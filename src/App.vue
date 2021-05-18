@@ -1,11 +1,20 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <component :is="layout">
+    <router-view/>
+  </component>
 </template>
-
+<script>
+import LayoutAuth from "@/layouts/LayoutAuth";
+import LayoutDefault from "@/layouts/LayoutDefault";
+export default {
+  components: {LayoutDefault, LayoutAuth},
+  computed: {
+    layout() {
+      return this.$route.meta.layout || 'layout-default'
+    }
+  }
+}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
