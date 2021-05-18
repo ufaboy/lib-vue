@@ -1,5 +1,8 @@
 <template>
   <div class="basement">
+    <header class="header">
+
+    </header>
     <slot/>
   </div>
 </template>
@@ -10,6 +13,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.basement {
 
+}
 </style>

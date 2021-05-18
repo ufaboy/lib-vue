@@ -1,0 +1,56 @@
+*:not(p) {
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  font-family: Roboto, sans-serif;
+  box-sizing: border-box;
+}
+ul {
+  list-style-type: none; /* Remove bullets */
+}
+html, body, .basement {
+  width: 100%;
+  height: 100%;
+  min-width: 360px;
+}
+:root {
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color: hsla(0, 0%, 100%, 1);
+
+    --color-p: hsla(var(--hue-p), 42%, 65%, 1); //#80cbc4
+    --color-s: hsla(var(--hue-s), 83%, 66%, 1); //f06292
+
+    --background: hsla(0, 0%, 7%, 1);
+    --background-2: hsla(0, 0%, 15%, 1);
+    --background-3: hsla(0, 0%, 30%, 1);
+    --background-picante: linear-gradient(to right, #262626, #2c2c2c, #333333, #393939, #404040);
+
+    --enabled: #1B1B1B;
+    --hovered: #2E2E2E;
+    --hovered-picante: linear-gradient(to right, #262626, #353535, #454545, #555555, #666666);
+    --hovered-parent: hsl(35, 42%, 18%, 1);
+    --focused: #121212;
+    --pressed: #111111;
+    --error: #CF6679;
+    --diabled: #FFFFFF59; //opacity 35
+  }
+}
+
+body {
+  color: var(--color);
+  background-color: var(--background);
+  --duration: 0.5s;
+  --timing: ease;
+
+  transition: color var(--duration) var(--timing),
+  background-color var(--duration) var(--timing);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

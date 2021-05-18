@@ -4,8 +4,10 @@
   </component>
 </template>
 <script>
+
 import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
+
 export default {
   components: {LayoutDefault, LayoutAuth},
   computed: {
