@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
+import ListBook from "@/views/ListBook";
+import ListGenre from "@/views/ListGenre";
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home
   },
   {
@@ -14,7 +16,17 @@ const routes = [
     meta: {
       layout: 'layout-auth'
     }
-  }
+  },
+  {
+    path: '/list-book/:id',
+    name: 'list-book',
+    component: ListBook
+  },
+  {
+    path: '/list-genre/:id',
+    name: 'list-genre',
+    component: ListGenre
+  },
   // {
   //   path: '/about',
   //   name: 'About',

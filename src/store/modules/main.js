@@ -1,5 +1,6 @@
 const state = () => ({
-	layout: 'LayoutDefault'
+	layout: 'LayoutDefault',
+	isMobile: false
 })
 
 // getters

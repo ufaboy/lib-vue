@@ -20,7 +20,7 @@ export default {
     async loadParents() {
       const result = await this.$fetch('/genre/find')
       if (result) {
-        parents.items = result.parents
+        this.$store.commit('genre/setGenre', result)
       }
       console.log({'loaded': parents})
     }
@@ -28,13 +28,11 @@ export default {
   computed: {},
   watch: {},
   created() {
-    this.$store.dispatch('genre/loadGenres')
-    // if (this.$store.state.genre.items.length === 0) {
+    // if (this.$store.getters['genre/items'].length === 0) {
     //   this.loadParents()
     // }
   },
   mounted() {
-    console.log({'store': this.$store.getters['genre/byType']})
   },
   updated() {
   },

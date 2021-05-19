@@ -1,13 +1,16 @@
 <template>
 <div class="home">
-  <ul>
-    <li v-for="genre of parentsArr" :key="genre.id">{{genre.name}}</li>
-  </ul>
+  <main class="nav">
+    <router-link class="content-link"
+               :to="{ name: 'list-genre', params: { id: genre.id }}"
+               v-for="genre of parentsArr"
+               :key="genre.id">{{ genre.name }}
+    </router-link>
+  </main>
 </div>
 </template>
 
 <script>
-import parents from '@/models/parents'
 export default {
   name: 'Home',
   head() {
@@ -18,19 +21,24 @@ export default {
   components: {},
   props: {},
   data: () => ({
-    parentsArr: []
   }),
   methods: {
-
+    checkGenres() {
+      if (this.$store.state.genre.data.items.length === 0) {
+        this.$store.dispatch('genre/loadGenres')
+      }
+    }
   },
-  computed: {},
+  computed: {
+    parentsArr() {
+      return this.$store.getters['genre/parents']
+    }
+  },
   watch: {},
   created() {
+    this.checkGenres()
   },
   mounted() {
-    console.log({'home': parents.items})
-    this.parentsArr = parents.items
-    // console.log({'store': this.$store.state.genre.items})
   },
   updated() {
   },
@@ -38,7 +46,40 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.general {
-  height: calc(100% - 4.5rem);
+.home {
+  //height: calc(100% - 4.5rem);
+  display: flex;
+  padding: 0 1rem;
+  .nav {
+    flex: 1;
+    display: flex;
+
+    .content-link {
+      display: flex;
+      flex: 1;
+      text-decoration: none;
+      margin-right: 1rem;
+      padding: 1rem 0.5rem;
+      border: 1px solid;
+      color: var(--color-2);
+      background: var(--background-2);
+      text-transform: capitalize;
+      outline: none;
+      cursor: pointer;
+      border-radius: 0.5rem;
+      font-size: 2rem;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    .content-link:hover {
+      background: var(--hovered-2);
+    }
+
+    .content-link:last-of-type {
+      margin-bottom: 0;
+      margin-right: 0;
+    }
+  }
 }
 </style>
