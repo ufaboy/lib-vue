@@ -1,21 +1,12 @@
-import { createStore } from 'vuex'
+import {createStore} from 'vuex'
+import main from './modules/main'
+import genre from './modules/genre'
+import book from './modules/book'
 
 export default createStore({
-  state: {
-    layout: 'LayoutDefault'
-  },
-  mutations: {
-    setLayout(state, payload) {
-      state.layout = payload
-    }
-  },
-  actions: {
-  },
-  getters: {
-    layout(state) {
-      return state.layout
-    }
-  },
   modules: {
-  }
+    main,
+    genre,
+    book
+  },
 })
