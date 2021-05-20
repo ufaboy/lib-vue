@@ -1,8 +1,9 @@
+import superFetch from "@/service/superFetch";
 const state = () => ({
   data: {
     items: [],
-    parents: {},
-    itemsByType: {}
+    parents: [],
+    itemsByType: []
   },
 })
 
@@ -23,8 +24,7 @@ const getters = {
 // actions
 const actions = {
   async loadGenres({commit}) {
-    console.log({'this': this, '$fetch': this.$fetch})
-    const result = await fetch('/genre/find')
+    const result = await superFetch.$fetch('/genre/find')
     if (result) {
       commit('setGenre', result)
     }
@@ -34,8 +34,9 @@ const actions = {
 // mutations
 const mutations = {
   setGenre(state, data) {
-    state.data = data
-    console.log({'state': state.data})
+    state.data.items = data.genres
+    state.data.itemsByType = data.genresByType
+    state.data.parents = data.parents
   }
 }
 

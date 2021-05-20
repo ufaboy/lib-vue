@@ -4,12 +4,14 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
+const app = createApp(App)
+
 //styles
 import '@/assets/style.scss'
 //styles
 
 //self plugins
-import improvedFetch from "@/plugins/fetch/improvedFetch";
+// import improvedFetch from "@/plugins/fetch/improvedFetch";
 //self plugins
 
 //components
@@ -17,13 +19,43 @@ import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
 //components
 
-createApp(App)
-	.use(store)
-	.use(router)
-	.use(improvedFetch, {
-		token: `$2y$13$xazgAgbxQe./cGdEuavuaeilY82N.IZLt/Adj8y2GiHBBTTReQfUS`,
-		apiUrl: process.env.NODE_ENV === 'development' ? 'http://api.librarydev.site' : 'https://api.librarydev.xyz'
-	})
-	.component('layout-default', LayoutDefault)
-	.component('layout-auth', LayoutAuth)
-	.mount('#app')
+
+const requireComponent = require.context(
+	// Относительный путь к каталогу с компонентами
+	'./components',
+	// Выполнять (или нет) ли поиск во вложенных каталогах
+	false,
+	// Регулярное выражение для сопоставления имён файлов базовых компонентов
+	/Base[A-Z]\w+\.(vue|js)$/
+)
+
+requireComponent.keys().forEach(fileName => {
+	// Получение конфигурации компонента
+	const componentConfig = requireComponent(fileName)
+
+	// Получение имени компонента в PascalCase
+	const componentName = fileName
+		.split('/')
+		.pop()
+		.replace(/\.\w+$/, '')
+
+	app.component(componentName.split(/(?=[A-Z])/).join('-').toLowerCase(),
+		// Поиск опций компонента в `.default`, который будет существовать,
+		// если компонент экспортируется с помощью `export default`,
+		// а в противном случае — возврат к корню модуля.
+		componentConfig.default || componentConfig
+	)
+})
+
+	app.use(store).use(router).component('layout-default', LayoutDefault).component('layout-auth', LayoutAuth)
+	app.mount('#app')
+// createApp(App)
+// 	.use(store)
+// 	.use(router)
+// 	.use(improvedFetch, {
+// 		token: `$2y$13$xazgAgbxQe./cGdEuavuaeilY82N.IZLt/Adj8y2GiHBBTTReQfUS`,
+// 		apiUrl: process.env.NODE_ENV === 'development' ? 'http://api.librarydev.site' : 'https://api.librarydev.xyz'
+// 	})
+// 	.component('layout-default', LayoutDefault)
+// 	.component('layout-auth', LayoutAuth)
+// 	.mount('#app')

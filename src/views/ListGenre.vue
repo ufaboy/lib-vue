@@ -24,22 +24,38 @@ export default {
 //mixins: {},
   props: {},
   data: () => ({
-    activeParent: {}
+    activeParent: {
+      childes: []
+    }
   }),
-  computed: {},
+  computed: {
+    genresByType() {
+      return this.$store.state.genre.data.itemsByType
+    },
+    genres() {
+      return this.activeParent.childes
+    }
+  },
   watch: {},
   created() {
-this.prepareGenres()
+    this.prepareGenres()
   },
   mounted() {
+
   },
   methods: {
-    prepareGenres() {
-      console.log({'byType': this.$store.getters['genre/byType']})
+    openGenre(genreId) {
+      this.$router.push({name: 'list-books', params: {'id': genreId}})
+    },
+    async prepareGenres() {
       if (this.$store.state.genre.data.items.length === 0) {
-        this.$store.dispatch('genre/loadGenres')
+        await this.$store.dispatch('genre/loadGenres')
       }
-      // this.activeParent = this.$store.getters['genre/byType'].find(item => item.id === +this.$route.params.id)
+      if (this.$store.state.genre.data.itemsByType.length) {
+        const result = this.$store.state.genre.data.itemsByType.find(item => item.id === this.$route.params.id)
+        if (result) this.activeParent = result
+      }
+
     }
   },
 }
