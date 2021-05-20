@@ -24,14 +24,14 @@ export default {
   }),
   methods: {
     checkGenres() {
-      if (this.$store.state.genre.data.items.length === 0) {
+      if (this.$store.state.genre.items.length === 0) {
         this.$store.dispatch('genre/loadGenres')
       }
     }
   },
   computed: {
     parentsArr() {
-      return this.$store.getters['genre/parents']
+      return this.$store.getters['genre/items']
     }
   },
   watch: {},

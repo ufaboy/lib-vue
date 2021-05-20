@@ -14,6 +14,18 @@ export default {
     layout() {
       return this.$route.meta.layout || 'layout-default'
     }
+  },
+  methods: {
+    onResize() {
+      if (document.documentElement.clientWidth > 892) {
+        this.$store.commit('main/setIsDesktop')
+      } else {
+        this.$store.commit('main/setIsMobile')
+      }
+    },
+  },
+  created() {
+    window.addEventListener('resize', this.onResize);
   }
 }
 </script>

@@ -21,11 +21,6 @@ import superFetch from "@/service/superFetch";
 export default {
   name: "login",
   components: {IconPassword, IconUsername},
-  head() {
-    return {
-      title: 'Login',
-    };
-  },
   props: {},
   data: () => ({
     username: '',
@@ -37,16 +32,16 @@ export default {
       const formData = {username: this.username, password: this.password};
       const result = await superFetch.$fetch('/auth/login', 'post', formData)
       if (result) {
-        console.log({'result': result})
         sessionStorage.setItem('lib-token', result.token)
+        this.$router.push('/')
       }
-      // await this.$store.dispatch('auth/login', formData)
-      // await this.$router.push('/');
+
     }
   },
   computed: {},
   watch: {},
   created() {
+    document.title = 'Login';
   },
   mounted() {
   },

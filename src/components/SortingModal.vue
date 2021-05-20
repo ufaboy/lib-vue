@@ -1,0 +1,79 @@
+<template>
+  <main class="sorting">
+    <fieldset class="fieldset">
+      <legend>sorting
+        <icon-base class="icon"><icon-sort-asc v-if="ascending"/><icon-sort-desc v-else/></icon-base>
+      </legend>
+      <button class="srt-btn" :class="{active: this.orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'view_count'}" @click="changeOrderBy('view_count')">view_count</button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'rating'}" @click="changeOrderBy('rating')">rating</button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'updated_at'}" @click="changeOrderBy('updated_at')">updated</button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'last_read'}" @click="changeOrderBy('last_read')">last read</button>
+      <button class="close-find" @click="sorting">close&filter</button>
+    </fieldset>
+  </main>
+</template>
+
+<script>
+export default {
+  name: "SortingModal",
+  components: {},
+//mixins: {},
+  props: {},
+  data: () => ({
+    ascending: 0,
+    orderBy: ''
+  }),
+  computed: {},
+  watch: {},
+  created() {
+  },
+  mounted() {
+  },
+  methods: {
+    sorting() {
+      this.$emit('sorting', {orderBy: this.orderBy, ascending: this.ascending})
+      this.$closeModal('sortings')
+    },
+    changeOrderBy(e) {
+      this.orderBy = e
+      this.ascending = !this.ascending
+    },
+  },
+}
+</script>
+
+<style lang="scss">
+.sorting {
+  padding: 1rem;
+  color: var(--color-2);
+  background-color: var(--background-2);
+
+  .icon {
+    fill: var(--color-p);
+    background-color: var(--background-2);
+  }
+.close-find {
+  color: var(--color-2);
+  background-color: #35495e;
+  width: 100%;
+  padding: 1rem;
+  text-align: center;
+}
+  .srt-btn {
+    padding: 0.5rem;
+    display: flex;
+    margin-bottom: 0.5rem;
+    width: 100%;
+    color: var(--color-2);
+    background-color: var(--background-3);
+    text-transform: capitalize;
+  }
+  .srt-btn:last-of-type {
+    margin-bottom: 1rem;
+  }
+  .srt-btn.active {
+    color: var(--color-p);
+  }
+}
+</style>

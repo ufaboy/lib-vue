@@ -1,9 +1,9 @@
 <template>
   <div class="list-genre">
-    <header class="header" v-if="$store.state.isMobile">
-      <select class="select" v-model="activeParent" @change="changeParent">
-        <option class="option" :value="genre" v-for="genre of $store.state.genre.itemsByType" :key="genre.id">
-          {{ genre.title }}
+    <header class="header" v-if="$store.state.main.isMobile">
+      <select class="select" v-model="activeParent" @change="loadGenre">
+        <option class="option" :value="genre" v-for="genre of $store.state.genre.items" :key="genre.id">
+          {{ genre.name }}
         </option>
       </select>
     </header>
@@ -18,49 +18,125 @@
 </template>
 
 <script>
+import superFetch from "@/service/superFetch";
 export default {
   name: "ListGenre",
   components: {},
-//mixins: {},
   props: {},
   data: () => ({
     activeParent: {
       childes: []
-    }
+    },
+    genres: []
   }),
   computed: {
-    genresByType() {
-      return this.$store.state.genre.data.itemsByType
+    parentId() {
+      return this.activeParent.id ? this.activeParent.id : this.$route.params.id ? this.$route.params.id : null
     },
-    genres() {
-      return this.activeParent.childes
-    }
   },
   watch: {},
   created() {
-    this.prepareGenres()
+    if (this.$route.params.id) {
+      this.loadGenre()
+    }
   },
   mounted() {
 
   },
   methods: {
     openGenre(genreId) {
-      this.$router.push({name: 'list-books', params: {'id': genreId}})
+      this.$router.push({name: 'list-book', params: {'id': genreId}})
     },
-    async prepareGenres() {
-      if (this.$store.state.genre.data.items.length === 0) {
-        await this.$store.dispatch('genre/loadGenres')
+    async loadGenre() {
+      const result = await superFetch.$get(`/genre?parent_id=${this.parentId}`)
+      if (result) {
+        this.genres = result
       }
-      if (this.$store.state.genre.data.itemsByType.length) {
-        const result = this.$store.state.genre.data.itemsByType.find(item => item.id === this.$route.params.id)
-        if (result) this.activeParent = result
-      }
-
     }
   },
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.list-genre {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 0 1rem;
 
+  .genre {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    text-transform: capitalize;
+    cursor: pointer;
+    width: 300px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    padding: 1rem;
+    color: var(--color-2);
+    background: var(--background-2);
+
+    .title {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 892px) {
+  .list-genre {
+    padding: 0.5rem;
+    columns: 400px;
+
+    .header {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      max-height: 42px;
+
+      .search-input {
+        flex: 1;
+        margin-right: 0.5rem;
+        color: (var(--color));
+        background-color: var(--background-2);
+      }
+
+      .select {
+        flex: 1;
+      }
+    }
+
+    .genre {
+      margin-bottom: 0.5rem;
+      margin-right: 0;
+      padding: 0.5rem;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 892px) and (orientation: landscape) {
+  .list-genre {
+  }
+}
+
+@media only screen and (max-width: 892px) and (orientation: portrait) {
+  .list-genre {
+    .header {
+      .search-input {
+        max-width: 220px;
+      }
+
+      .select {
+        max-width: 165px;
+      }
+    }
+
+    .genre {
+      justify-content: space-between;
+    }
+  }
+}
 </style>
