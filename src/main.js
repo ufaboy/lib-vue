@@ -4,6 +4,8 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
+import Toaster from "@meforma/vue-toaster";
+
 const app = createApp(App)
 
 //styles
@@ -12,6 +14,11 @@ import '@/assets/style.scss'
 
 //self plugins
 // import improvedFetch from "@/plugins/fetch/improvedFetch";
+import modal from "@/plugins/modal/engine";
+import scroll from "@/plugins/scroll/engine"
+import observer from "@/plugins/IntersectionObserver/observer";
+import loader from "@/plugins/loader/engine"
+// import toaster from "@/plugins/toaster/engine";
 //self plugins
 
 //components
@@ -47,7 +54,16 @@ requireComponent.keys().forEach(fileName => {
 	)
 })
 
-	app.use(store).use(router).component('layout-default', LayoutDefault).component('layout-auth', LayoutAuth)
+	app.use(store)
+		.use(router)
+		.component('layout-default', LayoutDefault)
+		.component('layout-auth', LayoutAuth)
+		.component('observer', observer)
+		.use(modal, modal)
+		.use(scroll, scroll)
+		.use(loader, loader)
+		.use(Toaster)
+		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')
 // createApp(App)
 // 	.use(store)

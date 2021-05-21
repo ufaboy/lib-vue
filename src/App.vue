@@ -23,9 +23,11 @@ export default {
         this.$store.commit('main/setIsMobile')
       }
     },
+
   },
   created() {
     window.addEventListener('resize', this.onResize);
+
   }
 }
 </script>

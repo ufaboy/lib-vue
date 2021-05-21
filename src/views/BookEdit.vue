@@ -1,0 +1,825 @@
+<template>
+  <div class="edit-book">
+    <div class="text-container">
+      <div class="text-container__action">
+        <button class="negative-btn" type="reset" @click="resetBook">reset</button>
+        <button class="positive-btn" @click="sendBook">save</button>
+        <star-rating v-model="book.rating" :star-size="20" :show-rating="false"/>
+        <div class="switch-label" v-if="$store.state.user.name === 'admin'">
+          <span class="switch-title">{{ $store.state.isDesktop ? 'SFW' : 'S' }}</span>
+          <label class="switch">
+            <input type="checkbox" v-model="book.ad">
+            <span class="slider round"/>
+          </label>
+          <span class="switch-title">{{ $store.state.isDesktop ? 'NSFW' : 'N' }}</span>
+        </div>
+      </div>
+      <section class="section row">
+        <label class="label">
+          <span class="title">name</span>
+          <input type="text" class="value" required v-model.trim="book.name"></label>
+        <label class="label">
+          <span class="title">source</span>
+          <input type="url" class="value" v-model.trim="book.source">
+        </label>
+      </section>
+      <label class="label">
+        <span class="title">
+          annotation
+        <meter class="meter" :value="book.annotation.length" min="0" max="300" low="30" high="280"
+               optimum="150"/>
+        </span>
+        <textarea class="value textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
+      </label>
+      <section class="section genre"  @click="openGenreModal">
+        <span class="title">genre</span>
+        <div class="value row">
+          <span v-if="genres.length === 0">Не выбраны жанры</span>
+          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
+                :key="genre.id">{{ genre.title }}</span>
+        </div>
+      </section>
+      <label class="label">
+        <span class="title">text {{ book.text.length }}</span>
+        <span class="action-bar">
+          <button class="editor-btn" type="button" @click="toggleEditor">{{ editor }}</button>
+          <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
+            <base-icon class="icon">
+              <icon-carriage/>
+            </base-icon>
+          </button>
+          <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
+            <base-icon class="icon">
+              <icon-paragraph/>
+            </base-icon>
+          </button>
+          <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
+            <base-icon class="icon">
+              <icon-slash/>
+            </base-icon>
+          </button>
+        </span>
+        <textarea class="editor clarity" v-model="book.text" rows="18" v-if="editor === 'raw'" ref="editor"></textarea>
+        <div v-else v-html="book.text"></div>
+      </label>
+    </div>
+    <div class="media-container" v-if="book.id">
+      <header class="header-media">
+        <label class="upload-dropbox">Choose files
+          <input type="file"
+                 class="upload-input desktop"
+                 multiple
+                 @change="loadFiles($event.target.files)">
+        </label>
+        <button class="positive-btn" @click="sendAllFiles">all upload</button>
+        <button class="negative-btn" @click="deleteAllFiles">remove files</button>
+      </header>
+
+      <div class="media-wrapper">
+        <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
+          <div class="action-panel">
+            <button class="image-entry-btn" @click="sendFile(media, index)" v-if="media.id === undefined">load</button>
+            <button class="image-entry-btn"
+                    @click="book.cover_id = media.id"
+                    v-if="media.type === 'image/webp' && media.id !== undefined">
+              {{ book.cover_id === media.id ? 'current' : 'set' }}cover
+            </button>
+            <button class="image-entry-btn" @click="copyFileName(index)" v-if="media.id !== undefined">tag</button>
+            <button class="image-entry-btn" @click="deleteFile(index)" v-if="media.id !== undefined">delete</button>
+          </div>
+          <progress-ring v-show="calcProgressUpload(index) < 100 && calcProgressUpload(index) > 0" :radius="60"
+                         :progress="calcProgressUpload(index)" :stroke="10" :color="'#ff2400'"/>
+          <img class="media image" :src="getSrc(media)" v-if="checkType(media.type) === 'image'">
+          <video v-else-if="checkType(media.type) === 'video'" class="media video" controls>
+            <source :src="getSrc(media)">
+          </video>
+          <audio v-else-if="checkType(media.type) === 'audio'" class="media audio" controls muted>
+            <source :src="getSrc(media)">
+          </audio>
+
+          <figcaption class="figure-caption">{{ media.name ? media.name : media.full_name }}</figcaption>
+        </figure>
+      </div>
+    </div>
+    <modal ref="genreBook" :width="750">
+      <genre-book :genres-props="genres" @set-genres="setGenres"/>
+    </modal>
+  </div>
+</template>
+
+<script>
+import superFetch from "@/service/superFetch";
+import StarRating from 'vue-star-rating'
+import IconParagraph from "@/components/icons/IconParagraph"
+import IconSlash from "@/components/icons/IconSlash"
+import IconCarriage from "@/components/icons/IconCarriage"
+import GenreBook from "@/components/GenreBook";
+import ProgressRing from "@/components/ProgressRing";
+
+export default {
+  name: "BookEdit",
+  components: {ProgressRing, GenreBook, IconParagraph, IconSlash, IconCarriage, StarRating},
+  props: {},
+  data: () => ({
+    files: [],
+    uploadingProgress: [],
+    book: {
+      id: null,
+      name: null,
+      annotation: '',
+      text: '',
+      source: null,
+      cover: null,
+      rating: null,
+      ad: null,
+      files: [],
+    },
+    genres: [],
+    editor: 'raw',
+    expandText: false,
+    expandIllustration: false,
+  }),
+  methods: {
+    calcProgressUpload(index) {
+      return this.uploadingProgress[index]
+    },
+    async sendBook() {
+      const check = await this.checkBook()
+      if (!check) {
+        return false
+      }
+      let result;
+      let url = `/book/create`
+      const formData = {...this.book, genres: this.genres.map(item => item.id)}
+      this.$loader('show')
+      if (this.$route.params.id) {
+        url = `/book/update?id=${this.$route.params.id}`
+        result = await superFetch.$patch(url, formData)
+      } else {
+        result = await superFetch.$post(url, formData)
+      }
+      this.$loader('hide')
+      if (result) {
+        this.$router.replace('/book')
+      }
+    },
+    resetBook() {
+      this.book = {
+        id: null,
+        name: null,
+        annotation: '',
+        text: '',
+        source: null,
+        cover_id: null,
+        cover_url: null,
+        rating: null,
+        book: null,
+        files: []
+      }
+      this.genres = []
+    },
+    async checkBook() {
+      let verification = true
+      let messages = []
+      if (!this.book.name) {
+        messages.push('empty name')
+        verification = false
+      }
+      if (this.genres.length < 1) {
+        messages.push('choose at least one genre')
+        verification = false
+      }
+      if (this.book.text.length === 0) {
+        messages.push('empty text')
+        verification = false
+      }
+      // this.$toast(messages)
+      this.$toast.error(messages, {position: 'top-right'});
+
+      return verification
+    },
+    async getBook() {
+      if (this.$route.params.id) {
+        const url = `/book/view?id=${this.$route.params.id}`
+        const result = await superFetch.$get(url)
+        if (result) {
+          // this.book = Object.assign({}, result)
+          this.book = {...result, annotation: result.annotation ? result.annotation : ''}
+          this.genres = result.genres
+          this.files.push(...result.files)
+        } else {
+          console.log(result)
+        }
+      } else {
+        return false
+      }
+    },
+
+    loadFiles(e) {
+      for (const file of e) {
+        this.files.push(file)
+        this.uploadingProgress.push(null)
+      }
+    },
+    getSrc(media) {
+      const loaded = !!media.id
+      return loaded ? `${this.$config.apiUrl}/${media.url}` : window.URL.createObjectURL(media);
+    },
+    async sendAllFiles() {
+      for (const [i, v] of this.files.entries()) {
+        await this.sendFile(v, i)
+      }
+    },
+    async sendFile(file, index) {
+      console.log({'index': index})
+      return new Promise(function (resolve) {
+        let formData = new FormData();
+        formData.append('file', file);
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("POST", `${this.$config.apiUrl}/media-storage/upload?book_id=${this.book.id}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${this.$store.state.auth.token}`);
+        xhr.responseType = 'json';
+
+        xhr.upload.onprogress = async (event) => {
+          this.uploadingProgress[index] = Math.round(event.loaded * 100 / event.total)
+          this.$forceUpdate()
+        };
+        xhr.onloadend = () => {
+          if (xhr.status === 200) {
+            console.log({'xhr': xhr.response, 'index': index});
+            this.files[index] = xhr.response
+            this.$forceUpdate()
+            resolve(xhr.response);
+          } else {
+            console.log("Ошибка " + this.status);
+            // reject(xhr.status);
+          }
+        };
+        xhr.send(formData);
+
+      }.bind(this))
+      //worked fetch
+      // let formData = new FormData();
+      // const url = `${this.$config.apiUrl}/file-storage/upload?book_id=${this.book.id}`;
+      // formData.append('file', file);
+      // console.log(formData, file)
+      // const response = await fetch(url, {
+      //   method: 'POST',
+      //   body: formData
+      // } );
+      // if (response) {
+      //   const elem = await response.json();
+      //   console.log(elem)
+      //   this.book.files.push(elem)
+      //   this.files.splice(index, 1)
+      // }
+      //worked fetch
+    },
+    async deleteAllFiles() {
+      const url = `/book/delete-all-media?id=${this.book.id}`
+      const result = await this.$fetch('delete', url);
+      if (result) {
+        this.files.length = 0
+        this.uploadingProgress.length = 0
+        this.$forceUpdate()
+      } else {
+        console.log(result)
+      }
+    },
+    resizeSelect(e) {
+      if (e.type === 'focusin' && e.target.attributes.size) {
+        e.target.attributes.size.value = 4
+      } else if (e.type === 'focusout' && e.target.attributes.size) {
+        e.target.attributes.size.value = 1
+      }
+    },
+
+    checkType(type) {
+      if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
+        return 'image'
+      } else if (type === 'video/webm' || type === 'video/mp4') {
+        return 'video'
+      } else if (type === 'audio/mpeg') {
+        return 'audio'
+      } else if (type === '') {
+        return 'file'
+      }
+    },
+
+    async deleteFile(file) {
+      const url = `/media-storage/delete?id=${this.files[file].id}`;
+      const result = await this.$fetchDelete(url);
+      if (result) {
+        this.files.splice(file, 1)
+        this.uploadingProgress.splice(file, 1)
+      } else {
+        console.error(result)
+      }
+    },
+    async copyFileName(index) {
+      const uploadedFile = this.files[index]
+      if (uploadedFile.type === 'image/webp') {
+        await navigator.clipboard.writeText(`<img class="media picture" src="${this.$config.apiUrl}/${uploadedFile.url}">`)
+      } else if (['video/webm', 'video/mp4'].includes(uploadedFile.type)) {
+        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${this.$config.apiUrl}/${uploadedFile.url}"/></video>`)
+      } else if (uploadedFile.type === 'audio/mp4') {
+        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${this.$config.apiUrl}/${uploadedFile.url}"/></audio>`)
+      }
+    },
+    async formatText(type) {
+      if (type === 'caret') {
+        this.book.text = this.book.text.replace(/\n/g, '<p>')
+      } else if (type === 'double-p') {
+        this.book.text = this.book.text.replace(/<p><p>/g, '<p>')
+      } else if (type === 'comment') {
+        let selectionText = this.$refs.editor.value.substring(this.$refs.editor.selectionStart, this.$refs.editor.selectionEnd);
+        if (selectionText.includes('<!-- ') && selectionText.includes(' -->')) {
+          selectionText = selectionText.replace('<!-- ', '');
+          selectionText = selectionText.replace(' -->', '');
+        } else {
+          selectionText = '<!-- ' + selectionText + ' -->'
+        }
+
+        this.$refs.editor.setRangeText(selectionText)
+      }
+    },
+    errorImage(e) {
+      e.onerror = null
+      e.target.src = '/icons/book-dead-solid.svg'
+    },
+    toggleEditor() {
+      if (this.editor === 'raw') {
+        this.editor = 'html'
+      } else {
+        this.editor = 'raw'
+      }
+    },
+    openGenreModal() {
+      this.$showModal('genreBook')
+    },
+    setGenres(e) {
+      this.genres = e
+    },
+    colorizeGenre(i) {
+      const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
+      return color[i]
+    },
+  },
+  computed: {},
+  watch: {
+    genres: {
+      handler: function () {
+        this.book.ad = this.genres.findIndex(item => item.ad) > -1
+      },
+      deep: true
+    },
+  },
+  created() {
+    this.getBook();
+  },
+  mounted() {
+  },
+  updated() {
+  },
+}
+</script>
+
+<style scoped lang="scss">
+.edit-book {
+  height: calc(100% - 4.5rem);
+  overflow-y: auto;
+  padding: 0 1rem;
+  display: flex;
+  flex-flow: row;
+  background: var(--background);
+
+
+  .header {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-flow: column nowrap;
+    .label {
+      margin-right: 1rem;
+      flex: 1;
+    }
+
+    .label:last-of-type {
+      margin-right: 0;
+    }
+  }
+  .section.row {
+    flex-flow: row nowrap;
+  }
+  .section, .label {
+    margin-bottom: 1rem;
+  }
+  .section.genre {
+    cursor: pointer;
+  }
+
+  .title {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .value {
+    padding: 0.3rem;
+    width: 100%;
+    color: var(--color);
+    background-color: var(--background-2);
+    outline: none;
+  }
+  .action-bar {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .text-container {
+    width: 800px;
+    margin-right: 1rem;
+
+    .description {
+      flex-grow: 1;
+    }
+
+    .text-container__action {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      margin-bottom: 1rem;
+      align-items: center;
+      padding: 0.5rem 0;
+    }
+
+    .reset-field-btn {
+      cursor: pointer;
+      padding: 0.3rem;
+      display: block;
+      color: var(--color-2);
+      background-color: var(--background-3);
+    }
+
+    .fieldset {
+      width: 100%;
+      margin-bottom: 1rem;
+
+      .select {
+        flex: 1;
+        margin-right: 1rem;
+      }
+    }
+
+
+    .annotation {
+      width: 100%;
+      flex-grow: 1;
+      //margin-right: 1rem;
+    }
+
+    .name {
+      flex: 1;
+    }
+
+    .rating {
+      width: 150px;
+      flex-direction: column;
+    }
+
+    .select {
+      width: initial;
+      cursor: pointer;
+      padding: 0.3rem;
+    }
+
+    .editor {
+      width: 100%;
+      color: var(--color);
+      background-color: var(--background-2);
+      text-transform: initial;
+      padding: 0 0.3rem;
+
+      .title {
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        width: 100%;
+      }
+
+      .editor {
+        padding: 5px;
+        width: 100%;
+        border: 1px solid #000000;
+        color: inherit;
+        background-color: inherit;
+      }
+
+      .editor.clarity {
+        resize: vertical;
+      }
+    }
+    .editor-btn {
+      color: var(--color-p);
+      background-color: transparent;
+      padding: 5px 10px;
+      cursor: pointer;
+      border: 1px solid var(--color-p);
+      border-radius: 5px;
+      margin-right: 0.5rem;
+
+      .icon {
+        fill: var(--color-p);
+      }
+    }
+
+    .editor-btn:last-of-type {
+      margin-right: 0;
+    }
+
+    .textarea {
+      resize: vertical;
+      width: 100%;
+      color: var(--color-2);
+      background-color: var(--background-2);
+      padding: 0.3rem;
+    }
+
+
+    .label--inline {
+      flex-flow: row;
+      justify-content: initial;
+      align-items: center;
+
+      .title, .value {
+        width: initial;
+      }
+
+      .title {
+        margin-right: 1rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .genre-span {
+    margin-right: 0.3rem;
+    cursor: pointer;
+  }
+
+  .media-container {
+    display: flex;
+    min-width: 200px;
+    height: 100%;
+    flex-flow: column;
+    flex: 1;
+
+    .header-media {
+      margin-bottom: 1rem;
+    }
+
+    .title {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .upload-dropbox {
+      font-weight: 700;
+      color: white;
+      background: var(--background-2);
+      display: inline-block;
+      cursor: pointer;
+      padding: 10px 25px;
+
+      .upload-input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+      }
+    }
+
+    .upload-dropbox:hover {
+      background: var(--background-3);
+    }
+
+    .media-wrapper {
+      display: flex;
+      flex-flow: row wrap;
+
+      .figure {
+        width: 356px;
+        padding: 1rem;
+        margin: 0 0.5rem 0.5rem 0;
+        position: relative;
+        border: 1px solid var(--color-p);
+
+        .action-panel {
+          position: absolute;
+          top: 0;
+          left: 0;
+          padding: 0.3rem;
+          background: transparent;
+          display: block;
+          flex-flow: row nowrap;
+          align-items: center;
+          z-index: 7;
+
+          .loader-ring {
+            width: 120px;
+            height: 120px;
+            z-index: 99;
+            margin: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+
+        }
+
+        .figure-caption {
+          width: 100%;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          cursor: pointer;
+          margin-top: 0.5rem;
+        }
+      }
+
+      .figure:hover {
+        .action-panel {
+          display: block;
+        }
+      }
+    }
+  }
+
+  .media {
+    width: 320px;
+    height: 180px;
+    border-radius: 0.5rem;
+    border: none;
+    outline: none;
+
+    .thumbnail {
+      width: inherit;
+      height: inherit;
+    }
+  }
+
+  .media.image {
+    object-fit: cover;
+    display: block;
+
+    img, source {
+      width: inherit;
+      height: inherit;
+      object-fit: cover;
+    }
+  }
+
+  .media.video {
+  }
+
+  .media.audio {
+    width: 100%;
+  }
+
+  .toggle-button {
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: none;
+    color: var(--color);
+    background-color: var(--background-2);
+    cursor: pointer;
+    border: 1px solid var(--color-p);
+    border-radius: 4px;
+
+    .icon {
+      fill: var(--color-p);
+    }
+  }
+
+  .footer {
+    width: 100%;
+    height: 2rem;
+  }
+}
+
+
+@media only screen and (max-width: 892px) {
+  .edit-book {
+    padding: 0.5rem;
+    overflow: initial;
+    flex-flow: row wrap;
+
+    .media-container {
+      .media-wrapper {
+        .figure {
+          width: 268px;
+          padding: 0.5rem;
+
+          .media {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .text-container {
+      .fieldset {
+        .select {
+          margin-right: 0.5rem;
+        }
+
+        .select:last-of-type {
+          margin-right: 0;
+        }
+      }
+
+      .zone {
+        .search-text {
+          padding: 0.3rem;
+          margin-right: 0.5rem;
+        }
+      }
+
+      .text:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .editor-btn {
+        padding: 0.3rem;
+      }
+    }
+
+  }
+}
+
+@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
+  .edit-book {
+    .text-container {
+      width: 100%;
+      margin-right: 0;
+
+      .description {
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
+  .edit-book {
+    .text-container {
+      width: 100%;
+      margin-right: 0;
+
+      .description {
+        margin-right: 0;
+      }
+
+      .selected {
+        overflow: hidden;
+      }
+
+      .zone {
+        max-width: 265px;
+
+        .search-text {
+          margin-right: 0;
+        }
+
+        .zone-selected {
+          display: none;
+        }
+      }
+    }
+
+    .media-container {
+      .media-wrapper {
+        .figure {
+          width: 100%;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
+</style>

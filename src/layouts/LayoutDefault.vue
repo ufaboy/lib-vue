@@ -2,14 +2,14 @@
   <div class="basement">
     <header class="header">
       <router-link to="/">Home</router-link>
+      <router-link to="/book">Books</router-link>
+      <router-link to="/genre">Genre</router-link>
     </header>
     <slot/>
   </div>
 </template>
 
 <script>
-import parents from "@/models/parents";
-
 export default {
   name: "LayoutDefault",
   components: {},
@@ -17,20 +17,17 @@ export default {
   data: () => ({
   }),
   methods: {
-    async loadParents() {
-      const result = await this.$fetch('/genre/find')
-      if (result) {
-        this.$store.commit('genre/setGenre', result)
+    checkAuth() {
+      const token = sessionStorage.getItem('lib-token') ?? ''
+      if (!token) {
+        this.$router.push('/login')
       }
-      console.log({'loaded': parents})
     }
   },
   computed: {},
   watch: {},
   created() {
-    // if (this.$store.getters['genre/items'].length === 0) {
-    //   this.loadParents()
-    // }
+    this.checkAuth()
   },
   mounted() {
   },

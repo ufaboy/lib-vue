@@ -1,0 +1,150 @@
+<template>
+  <form class="edit-genre" @submit.prevent="sendGenre">
+    <header class="header">
+      <h1>Genre</h1>
+        <button v-if="$store.state.user.name === 'admin'"
+                type="button"
+                class="btn-switch btn"
+                :class="{'active': genre.ad}"
+                @click="localGenre.genre.ad = !genre.ad">ad
+        </button>
+      <button class="close-button" type="reset" @click="closeModal">
+        <icon-base class="icon" icon-name="close"><icon-close/></icon-base>
+      </button>
+    </header>
+    <label class="label">
+      <span class="title">title</span>
+      <input type="text" class="value" v-model.trim="localGenre.name">
+    </label>
+    <label class="label">
+      <span class="title">description</span>
+      <textarea class="value textarea" v-model.trim="localGenre.description" rows="5"></textarea>
+    </label>
+    <label class="label">
+      <span class="title">parent genre</span>
+      <select class="value" v-model="localGenre.parent_id">
+        <option v-for="genre of $store.state.genre.itemsParents" :key="genre.id" :value="genre.id">{{genre.name}}</option>
+      </select>
+    </label>
+    <footer class="footer">
+      <button class="negative-btn" type="reset" @click="deleteGenre">Удалить</button>
+      <button class="positive-btn">Сохранить</button>
+    </footer>
+  </form>
+</template>
+
+<script>
+import superFetch from "@/service/superFetch";
+export default {
+  name: "EditGenre",
+  components: {},
+  props: {
+    genre: Object
+  },
+  data: () => ({
+    localGenre: {
+      id: null,
+      title: null,
+      description: null,
+      parent_id: null,
+      ad: null,
+    },
+  }),
+  computed: {},
+  watch: {},
+  created() {
+    this.prepareGenre()
+  },
+  mounted() {
+  },
+  methods: {
+    async sendGenre() {
+      let result, url = `/genre/create`;
+      const formData = {
+        name: this.localGenre.name,
+        description: this.localGenre.description,
+        ad: this.localGenre.ad,
+      }
+      if (this.localGenre.parent_id) {
+        formData.parent_id = this.localGenre.parent_id
+      }
+       if (this.localGenre.id) {
+        url = `/genre/update?id=${this.genre.id}`
+        result = await superFetch.$patch(url, formData)
+      } else {
+        result = await superFetch.$post(url, formData)
+      }
+      if (result) {
+        this.$store.dispatch('genre/loadGenre')
+        this.closeModal();
+      }
+    },
+    async deleteGenre() {
+      if (!this.genre.parent_id) {
+        return false;
+      }
+      const url = `/genre/delete?id=${this.genre.id}`
+      const result = await superFetch.$delete(url)
+      if (result) {
+        this.$store.dispatch('genre/loadGenre')
+        this.closeModal();
+      }
+    },
+    selectGenre(genre) {
+      this.parent = genre
+    },
+    clearGenre() {
+      this.parent = {id: null, name: null}
+    },
+    closeModal() {
+      this.$closeModal('editGenre')
+    },
+    prepareGenre() {
+      this.localGenre = Object.assign({}, this.genre)
+    },
+  },
+}
+</script>
+
+<style lang="scss">
+.edit-genre {
+  padding: 2rem;
+  display: flex;
+  flex-flow: wrap;
+  height: 100%;
+  width: 100%;
+  color: var(--color-2);
+  background-color: var(--background-2);
+  .header {
+    margin-bottom: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .close-button {
+      background: inherit;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+
+  .label {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1rem;
+    .title {
+      margin-bottom: 0.5rem;
+    }
+  }
+  .footer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    button:last-of-type {
+      margin-right: 0;
+    }
+  }
+
+}
+
+</style>

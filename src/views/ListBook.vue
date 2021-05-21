@@ -7,7 +7,7 @@
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
       <select class="select" v-model="activeGenre" @change="changeGenre">
-        <optgroup :label="parent.name" v-for="parent of $store.state.genre.itemsByType" :key="'parent-' + parent.id">
+        <optgroup :label="parent.name" v-for="parent of $store.state.genre.items" :key="'parent-' + parent.id">
           <option v-for="genre of parent.childes"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
@@ -16,7 +16,7 @@
       </select>
     </header>
     <section class="book" v-for="book of data.items" @click="openBook(book.id)" :key="'book'+book.id">
-      <img :src="getCover(book)" alt="" class="book-cover" :class="{'clear-view': $store.state.showMedia}">
+      <img :src="getCover(book)" alt="" class="book-cover">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
@@ -33,6 +33,7 @@
 
 <script>
 import SortingModal from "@/components/SortingModal";
+import superFetch from "@/service/superFetch";
 export default {
   name: "ListBook",
   components: {SortingModal},
@@ -48,7 +49,7 @@ export default {
     activeParent: null,
     infinityState: true,
     infinityLoading: false,
-    orderBy: name,
+    orderBy: 'name',
     limit: 25,
     page: 1,
     ascending: 1,
@@ -84,7 +85,7 @@ export default {
       }
       this.infinityLoading = true
       this.$loader('show')
-      const result = await this.$fetch('get', url);
+      const result = await superFetch.$get(url);
       this.$loader('hide')
       this.infinityLoading = false
       if (result) {

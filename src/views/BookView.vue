@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div class="book"></div>
 </template>
 
 <script>

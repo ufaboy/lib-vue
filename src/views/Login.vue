@@ -17,7 +17,6 @@
 <script>
 import IconUsername from "@/components/icons/IconUsername";
 import IconPassword from "@/components/icons/IconPassword";
-import superFetch from "@/service/superFetch";
 export default {
   name: "login",
   components: {IconPassword, IconUsername},
@@ -30,12 +29,17 @@ export default {
   methods: {
     async login() {
       const formData = {username: this.username, password: this.password};
-      const result = await superFetch.$fetch('/auth/login', 'post', formData)
-      if (result) {
-        sessionStorage.setItem('lib-token', result.token)
-        this.$router.push('/')
-      }
-
+      const result = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8',
+        }
+      })
+      const res = await result.json()
+      sessionStorage.setItem('lib-token', res.token)
+      this.$store.commit('user/setUser', res)
+      this.$router.push('/')
     }
   },
   computed: {},
