@@ -117,7 +117,7 @@ export default {
 <style scoped lang="scss">
 .genre-table {
   width: 100%;
-  height: calc(100% - 4.5rem);
+  height: calc(100% - 4rem);
   padding: 0 1rem;
 
   .header {
@@ -154,7 +154,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .genre-table {
     .table {
       .cell-id {
@@ -164,7 +164,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .genre-table {
     .dialog {
       width: 100%;

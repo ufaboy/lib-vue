@@ -165,7 +165,7 @@ export default {
 .list-book {
   display: flex;
   flex-flow: row wrap;
-  height: calc(100% - 4.5rem);
+  height: calc(100% - 4rem);
   overflow-y: auto;
   padding: 0 1rem;
   align-content: baseline;
@@ -179,6 +179,7 @@ export default {
     max-height: 42px;
 
     .search-input {
+      display: flex;
       flex: 1;
       margin-right: 0.5rem;
       color: (var(--color));
@@ -186,6 +187,7 @@ export default {
     }
 
     .select {
+      display: flex;
       flex: 1;
     }
   }
@@ -288,11 +290,11 @@ export default {
   .list-book {
     .header {
       .search-input {
-        max-width: 220px;
+        max-width: 180px;
       }
 
       .select {
-        max-width: 165px;
+        max-width: 157px;
       }
     }
   }

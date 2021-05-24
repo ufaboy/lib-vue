@@ -1,22 +1,27 @@
 <template>
-  <div class="book" ref="book" v-scroll="handleScroll" id="book">
-    <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
-    <footer class="footer" v-if="book.annotation !== 'media'">
-      <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
-      <div class="progress-value">{{ progress }}</div>
-    </footer>
+  <div class="book-container" @scroll="handleScroll">
+    <div class="book" ref="book" @scroll="handleScroll" id="book">
+      <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
+    </div>
   </div>
-
+  <footer class="footer" v-if="book.annotation !== 'media'">
+    <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
+    <div class="progress-value">{{ progress }}</div>
+  </footer>
   <modal ref="editor">
     <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
   </modal>
 </template>
 
 <script>
+import EditorModal from "@/components/EditorModal";
+import superFetch from "@/service/superFetch";
+
 export default {
   name: "Book",
-  components: {},
+  components: {EditorModal},
   props: {},
+
   data: () => ({
     book: {annotation: null, text: null, genres: []},
     progress: 0,
@@ -72,9 +77,11 @@ export default {
       let w = document.getElementById("progressbar").clientWidth;
       let o = e.offsetX;
       let x = (100 * o) / w;
+      console.log({'scrollByClick': e, 'y': y, 'x': x, 'o': o})
       document.getElementById("progressbar").value = x;
       let y = (this.windowHeights * x) / 100;
       document.getElementById('book').scrollTo(0, y);
+
     },
     editMode(e) {
       this.editorNode = e.target
@@ -83,18 +90,22 @@ export default {
     async saveEditor() {
       this.book.text = this.$refs.text.innerHTML
       const url = `/book/update?id=${this.$route.params.id}`
-      const result = await this.$fetch('patch', url, {text: this.book.text})
+      const result = await superFetch.$patch(url, {text: this.book.text})
       if (result) {
-        this.$toast('success', 'Успешно сохранено')
+        this.$toast.success('Успешно сохранено', {position: 'top-right'})
       } else {
         console.log({editor: result})
       }
     },
-    handleScroll(evt, el) {
-      this.progress = Math.round((el.scrollTop * 100) / (el.scrollHeight - el.clientHeight))
+    handleScroll(e) {
+      this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
     },
   },
-  computed: {},
+  computed: {
+    windowHeights() {
+      return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
+    },
+  },
   watch: {},
   created() {
     this.loadBook()
@@ -107,12 +118,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.book-container {
+  height: calc(100% - 6rem);
+}
+
 .book {
   display: flex;
   flex-flow: row wrap;
   width: 100%;
   overflow-y: auto;
-  height: calc(100% - 4.5rem);
+height: 100%;
   padding: 1rem;
   justify-content: center;
 
@@ -165,11 +180,13 @@ export default {
 
   }
 }
+
 .footer {
   width: 100%;
   height: 2rem;
   display: flex;
   padding: 0.2rem 0.5rem;
+
   .progress {
     width: 100%;
     height: 100%;

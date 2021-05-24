@@ -15,14 +15,17 @@
 </template>
 
 <script>
+import IconSortAsc from "@/components/icons/IconSortAsc"
+import IconSortDesc from "@/components/icons/IconSortDesc"
+
 export default {
   name: "SortingModal",
-  components: {},
-//mixins: {},
+  components: {IconSortAsc, IconSortDesc},
   props: {},
   data: () => ({
     ascending: 0,
-    orderBy: ''
+    orderBy: '',
+    orderRandom: false
   }),
   computed: {},
   watch: {},
@@ -74,6 +77,9 @@ export default {
   }
   .srt-btn.active {
     color: var(--color-p);
+  }
+  .random-btn {
+    margin-left: 2rem;
   }
 }
 </style>

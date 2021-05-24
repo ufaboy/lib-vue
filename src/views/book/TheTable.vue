@@ -53,7 +53,7 @@
       <button class="btn table-pag__btn" v-if="books._links.last"
               @click="goPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksPage" v-model="page" v-if="$store.state.isMobile">
+      <select class="select" @change="getBooksPage" v-model="page" v-if="$store.state.main.isMobile">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
@@ -67,6 +67,7 @@
 <script>
 import FilterModal from "@/components/FilterModal";
 import superFetch from "@/service/superFetch";
+import {goPage} from "@/service/superFetch";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
 export default {
@@ -175,18 +176,10 @@ export default {
       return book.cover_url ? `${this.$config.apiUrl}/${book.cover_url}` : '/img/book-cover.jpg'
     },
     async goPage(url) {
-      console.log({'goPage': url})
-      const token = this.$store.state.auth.token;
-      const Bearer = `Bearer ${token}`;
-
-      const response = await fetch(url.href , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-          Authorization: Bearer
-        }
-      })
-      this.books = await response.json();
+      const result = await goPage(url.href)
+      if (result) {
+        this.books = result;
+      } else console.log({'goPage': result})
     },
 
     showFilterModal() {
@@ -292,7 +285,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .books-table {
     .table {
       .cell-annotation, .cell-updated_at {
@@ -302,7 +295,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .books-table {
     .header {
       .create-btn {

@@ -105,6 +105,10 @@ export default {
 
       .select {
         flex: 1;
+        padding: 0.5rem;
+        .option {
+          padding: 0.5rem;
+        }
       }
     }
 
@@ -130,7 +134,7 @@ export default {
       }
 
       .select {
-        max-width: 165px;
+        //max-width: 165px;
       }
     }
 

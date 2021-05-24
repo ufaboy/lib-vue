@@ -82,4 +82,28 @@ export default {
     }
   }
 }
+@media only screen and (max-width: 892px) {
+  .home {
+    padding: 0.5rem;
+
+    .nav {
+      flex: 1;
+      flex-flow: column nowrap;
+
+      .content-link {
+        flex: 1;
+        margin-bottom: 1rem;
+        margin-right: 0;
+
+        .content-img {
+          display: none;
+        }
+
+        .content-name {
+          display: flex;
+        }
+      }
+    }
+  }
+}
 </style>

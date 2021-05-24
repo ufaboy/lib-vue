@@ -55,3 +55,16 @@ export default {
     return await response.json();
   }
 }
+
+const token = sessionStorage.getItem('lib-token') ?? ''
+const Bearer = `Bearer ${token}`;
+export async function goPage(url) {
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: Bearer
+    }
+  })
+  return await response.json();
+}
