@@ -12,20 +12,20 @@
     <fieldset class="genre-titles">
       <legend>selected: {{selectedGenre.length}}</legend>
       <span v-if="selectedGenre.length === 0">Не выбраны жанры</span>
-      <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre" :key="genre.id">{{genre.title}}</span>
+      <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre" :key="genre.id">{{genre.name}}</span>
     </fieldset>
-    <fieldset class="genres" v-if="$store.state.isDesktop">
+    <fieldset class="genres" v-if="$store.state.main.isDesktop">
       <legend>all genres</legend>
-      <div class="parent" :class="{'checked-childes': calcCheckedChildes(parent)}" v-for="parent of $store.state.genre.itemsByType" :key="parent.id" @click="activeParent = Number(parent.id)">
-        <div class="parent-title">{{parent.title}}</div>
-        <label class="checkbox-container" v-for="genre of parent.childes" :key="genre.id">{{ genre.title }}
+      <div class="parent" :class="{'checked-childes': calcCheckedChildes(parent)}" v-for="parent of $store.state.genre.items" :key="parent.id" @click="activeParent = Number(parent.id)">
+        <div class="parent-title">{{parent.name}}</div>
+        <label class="checkbox-container" v-for="genre of parent.childes" :key="genre.id">{{ genre.name }}
           <input type="checkbox" :value="genre" v-model="selectedGenre">
           <span class="checkmark"></span>
         </label>
       </div>
     </fieldset>
-    <select class="select-genre" multiple v-model="genres" size="1" v-if="$store.state.isMobile">
-      <optgroup v-for="parent of $store.state.genre.itemsByType" :key="parent.id" :label="parent.title">
+    <select class="select-genre" multiple v-model="genres" size="1" v-if="$store.state.main.isMobile">
+      <optgroup v-for="parent of $store.state.genre.items" :key="parent.id" :label="parent.title">
         <option v-for="genre of parent.childes" :key="genre.id">{{ genre.title }}</option>
       </optgroup>
     </select>
@@ -37,9 +37,10 @@
 </template>
 
 <script>
+import IconClose from "@/components/icons/IconClose"
 export default {
   name: "GenreBook",
-  components: {},
+  components: {IconClose},
   props: {
     genresProps: Array,
   },
@@ -71,6 +72,9 @@ export default {
       return e.childes.find(item => this.genres.map(genre => genre.id).includes(item.id))
     },
     async loadGenres() {
+      if (this.$store.state.genre.items.length === 0) {
+        await this.$store.dispatch('genre/loadGenres')
+      }
       this.genres = this.$store.state.genre.items.map(a => ({...a}))
       this.selectedGenre = this.genresProps.map(a => ({...a}))
     },

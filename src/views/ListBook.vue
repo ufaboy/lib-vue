@@ -15,7 +15,7 @@
         </optgroup>
       </select>
     </header>
-    <section class="book" v-for="book of data.items" @click="openBook(book.id)" :key="'book'+book.id">
+    <section class="book" v-for="book of data.items" @click="openBook(book)" :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
@@ -110,8 +110,8 @@ export default {
       this.page = 1
       this.loadBooks()
     },
-    openBook(id) {
-      this.$router.push({name: 'book-id', params: {'id': id}})
+    openBook(book) {
+      this.$router.push({name: 'book-view', params: {'id': book.id, name: book.name}})
     },
     getCover(book) {
       if (book.cover_url) {

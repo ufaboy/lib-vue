@@ -4,7 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
-import Toaster from "@meforma/vue-toaster";
+import toaster from "@meforma/vue-toaster";
 
 const app = createApp(App)
 
@@ -62,7 +62,7 @@ requireComponent.keys().forEach(fileName => {
 		.use(modal, modal)
 		.use(scroll, scroll)
 		.use(loader, loader)
-		.use(Toaster)
+		.use(toaster)
 		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')
 // createApp(App)

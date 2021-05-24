@@ -23,7 +23,7 @@
     <label class="label">
       <span class="title">parent genre</span>
       <select class="value" v-model="localGenre.parent_id">
-        <option v-for="genre of $store.state.genre.itemsParents" :key="genre.id" :value="genre.id">{{genre.name}}</option>
+        <option v-for="genre of $store.state.genre.items" :key="genre.id" :value="genre.id">{{genre.name}}</option>
       </select>
     </label>
     <footer class="footer">
@@ -35,9 +35,10 @@
 
 <script>
 import superFetch from "@/service/superFetch";
+import IconClose from "@/components/icons/IconClose"
 export default {
   name: "EditGenre",
-  components: {},
+  components: {IconClose},
   props: {
     genre: Object
   },
@@ -54,6 +55,9 @@ export default {
   watch: {},
   created() {
     this.prepareGenre()
+    if (this.$store.state.genre.items.length === 0) {
+      this.$store.dispatch('genre/loadGenres')
+    }
   },
   mounted() {
   },
@@ -75,7 +79,8 @@ export default {
         result = await superFetch.$post(url, formData)
       }
       if (result) {
-        this.$store.dispatch('genre/loadGenre')
+
+        this.$emit('update-genres')
         this.closeModal();
       }
     },
@@ -128,14 +133,7 @@ export default {
     }
   }
 
-  .label {
-    display: flex;
-    width: 100%;
-    margin-bottom: 1rem;
-    .title {
-      margin-bottom: 0.5rem;
-    }
-  }
+
   .footer {
     display: flex;
     width: 100%;

@@ -28,7 +28,7 @@
       </transition-group>
     </table>
     <modal ref="editGenre">
-      <edit-genre :genre="activeGenre"/>
+      <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>
     </modal>
   </div>
 </template>
@@ -37,6 +37,8 @@
 import EditGenre from "@/components/EditGenre";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
+import superFetch from "@/service/superFetch";
+
 export default {
   name: "GenreTable",
   components: {EditGenre, IconSortAsc, IconSortDesc},
@@ -49,7 +51,7 @@ export default {
       parentGenre: {id: null, name: null},
       parent: {id: null, name: null},
     },
-
+    genres: [],
     ascending: 0,
     orderBy: null,
     columns: ['id', 'name', 'description', 'parent'],
@@ -61,6 +63,12 @@ export default {
     },
   }),
   methods: {
+    async loadGenres() {
+      const result = await superFetch.$get('/genre?type=all')
+      if (result) {
+        this.genres = result
+      } else console.log({'loadGenres': result})
+    },
     openRow(row) {
       this.activeGenre = row
       this.$showModal('editGenre')
@@ -91,12 +99,13 @@ export default {
     },
   },
   computed: {
-    genres() {
-      return this.$store.state.genre.items
-    },
+
   },
   watch: {},
   created() {
+    if (this.genres.length === 0) {
+      this.loadGenres()
+    }
   },
   mounted() {
   },

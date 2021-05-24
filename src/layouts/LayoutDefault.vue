@@ -7,7 +7,7 @@
         </li>
         <li class="breadcrumb-li"><router-link :to="{ name: 'list-genre', params: { id: $route.params.id }}" v-if="listParentTitle">{{listParentTitle}}</router-link></li>
         <li class="breadcrumb-li"><router-link :to="{ name: 'list-book', params: { id: $route.params.id }}" v-if="listGenreTitle">{{listGenreTitle}}</router-link></li>
-        <li><span>book</span></li>
+        <li class="breadcrumb-li" v-if="bookTitle"><span>{{bookTitle}}</span></li>
 
       </ul>
       <ul class="breadcrumb">
@@ -53,6 +53,11 @@ export default {
     },
     listGenreTitle() {
       if (this.$route.name === 'list-book' && this.$route.params.id) {
+        return this.$route.params.name
+      } else return null
+    },
+    bookTitle() {
+      if (this.$route.name === 'book-view' && this.$route.params.id) {
         return this.$route.params.name
       } else return null
     }

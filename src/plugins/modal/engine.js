@@ -6,7 +6,7 @@ export default {
     };
     app.config.globalProperties.$closeModal = function (name) {
       console.log(name)
-      // this.$parent.close()
+      this.$parent.close()
     }
   }
 }

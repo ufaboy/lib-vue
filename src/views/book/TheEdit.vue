@@ -36,7 +36,7 @@
         <div class="value row">
           <span v-if="genres.length === 0">Не выбраны жанры</span>
           <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
-                :key="genre.id">{{ genre.title }}</span>
+                :key="genre.id">{{ genre.name }}</span>
         </div>
       </section>
       <label class="label">
@@ -193,9 +193,9 @@ export default {
         messages.push('empty text')
         verification = false
       }
-      // this.$toast(messages)
-      this.$toast.error(messages, {position: 'top-right'});
-
+      if (!verification) {
+        this.$toast.error(messages, {position: 'top-right'});
+      }
       return verification
     },
     async getBook() {
