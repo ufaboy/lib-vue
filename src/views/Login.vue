@@ -58,7 +58,7 @@ export default {
 .login {
   width: 100%;
   height: 100%;
-  background-image: url('/assets/view_of_moon.jpg');
+  background-image: url('/img/view_of_moon.jpg');
   background-size: cover;
   background-position-y: center;
   display: flex;

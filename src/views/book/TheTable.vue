@@ -120,7 +120,7 @@ export default {
       return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
     },
     async openBook(bookId, type) {
-      await this.$router.push({name: type === 'edit' ? 'book-edit-id' : 'book-id', params: {id: bookId}})
+      await this.$router.push({name: type === 'edit' ? 'book-edit' : 'book-view', params: {id: bookId}})
     },
     resetTable() {
       this.filter.genre = null

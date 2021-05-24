@@ -6,7 +6,7 @@
              v-model="searchParams"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
-      <select class="select" v-model="activeGenre" @change="changeGenre">
+      <select class="select" v-model="activeGenre" @change="changeGenre" v-if="isMobile">
         <optgroup :label="parent.name" v-for="parent of $store.state.genre.items" :key="'parent-' + parent.id">
           <option v-for="genre of parent.childes"
                   :key="'select-genre'+genre.id"
@@ -56,7 +56,11 @@ export default {
     startPos: {x: 0, y: 0},
     endPos: {x: 0, y: 0},
   }),
-  computed: {},
+  computed: {
+    isMobile() {
+      return this.$store.state.main.isMobile
+    }
+  },
   watch: {},
   created() {
   },
@@ -70,7 +74,6 @@ export default {
     async loadBooks(method = null) {
       let genreId = this.activeGenre ? this.activeGenre.id : this.$route.params.id ? this.$route.params.id : null
       if (genreId === null) {
-        console.log({'genres': this.activeGenre})
         return false
       }
       if (!this.infinityState && method) {
@@ -111,9 +114,9 @@ export default {
       this.$router.push({name: 'book-id', params: {'id': id}})
     },
     getCover(book) {
-      if (book.cover_url && this.$store.state.showMedia) {
-        return `${this.$config.apiUrl}/${book.cover_url}`
-      } else return '/icons/book-dead-solid.svg'
+      if (book.cover_url) {
+        return `${process.env.VUE_APP_API_URL}/${book.cover_url}`
+      } else return '/img/book-dead-solid.svg'
     },
 
     touchStart(e) {

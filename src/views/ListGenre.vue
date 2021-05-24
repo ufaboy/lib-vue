@@ -10,7 +10,7 @@
     <section class="genre"
              v-for="genre of genres"
              :key="'genre'+genre.id"
-             @click="openGenre(genre.id)">{{ genre.name }}
+             @click="openGenre(genre)">{{ genre.name }}
     </section>
     <!--    <observer @intersect="loadGenres('push')"/>-->
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
@@ -44,8 +44,8 @@ export default {
 
   },
   methods: {
-    openGenre(genreId) {
-      this.$router.push({name: 'list-book', params: {'id': genreId}})
+    openGenre(genre) {
+      this.$router.push({name: 'list-book', params: {'id': genre.id, name: genre.name, parent: this.$store.state.genre.items.find(item=>item.id === this.$route.params.id).name}})
     },
     async loadGenre() {
       const result = await superFetch.$get(`/genre?parent_id=${this.parentId}`)

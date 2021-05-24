@@ -9,7 +9,7 @@
                 @click="localGenre.genre.ad = !genre.ad">ad
         </button>
       <button class="close-button" type="reset" @click="closeModal">
-        <icon-base class="icon" icon-name="close"><icon-close/></icon-base>
+        <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
       </button>
     </header>
     <label class="label">

@@ -4,9 +4,9 @@
       <h1>Genre</h1>
       <span>{{genres.length}}</span>
       <button class="close-button" type="reset" @click="closeModal">
-        <icon-base class="icon" icon-name="close">
+        <base-icon class="icon" icon-name="close">
           <icon-close/>
-        </icon-base>
+        </base-icon>
       </button>
     </header>
     <fieldset class="genre-titles">

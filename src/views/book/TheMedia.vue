@@ -1,30 +1,23 @@
 <template>
-  <div class="book"></div>
+  <div></div>
 </template>
 
 <script>
 export default {
-  name: "Book",
-  head() {
-    return {
-      title: '',
-    };
-  },
+  name: "TheMedia",
   components: {},
   props: {},
   data: () => ({}),
-  methods: {},
   computed: {},
   watch: {},
   created() {
   },
   mounted() {
   },
-  updated() {
-  },
+  methods: {},
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>

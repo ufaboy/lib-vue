@@ -14,13 +14,34 @@ html, body, #app, .basement {
   min-width: 360px;
 }
 :root {
+  --hue-p: 180;
+  --hue-s: 265;
 
+  --color: #000000;
+  --color-2: #FFFFFF;
+  --color-p: #018786; //primary #018786
+  --color-s: #6200ee; //secondary #6200ee
+
+  --background: hsla(0, 0%, 100%, 1);
+  --background-2: hsla(217, 46%, 37%, 1);
+  --background-3: #018786;
+  --background-picante: hsla(350, 100%, 88%, 1);
+  --background-parent: hsla(42, 35%, 9%, 1);
+
+
+  --enabled: hsla(0, 0%, 70%, 1);
+  --enabled-2: hsla(217, 46%, 67%, 1);
+  --hovered: hsla(0, 0%, 80%, 1);
+  --hovered-2: hsla(217, 46%, 57%, 1);
+  --focused: #121212;
+  --pressed: #111111;
+  --error: hsla(349, 100%, 35%, 1);
+  --disabled: #00000059; //opacity 35
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color: hsla(0, 0%, 100%, 1);
-
     --color-p: hsla(var(--hue-p), 42%, 65%, 1); //#80cbc4
     --color-s: hsla(var(--hue-s), 83%, 66%, 1); //f06292
 
@@ -55,6 +76,40 @@ img {
   display: block;
 }
 
+// button
+.btn {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  outline: none;
+  background-color: var(--background-2);
+}
+.positive-btn {
+  @extend .btn;
+  background-color: #4CAF50;
+}
+
+.negative-btn {
+  @extend .btn;
+  background-color: #f44336;
+}
+
+.close-btn {
+  outline: none;
+  background: none;
+  cursor: pointer;
+  border: none;
+  width: 20px;
+  height: 20px;
+}
+
 .scroll-btn {
   display: none;
   position: fixed;
@@ -73,4 +128,15 @@ img {
 
 .scroll-btn:hover {
   background-color: darkgreen;
+}
+
+.btn-switch {
+  background-color: var(--background-3);
+  opacity: 0.7;
+}
+
+.btn-switch.active {
+  color: red;
+  opacity: initial;
+  font-weight: bold;
 }

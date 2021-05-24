@@ -14,5 +14,8 @@ export default {
 </script>
 
 <style scoped>
-
+.auth-wrap {
+  height: 100%;
+  width: 100%;
+}
 </style>

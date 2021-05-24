@@ -2,7 +2,7 @@
   <main class="sorting">
     <fieldset class="fieldset">
       <legend>sorting
-        <icon-base class="icon"><icon-sort-asc v-if="ascending"/><icon-sort-desc v-else/></icon-base>
+        <base-icon class="icon"><icon-sort-asc v-if="ascending"/><icon-sort-desc v-else/></base-icon>
       </legend>
       <button class="srt-btn" :class="{active: this.orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
       <button class="srt-btn" :class="{active: this.orderBy === 'view_count'}" @click="changeOrderBy('view_count')">view_count</button>

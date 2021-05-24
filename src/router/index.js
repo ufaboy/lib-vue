@@ -2,9 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import ListBook from "@/views/ListBook";
 import ListGenre from "@/views/ListGenre";
-import BookView from  "@/views/BookView"
-import BookTable from  "@/views/BookTable"
-import BookEdit from "@/views/BookEdit";
+import BookView from "@/views/book/TheView"
+import BookTable from "@/views/book/TheTable"
+import BookEdit from "@/views/book/TheEdit";
+import BookMedia from "@/views/book/TheMedia";
 import GenreTable from "@/views/GenreTable";
 
 const routes = [
@@ -45,6 +46,11 @@ const routes = [
     path: '/book/:id',
     name: 'book-view',
     component: BookView
+  },
+  {
+    path: '/book/:id',
+    name: 'book-media',
+    component: BookMedia
   },
   {
     path: '/book/create',

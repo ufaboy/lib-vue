@@ -3,7 +3,7 @@
   <header class="header">
     <span class="filter-title">filter</span>
     <button class="close-button" type="reset" @click="closeModal">
-      <icon-base class="icon" icon-name="close"><icon-close/></icon-base>
+      <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
     </button>
   </header>
   <label class="label">
