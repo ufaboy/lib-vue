@@ -33,7 +33,7 @@
 
 <script>
 import SortingModal from "@/components/SortingModal";
-import superFetch from "@/service/superFetch";
+import {$get} from "@/service/superFetch";
 export default {
   name: "ListBook",
   components: {SortingModal},
@@ -88,7 +88,7 @@ export default {
       }
       this.infinityLoading = true
       this.$loader('show')
-      const result = await superFetch.$get(url);
+      const result = await $get(url);
       this.$loader('hide')
       this.infinityLoading = false
       if (result) {

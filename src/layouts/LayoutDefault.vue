@@ -36,7 +36,12 @@ export default {
       if (!token) {
         this.$router.push('/login')
       }
-    }
+    },
+    loadParents() {
+      if (this.$store.state.genre.items.length === 0) {
+        this.$store.dispatch('genre/loadGenres')
+      }
+    },
   },
   computed: {
     listParentTitle() {
@@ -65,6 +70,7 @@ export default {
   watch: {},
   created() {
     this.checkAuth()
+    this.loadParents()
   },
   mounted() {
   },

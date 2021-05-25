@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import superFetch from "@/service/superFetch";
+import {$get} from "@/service/superFetch";
 export default {
   name: "ListGenre",
   components: {},
@@ -48,7 +48,7 @@ export default {
       this.$router.push({name: 'list-book', params: {'id': genre.id, name: genre.name, parent: this.$store.state.genre.items.find(item=>item.id === this.$route.params.id).name}})
     },
     async loadGenre() {
-      const result = await superFetch.$get(`/genre?parent_id=${this.parentId}`)
+      const result = await $get(`/genre?parent_id=${this.parentId}`)
       if (result) {
         this.genres = result
       }

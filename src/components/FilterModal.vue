@@ -9,8 +9,8 @@
   <label class="label">
     <span class="title">genre</span>
     <select class="select" ref="filterBook" name="selectGenre" v-model="filter.genre">
-      <optgroup v-for="parent of genres" :key="parent.id" :label="parent.title">
-        <option class="value" :value="genre" v-for="genre of parent.genres" :key="genre.id">{{genre.title}}</option>
+      <optgroup v-for="parent of genres" :key="parent.id" :label="parent.name">
+        <option class="value" :value="genre" v-for="genre of parent.childes" :key="genre.id">{{genre.name}}</option>
       </optgroup>
 
     </select>
@@ -35,8 +35,12 @@
 </template>
 
 <script>
+import IconClose from "@/components/icons/IconClose"
 export default {
   name: "FilterModal",
+  components: {
+    IconClose,
+  },
   props: {
     rating: Number,
     ad: Number,
@@ -51,7 +55,7 @@ export default {
   }),
   computed: {
     genres() {
-      return this.$store.state.genre.itemsByType
+      return this.$store.state.genre.items
     }
   },
   methods: {

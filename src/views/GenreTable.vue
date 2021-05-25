@@ -37,7 +37,7 @@
 import EditGenre from "@/components/EditGenre";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
-import superFetch from "@/service/superFetch";
+import {$get} from "@/service/superFetch";
 
 export default {
   name: "GenreTable",
@@ -64,7 +64,7 @@ export default {
   }),
   methods: {
     async loadGenres() {
-      const result = await superFetch.$get('/genre?type=all')
+      const result = await $get('/genre?type=all')
       if (result) {
         this.genres = result
       } else console.log({'loadGenres': result})

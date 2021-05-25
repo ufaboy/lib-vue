@@ -1,4 +1,4 @@
-import superFetch from "@/service/superFetch";
+import {$get} from "@/service/superFetch";
 const state = () => ({
   items: []
 })
@@ -13,7 +13,7 @@ const getters = {
 // actions
 const actions = {
   async loadGenres({commit}) {
-    const result = await superFetch.$get('/genre?type=parent')
+    const result = await $get('/genre?type=parent')
     if (result) {
       commit('setGenre', result)
     }

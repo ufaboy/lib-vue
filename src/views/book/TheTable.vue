@@ -66,8 +66,7 @@
 
 <script>
 import FilterModal from "@/components/FilterModal";
-import superFetch from "@/service/superFetch";
-import {goPage} from "@/service/superFetch";
+import {goPage, $get} from "@/service/superFetch";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
 export default {
@@ -156,7 +155,7 @@ export default {
         url += `&ad=1`
       }
       this.$loader('show')
-      const result = await superFetch.$get(url);
+      const result = await $get(url);
       this.$loader('hide')
       if (result) {
         this.books = result

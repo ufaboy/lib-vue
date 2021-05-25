@@ -1,5 +1,5 @@
 <template>
-  <div class="book-container" @scroll="handleScroll">
+  <div class="book-container" >
     <div class="book" ref="book" @scroll="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
@@ -15,7 +15,7 @@
 
 <script>
 import EditorModal from "@/components/EditorModal";
-import superFetch from "@/service/superFetch";
+import {$patch} from "@/service/superFetch";
 
 export default {
   name: "Book",
@@ -90,7 +90,7 @@ export default {
     async saveEditor() {
       this.book.text = this.$refs.text.innerHTML
       const url = `/book/update?id=${this.$route.params.id}`
-      const result = await superFetch.$patch(url, {text: this.book.text})
+      const result = await $patch(url, {text: this.book.text})
       if (result) {
         this.$toast.success('Успешно сохранено', {position: 'top-right'})
       } else {

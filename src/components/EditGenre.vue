@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import superFetch from "@/service/superFetch";
+import {$patch, $post, $delete} from "@/service/superFetch";
 import IconClose from "@/components/icons/IconClose"
 export default {
   name: "EditGenre",
@@ -74,9 +74,9 @@ export default {
       }
        if (this.localGenre.id) {
         url = `/genre/update?id=${this.genre.id}`
-        result = await superFetch.$patch(url, formData)
+        result = await $patch(url, formData)
       } else {
-        result = await superFetch.$post(url, formData)
+        result = await $post(url, formData)
       }
       if (result) {
 
@@ -89,7 +89,7 @@ export default {
         return false;
       }
       const url = `/genre/delete?id=${this.genre.id}`
-      const result = await superFetch.$delete(url)
+      const result = await $delete(url)
       if (result) {
         this.$store.dispatch('genre/loadGenre')
         this.closeModal();

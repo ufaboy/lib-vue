@@ -14,34 +14,46 @@
           <span class="switch-title">{{ $store.state.isDesktop ? 'NSFW' : 'N' }}</span>
         </div>
       </div>
+
       <section class="section row">
-        <label class="label">
-          <span class="title">name</span>
-          <input type="text" class="value" required v-model.trim="book.name"></label>
-        <label class="label">
-          <span class="title">source</span>
-          <input type="url" class="value" v-model.trim="book.source">
-        </label>
+        <form-field :placeholder="'name'">
+          <input type="text" class="ml-value" v-model.trim="book.name" placeholder="name"
+                 @focus="$event.target.placeholder = ''" @blur="$event.target.placeholder = 'name'">
+        </form-field>
+        <form-field :placeholder="'source'"><input type="url" class="ml-value" placeholder="source"
+                                                   v-model.trim="book.source" @focus="$event.target.placeholder = ''"
+                                                   @blur="$event.target.placeholder = 'source'"></form-field>
       </section>
-      <label class="label">
-        <span class="title">
+      <form-field :placeholder="'annotation'">
+        <template #header>
+          <span class="ml-head">
           annotation
         <meter class="meter" :value="book.annotation.length" min="0" max="300" low="30" high="280"
                optimum="150"/>
         </span>
-        <textarea class="value textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
-      </label>
-      <section class="section genre"  @click="openGenreModal">
-        <span class="title">genre</span>
-        <div class="value row">
+        </template>
+        <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation" placeholder="annotation" @focus="$event.target.placeholder = ''"
+                  @blur="$event.target.placeholder = 'annotation'"/>
+      </form-field>
+      <form-field @click="openGenreModal" :placeholder="'genre'">
+        <div class="ml-value row">
           <span v-if="genres.length === 0">Не выбраны жанры</span>
           <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
                 :key="genre.id">{{ genre.name }}</span>
         </div>
-      </section>
+      </form-field>
+<!--      <section class="section genre" @click="openGenreModal">-->
+<!--        <span class="title">genre</span>-->
+<!--        <div class="value row">-->
+<!--          <span v-if="genres.length === 0">Не выбраны жанры</span>-->
+<!--          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"-->
+<!--                :key="genre.id">{{ genre.name }}</span>-->
+<!--        </div>-->
+<!--      </section>-->
       <label class="label">
-        <span class="title">text {{ book.text.length }}</span>
-        <span class="action-bar">
+        <span class="label-header">
+          <span class="title">text {{ book.text.length }}</span>
+          <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editor }}</button>
           <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
             <base-icon class="icon">
@@ -59,7 +71,8 @@
             </base-icon>
           </button>
         </span>
-        <textarea class="editor clarity" v-model="book.text" rows="18" v-if="editor === 'raw'" ref="editor"></textarea>
+        </span>
+        <textarea class="editor clarity" v-model="book.text" rows="22" v-if="editor === 'raw'" ref="editor"></textarea>
         <div v-else v-html="book.text"></div>
       </label>
     </div>
@@ -108,7 +121,8 @@
 </template>
 
 <script>
-import superFetch from "@/service/superFetch";
+import {$get, $patch, $post} from "@/service/superFetch";
+import FormField from "@/components/FormField";
 import StarRating from 'vue-star-rating'
 import IconParagraph from "@/components/icons/IconParagraph"
 import IconSlash from "@/components/icons/IconSlash"
@@ -118,7 +132,7 @@ import ProgressRing from "@/components/ProgressRing";
 
 export default {
   name: "BookEdit",
-  components: {ProgressRing, GenreBook, IconParagraph, IconSlash, IconCarriage, StarRating},
+  components: {ProgressRing, GenreBook, IconParagraph, IconSlash, IconCarriage, StarRating, FormField},
   props: {},
   data: () => ({
     files: [],
@@ -154,9 +168,9 @@ export default {
       this.$loader('show')
       if (this.$route.params.id) {
         url = `/book/update?id=${this.$route.params.id}`
-        result = await superFetch.$patch(url, formData)
+        result = await $patch(url, formData)
       } else {
-        result = await superFetch.$post(url, formData)
+        result = await $post(url, formData)
       }
       this.$loader('hide')
       if (result) {
@@ -201,7 +215,7 @@ export default {
     async getBook() {
       if (this.$route.params.id) {
         const url = `/book/view?id=${this.$route.params.id}`
-        const result = await superFetch.$get(url)
+        const result = await $get(url)
         if (result) {
           // this.book = Object.assign({}, result)
           this.book = {...result, annotation: result.annotation ? result.annotation : ''}
@@ -406,21 +420,30 @@ export default {
     justify-content: space-between;
     width: 100%;
     flex-flow: column nowrap;
-    .label {
+
+    .label, .ml {
       margin-right: 1rem;
       flex: 1;
     }
 
-    .label:last-of-type {
+    .label:last-of-type, .ml:last-of-type {
       margin-right: 0;
     }
   }
+
   .section.row {
     flex-flow: row nowrap;
   }
+
   .section, .label {
-    margin-bottom: 1rem;
+    //margin-bottom: 1rem;
   }
+  .label-header {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+  }
+
   .section.genre {
     cursor: pointer;
   }
@@ -440,6 +463,7 @@ export default {
     background-color: var(--background-2);
     outline: none;
   }
+
   .action-bar {
     width: 100%;
     margin-bottom: 0.5rem;
@@ -448,6 +472,28 @@ export default {
   .text-container {
     width: 800px;
     margin-right: 1rem;
+
+    .ml {
+      background-color: var(--background-2);
+      margin-bottom: 1rem;
+    }
+
+    .ml-head {
+      position: absolute;
+      top: -13px;
+      left: 13px;
+      padding: 0 3px;
+      background-color: var(--background-2);
+      border-radius: 5px;
+    }
+
+    .ml-value {
+      width: 100%;
+      outline: none;
+      border: none;
+      background: inherit;
+      padding: 5px;
+    }
 
     .description {
       flex-grow: 1;
@@ -459,7 +505,6 @@ export default {
       width: 100%;
       margin-bottom: 1rem;
       align-items: center;
-      padding: 0.5rem 0;
     }
 
     .reset-field-btn {
@@ -528,6 +573,7 @@ export default {
         resize: vertical;
       }
     }
+
     .editor-btn {
       color: var(--color-p);
       background-color: transparent;
