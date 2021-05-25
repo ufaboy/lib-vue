@@ -203,7 +203,7 @@ export default {
 
 <style lang="scss">
 .books-table {
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 
   .btn {
     text-transform: capitalize;

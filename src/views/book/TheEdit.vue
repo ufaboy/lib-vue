@@ -493,6 +493,7 @@ export default {
       border: none;
       background: inherit;
       padding: 5px;
+      color: var(--color);
     }
 
     .description {
