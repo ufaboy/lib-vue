@@ -17,8 +17,6 @@
           <router-link class="breadcrumb-link" to="/genre">Genre</router-link>
         </li>
       </ul>
-
-
     </header>
     <slot/>
   </div>
@@ -31,15 +29,15 @@ export default {
   props: {},
   data: () => ({}),
   methods: {
-    checkAuth() {
+    async checkAuth() {
       const token = sessionStorage.getItem('lib-token') ?? ''
       if (!token) {
-        this.$router.push('/login')
+        await this.$router.push('/login')
       }
     },
-    loadParents() {
-      if (this.$store.state.genre.items.length === 0) {
-        this.$store.dispatch('genre/loadGenres')
+    async loadParents() {
+      if (this.genresParent && this.genresParent.length === 0) {
+        await this.$store.dispatch('genre/loadGenres')
       }
     },
   },
@@ -48,7 +46,7 @@ export default {
       if (this.$store.state.main.isMobile) {
         return false
       } else if (this.$route.name === 'list-genre' && this.$route.params.id) {
-        const parent = this.$store.state.genre.items.find(item => item.id === this.$route.params.id)
+        const parent = this.genresParent.find(item => item.id === +this.$route.params.id)
         return parent.name
       } else if (this.$route.name === 'list-book' && this.$route.params.id) {
         return this.$route.params.parent
@@ -65,12 +63,15 @@ export default {
       if (this.$route.name === 'book-view' && this.$route.params.id) {
         return this.$route.params.name
       } else return null
+    },
+    genresParent() {
+      return this.$store.state.genre.items
     }
   },
   watch: {},
-  created() {
-    this.checkAuth()
-    this.loadParents()
+  async created() {
+    await this.checkAuth()
+    await this.loadParents()
   },
   mounted() {
   },

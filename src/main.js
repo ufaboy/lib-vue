@@ -16,7 +16,7 @@ import '@/assets/style.scss'
 // import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal/engine";
 import scroll from "@/plugins/scroll/engine"
-import observer from "@/plugins/IntersectionObserver/observer";
+import observer from "@/plugins/IntersectionObserver";
 import loader from "@/plugins/loader"
 // import toaster from "@/plugins/toaster/engine";
 //self plugins
@@ -58,8 +58,8 @@ requireComponent.keys().forEach(fileName => {
 		.use(router)
 		.component('layout-default', LayoutDefault)
 		.component('layout-auth', LayoutAuth)
-		.component('observer', observer)
 		.use(modal, modal)
+		.use(observer)
 		.use(scroll, scroll)
 		.use(loader, loader)
 		.use(toaster)

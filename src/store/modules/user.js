@@ -14,7 +14,11 @@ const getters = {
 }
 
 // actions
-const actions = {}
+const actions = {
+	async setUser({commit}, data) {
+		commit('setUser', data)
+	}
+}
 
 // mutations
 const mutations = {

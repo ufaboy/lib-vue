@@ -87,9 +87,9 @@ export default {
         url += `&name=${this.searchParams}`
       }
       this.infinityLoading = true
-      this.$loader('show')
+      this.$loader.show()
       const result = await $get(url);
-      this.$loader('hide')
+      this.$loader.hide()
       this.infinityLoading = false
       if (result) {
         if (method === 'push') {

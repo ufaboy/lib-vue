@@ -5,9 +5,6 @@ const state = () => ({
 
 // getters
 const getters = {
-  items(state) {
-    return state.items
-  },
 }
 
 // actions
@@ -25,7 +22,7 @@ const actions = {
 // mutations
 const mutations = {
   setGenre(state, data) {
-    state.items = data
+    state.items = [...data]
   }
 }
 

@@ -2,7 +2,7 @@
   <div class="list-genre">
     <header class="header" v-if="$store.state.main.isMobile">
       <select class="select" v-model="activeParent" @change="loadGenre">
-        <option class="option" :value="genre" v-for="genre of $store.state.genre.items" :key="genre.id">
+        <option class="option" :value="genre" v-for="genre of genresParent" :key="genre.id">
           {{ genre.name }}
         </option>
       </select>
@@ -33,6 +33,9 @@ export default {
     parentId() {
       return this.activeParent.id ? this.activeParent.id : this.$route.params.id ? this.$route.params.id : null
     },
+    genresParent() {
+      return this.$store.state.genre.items
+    }
   },
   watch: {},
   created() {
@@ -45,10 +48,12 @@ export default {
   },
   methods: {
     openGenre(genre) {
-      this.$router.push({name: 'list-book', params: {'id': genre.id, name: genre.name, parent: this.$store.state.genre.items.find(item=>item.id === this.$route.params.id).name}})
+      this.$router.push({name: 'list-book', params: {'id': genre.id, name: genre.name, parent: this.genresParent.find(item=>item.id === +this.$route.params.id).name}})
     },
     async loadGenre() {
+      this.$loader.show()
       const result = await $get(`/genre?parent_id=${this.parentId}`)
+      this.$loader.hide()
       if (result) {
         this.genres = result
       }

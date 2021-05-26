@@ -9,7 +9,7 @@ import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
 
 export default {
-  components: {LayoutDefault, LayoutAuth},
+  components: { LayoutDefault, LayoutAuth},
   computed: {
     layout() {
       return this.$route.meta.layout || 'layout-default'
@@ -23,11 +23,9 @@ export default {
         this.$store.commit('main/setIsMobile')
       }
     },
-
   },
   created() {
     window.addEventListener('resize', this.onResize);
-
   }
 }
 </script>

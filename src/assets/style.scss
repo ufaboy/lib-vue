@@ -390,3 +390,17 @@ img {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+@media only screen and (max-width: 892px) {
+  .table-paginator {
+    justify-content: space-around;
+  }
+}
+
+@media only screen and (max-width: 892px) and (orientation: landscape) {
+
+}
+
+@media only screen and (max-width: 892px) and (orientation: portrait) {
+
+}

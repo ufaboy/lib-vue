@@ -165,14 +165,14 @@ export default {
       let result;
       let url = `/book/create`
       const formData = {...this.book, genres: this.genres.map(item => item.id)}
-      this.$loader('show')
+      this.$loader.show()
       if (this.$route.params.id) {
         url = `/book/update?id=${this.$route.params.id}`
         result = await $patch(url, formData)
       } else {
         result = await $post(url, formData)
       }
-      this.$loader('hide')
+      this.$loader.hide()
       if (result) {
         this.$router.replace('/book')
       }

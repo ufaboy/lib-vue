@@ -38,9 +38,8 @@ export default {
       })
       const res = await result.json()
       sessionStorage.setItem('lib-token', res.token)
-      this.$store.commit('user/setUser', res)
-      console.log({'user': sessionStorage.getItem('lib-token')})
-      this.$router.push('/')
+      await this.$store.dispatch('user/setUser', res)
+      await this.$router.push('/')
     }
   },
   computed: {},
@@ -58,7 +57,7 @@ export default {
 <style scoped lang="scss">
 .login {
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-image: url('/img/view_of_moon.jpg');
   background-size: cover;
   background-position-y: center;

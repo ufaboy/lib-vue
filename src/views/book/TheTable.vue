@@ -154,9 +154,9 @@ export default {
       if (this.filter.ad) {
         url += `&ad=1`
       }
-      this.$loader('show')
+      this.$loader.show()
       const result = await $get(url);
-      this.$loader('hide')
+      this.$loader.hide()
       if (result) {
         this.books = result
         this.page = result._meta.currentPage

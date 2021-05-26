@@ -26,14 +26,13 @@ export default {
   },
   computed: {
     parentsArr() {
-      return this.$store.getters['genre/items']
+      return this.$store.state.genre.items
     }
   },
   watch: {},
   created() {
   },
   mounted() {
-    this.$loader.show()
   },
   updated() {
   },

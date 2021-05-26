@@ -4,8 +4,7 @@ export default {
     app.config.globalProperties.$showModal = function (name) {
       this.$refs[name].show()
     };
-    app.config.globalProperties.$closeModal = function (name) {
-      console.log(name)
+    app.config.globalProperties.$closeModal = function () {
       this.$parent.close()
     }
   }

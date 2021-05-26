@@ -64,7 +64,9 @@ export default {
   }),
   methods: {
     async loadGenres() {
+      this.$loader.show()
       const result = await $get('/genre?type=all')
+      this.$loader.hide()
       if (result) {
         this.genres = result
       } else console.log({'loadGenres': result})

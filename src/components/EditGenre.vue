@@ -51,7 +51,13 @@ export default {
       ad: null,
     },
   }),
-  computed: {},
+  computed: {
+    invalidForm() {
+      return {
+        title: !this.genre.title
+      }
+    }
+  },
   watch: {},
   created() {
     this.prepareGenre()
