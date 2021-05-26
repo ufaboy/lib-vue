@@ -92,7 +92,7 @@ export default {
       const url = `/book/update?id=${this.$route.params.id}`
       const result = await $patch(url, {text: this.book.text})
       if (result) {
-        this.$toast.success('Успешно сохранено', {position: 'top-right'})
+        this.$toast.success('Успешно сохранено')
       } else {
         console.log({editor: result})
       }

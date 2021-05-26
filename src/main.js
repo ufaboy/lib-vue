@@ -62,6 +62,6 @@ requireComponent.keys().forEach(fileName => {
 		.use(observer)
 		.use(scroll, scroll)
 		.use(loader, loader)
-		.use(toaster)
+		.use(toaster, {position: 'top-right'})
 		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')

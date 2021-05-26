@@ -111,7 +111,11 @@ export default {
       this.loadBooks()
     },
     openBook(book) {
-      this.$router.push({name: 'book-view', params: {'id': book.id, name: book.name}})
+      // let type = null
+      for (const genre of book.genres) {
+        console.log({'genre': genre})
+      }
+      // this.$router.push({name: 'book-view', params: {'id': book.id, name: book.name}})
     },
     getCover(book) {
       if (book.cover_url) {

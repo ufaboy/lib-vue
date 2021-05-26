@@ -52,11 +52,6 @@ export default {
     },
   }),
   computed: {
-    invalidForm() {
-      return {
-        title: !this.genre.title
-      }
-    }
   },
   watch: {},
   created() {
@@ -69,6 +64,10 @@ export default {
   },
   methods: {
     async sendGenre() {
+      if (!this.localGenre.name) {
+        this.$toast.error('name not specified')
+        return;
+      }
       let result, url = `/genre/create`;
       const formData = {
         name: this.localGenre.name,

@@ -87,7 +87,7 @@ export default {
     background: var(--background-2);
     display: flex;
     height: 3.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 1.5rem;
     align-items: center;
     margin-bottom: 0.5rem;
     justify-content: space-between;

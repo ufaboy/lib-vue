@@ -23,8 +23,8 @@
       <tbody>
       <!--      <transition-group name="flip-list" tag="tbody">-->
       <tr class="row" :class="{'picante': book.ad}" v-for="book of books.items" :key="book.id">
-        <td class="td" :class="columnsClasses.id" @click="openBook(book.id, 'edit')">{{ book.id }}</td>
-        <td class="td" :class="columnsClasses.name" @click="openBook(book.id, 'view')">{{ book.name }}</td>
+        <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
+        <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
         <td class="td" :class="columnsClasses.annotation">{{ book.annotation }}</td>
         <td class="td" :class="columnsClasses.genres">
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.title : '' }}</div>
@@ -69,6 +69,7 @@ import FilterModal from "@/components/FilterModal";
 import {goPage, $get} from "@/service/superFetch";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
+import {mapState} from "vuex";
 export default {
   name: "BooksTable",
   head() {
@@ -119,8 +120,9 @@ export default {
       const date = new Date(timestamp * 1000);
       return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
     },
-    async openBook(bookId, type) {
-      await this.$router.push({name: type === 'edit' ? 'book-edit' : 'book-view', params: {id: bookId}})
+    async openBook(book, type) {
+      const comicsBook = book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
+      await this.$router.push({name: type === 'edit' ? 'book-edit' : comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
     },
     resetTable() {
       this.filter.genre = null
@@ -167,8 +169,6 @@ export default {
     sortBy(orderBy, asc) {
       this.orderBy = orderBy
       this.ascending = asc
-      const params = {ascending: asc, orderBy: orderBy !== 'genre' ? orderBy : 'genre.title'}
-      this.$store.dispatch('books/setParamsLoadBooks', params)
       this.getBooksPage();
     },
     getThumbs(book) {
@@ -186,8 +186,11 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      main: state => state.main,
+    }),
     modalSize() {
-      return this.$store.state.isDesktop ? 600 : '100%'
+      return this.main.isDesktop ? 600 : '100%'
     },
   },
   watch: {},

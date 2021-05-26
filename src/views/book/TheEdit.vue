@@ -208,7 +208,7 @@ export default {
         verification = false
       }
       if (!verification) {
-        this.$toast.error(messages, {position: 'top-right'});
+        this.$toast.error(messages);
       }
       return verification
     },
