@@ -39,6 +39,7 @@ export default {
     this.checkGenres()
   },
   mounted() {
+    this.$loader.show()
   },
   updated() {
   },

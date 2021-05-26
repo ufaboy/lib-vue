@@ -17,7 +17,7 @@ import '@/assets/style.scss'
 import modal from "@/plugins/modal/engine";
 import scroll from "@/plugins/scroll/engine"
 import observer from "@/plugins/IntersectionObserver/observer";
-import loader from "@/plugins/loader/engine"
+import loader from "@/plugins/loader"
 // import toaster from "@/plugins/toaster/engine";
 //self plugins
 
@@ -65,6 +65,7 @@ requireComponent.keys().forEach(fileName => {
 		.use(toaster)
 		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')
+app.config.performance = true
 // createApp(App)
 // 	.use(store)
 // 	.use(router)
