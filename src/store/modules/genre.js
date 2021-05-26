@@ -13,9 +13,11 @@ const getters = {
 // actions
 const actions = {
   async loadGenres({commit}) {
-    const result = await $get('/genre?type=parent')
-    if (result) {
+    try {
+      const result = await $get('/genre?type=parent')
       commit('setGenre', result)
+    } catch (e) {
+      console.log({'result': e})
     }
   }
 }

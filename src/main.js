@@ -65,14 +65,3 @@ requireComponent.keys().forEach(fileName => {
 		.use(toaster)
 		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')
-app.config.performance = true
-// createApp(App)
-// 	.use(store)
-// 	.use(router)
-// 	.use(improvedFetch, {
-// 		token: `$2y$13$xazgAgbxQe./cGdEuavuaeilY82N.IZLt/Adj8y2GiHBBTTReQfUS`,
-// 		apiUrl: process.env.NODE_ENV === 'development' ? 'http://api.librarydev.site' : 'https://api.librarydev.xyz'
-// 	})
-// 	.component('layout-default', LayoutDefault)
-// 	.component('layout-auth', LayoutAuth)
-// 	.mount('#app')

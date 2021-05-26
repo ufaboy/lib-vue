@@ -23,11 +23,6 @@ export default {
   data: () => ({
   }),
   methods: {
-    checkGenres() {
-      if (this.$store.state.genre.items.length === 0) {
-        this.$store.dispatch('genre/loadGenres')
-      }
-    }
   },
   computed: {
     parentsArr() {
@@ -36,7 +31,6 @@ export default {
   },
   watch: {},
   created() {
-    this.checkGenres()
   },
   mounted() {
     this.$loader.show()
@@ -50,7 +44,7 @@ export default {
 .home {
   //height: calc(100% - 4.5rem);
   display: flex;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
   .nav {
     flex: 1;
     display: flex;

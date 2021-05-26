@@ -118,7 +118,7 @@ export default {
 .genre-table {
   width: 100%;
   height: calc(100% - 4rem);
-  padding: 0 1rem;
+  padding: 0 1.5rem;
 
   .header {
     margin-bottom: 1rem;

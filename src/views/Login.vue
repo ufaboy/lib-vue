@@ -39,6 +39,7 @@ export default {
       const res = await result.json()
       sessionStorage.setItem('lib-token', res.token)
       this.$store.commit('user/setUser', res)
+      console.log({'user': sessionStorage.getItem('lib-token')})
       this.$router.push('/')
     }
   },
