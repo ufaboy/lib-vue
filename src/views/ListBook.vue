@@ -7,7 +7,7 @@
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
       <select class="select" v-model="activeGenre" @change="changeGenre" v-if="isMobile">
-        <optgroup :label="parent.name" v-for="parent of $store.state.genre.items" :key="'parent-' + parent.id">
+        <optgroup :label="parent.name" v-for="parent of genres" :key="'parent-' + parent.id">
           <option v-for="genre of parent.childes"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
@@ -59,12 +59,17 @@ export default {
   computed: {
     isMobile() {
       return this.$store.state.main.isMobile
+    },
+    genres() {
+      return this.$store.state.genre.items
     }
   },
   watch: {},
   created() {
+
   },
   mounted() {
+    this.prepareGenre()
   },
   methods: {
     async searchByName() {
@@ -109,6 +114,18 @@ export default {
     async changeGenre() {
       this.page = 1
       this.loadBooks()
+    },
+    prepareGenre() {
+      if (this.$route.params.id) {
+        for (const parent of this.genres) {
+          let x = parent.childes.find(genre => genre.id === +this.$route.params.id)
+          if (x) {
+            this.activeGenre = x
+            break;
+          }
+        }
+
+      }
     },
     openBook(book) {
       // let type = null
@@ -185,14 +202,16 @@ export default {
     .search-input {
       display: flex;
       flex: 1;
-      margin-right: 0.5rem;
+
       color: (var(--color));
       background-color: var(--background-2);
+      padding: 5px;
     }
 
     .select {
       display: flex;
       flex: 1;
+      margin-left: 0.5rem;
     }
   }
 
