@@ -100,6 +100,9 @@ export default {
     handleScroll(e) {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
     },
+    scrollLog(e) {
+      console.log({'e': e})
+    }
   },
   computed: {
     windowHeights() {
@@ -119,7 +122,7 @@ export default {
 
 <style scoped lang="scss">
 .book-container {
-  height: calc(100% - 6rem);
+  height: calc(100vh - 6rem);
 }
 
 .book {
