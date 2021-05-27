@@ -27,7 +27,7 @@
         </tr>
       </transition-group>
     </table>
-    <modal ref="editGenre">
+    <modal name="editGenre">
       <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>
     </modal>
   </div>
@@ -73,7 +73,7 @@ export default {
     },
     openRow(row) {
       this.activeGenre = row
-      this.$showModal('editGenre')
+      this.$modal.show('editGenre')
     },
     createGenre() {
       this.activeGenre = {
@@ -83,7 +83,7 @@ export default {
         parentGenre: {id: null, name: null},
         parent: {id: null, name: null},
       };
-      this.$showModal('editGenre')
+      this.$modal.show('editGenre')
     },
     sortBy(orderBy, asc) {
       console.log({'orderBy': orderBy, 'asc': asc})

@@ -1,5 +1,8 @@
 <template>
-  <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>
+  <div class="modal">
+    <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>
+  </div>
+
 </template>
 
 <script>
@@ -18,7 +21,8 @@ export default {
     }
   },
   data: () => ({
-    showDialog: false
+    showDialog: false,
+    options: {}
   }),
   computed: {
     md() {
@@ -36,14 +40,21 @@ export default {
 
   },
   methods: {
-    show() {
+    show(options = {}) {
+      this.options = options
       this.showDialog = true
-      this.md.showModal()
     },
-    close() {
+    hide() {
       this.showDialog = false
-      this.md.close()
-    },
+    }
+    // show() {
+    //   this.showDialog = true
+    //   this.md.showModal()
+    // },
+    // close() {
+    //   this.showDialog = false
+    //   this.md.close()
+    // },
 
   },
 }
