@@ -1,6 +1,7 @@
 <template>
   <div class="modal">
-    <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>
+    <div>wssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</div>
+<!--    <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>-->
   </div>
 
 </template>
@@ -43,6 +44,7 @@ export default {
     show(options = {}) {
       this.options = options
       this.showDialog = true
+      console.log(111111111111111111111111111)
     },
     hide() {
       this.showDialog = false

@@ -1,14 +1,12 @@
 <template>
-  <div class="test">
-    <ul>
-      <li></li>
-    </ul>
+  <div class="test-wrap">
+    <slot/>
   </div>
 </template>
 
 <script>
 export default {
-  name: "TestPage",
+  name: "LayoutTest",
   components: {},
 //mixins: {},
   props: {},

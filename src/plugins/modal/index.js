@@ -3,9 +3,8 @@ export default {
     app.component('modal', require('./modal.vue').default)
     app.config.globalProperties.$modal = {
       show(name, options) {
-        const elem = document.getElementById(name)
-        console.log({'app': app, 'elem': elem, 'name': name, 'options': options})
-        // app.$refs[name].show(options)
+        console.log({'editGenre': this, 'app': app, 'options': options, 'refs': options.$refs[name]})
+        options.$refs[name].show(options)
     },
       hide(name) {
         console.log({'hide': name})

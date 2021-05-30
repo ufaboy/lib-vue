@@ -62,6 +62,14 @@ const routes = [
     name: 'book-edit',
     component: BookEdit
   },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/views/TestPage.vue'),
+    meta: {
+      layout: 'layout-test'
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'About',

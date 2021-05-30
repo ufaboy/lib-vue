@@ -27,9 +27,14 @@
         </tr>
       </transition-group>
     </table>
-    <modal name="editGenre">
+    <modal ref="editGenre">
       <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>
     </modal>
+<!--    <teleport to="body">-->
+<!--      <div v-if="modalOpen" class="modal">-->
+<!--        <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>-->
+<!--      </div>-->
+<!--    </teleport>-->
   </div>
 </template>
 
@@ -51,6 +56,7 @@ export default {
       parentGenre: {id: null, name: null},
       parent: {id: null, name: null},
     },
+    modalOpen: false,
     genres: [],
     ascending: 0,
     orderBy: null,
@@ -83,7 +89,8 @@ export default {
         parentGenre: {id: null, name: null},
         parent: {id: null, name: null},
       };
-      this.$modal.show('editGenre')
+      // this.modalOpen = true
+      this.$modal.show('editGenre', this)
     },
     sortBy(orderBy, asc) {
       console.log({'orderBy': orderBy, 'asc': asc})

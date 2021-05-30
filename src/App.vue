@@ -7,9 +7,10 @@
 
 import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
+import LayoutTest from "@/layouts/LayoutTest";
 
 export default {
-  components: { LayoutDefault, LayoutAuth},
+  components: { LayoutDefault, LayoutAuth, LayoutTest},
   computed: {
     layout() {
       return this.$route.meta.layout || 'layout-default'
