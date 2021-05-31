@@ -42,6 +42,9 @@ export default {
       this.orderBy = e
       this.ascending = !this.ascending
     },
+    closeModal() {
+      this.$parent.hide('sortings', this)
+    },
   },
 }
 </script>

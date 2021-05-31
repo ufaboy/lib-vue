@@ -75,7 +75,7 @@ export default {
       this.filter.ad = this.ad ?? null
     },
     closeModal() {
-      this.$closeModal('filterBookModal')
+      this.$parent.hide('filterBookModal', this)
     },
   },
   created() {

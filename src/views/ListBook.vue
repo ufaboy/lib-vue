@@ -148,7 +148,7 @@ export default {
       this.endPos = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
       let difX = this.endPos.x - this.startPos.x
       let difY = this.startPos.y - this.endPos.y
-      if (difX > 100 && difY < 50) this.$showModal('sortings')
+      if (difX > 100 && difY < 50) this.$modal.show('sortings', this)
     },
     async updateBySorting(e) {
       this.orderBy = e.orderBy

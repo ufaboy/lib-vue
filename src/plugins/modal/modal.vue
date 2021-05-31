@@ -1,6 +1,9 @@
 <template>
-  <div class="modal">
-    <div>wssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</div>
+  <div class="modal-wrap" :class="{active: showDialog}">
+    <div class="modal" :style="styleObject" v-if="showDialog">
+      <slot></slot>
+    </div>
+
 <!--    <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>-->
   </div>
 
@@ -10,7 +13,6 @@
 export default {
   name: "modal",
   components: {},
-//mixins: {},
   props: {
     name: {
       type: String,
@@ -26,10 +28,6 @@ export default {
     options: {}
   }),
   computed: {
-    md() {
-      const x = `#${this.name}`
-      return document.querySelector(x)
-    },
     styleObject() {
       return {width: `${this.width ? this.width : 600}px`}
     }
@@ -44,25 +42,35 @@ export default {
     show(options = {}) {
       this.options = options
       this.showDialog = true
-      console.log(111111111111111111111111111)
     },
     hide() {
       this.showDialog = false
     }
-    // show() {
-    //   this.showDialog = true
-    //   this.md.showModal()
-    // },
-    // close() {
-    //   this.showDialog = false
-    //   this.md.close()
-    // },
-
   },
 }
 </script>
 
 <style lang="scss">
+.modal-wrap {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  z-index: -1;
+  .modal {
+    position: absolute;
+    margin: auto;
+    height: fit-content;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    top: 0;
+  }
+}
+.modal-wrap.active {
+  z-index: 9;
+}
+
 .dialog {
   margin: auto;
 }

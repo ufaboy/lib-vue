@@ -182,7 +182,7 @@ export default {
     },
 
     showFilterModal() {
-      this.$showModal('filterBookModal')
+      this.$modal.show('filterBookModal', this)
     }
   },
   computed: {

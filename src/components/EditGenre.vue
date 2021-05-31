@@ -40,7 +40,8 @@ export default {
   name: "EditGenre",
   components: {IconClose},
   props: {
-    genre: Object
+    genre: Object,
+    options: Object,
   },
   data: () => ({
     localGenre: {
@@ -107,7 +108,7 @@ export default {
       this.parent = {id: null, name: null}
     },
     closeModal() {
-      this.$closeModal('editGenre')
+      this.$parent.hide('editGenre', this)
     },
     prepareGenre() {
       this.localGenre = Object.assign({}, this.genre)

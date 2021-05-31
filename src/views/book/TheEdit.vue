@@ -370,7 +370,7 @@ export default {
       }
     },
     openGenreModal() {
-      this.$showModal('genreBook')
+      this.$modal.show('genreBook', this)
     },
     setGenres(e) {
       this.genres = e
