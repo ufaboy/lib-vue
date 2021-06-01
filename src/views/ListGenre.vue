@@ -40,7 +40,11 @@ export default {
   watch: {},
   created() {
     if (this.$route.params.id) {
-      this.loadGenre()
+        const parent = this.genresParent.find(item=>item.id === +this.$route.params.id)
+      if (parent) {
+        this.activeParent = parent
+      }
+    this.loadGenre()
     }
   },
   mounted() {

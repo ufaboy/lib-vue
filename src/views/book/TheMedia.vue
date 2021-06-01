@@ -33,7 +33,9 @@ const apiUrl = process.env.VUE_APP_API_URL
 export default {
   name: "TheMedia",
   components: {},
-  props: {},
+  props: {
+    bookProps: Object
+  },
   data: () => ({
     book: {annotation: null, text: null, genres: []},
     activeImage: null,
@@ -59,11 +61,16 @@ export default {
   },
   watch: {},
   created() {
-    this.loadBook()
+    this.checkBook()
   },
   mounted() {
   },
   methods: {
+    checkBook() {
+      if (this.bookProps.id && this.bookProps.id === +this.$route.params.id) {
+        this.book = Object.assign({}, this.bookProps)
+      } else this.loadBook()
+    },
     async loadBook() {
       const url = `/book/view?id=${this.$route.params.id}`;
       try {
@@ -71,7 +78,6 @@ export default {
       }catch (e) {
         console.log({'loadBook': e})
       }
-
 
     },
     getSrcImgUrl(e) {
@@ -82,5 +88,52 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.book-container {
+  width: 100%;
+  .book-picture {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  .book-picture_img {
+
+  }
+  .book-video {
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    padding: 1rem 2rem;
+
+    .media-list {
+      width: 440px;
+      margin-right: 1rem;
+
+      li {
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+      }
+
+      li.active {
+        color: var(--color-p)
+      }
+
+      .media-name {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .media-video {
+      flex: 1;
+      text-align: center;
+
+      video {
+        width: 100%;
+      }
+    }
+  }
+}
 
 </style>

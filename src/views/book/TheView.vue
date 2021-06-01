@@ -1,6 +1,6 @@
 <template>
-  <div class="book-container" >
-    <div class="book" ref="book" @scroll="handleScroll" id="book">
+  <div class="book-container" v-bind="$attrs">
+    <div class="book" ref="book" @scroll.passive="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
   </div>
@@ -70,8 +70,21 @@ export default {
           chunksAll.set(chunk, position); // (4.2)
           position += chunk.length;
         }
-        this.book = JSON.parse(new TextDecoder("utf-8").decode(chunksAll));
+        const result = JSON.parse(new TextDecoder("utf-8").decode(chunksAll));
+        if (await this.checkLoadedBook(result)) {
+          await this.relocateToMedia(result)
+        } else {
+          this.book = result
+        }
+
       }
+    },
+    async checkLoadedBook(book) {
+      return book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
+    },
+    async relocateToMedia(book) {
+      await this.$emit('loaded-book', book)
+      await this.$router.push({name: 'book-media', params: {id: book.id}})
     },
     scrollByClick(e) {
       let w = document.getElementById("progressbar").clientWidth;

@@ -36,7 +36,7 @@ export default {
   methods: {
     sorting() {
       this.$emit('sorting', {orderBy: this.orderBy, ascending: this.ascending})
-      this.$closeModal('sortings')
+      this.closeModal()
     },
     changeOrderBy(e) {
       this.orderBy = e

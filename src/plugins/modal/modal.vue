@@ -1,6 +1,6 @@
 <template>
-  <div class="modal-wrap" :class="{active: showDialog}">
-    <div class="modal" :style="styleObject"  v-if="showDialog">
+  <div class="modal-wrap" :class="{active: showDialog}" @click="hide">
+    <div class="modal" :style="styleObject"  v-if="showDialog" @click.stop="">
       <slot :data-props="options"></slot>
     </div>
 
@@ -56,10 +56,12 @@ export default {
   width: 100vw;
   height: 100vh;
   top: 0;
+  left: 0;
   z-index: -1;
   .modal {
     position: absolute;
     margin: auto;
+    padding: 0 1rem;
     height: fit-content;
     bottom: 0;
     right: 0;

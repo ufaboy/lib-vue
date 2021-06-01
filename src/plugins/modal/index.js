@@ -6,6 +6,7 @@ export default {
         compContext.$refs[name].show(options)
     },
       hide(name, compContext) {
+        console.log({'compContext': compContext})
         compContext.$refs[name].hide()
       }
     }

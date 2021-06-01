@@ -1,6 +1,6 @@
 <template>
   <component :is="layout">
-    <router-view/>
+    <router-view @loaded-book="loadBook" :book-props="book" v-bind="$attrs"/>
   </component>
 </template>
 <script>
@@ -11,6 +11,9 @@ import LayoutTest from "@/layouts/LayoutTest";
 
 export default {
   components: { LayoutDefault, LayoutAuth, LayoutTest},
+  data: () => ({
+    book: {},
+  }),
   computed: {
     layout() {
       return this.$route.meta.layout || 'layout-default'
@@ -24,6 +27,10 @@ export default {
         this.$store.commit('main/setIsMobile')
       }
     },
+    loadBook(book) {
+      console.log({'event': book})
+      this.book = book
+    }
   },
   created() {
     this.onResize()

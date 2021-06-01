@@ -127,12 +127,9 @@ export default {
 
       }
     },
-    openBook(book) {
-      // let type = null
-      for (const genre of book.genres) {
-        console.log({'genre': genre})
-      }
-      // this.$router.push({name: 'book-view', params: {'id': book.id, name: book.name}})
+    async openBook(book) {
+      const comicsBook = book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
+      await this.$router.push({name: comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
     },
     getCover(book) {
       if (book.cover_url) {

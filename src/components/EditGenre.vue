@@ -119,7 +119,7 @@ export default {
 
 <style lang="scss">
 .edit-genre {
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-flow: wrap;
   height: 100%;

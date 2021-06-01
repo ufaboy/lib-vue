@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import {$get, $patch, $post} from "@/service/superFetch";
+import {$get, $patch, $post, $delete} from "@/service/superFetch";
 import FormField from "@/components/FormField";
 import StarRating from 'vue-star-rating'
 import IconParagraph from "@/components/icons/IconParagraph"
@@ -236,7 +236,7 @@ export default {
     },
     getSrc(media) {
       const loaded = !!media.id
-      return loaded ? `${this.$config.apiUrl}/${media.url}` : window.URL.createObjectURL(media);
+      return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media);
     },
     async sendAllFiles() {
       for (const [i, v] of this.files.entries()) {
@@ -250,7 +250,7 @@ export default {
         formData.append('file', file);
         let xhr = new XMLHttpRequest();
 
-        xhr.open("POST", `${this.$config.apiUrl}/media-storage/upload?book_id=${this.book.id}`);
+        xhr.open("POST", `${process.env.VUE_APP_API_URL}/media-storage/upload?book_id=${this.book.id}`);
         xhr.setRequestHeader('Authorization', `Bearer ${this.$store.state.auth.token}`);
         xhr.responseType = 'json';
 
@@ -274,7 +274,7 @@ export default {
       }.bind(this))
       //worked fetch
       // let formData = new FormData();
-      // const url = `${this.$config.apiUrl}/file-storage/upload?book_id=${this.book.id}`;
+      // const url = `${process.env.VUE_APP_API_URL}/file-storage/upload?book_id=${this.book.id}`;
       // formData.append('file', file);
       // console.log(formData, file)
       // const response = await fetch(url, {
@@ -322,7 +322,7 @@ export default {
 
     async deleteFile(file) {
       const url = `/media-storage/delete?id=${this.files[file].id}`;
-      const result = await this.$fetchDelete(url);
+      const result = await $delete(url);
       if (result) {
         this.files.splice(file, 1)
         this.uploadingProgress.splice(file, 1)
@@ -333,11 +333,11 @@ export default {
     async copyFileName(index) {
       const uploadedFile = this.files[index]
       if (uploadedFile.type === 'image/webp') {
-        await navigator.clipboard.writeText(`<img class="media picture" src="${this.$config.apiUrl}/${uploadedFile.url}">`)
+        await navigator.clipboard.writeText(`<img class="media picture" src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}">`)
       } else if (['video/webm', 'video/mp4'].includes(uploadedFile.type)) {
-        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${this.$config.apiUrl}/${uploadedFile.url}"/></video>`)
+        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></video>`)
       } else if (uploadedFile.type === 'audio/mp4') {
-        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${this.$config.apiUrl}/${uploadedFile.url}"/></audio>`)
+        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></audio>`)
       }
     },
     async formatText(type) {

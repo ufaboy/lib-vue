@@ -3,6 +3,9 @@ module.exports = {
     name: 'Library',
     themeColor: '#4285f4',
     msTileColor: '#000000',
+    background_color: "#000000",
+    short_name: 'Library',
+    description: 'My library for some text',
     workboxPluginMode: 'GenerateSW',
 
     // настройки манифеста

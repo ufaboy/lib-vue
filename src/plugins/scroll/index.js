@@ -8,7 +8,7 @@ export default {
             el.removeEventListener('scroll', f)
           }
         }
-        el.addEventListener('scroll', f)
+        el.addEventListener('scroll', f, {passive: true})
       }
       // mounted: function (el, binding) {
       //   let f = function (evt) {
