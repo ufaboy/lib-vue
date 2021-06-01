@@ -85,4 +85,10 @@ const router = createRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const token = sessionStorage.getItem('lib-token') ?? ''
+  if (to.name !== 'login' && !token) next({ name: 'login' })
+  else next()
+})
+
 export default router

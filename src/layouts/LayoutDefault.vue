@@ -29,14 +29,8 @@ export default {
   props: {},
   data: () => ({}),
   methods: {
-    async checkAuth() {
-      const token = sessionStorage.getItem('lib-token') ?? ''
-      if (!token) {
-        await this.$router.push('/login')
-      }
-    },
     async loadParents() {
-      if (this.genresParent && this.genresParent.length === 0) {
+      if (this.genresParent && this.genresParent.length === 0 && sessionStorage.getItem('lib-token')) {
         await this.$store.dispatch('genre/loadGenres')
       }
     },
@@ -70,7 +64,6 @@ export default {
   },
   watch: {},
   async created() {
-    await this.checkAuth()
     await this.loadParents()
   },
   mounted() {

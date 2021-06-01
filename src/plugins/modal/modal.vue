@@ -1,7 +1,7 @@
 <template>
   <div class="modal-wrap" :class="{active: showDialog}">
-    <div class="modal" :style="styleObject" v-if="showDialog">
-      <slot></slot>
+    <div class="modal" :style="styleObject"  v-if="showDialog">
+      <slot :data-props="options"></slot>
     </div>
 
 <!--    <dialog :id="name" class="dialog" :style="styleObject"><slot v-if="showDialog"></slot></dialog>-->
@@ -74,14 +74,14 @@ export default {
 .dialog {
   margin: auto;
 }
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
-  .dialog {
-    width: 400px;
+@media only screen and (max-width: 892px) and (orientation: landscape) {
+  .dialog, .modal {
+    width: 400px!important;
   }
 }
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
-  .dialog {
-    width: 100%;
+@media only screen and (max-width: 892px) and (orientation: portrait) {
+  .dialog, .modal {
+    width: 100%!important;
   }
 }
 </style>

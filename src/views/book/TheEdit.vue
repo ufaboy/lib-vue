@@ -35,22 +35,21 @@
         <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation" placeholder="annotation" @focus="$event.target.placeholder = ''"
                   @blur="$event.target.placeholder = 'annotation'"/>
       </form-field>
-      <form-field @click="openGenreModal" :placeholder="'genre'">
-        <div class="ml-value row">
-          <span v-if="genres.length === 0">Не выбраны жанры</span>
-          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
-                :key="genre.id">{{ genre.name }}</span>
-        </div>
-      </form-field>
-<!--      <section class="section genre" @click="openGenreModal">-->
-<!--        <span class="title">genre</span>-->
-<!--        <div class="value row">-->
+<!--      <form-field @click="openGenreModal" :placeholder="'genre'">-->
+<!--        <div class="ml-value row">-->
 <!--          <span v-if="genres.length === 0">Не выбраны жанры</span>-->
 <!--          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"-->
 <!--                :key="genre.id">{{ genre.name }}</span>-->
 <!--        </div>-->
-<!--      </section>-->
-      <label class="label">
+<!--      </form-field>-->
+      <section class="section genre" @click="openGenreModal">
+        <div class="value row">
+          <span v-if="genres.length === 0">Не выбраны жанры</span>
+          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
+                :key="genre.id">{{ genre.name }}</span>
+        </div>
+      </section>
+      <div class="label">
         <span class="label-header">
           <span class="title">text {{ book.text.length }}</span>
           <span class="action-bar">
@@ -73,8 +72,8 @@
         </span>
         </span>
         <textarea class="editor clarity" v-model="book.text" rows="22" v-if="editor === 'raw'" ref="editor"></textarea>
-        <div v-else v-html="book.text"></div>
-      </label>
+        <div class="editor" v-else v-html="book.text"></div>
+      </div>
     </div>
     <div class="media-container" v-if="book.id">
       <header class="header-media">
@@ -446,6 +445,7 @@ export default {
 
   .section.genre {
     cursor: pointer;
+    margin-bottom: 1rem;
   }
 
   .title {
@@ -553,7 +553,7 @@ export default {
       color: var(--color);
       background-color: var(--background-2);
       text-transform: initial;
-      padding: 0 0.3rem;
+      padding: 0.3rem;
 
       .title {
         flex-flow: row nowrap;

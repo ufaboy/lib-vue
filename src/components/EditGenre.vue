@@ -1,4 +1,4 @@
-<template>
+<template v-slot:default="dataProps">
   <form class="edit-genre" @submit.prevent="sendGenre">
     <header class="header">
       <h1>Genre</h1>
@@ -41,7 +41,7 @@ export default {
   components: {IconClose},
   props: {
     genre: Object,
-    options: Object,
+    dataProps: Object,
   },
   data: () => ({
     localGenre: {
