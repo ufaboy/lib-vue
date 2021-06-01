@@ -79,7 +79,7 @@ export default {
     },
     openRow(row) {
       this.activeGenre = row
-      this.$modal.show('editGenre', this)
+      this.$modal.show('editGenre', this, row)
     },
     createGenre() {
       this.activeGenre = {
