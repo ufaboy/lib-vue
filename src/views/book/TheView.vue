@@ -113,8 +113,11 @@ export default {
     handleScroll(e) {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
     },
-    prepareUrlForMedia() {
-
+    prepareUrlForMedia(book) {
+      const regexp = new RegExp("APIURL", "g");
+      book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
+      console.log({'book': book})
+      return book
     },
     moveMedia() {
       let toggleSide = true
@@ -147,7 +150,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .book-container {
   height: calc(100vh - 6rem);
 }
@@ -157,7 +160,7 @@ export default {
   flex-flow: row wrap;
   width: 100%;
   overflow-y: auto;
-height: 100%;
+  height: 100%;
   padding: 1rem;
   justify-content: center;
 
@@ -175,8 +178,7 @@ height: 100%;
 
     .media {
       border: none;
-
-      display: none;
+      //display: none;
       cursor: pointer;
       width: 480px;
       height: 320px;
@@ -233,12 +235,60 @@ height: 100%;
   .progress::-webkit-progress-value {
   }
 }
-@media only screen and (max-width: 892px) {
 
+@media only screen and (max-width: 892px) {
+  .book-container {
+    .book {
+      .text {
+        max-width: initial;
+        width: 100%;
+
+        .media {
+          position: static;
+          width: 100%;
+          max-height: calc(var(--media-width) / 1.5);
+        }
+      }
+    }
+
+    .image-modal {
+      padding: 0.3rem;
+      height: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+
+      .close {
+        top: 0;
+      }
+
+      .picture-action-panel {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      .picture-arrow-btn {
+        height: 5rem;
+        width: 5rem;
+        color: var(--color-2);
+        background-color: var(--background-3);
+      }
+
+      .modal-content {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
 }
+
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
 
 }
+
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
 
 }

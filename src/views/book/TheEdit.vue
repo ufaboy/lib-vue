@@ -96,7 +96,7 @@
                     v-if="media.type === 'image/webp' && media.id !== undefined">
               {{ book.cover_id === media.id ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn" @click="copyFileName(index)" v-if="media.id !== undefined">tag</button>
+            <button class="image-entry-btn" @click="copyFileName(media)" v-if="media.id !== undefined">tag</button>
             <button class="image-entry-btn" @click="deleteFile(index)" v-if="media.id !== undefined">delete</button>
           </div>
           <progress-ring v-show="calcProgressUpload(index) < 100 && calcProgressUpload(index) > 0" :radius="60"
@@ -330,16 +330,26 @@ export default {
         console.error(result)
       }
     },
-    async copyFileName(index) {
-      const uploadedFile = this.files[index]
-      if (uploadedFile.type === 'image/webp') {
-        await navigator.clipboard.writeText(`<img class="media picture" src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}">`)
-      } else if (['video/webm', 'video/mp4'].includes(uploadedFile.type)) {
-        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></video>`)
-      } else if (uploadedFile.type === 'audio/mp4') {
-        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></audio>`)
+    async copyFileName(file) {
+      console.log({'file': file})
+      if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
+        await navigator.clipboard.writeText(`<img class="media picture" src="APIURL/${file.url}">`)
+      } else if (['video/webm', 'video/mp4'].includes(file.type)) {
+        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
+      } else if (file.type === 'audio/mp4') {
+        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="APIURL/${file.url}"/></audio>`)
       }
     },
+    // async copyFileName(index) {
+    //   const uploadedFile = this.files[index]
+    //   if (uploadedFile.type === 'image/webp') {
+    //     await navigator.clipboard.writeText(`<img class="media picture" src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}">`)
+    //   } else if (['video/webm', 'video/mp4'].includes(uploadedFile.type)) {
+    //     await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></video>`)
+    //   } else if (uploadedFile.type === 'audio/mp4') {
+    //     await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></audio>`)
+    //   }
+    // },
     async formatText(type) {
       if (type === 'caret') {
         this.book.text = this.book.text.replace(/\n/g, '<p>')
