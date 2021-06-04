@@ -11,11 +11,24 @@
   <modal ref="editor">
     <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
   </modal>
+  <div id="image-modal" class="image-modal" v-if="activeImage">
+    <span class="close" @click="activeImage = null">&times;</span>
+    <aside class="picture-action-panel">
+      <button class="picture-arrow-btn" @click="showSlide('first')">1</button>
+      <button class="picture-arrow-btn" @click="showSlide('prev')">Back</button>
+    </aside>
+    <img class="modal-content" id="img01" :src="activeImage">
+    <aside class="picture-action-panel">
+      <button class="picture-arrow-btn" @click="showSlide('last')">e</button>
+      <button class="picture-arrow-btn" @click="showSlide('next')">Forward</button>
+    </aside>
+  </div>
 </template>
 
 <script>
 import EditorModal from "@/components/EditorModal";
 import {$patch} from "@/service/superFetch";
+const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
   name: "Book",
@@ -98,7 +111,7 @@ export default {
     },
     editMode(e) {
       this.editorNode = e.target
-      this.$showModal('editor')
+      this.$modal.show('editor', this)
     },
     async saveEditor() {
       this.book.text = this.$refs.text.innerHTML
@@ -116,7 +129,6 @@ export default {
     prepareUrlForMedia(book) {
       const regexp = new RegExp("APIURL", "g");
       book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
-      console.log({'book': book})
       return book
     },
     moveMedia() {
@@ -130,7 +142,33 @@ export default {
     },
     scrollLog(e) {
       console.log({'e': e})
-    }
+    },
+    listenClickbyImg() {
+      let images = document.getElementsByClassName('picture')
+      for (let image of images) {
+        image.addEventListener("click", this.openImage);
+      }
+    },
+    openImage(img) {
+      this.activeImage = img.target.src
+    },
+    showSlide(type) {
+      let index = 0
+      if (type === 'prev') {
+        index = this.activeImageIndex > 1 ? this.activeImageIndex - 1 : this.book.files.length - 1
+      } else if (type === 'next') {
+        index = this.activeImageIndex < this.book.files.length - 1 ? this.activeImageIndex + 1 : 0
+      } else if (type === 'last') {
+        index = this.book.files.length - 1
+      } else if (type === 'first') {
+        index = 0
+      }
+      this.activeImageIndex = index
+      this.activeImage = this.getSrcImgUrl(this.book.files[index])
+    },
+    getSrcImgUrl(e) {
+      return e.url ? `${apiUrl}/${e.url}` : ''
+    },
   },
   computed: {
     windowHeights() {
@@ -146,6 +184,7 @@ export default {
   },
   updated() {
     this.moveMedia()
+    this.listenClickbyImg()
   },
 }
 </script>
@@ -211,6 +250,7 @@ export default {
     flex: 1;
 
   }
+
 }
 
 .footer {
@@ -218,10 +258,11 @@ export default {
   height: 2rem;
   display: flex;
   padding: 0.2rem 0.5rem;
+  position: relative;
 
   .progress {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 5px);
     background: var(--bg-secondary);
     position: absolute;
     left: 0;
@@ -236,6 +277,69 @@ export default {
 
   .progress::-webkit-progress-value {
   }
+}
+.image-modal {
+  //display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+  .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+  }
+
+  /* Caption of Modal Image (Image Text) - Same Width as the Image */
+  #caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+  }
+
+  /* Add Animation - Zoom in the Modal */
+  .modal-content, #caption {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+  }
+}
+@keyframes zoom {
+  from {
+    transform: scale(0)
+  }
+  to {
+    transform: scale(1)
+  }
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 @media only screen and (max-width: 892px) {
