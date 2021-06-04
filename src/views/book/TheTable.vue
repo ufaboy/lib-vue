@@ -195,6 +195,7 @@ export default {
   },
   watch: {},
   created() {
+    document.title = 'Table Books';
   },
   mounted() {
     this.getBooksPage();

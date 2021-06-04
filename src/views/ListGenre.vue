@@ -39,6 +39,7 @@ export default {
   },
   watch: {},
   created() {
+    document.title = 'Genres';
     if (this.$route.params.id) {
         const parent = this.genresParent.find(item=>item.id === +this.$route.params.id)
       if (parent) {

@@ -66,7 +66,7 @@ export default {
   },
   watch: {},
   created() {
-
+    document.title = 'Books';
   },
   mounted() {
     this.prepareGenre()

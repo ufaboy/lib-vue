@@ -16,6 +16,7 @@ export default {
   computed: {},
   watch: {},
   created() {
+    document.title = 'Test';
   },
   mounted() {
   },

@@ -75,6 +75,7 @@ export default {
       const url = `/book/view?id=${this.$route.params.id}`;
       try {
         this.book = await $get(url)
+        document.title = `Book: ${this.book.name}`;
       }catch (e) {
         console.log({'loadBook': e})
       }

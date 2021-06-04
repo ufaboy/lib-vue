@@ -331,7 +331,6 @@ export default {
       }
     },
     async copyFileName(file) {
-      console.log({'file': file})
       if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
         await navigator.clipboard.writeText(`<img class="media picture" src="APIURL/${file.url}">`)
       } else if (['video/webm', 'video/mp4'].includes(file.type)) {
@@ -340,16 +339,6 @@ export default {
         await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="APIURL/${file.url}"/></audio>`)
       }
     },
-    // async copyFileName(index) {
-    //   const uploadedFile = this.files[index]
-    //   if (uploadedFile.type === 'image/webp') {
-    //     await navigator.clipboard.writeText(`<img class="media picture" src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}">`)
-    //   } else if (['video/webm', 'video/mp4'].includes(uploadedFile.type)) {
-    //     await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></video>`)
-    //   } else if (uploadedFile.type === 'audio/mp4') {
-    //     await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="${process.env.VUE_APP_API_URL}/${uploadedFile.url}"/></audio>`)
-    //   }
-    // },
     async formatText(type) {
       if (type === 'caret') {
         this.book.text = this.book.text.replace(/\n/g, '<p>')
@@ -400,6 +389,7 @@ export default {
   },
   created() {
     this.getBook();
+    document.title = 'Editor';
   },
   mounted() {
   },

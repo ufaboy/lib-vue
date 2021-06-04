@@ -88,6 +88,7 @@ export default {
           await this.relocateToMedia(result)
         } else {
           this.book = await this.prepareUrlForMedia(result)
+          document.title = `Book: ${result.name}`;
         }
 
       }

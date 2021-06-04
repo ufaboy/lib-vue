@@ -31,6 +31,7 @@ export default {
   },
   watch: {},
   created() {
+    document.title = 'Home';
   },
   mounted() {
   },

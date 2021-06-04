@@ -112,6 +112,7 @@ export default {
   },
   watch: {},
   created() {
+    document.title = 'Table Genres';
     if (this.genres.length === 0) {
       this.loadGenres()
     }
