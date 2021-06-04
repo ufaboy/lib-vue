@@ -249,9 +249,9 @@ export default {
         let formData = new FormData();
         formData.append('file', file);
         let xhr = new XMLHttpRequest();
-
+        const token = sessionStorage.getItem('lib-token')
         xhr.open("POST", `${process.env.VUE_APP_API_URL}/media-storage/upload?book_id=${this.book.id}`);
-        xhr.setRequestHeader('Authorization', `Bearer ${this.$store.state.auth.token}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         xhr.responseType = 'json';
 
         xhr.upload.onprogress = async (event) => {

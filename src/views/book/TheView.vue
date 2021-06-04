@@ -74,7 +74,7 @@ export default {
         if (await this.checkLoadedBook(result)) {
           await this.relocateToMedia(result)
         } else {
-          this.book = result
+          this.book = await this.prepareUrlForMedia(result)
         }
 
       }
@@ -113,6 +113,18 @@ export default {
     handleScroll(e) {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
     },
+    prepareUrlForMedia() {
+
+    },
+    moveMedia() {
+      let toggleSide = true
+      let media = document.querySelectorAll('.media')
+
+      for (const elem of media) {
+        elem.classList.add(toggleSide ? 'media--right' : 'media--left')
+        toggleSide = !toggleSide
+      }
+    },
     scrollLog(e) {
       console.log({'e': e})
     }
@@ -127,8 +139,10 @@ export default {
     this.loadBook()
   },
   mounted() {
+
   },
   updated() {
+    this.moveMedia()
   },
 }
 </script>
@@ -218,5 +232,14 @@ height: 100%;
 
   .progress::-webkit-progress-value {
   }
+}
+@media only screen and (max-width: 892px) {
+
+}
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
+
+}
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
+
 }
 </style>
