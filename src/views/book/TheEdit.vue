@@ -108,7 +108,6 @@
           <audio v-else-if="checkType(media.type) === 'audio'" class="media audio" controls muted>
             <source :src="getSrc(media)">
           </audio>
-
           <figcaption class="figure-caption">{{ media.name ? media.name : media.full_name }}</figcaption>
         </figure>
       </div>
@@ -120,7 +119,6 @@
 </template>
 
 <script>
-import {$get, $patch, $post, $delete} from "@/service/superFetch";
 import FormField from "@/components/FormField";
 import StarRating from 'vue-star-rating'
 import IconParagraph from "@/components/icons/IconParagraph"
@@ -167,9 +165,9 @@ export default {
       this.$loader.show()
       if (this.$route.params.id) {
         url = `/book/update?id=${this.$route.params.id}`
-        result = await $patch(url, formData)
+        result = await this.$patch(url, formData)
       } else {
-        result = await $post(url, formData)
+        result = await this.$post(url, formData)
       }
       this.$loader.hide()
       if (result) {
@@ -214,7 +212,7 @@ export default {
     async getBook() {
       if (this.$route.params.id) {
         const url = `/book/view?id=${this.$route.params.id}`
-        const result = await $get(url)
+        const result = await this.$get(url)
         if (result) {
           // this.book = Object.assign({}, result)
           this.book = {...result, annotation: result.annotation ? result.annotation : ''}
@@ -291,7 +289,7 @@ export default {
     },
     async deleteAllFiles() {
       const url = `/book/delete-all-media?id=${this.book.id}`
-      const result = await this.$fetch('delete', url);
+      const result = await this.$delete(url);
       if (result) {
         this.files.length = 0
         this.uploadingProgress.length = 0
@@ -322,7 +320,7 @@ export default {
 
     async deleteFile(file) {
       const url = `/media-storage/delete?id=${this.files[file].id}`;
-      const result = await $delete(url);
+      const result = await this.$delete(url);
       if (result) {
         this.files.splice(file, 1)
         this.uploadingProgress.splice(file, 1)

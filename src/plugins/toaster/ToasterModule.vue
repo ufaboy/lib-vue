@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: "toaster",
+  name: "ToasterModule",
   data: () => ({
     type: '',
     messageArray: []
@@ -17,6 +17,7 @@ export default {
         info: this.type === 'info',
         error: this.type === 'error',
         success: this.type === 'success',
+        warning: this.type === 'warning',
       }
     }
   },
@@ -25,16 +26,21 @@ export default {
   watch: {
   },
   methods: {
-    printMessage(type, time, message) {
+    printMessage(message, option) {
+      const {time, type} = {...option}
       this.type = type
       if (Array.isArray(message)) {
+        console.log({'message': message})
         for (const elem of message) {
           this.messageArray.push(elem)
-          setTimeout(()=>{
+        }
+        setTimeout(()=>{
+          for (const elem of message) {
             const index = this.messageArray.findIndex(item => item === elem);
             this.messageArray.splice(index, 1)
-          }, time)
-        }
+          }
+
+        }, time)
       } else if (typeof(message) === 'string') {
         this.messageArray.push(message)
         // let index = this.messageArray.length
@@ -75,20 +81,26 @@ export default {
     margin-bottom: 0.5rem;
   }
   .message.info {
-    color: dodgerblue;
+    color: white;
     border-color: dodgerblue;
-    background-color: #8ab6d6;
+    background-color: dodgerblue;
   }
   .message.error {
-    color: hsla(4, 90%, 58%, 1);
+    color: white;
     border-color: crimson;
-    background: hsla(4, 15%, 30%, 1);
+    background: hsla(4, 90%, 58%, 1);
   }
   .message.success {
-    color: green;
+    color: white;
     border-color: green;
-    background-color: #bdd2b6;
+    background-color: green;
   }
+  .message.warning {
+    color: white;
+    border-color: yellowgreen;
+    background-color: yellow;
+  }
+
   .toast-enter-active, .toast-leave-active {
     transition: all 1s;
   }

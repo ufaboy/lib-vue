@@ -42,7 +42,6 @@
 import EditGenre from "@/components/EditGenre";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
-import {$get} from "@/service/superFetch";
 
 export default {
   name: "GenreTable",
@@ -71,7 +70,7 @@ export default {
   methods: {
     async loadGenres() {
       this.$loader.show()
-      const result = await $get('/genre?type=all')
+      const result = await this.$get('/genre?type=all')
       this.$loader.hide()
       if (result) {
         this.genres = result
@@ -89,7 +88,6 @@ export default {
         parentGenre: {id: null, name: null},
         parent: {id: null, name: null},
       };
-      // this.modalOpen = true
       this.$modal.show('editGenre', this)
     },
     sortBy(orderBy, asc) {

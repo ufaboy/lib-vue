@@ -2,7 +2,7 @@
 <form class="filter" method="dialog" @submit.prevent="findBookByFilter">
   <header class="header">
     <span class="filter-title">filter</span>
-    <button class="close-button" type="reset" @click="closeModal">
+    <button class="close-btn" type="reset" @click="closeModal">
       <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
     </button>
   </header>
@@ -94,12 +94,6 @@ export default {
     flex-flow: row;
     justify-content: space-between;
     margin-bottom: 0.5rem!important;
-    .close-button {
-      background: inherit;
-      border: none;
-      outline: none;
-      cursor: pointer;
-    }
   }
 
   .filter-title {

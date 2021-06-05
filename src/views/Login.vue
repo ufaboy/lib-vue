@@ -29,18 +29,27 @@ export default {
   methods: {
     async login() {
       const formData = {username: this.username, password: this.password};
-      const result = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
+      const response = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
           'Content-Type': 'application/json;charset=utf-8',
         }
       })
-      const res = await result.json()
-      sessionStorage.setItem('lib-token', res.token)
-      await this.$store.dispatch('user/setUser', res)
-      await this.$router.push('/')
-    }
+      if (response.ok) {
+        const result = await response.json();
+        if (result.token) {
+          sessionStorage.setItem('lib-token', result.token)
+          await this.$store.dispatch('user/setUser', result)
+          await this.$router.push('/')
+        } else this.$toast.error('Empty Token')
+
+      } else {
+        const result = await response.json();
+        this.$toast.error(result.message)
+      }
+    },
+
   },
   computed: {},
   watch: {},

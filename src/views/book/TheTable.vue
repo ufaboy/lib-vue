@@ -39,19 +39,19 @@
     </table>
     <div class="table-paginator">
       <button class="btn table-pag__btn" v-if="books._links.first"
-              @click="goPage(books._links.first)">first
+              @click="toPage(books._links.first)">first
       </button>
       <button class="btn table-pag__btn" v-if="books._links.prev"
-              @click="goPage(books._links.prev)">prev
+              @click="toPage(books._links.prev)">prev
       </button>
       <button class="btn table-pag__btn" v-if="books._links.self"
-              @click="goPage(books._links.self)">{{ books._meta ? books._meta.currentPage : '' }}
+              @click="toPage(books._links.self)">{{ books._meta ? books._meta.currentPage : '' }}
       </button>
       <button class="btn table-pag__btn" v-if="books._links.next"
-              @click="goPage(books._links.next)">next
+              @click="toPage(books._links.next)">next
       </button>
       <button class="btn table-pag__btn" v-if="books._links.last"
-              @click="goPage(books._links.last)">last
+              @click="toPage(books._links.last)">last
       </button>
       <select class="select" @change="getBooksPage" v-model="page" v-if="$store.state.main.isMobile">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
@@ -66,7 +66,6 @@
 
 <script>
 import FilterModal from "@/components/FilterModal";
-import {goPage, $get} from "@/service/superFetch";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
 import {mapState} from "vuex";
@@ -157,7 +156,7 @@ export default {
         url += `&ad=1`
       }
       this.$loader.show()
-      const result = await $get(url);
+      const result = await this.$get(url);
       this.$loader.hide()
       if (result) {
         this.books = result
@@ -174,8 +173,8 @@ export default {
     getThumbs(book) {
       return book.cover_url ? `${this.$config.apiUrl}/${book.cover_url}` : '/img/book-cover.jpg'
     },
-    async goPage(url) {
-      const result = await goPage(url.href)
+    async toPage(url) {
+      const result = await this.goPage(url.href)
       if (result) {
         this.books = result;
       } else console.log({'goPage': result})

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {$get} from "@/service/superFetch";
+
 export default {
   name: "ListGenre",
   components: {},
@@ -57,7 +57,7 @@ export default {
     },
     async loadGenre() {
       this.$loader.show()
-      const result = await $get(`/genre?parent_id=${this.parentId}`)
+      const result = await this.$get(`/genre?parent_id=${this.parentId}`)
       this.$loader.hide()
       if (result) {
         this.genres = result

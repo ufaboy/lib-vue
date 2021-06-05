@@ -27,7 +27,6 @@
 
 <script>
 import EditorModal from "@/components/EditorModal";
-import {$patch} from "@/service/superFetch";
 const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
@@ -117,7 +116,7 @@ export default {
     async saveEditor() {
       this.book.text = this.$refs.text.innerHTML
       const url = `/book/update?id=${this.$route.params.id}`
-      const result = await $patch(url, {text: this.book.text})
+      const result = await this.$patch(url, {text: this.book.text})
       if (result) {
         this.$toast.success('Успешно сохранено')
       } else {

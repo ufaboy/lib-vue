@@ -27,7 +27,6 @@
 
 <script>
 import {mapState} from "vuex";
-import {$get} from "@/service/superFetch";
 
 const apiUrl = process.env.VUE_APP_API_URL
 export default {
@@ -74,7 +73,7 @@ export default {
     async loadBook() {
       const url = `/book/view?id=${this.$route.params.id}`;
       try {
-        this.book = await $get(url)
+        this.book = await this.$get(url)
         document.title = `Book: ${this.book.name}`;
       }catch (e) {
         console.log({'loadBook': e})

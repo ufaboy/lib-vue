@@ -1,28 +1,24 @@
 <template>
-<div class="home">
-  <main class="nav">
+<main class="home">
+  <nav class="nav">
     <router-link class="content-link"
                :to="{ name: 'list-genre', params: { id: genre.id }}"
                v-for="genre of parentsArr"
                :key="genre.id">{{ genre.name }}
     </router-link>
-  </main>
-</div>
+  </nav>
+</main>
 </template>
 
 <script>
 export default {
   name: 'Home',
-  head() {
-    return {
-      title: 'Home',
-    };
-  },
   components: {},
   props: {},
   data: () => ({
   }),
   methods: {
+
   },
   computed: {
     parentsArr() {

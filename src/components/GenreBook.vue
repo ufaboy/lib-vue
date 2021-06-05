@@ -3,7 +3,7 @@
     <header class="modal-header">
       <h1>Genre</h1>
       <span>{{genres.length}}</span>
-      <button class="close-button" type="reset" @click="closeModal">
+      <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close">
           <icon-close/>
         </base-icon>

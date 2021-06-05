@@ -8,14 +8,6 @@ export default {
 			show: function () {loader.showLoader()},
 			hide: function () {loader.hideLoader()}
 		}
-		// app.config.globalProperties.$loader = function (status) {
-		// 	if (status === 'show') {
-		// 		loader.showLoader()
-		// 	} else {
-		// 		loader.hideLoader()
-		// 	}
-		//
-		// }
 		const mountNode = document.createElement('div')
 		mountNode.id = 'loaderNode'
 		mountNode.ref = 'loaderRef'

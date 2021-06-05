@@ -4,7 +4,7 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
-import toaster from "@meforma/vue-toaster";
+// import toaster from "@meforma/vue-toaster";
 
 const app = createApp(App)
 
@@ -13,12 +13,12 @@ import '@/assets/style.scss'
 //styles
 
 //self plugins
-// import improvedFetch from "@/plugins/fetch/improvedFetch";
+import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal";
 import scroll from "@/plugins/scroll"
 import observer from "@/plugins/IntersectionObserver";
 import loader from "@/plugins/loader"
-// import toaster from "@/plugins/toaster/engine";
+import toaster from "@/plugins/toaster";
 //self plugins
 
 //components
@@ -61,7 +61,8 @@ requireComponent.keys().forEach(fileName => {
 		.use(modal)
 		.use(observer)
 		.use(scroll)
+		.use(improvedFetch, {API_URL: process.env.VUE_APP_API_URL, API_TOKEN: sessionStorage.getItem('lib-token')})
 		.use(loader, loader)
-		.use(toaster, {position: 'top-right'})
+		.use(toaster, {time: 1000, position: 'top-right'})
 		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')

@@ -33,7 +33,7 @@
 
 <script>
 import SortingModal from "@/components/SortingModal";
-import {$get} from "@/service/superFetch";
+
 export default {
   name: "ListBook",
   components: {SortingModal},
@@ -49,10 +49,10 @@ export default {
     activeParent: null,
     infinityState: true,
     infinityLoading: false,
-    orderBy: 'name',
+    orderBy: 'updated_at',
     limit: 25,
     page: 1,
-    ascending: 1,
+    ascending: 0,
     startPos: {x: 0, y: 0},
     endPos: {x: 0, y: 0},
   }),
@@ -93,7 +93,7 @@ export default {
       }
       this.infinityLoading = true
       this.$loader.show()
-      const result = await $get(url);
+      const result = await this.$get(url);
       this.$loader.hide()
       this.infinityLoading = false
       if (result) {

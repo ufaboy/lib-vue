@@ -8,7 +8,7 @@
                 :class="{'active': genre.ad}"
                 @click="localGenre.genre.ad = !genre.ad">ad
         </button>
-      <button class="close-button" type="reset" @click="closeModal">
+      <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
       </button>
     </header>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import {$patch, $post, $delete} from "@/service/superFetch";
 import IconClose from "@/components/icons/IconClose"
 export default {
   name: "EditGenre",
@@ -80,9 +79,9 @@ export default {
       }
        if (this.localGenre.id) {
         url = `/genre/update?id=${this.genre.id}`
-        result = await $patch(url, formData)
+        result = await this.$patch(url, formData)
       } else {
-        result = await $post(url, formData)
+        result = await this.$post(url, formData)
       }
       if (result) {
 
@@ -95,7 +94,7 @@ export default {
         return false;
       }
       const url = `/genre/delete?id=${this.genre.id}`
-      const result = await $delete(url)
+      const result = await this.$delete(url)
       if (result) {
         this.$store.dispatch('genre/loadGenre')
         this.closeModal();
@@ -131,12 +130,6 @@ export default {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    .close-button {
-      background: inherit;
-      border: none;
-      outline: none;
-      cursor: pointer;
-    }
   }
 
 
