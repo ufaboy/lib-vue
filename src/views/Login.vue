@@ -3,7 +3,7 @@
     <form class="form" @submit.prevent="login">
       <label class="label label-username">
         <base-icon class="icon"><icon-username/></base-icon>
-        <input type="text" class="input" v-model.trim="username" placeholder="username" autocomplete="off">
+        <input type="text" class="input" v-focus v-model.trim="username" placeholder="username" autocomplete="off">
       </label>
       <label class="label label-password">
         <base-icon class="icon"><icon-password/></base-icon>

@@ -19,6 +19,7 @@ import scroll from "@/plugins/scroll"
 import observer from "@/plugins/IntersectionObserver";
 import loader from "@/plugins/loader"
 import toaster from "@/plugins/toaster";
+import autoFocus from "@/plugins/focus";
 //self plugins
 
 //components
@@ -61,6 +62,7 @@ requireComponent.keys().forEach(fileName => {
 		.use(modal)
 		.use(observer)
 		.use(scroll)
+		.use(autoFocus)
 		.use(improvedFetch, {API_URL: process.env.VUE_APP_API_URL, API_TOKEN: sessionStorage.getItem('lib-token')})
 		.use(loader, loader)
 		.use(toaster, {time: 1000, position: 'top-right'})

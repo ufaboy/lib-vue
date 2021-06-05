@@ -13,8 +13,8 @@
       </button>
     </header>
     <label class="label">
-      <span class="title">title</span>
-      <input type="text" class="value" v-model.trim="localGenre.name">
+      <span class="title">name</span>
+      <input type="text" class="value" v-model.trim="localGenre.name" v-focus>
     </label>
     <label class="label">
       <span class="title">description</span>
