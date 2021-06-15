@@ -129,7 +129,7 @@ export default {
   padding: 0 1.5rem;
 
   .header {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-flow: row nowrap;
 

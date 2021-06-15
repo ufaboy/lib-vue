@@ -213,10 +213,10 @@ export default {
   }
 
   .header {
-    margin-bottom: 1rem;
     display: flex;
     justify-content: space-between;
     flex-flow: row nowrap;
+    margin-bottom: 0.5rem;
 
     .searchText {
       color: var(--color-2);
