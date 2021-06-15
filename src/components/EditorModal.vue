@@ -1,9 +1,12 @@
 <template>
   <div class="editor-modal">
 <!--     eslint-disable-next-line vue/no-mutating-props-->
-    <textarea class="textarea" name="" id="" rows="10" v-model="editorNode.innerHTML"/>
+    <textarea class="textarea" rows="10" v-if="rawEditor" v-model="editorNode.outerHTML"/>
+    <!--     eslint-disable-next-line vue/no-mutating-props-->
+    <textarea class="textarea" rows="10" v-else v-model="editorNode.innerHTML"/>
     <footer class="btn-bar">
       <button class="negative-btn" @click="closeModal">сброс</button>
+      <button class="regular-btn" @click="rawEditor = !rawEditor">{{rawEditor ? 'HTML' : 'RAW'}}</button>
       <button class="positive-btn" @click="saveEditor">сохранить</button>
     </footer>
   </div>
@@ -17,6 +20,7 @@ export default {
     editorNode: {},
   },
   data: () => ({
+    rawEditor: false
   }),
   computed: {},
   watch: {},

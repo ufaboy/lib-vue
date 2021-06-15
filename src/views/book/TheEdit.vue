@@ -4,7 +4,7 @@
       <div class="text-container__action">
         <button class="negative-btn" type="reset" @click="resetBook">reset</button>
         <button class="positive-btn" @click="sendBook">save</button>
-        <star-rating v-model="book.rating" :star-size="20" :show-rating="false"/>
+        <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
         <div class="switch-label" v-if="$store.state.user.name === 'admin'">
           <span class="switch-title">{{ $store.state.isDesktop ? 'SFW' : 'S' }}</span>
           <label class="switch">

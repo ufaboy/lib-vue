@@ -206,9 +206,12 @@ export default {
   p {
     word-break: break-word;
     padding: initial;
-    margin: initial;
     text-indent: 1rem;
-    margin-bottom: 0.3rem;
+    margin: 0 0 0.3rem;
+    position: relative;
+    span[data-tooltip]:hover {
+      color: crimson;
+    }
   }
 
   .text {

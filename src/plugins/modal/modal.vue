@@ -70,7 +70,7 @@ export default {
   }
 }
 .modal-wrap.active {
-  z-index: 9;
+  z-index: 30;
 }
 
 .dialog {
