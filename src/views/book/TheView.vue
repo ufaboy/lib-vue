@@ -127,9 +127,13 @@ export default {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
     },
     prepareUrlForMedia(book) {
-      const regexp = new RegExp("APIURL", "g");
-      book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
+      if(book.text) {
+        const regexp = new RegExp("APIURL", "g");
+        book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
+        return book
+      }
       return book
+
     },
     moveMedia() {
       let toggleSide = true

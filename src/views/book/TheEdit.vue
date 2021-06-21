@@ -35,23 +35,20 @@
         <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation" placeholder="annotation" @focus="$event.target.placeholder = ''"
                   @blur="$event.target.placeholder = 'annotation'"/>
       </form-field>
-<!--      <form-field @click="openGenreModal" :placeholder="'genre'">-->
-<!--        <div class="ml-value row">-->
-<!--          <span v-if="genres.length === 0">Не выбраны жанры</span>-->
-<!--          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"-->
-<!--                :key="genre.id">{{ genre.name }}</span>-->
-<!--        </div>-->
-<!--      </form-field>-->
       <section class="section genre" @click="openGenreModal">
         <div class="value row">
           <span v-if="genres.length === 0">Не выбраны жанры</span>
-          <span class="value genre-span" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of genres"
-                :key="genre.id">{{ genre.name }}</span>
+          <span class="value genre-span"
+                :style="{color: colorizeGenre(index)}"
+                v-for="(genre, index) of genres"
+                :key="genre.id">
+            {{ genre.name }}
+          </span>
         </div>
       </section>
       <div class="label">
         <span class="label-header">
-          <span class="title">text {{ book.text.length }}</span>
+          <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editor }}</button>
           <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
@@ -216,7 +213,7 @@ export default {
         if (result) {
           // this.book = Object.assign({}, result)
           this.book = {...result, annotation: result.annotation ? result.annotation : ''}
-          this.genres = result.genres
+          this.genres = [...result.genres]
           this.files.push(...result.files)
         } else {
           console.log(result)

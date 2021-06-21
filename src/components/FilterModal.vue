@@ -12,13 +12,12 @@
       <optgroup v-for="parent of genres" :key="parent.id" :label="parent.name">
         <option class="value" :value="genre" v-for="genre of parent.childes" :key="genre.id">{{genre.name}}</option>
       </optgroup>
-
     </select>
   </label>
   <label class="label">
     <span class="title">rating</span>
     <select class="select" v-model="filter.rating" name="selectRating">
-      <option class="value" :value="num" v-for="num of 5" :key="'ratin-' + num">{{num}}</option>
+      <option class="value" :value="num" v-for="num of 5" :key="'rating-' + num">{{num}}</option>
     </select>
   </label>
   <button v-if="$store.state.user.name === 'admin'"
