@@ -17,5 +17,6 @@ export default {
 .auth-wrap {
   height: 100%;
   width: 100%;
+  background: linear-gradient(#141e30, #243b55);
 }
 </style>
