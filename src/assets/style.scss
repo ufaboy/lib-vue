@@ -93,8 +93,47 @@ input {
   outline: none;
 }
 
-// button
+.theme-light {
+  --body-color: #ECEFF1;
+  --antiBody-color: #263238;
+  --shared-primary-color: #1565C0;
+  --shared-secondary-color: #EF6C00;
+  --shared-error-color: #C62828;
+  --shared-default-color: #9E9E9E;
+  --shared-disabled-color: #E0E0E0;
+  --text-lvl1-color: #263238;
+  --text-lvl3-color: #546E7A;
+  --text-lvl5-color: #78909C;
+  --text-lvl7-color: #B0BEC5;
+  --text-lvl9-color: #ECEFF1;
+}
 
+.theme-dark {
+  --body-color: #263238;
+  --antiBody-color: #ECEFF1;
+  --shared-primary-color: #90CAF9;
+  --shared-secondary-color: #FFE0B2;
+  --shared-error-color: #FFCDD2;
+  --shared-default-color: #BDBDBD;
+  --shared-disabled-color: #616161;
+  --text-lvl1-color: #ECEFF1;
+  --text-lvl3-color: #B0BEC5;
+  --text-lvl5-color: #78909C;
+  --text-lvl7-color: #546E7A;
+  --text-lvl9-color: #263238;
+}
+@media (prefers-color-scheme: dark) {
+  body.theme-auto {
+    --background-color: #111;
+    --text-color: #f3f3f3;
+  }
+}
+@media (prefers-color-scheme: light) {
+  body.theme-auto {
+    --background-color: #f3f3f3;
+    --text-color: #111;
+  }
+}
 
 //form
 .label {

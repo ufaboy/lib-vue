@@ -7,6 +7,8 @@ import BookTable from "@/views/book/TheTable"
 import BookEdit from "@/views/book/TheEdit";
 import BookMedia from "@/views/book/TheMedia";
 import GenreTable from "@/views/GenreTable";
+import TheSettings from "@/views/TheSettings";
+import TheNote from "@/views/TheNote";
 
 const routes = [
   {
@@ -61,6 +63,16 @@ const routes = [
     path: '/book/update/:id',
     name: 'book-edit',
     component: BookEdit
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: TheSettings
+  },
+  {
+    path: '/note',
+    name: 'note',
+    component: TheNote
   },
   {
     path: '/test',

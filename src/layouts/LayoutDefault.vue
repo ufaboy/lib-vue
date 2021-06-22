@@ -16,6 +16,12 @@
         <li class="breadcrumb-li">
           <router-link class="breadcrumb-link" to="/genre">Genre</router-link>
         </li>
+        <li class="breadcrumb-li">
+          <router-link class="breadcrumb-link" to="/note">Note</router-link>
+        </li>
+        <li class="breadcrumb-li">
+          <router-link class="breadcrumb-link" to="/settings">Settings</router-link>
+        </li>
       </ul>
     </header>
     <slot/>
