@@ -155,7 +155,7 @@ export default {
       .breadcrumb {
         height: auto;
         padding: 1rem;
-        transition: all linear 0.5s;
+        transition: all linear 0.3s;
         .breadcrumb-li {
           height: auto;
           margin-bottom: 1rem;

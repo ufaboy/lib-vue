@@ -9,7 +9,7 @@
           <span class="media-name">{{ media.file_name }}</span>
         </li>
       </ol>
-      <select v-else-if="main.isMobile" v-model="activeMedia">
+      <select class="select" v-else-if="main.isMobile" v-model="activeMedia">
         <option :value="media" v-for="media of book.files" :key="media.id">{{ media.file_name }}</option>
       </select>
       <figure class="media-video">
@@ -95,7 +95,7 @@ export default {
     flex-flow: row wrap;
   }
   .book-picture_img {
-
+    object-fit: cover;
   }
   .book-video {
     display: flex;
@@ -135,5 +135,24 @@ export default {
     }
   }
 }
+@media only screen and (max-width: 892px) {
+  .book-container {
+    .book-video {
+      display: block;
+      padding: 0.5rem;
+    }
+    .select {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
 
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
+  .book-container {}
+}
+
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
+  .book-container {}
+}
 </style>
