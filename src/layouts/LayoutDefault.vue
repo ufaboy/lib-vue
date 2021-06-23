@@ -93,6 +93,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .basement {
   .header {
     color: var(--color-2);
@@ -106,6 +107,11 @@ export default {
 
     .burger {
       cursor: pointer;
+      //убрать фон при клике, тапе
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
       .icon-btn {
         display: none;
       }
@@ -113,6 +119,7 @@ export default {
     .burger.mobile {
       width: 26px;
       height: 24px;
+      background-color: var(--background-2);
       .icon-btn {
         display: block;
       }
@@ -120,30 +127,49 @@ export default {
         transition: transform 0.3s;
       }
       .breadcrumb {
-        visibility: hidden;
+        //opacity: 0;
         position: absolute;
-        top: 63px;
-        left: 0;
         flex-flow: row wrap;
         width: 100vw;
+        left: 0;
+        top: 65px;
+        height: 0px;
         z-index: 55;
-        padding: 1rem 2rem;
+        padding: 0;
         background-color: #000000;
         .breadcrumb-li {
           width: 100%;
+          height: 0;
           margin-right: initial;
-          margin-bottom: 1rem;
+          border: none;
+        }
+        .breadcrumb-link {
+          display: none;
+          border: none;
+          padding: 0;
         }
       }
 
     }
     .burger.mobile.active {
       .breadcrumb {
-        visibility: visible;
-        transition: visibility linear 1s;
+        height: auto;
+        padding: 1rem;
+        transition: all linear 0.5s;
+        .breadcrumb-li {
+          height: auto;
+          margin-bottom: 1rem;
+          border: 1px solid var(--color-p);
+        }
+        .breadcrumb-li:last-of-type {
+          margin-bottom: 0;
+        }
+        .breadcrumb-link {
+          padding: 0.5rem;
+          display: block;
+        }
       }
       .icon-btn {
-        display: block;
         rect:nth-child(1) {
           transform: rotate(45deg) translate(15%, -10%);
         }
@@ -170,6 +196,7 @@ export default {
       margin-right: 0;
     }
     .breadcrumb-link {
+      width: 100%;
       padding: 0.5rem;
       background: transparent;
       color: var(--color-2);
@@ -178,10 +205,9 @@ export default {
       cursor: pointer;
       white-space: nowrap;
       text-transform: capitalize;
-      border: none;
+
+
     }
-
-
     .select {
       width: 100%;
     }
