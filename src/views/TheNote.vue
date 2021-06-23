@@ -4,27 +4,25 @@
       <button class="positive-btn" @click="sendNotes">save</button>
     </header>
     <table class="notes-table">
-      <caption>Fast Notes Links</caption>
-      <thead>
-      <th>index</th>
-      <th>url</th>
-      <th>actions</th>
+      <caption class="caption">Fast Notes Links</caption>
+      <thead class="thead">
+      <th class="th">index</th>
+      <th class="th">url</th>
+      <th class="th">actions</th>
       </thead>
       <tbody>
       <tr class="note" v-for="(note, index) of notes" :key="'note-' + index">
-        <td>{{ index }}</td>
-        <td>
+        <td class="td">{{ index }}</td>
+        <td class="td">
           <input type="text" class="note__url" v-model="note.url">
         </td>
-        <td>
+        <td class="td">
           <button class="td__btn negative-btn" @click="deleteNote(index)">del</button>
         </td>
       </tr>
       </tbody>
-
     </table>
     <button class="notes__btn btn" @click="addNote">add</button>
-
   </div>
 </template>
 
@@ -77,20 +75,40 @@ export default {
   width: 100%;
   height: calc(100% - 4rem);
   padding: 0 1.5rem;
+  .notes-table {
+    border: 1px solid;
+    border-color: whitesmoke;
+    margin-bottom: 1rem;
+    .thead {
+      border-bottom: 1px solid;
+      border-color: inherit;
+    }
+    .th {
+      padding: 0.3rem;
+    }
+    .td {
+      padding: 0.3rem;
+      text-align: center;
+    }
+    .note {
+      border-bottom: 1px solid;
+      border-color: inherit;
+    }
+  }
 
   .note__url {
     padding: 6px;
     width: 400px;
   }
 
-  .tfoot {
-    .tfoot__btn {
-    }
+  .td__btn {
+    margin-right: initial;
   }
 }
 
 @media only screen and (max-width: 892px) {
   .notes {
+    padding: 0.5rem;
     .note__url {
       width: 100%;
     }

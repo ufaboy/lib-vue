@@ -627,6 +627,10 @@ export default {
 
     .header-media {
       margin-bottom: 1rem;
+      display: flex;
+      .upload-dropbox {
+        margin-right: 0.5rem;
+      }
     }
 
     .title {

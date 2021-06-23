@@ -23,9 +23,9 @@ export default {
       document.getElementById('stars').className = 'star-animating stars';
     },
     createDotsString() {
-      const maxDots = 500;
-      const maxW = 1920;
-      const maxH = 1080;
+      const maxDots = document.documentElement.clientHeight > 900 ? 500 : 150;
+      const maxW = document.documentElement.clientWidth;
+      const maxH = document.documentElement.clientHeight;
       let str = `box-shadow: `
       for (let i = 0; i < maxDots; i++) {
         const rndH = this.randomInteger(0, maxH)
