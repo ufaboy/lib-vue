@@ -1,12 +1,12 @@
 const state = () => ({
-	name: '',
+	username: '',
 	token: ''
 })
 
 // getters
 const getters = {
-	name(state) {
-		return state.name
+	username(state) {
+		return state.username
 	},
 	token(state) {
 		return state.token
@@ -23,7 +23,7 @@ const actions = {
 // mutations
 const mutations = {
 	setUser(state, payload) {
-		state.name = payload.name
+		state.username = payload.username
 		state.token = payload.token
 	},
 }

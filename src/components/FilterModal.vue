@@ -20,7 +20,7 @@
       <option class="value" :value="num" v-for="num of 5" :key="'rating-' + num">{{num}}</option>
     </select>
   </label>
-  <button v-if="$store.state.user.name === 'admin'"
+  <button v-if="username === 'admin'"
           type="button"
           class="btn-switch btn"
           :class="{'active': genre.ad}"
@@ -55,6 +55,9 @@ export default {
   computed: {
     genres() {
       return this.$store.state.genre.items
+    },
+    username() {
+      return this.$store.state.user.username
     }
   },
   methods: {
@@ -101,7 +104,7 @@ export default {
     margin-bottom: 0.5rem;
   }
   .label {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     .title {
       margin-bottom: 0.3rem;
     }

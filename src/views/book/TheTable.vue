@@ -66,17 +66,15 @@
 
 <script>
 import {mapState} from "vuex";
-import {defineAsyncComponent} from "vue";
+import IconSortAsc from '@/components/icons/IconSortAsc.vue'
+import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import FilterModal from '@/components/FilterModal.vue'
 
 export default {
   name: "BooksTable",
   layout: 'basement',
   middleware: [],
-  components: {
-    FilterModal: defineAsyncComponent(() => import('@/components/FilterModal.vue')),
-    IconSortAsc: defineAsyncComponent(() => import('@/components/icons/IconSortAsc.vue')),
-    IconSortDesc: defineAsyncComponent(() => import('@/components/icons/IconSortDesc.vue')),
-  },
+  components: {FilterModal, IconSortAsc, IconSortDesc},
   props: {},
   data: () => ({
     books: {

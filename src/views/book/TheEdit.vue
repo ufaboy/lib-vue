@@ -5,7 +5,7 @@
         <button class="negative-btn" type="reset" @click="resetBook">reset</button>
         <button class="positive-btn" @click="sendBook">save</button>
         <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
-        <div class="switch-label" v-if="$store.state.user.name === 'admin'">
+        <div class="switch-label" v-if="username === 'admin'">
           <span class="switch-title">{{ $store.state.isDesktop ? 'SFW' : 'S' }}</span>
           <label class="switch">
             <input type="checkbox" v-model="book.ad">
@@ -20,9 +20,14 @@
           <input type="text" class="ml-value" v-model.trim="book.name" placeholder="name"
                  @focus="$event.target.placeholder = ''" @blur="$event.target.placeholder = 'name'">
         </form-field>
-        <form-field :placeholder="'source'"><input type="url" class="ml-value" placeholder="source"
-                                                   v-model.trim="book.source" @focus="$event.target.placeholder = ''"
-                                                   @blur="$event.target.placeholder = 'source'"></form-field>
+        <form-field :placeholder="'source'">
+          <input type="url"
+                 class="ml-value"
+                 placeholder="source"
+                 v-model.trim="book.source"
+                 @focus="$event.target.placeholder = ''"
+                 @blur="$event.target.placeholder = 'source'">
+        </form-field>
       </section>
       <form-field :placeholder="'annotation'">
         <template #header>
@@ -117,18 +122,16 @@
 
 <script>
 import StarRating from 'vue-star-rating'
-import {defineAsyncComponent} from "vue";
+import IconParagraph from '@/components/icons/IconParagraph.vue'
+import IconCarriage from '@/components/icons/IconCarriage.vue'
+import IconSlash from '@/components/icons/IconSlash.vue'
+import GenreBook from '@/components/GenreBook.vue'
+import ProgressRing from '@/components/ProgressRing.vue'
+import FormField from '@/components/FormField.vue'
 
 export default {
   name: "BookEdit",
-  components: {
-    IconParagraph: defineAsyncComponent(() => import('@/components/icons/IconParagraph.vue')),
-    IconCarriage: defineAsyncComponent(() => import('@/components/icons/IconCarriage.vue')),
-    IconSlash: defineAsyncComponent(() => import('@/components/icons/IconSlash.vue')),
-    GenreBook: defineAsyncComponent(() => import('@/components/GenreBook.vue')),
-    ProgressRing: defineAsyncComponent(() => import('@/components/ProgressRing.vue')),
-    FormField: defineAsyncComponent(() => import('@/components/FormField.vue')),
-    StarRating, },
+  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, ProgressRing, FormField, StarRating, },
   props: {},
   data: () => ({
     files: [],
@@ -375,7 +378,11 @@ export default {
       return color[i]
     },
   },
-  computed: {},
+  computed: {
+    username() {
+      return this.$store.state.user.username
+    }
+  },
   watch: {
     genres: {
       handler: function () {

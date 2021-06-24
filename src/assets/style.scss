@@ -319,9 +319,6 @@ input {
   padding-left: 25px;
   cursor: pointer;
   text-transform: capitalize;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -379,6 +376,12 @@ input {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
+}
+
+.select {
+  padding: 7px;
+  background-color: var(--background-3);
+  color: var(--color);
 }
 
 @media only screen and (max-width: 892px) {
