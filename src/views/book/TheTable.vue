@@ -58,8 +58,11 @@
       </select>
     </div>
     <modal ref="filterBookModal">
-      <filter-modal @active-filter="updateFilterPage" @reset-filter="resetTable" :rating="filter.rating"
-                    :genre="filter.genre" :ad="filter.ad"/>
+      <filter-modal @active-filter="updateFilterPage"
+                    @reset-filter="resetTable"
+                    :rating="filter.rating"
+                    :genre="filter.genre"
+                    :ad="filter.ad"/>
     </modal>
   </div>
 </template>

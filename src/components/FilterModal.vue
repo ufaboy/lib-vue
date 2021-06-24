@@ -23,7 +23,7 @@
   <button v-if="username === 'admin'"
           type="button"
           class="btn-switch btn"
-          :class="{'active': genre.ad}"
+          :class="{'active': filter.genre.ad}"
           @click="filter.genre.ad = !genre.ad">ad
   </button>
   <footer class="footer">
@@ -77,7 +77,7 @@ export default {
       this.filter.ad = this.ad ?? null
     },
     closeModal() {
-      this.$parent.$parent.hide('filterBookModal', this)
+      this.$parent.hide('filterBookModal', this)
     },
   },
   created() {
