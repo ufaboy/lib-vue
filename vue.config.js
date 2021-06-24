@@ -1,4 +1,5 @@
 module.exports = {
+  // publicPath: process.env.NODE_ENV === 'production' ? '/library-example/' : '/',
   pwa: {
     name: 'Library',
     themeColor: '#4285f4',
