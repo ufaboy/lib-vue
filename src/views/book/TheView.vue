@@ -26,12 +26,14 @@
 </template>
 
 <script>
-import EditorModal from "@/components/EditorModal";
+import {defineAsyncComponent} from "vue";
 const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
   name: "Book",
-  components: {EditorModal},
+  components: {
+    EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
+  },
   props: {},
 
   data: () => ({
@@ -48,53 +50,15 @@ export default {
   }),
   methods: {
     async loadBook() {
-      const token = sessionStorage.getItem('lib-token') ?? ''
-      const Bearer = `Bearer ${token}`;
-      const url = `${process.env.VUE_APP_API_URL}/book/view?id=${this.$route.params.id}`;
-      let response = await fetch(url, {
-        headers: {
-          Authorization: Bearer
-        }
-      })
-      if (response) {
-        const reader = response.body.getReader();
-        const contentLength = response.headers.get('Content-Length') ? +response.headers.get('Content-Length') : +response.headers.get('Data-Size');
-        let receivedLength = 0; // количество байт, полученных на данный момент
-        let chunks = []; // массив полученных двоичных фрагментов (составляющих тело ответа)
-        // eslint-disable-next-line no-constant-condition
-        while (true) {
-          const {done, value} = await reader.read();
-          if (done) {
-            break;
-          }
-          chunks.push(value);
-          receivedLength += value.length;
-          let percent = Math.round(receivedLength * 100 / contentLength)
-          if (percent >= 100) {
-            percent = 100
-            setTimeout(() => this.progressLoad = 0, 500)
-          }
-          this.progressLoad = percent
-        }
-        let chunksAll = new Uint8Array(receivedLength); // (4.1)
-        let position = 0;
-        for (let chunk of chunks) {
-          chunksAll.set(chunk, position); // (4.2)
-          position += chunk.length;
-        }
-        const result = JSON.parse(new TextDecoder("utf-8").decode(chunksAll));
-        if (await this.checkLoadedBook(result)) {
-          await this.relocateToMedia(result)
-        } else {
-          this.book = await this.prepareUrlForMedia(result)
-          document.title = `Book: ${result.name}`;
-        }
-
+      const url = `/book/view?id=${this.$route.params.id}`;
+      const result = await this.$get(url)
+      if (result) {
+        this.book = await this.prepareUrlForMedia(result)
+        document.title = `Book: ${result.name}`;
+      } else {
+        console.log({'result': result})
       }
-    },
-    async checkLoadedBook(book) {
-      return book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
-    },
+     },
     async relocateToMedia(book) {
       await this.$emit('loaded-book', book)
       await this.$router.push({name: 'book-media', params: {id: book.id}})

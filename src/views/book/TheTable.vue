@@ -65,26 +65,24 @@
 </template>
 
 <script>
-import FilterModal from "@/components/FilterModal";
-import IconSortAsc from "@/components/icons/IconSortAsc"
-import IconSortDesc from "@/components/icons/IconSortDesc"
 import {mapState} from "vuex";
+import {defineAsyncComponent} from "vue";
+
 export default {
   name: "BooksTable",
-  head() {
-    return {
-      title: 'Table books',
-    };
-  },
   layout: 'basement',
   middleware: [],
-  components: {FilterModal, IconSortAsc, IconSortDesc},
+  components: {
+    FilterModal: defineAsyncComponent(() => import('@/components/FilterModal.vue')),
+    IconSortAsc: defineAsyncComponent(() => import('@/components/icons/IconSortAsc.vue')),
+    IconSortDesc: defineAsyncComponent(() => import('@/components/icons/IconSortDesc.vue')),
+  },
   props: {},
   data: () => ({
     books: {
-        items: [],
-        _links: {},
-        _meta: {},
+      items: [],
+      _links: {},
+      _meta: {},
     },
     bookName: null,
     filter: {
@@ -121,7 +119,10 @@ export default {
     },
     async openBook(book, type) {
       const comicsBook = book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
-      await this.$router.push({name: type === 'edit' ? 'book-edit' : comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
+      await this.$router.push({
+        name: type === 'edit' ? 'book-edit' : comicsBook ? 'book-media' : 'book-view',
+        params: {id: book.id}
+      })
     },
     resetTable() {
       this.filter.genre = null

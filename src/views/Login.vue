@@ -3,12 +3,12 @@
     <h2 class="header-title">Login</h2>
     <form class="login-form" @submit.prevent="login">
       <div class="user-box">
-        <input type="text" class="input" required v-model.trim="username" autocomplete="off"><!--v-focus для автофокуса-->
-        <label class="label">Username</label>
+        <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off"><!--v-focus для автофокуса-->
+        <label class="label" for="login-username">Username</label>
       </div>
       <div class="user-box">
-        <input type="password" class="input" required v-model.trim="password" autocomplete="off">
-        <label class="label">Password</label>
+        <input id="login-pass" type="password" class="input" required v-model.trim="password" autocomplete="off">
+        <label class="label" for="login-pass">Password</label>
       </div>
       <button class="login-btn">
         <span></span>

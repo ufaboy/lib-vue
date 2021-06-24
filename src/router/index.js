@@ -1,14 +1,16 @@
+// import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
-import ListBook from "@/views/ListBook";
-import ListGenre from "@/views/ListGenre";
-import BookView from "@/views/book/TheView"
-import BookTable from "@/views/book/TheTable"
-import BookEdit from "@/views/book/TheEdit";
-import BookMedia from "@/views/book/TheMedia";
-import GenreTable from "@/views/GenreTable";
-import TheSettings from "@/views/TheSettings";
-import TheNote from "@/views/TheNote";
+const Home = () => import('@/views/Home.vue')
+const ListBook = () => import('@/views/ListBook.vue')
+const ListGenre = () => import('@/views/ListGenre.vue')
+const BookView = () => import('@/views/book/TheView.vue')
+const BookTable = () => import('@/views/book/TheTable.vue')
+const GenreTable = () => import('@/views/GenreTable.vue')
+const BookEdit = () => import('@/views/book/TheEdit.vue')
+const BookMedia = () => import('@/views/book/TheMedia.vue')
+const TheSettings = () => import('@/views/TheSettings.vue')
+const TheNote = () => import('@/views/TheNote.vue')
+
 
 const routes = [
   {

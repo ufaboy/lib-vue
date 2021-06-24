@@ -32,11 +32,11 @@
 </template>
 
 <script>
-import SortingModal from "@/components/SortingModal";
-
 export default {
   name: "ListBook",
-  components: {SortingModal},
+  components: {
+    SortingModal: () => import('@/components/SortingModal.vue')
+  },
   props: {},
   data: () => ({
     data: {

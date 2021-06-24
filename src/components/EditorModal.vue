@@ -34,7 +34,7 @@ export default {
       this.closeModal()
     },
     closeModal() {
-      this.$parent.hide('editor', this)
+      this.$parent.$parent.hide('editor', this)
     },
   },
   unmounted() {
