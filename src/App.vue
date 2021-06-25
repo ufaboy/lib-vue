@@ -3,15 +3,18 @@
     <router-view @loaded-book="loadBook" :book-props="book" v-bind="$attrs"/>
   </component>
 </template>
-<script>
 
-import LayoutAuth from "@/layouts/LayoutAuth";
+<script>
 import LayoutDefault from "@/layouts/LayoutDefault";
-import LayoutTest from "@/layouts/LayoutTest";
-import LayoutError from "@/layouts/LayoutError";
+import {defineAsyncComponent} from "vue";
 
 export default {
-  components: { LayoutDefault, LayoutAuth, LayoutTest, LayoutError},
+  components: {
+    LayoutDefault,
+    LayoutAuth: defineAsyncComponent(() => import('@/layouts/LayoutAuth.vue')),
+    LayoutTest: defineAsyncComponent(() => import('@/layouts/LayoutTest.vue')),
+    LayoutError: defineAsyncComponent(() => import('@/layouts/LayoutError.vue'))
+  },
   data: () => ({
     book: {},
   }),

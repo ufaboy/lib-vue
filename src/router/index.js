@@ -1,6 +1,7 @@
 import store from '@/store'
 import { createRouter, createWebHistory } from 'vue-router'
-const Home = () => import('@/views/Home.vue')
+import Home from '@/views/Home.vue'
+// const Home = () => import('@/views/Home.vue')
 const ListBook = () => import('@/views/ListBook.vue')
 const ListGenre = () => import('@/views/ListGenre.vue')
 const BookView = () => import('@/views/book/TheView.vue')
