@@ -412,7 +412,7 @@ span {
       height: 3rem;
     }
     .stars.s1 {
-      top: 14em;
+      top: 8em;
       left: -7em;
       &:before {
         top: -15rem;
@@ -438,13 +438,26 @@ span {
       top: 87em;
       left: 7em;
     }
+    &:before {
+      top: calc(50% - 27em);
+      left: calc(50% - 19em);
+      width: 40em;
+      height: 40em;
+    }
+    &:after {
+      top: calc(50% - 22em);
+      left: calc(50% - 13em);
+      width: 28em;
+      height: 28em;
+    }
   }
   .alt {
-    bottom: 6.25em;
+    bottom: initial;
+    top: 1rem;
   }
   .info {
     text-align: center;
-    bottom: 2rem;
+    bottom: 6rem;
   }
   @keyframes moon {
     0%{
