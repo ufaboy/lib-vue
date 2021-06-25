@@ -117,18 +117,16 @@
 
 <script>
 import StarRating from 'vue-star-rating'
-import {defineAsyncComponent} from "vue";
+import IconParagraph from '@/components/icons/IconParagraph.vue'
+import IconCarriage from '@/components/icons/IconCarriage.vue'
+import IconSlash from '@/components/icons/IconSlash.vue'
+import GenreBook from '@/components/GenreBook.vue'
+import ProgressRing from '@/components/ProgressRing.vue'
+import FormField from '@/components/FormField.vue'
 
 export default {
   name: "BookEdit",
-  components: {
-    IconParagraph: defineAsyncComponent(() => import('@/components/icons/IconParagraph.vue')),
-    IconCarriage: defineAsyncComponent(() => import('@/components/icons/IconCarriage.vue')),
-    IconSlash: defineAsyncComponent(() => import('@/components/icons/IconSlash.vue')),
-    GenreBook: defineAsyncComponent(() => import('@/components/GenreBook.vue')),
-    ProgressRing: defineAsyncComponent(() => import('@/components/ProgressRing.vue')),
-    FormField: defineAsyncComponent(() => import('@/components/FormField.vue')),
-    StarRating, },
+  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, ProgressRing, FormField, StarRating},
   props: {},
   data: () => ({
     files: [],

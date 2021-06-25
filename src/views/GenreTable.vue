@@ -39,15 +39,13 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue'
+import EditGenre from '@/components/EditGenre.vue'
+import IconSortAsc from '@/components/icons/IconSortAsc.vue'
+import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
 export default {
   name: "GenreTable",
-  components: {
-    EditGenre: defineAsyncComponent(() => import('@/components/EditGenre.vue')),
-    IconSortAsc: defineAsyncComponent(() => import('@/components/icons/IconSortAsc.vue')),
-    IconSortDesc: defineAsyncComponent(() => import('@/components/icons/IconSortDesc.vue'))
-  },
+  components: {EditGenre, IconSortAsc, IconSortDesc},
   props: {},
   data: () => ({
     activeGenre: {

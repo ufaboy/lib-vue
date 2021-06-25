@@ -30,6 +30,7 @@ export default {
     document.title = 'Home';
   },
   mounted() {
+
   },
   updated() {
   },
