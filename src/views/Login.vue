@@ -46,6 +46,7 @@ export default {
         const result = await response.json();
         if (result.token) {
           sessionStorage.setItem('lib-token', result.token)
+          sessionStorage.setItem('lib-username', result.username)
           await this.$store.dispatch('user/setUser', result)
           await this.$router.push('/')
         } else this.$toast.error('Empty Token')

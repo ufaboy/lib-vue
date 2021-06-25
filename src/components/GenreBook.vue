@@ -86,7 +86,7 @@ export default {
       this.selectedGenre = this.genresProps.map(a => ({...a}))
     },
     closeModal() {
-      this.$parent.$parent.hide('genreBook', this)
+      this.$parent.hide('genreBook', this)
     }
   },
 }

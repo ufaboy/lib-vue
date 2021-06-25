@@ -50,6 +50,10 @@ export default {
         await this.$store.dispatch('genre/loadGenres')
       }
     },
+    getUsername() {
+      const username = sessionStorage.getItem('lib-username')
+      if (username) this.$store.commit('user/setUsername', username)
+    }
   },
   computed: {
     listParentTitle() {
@@ -79,11 +83,13 @@ export default {
     },
     isMobile() {
       return this.$store.state.main.isMobile
-    }
+    },
+
   },
   watch: {},
   async created() {
     await this.loadParents()
+    this.getUsername()
   },
   mounted() {
   },

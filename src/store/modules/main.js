@@ -8,21 +8,6 @@ const state = () => ({
 
 // getters
 const getters = {
-	layout(state) {
-		return state.layout
-	},
-	isMobile(state) {
-		return state.isMobile
-	},
-	isDesktop(state) {
-		return state.isDesktop
-	},
-	activeGenre(state) {
-		return state.activeGenre
-	},
-	activeBook(state) {
-		return state.activeBook
-	},
 }
 
 // actions

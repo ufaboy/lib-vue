@@ -110,7 +110,7 @@ export default {
       this.parent = {id: null, name: null}
     },
     closeModal() {
-      this.$parent.$parent.hide('editGenre', this)
+      this.$parent.hide('editGenre', this)
     },
     prepareGenre() {
       this.localGenre = Object.assign({}, this.genre)

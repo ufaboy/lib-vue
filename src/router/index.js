@@ -78,7 +78,6 @@ const routes = [
     component: TheNote,
     beforeEnter: (to, from, next) => {
       const user = store.state.user.username
-      console.log({'user': user, 'to': to, 'from': from})
       if (user === 'admin' ) {
         next()
       } else {

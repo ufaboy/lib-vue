@@ -16,15 +16,18 @@ const getters = {
 // actions
 const actions = {
 	async setUser({commit}, data) {
-		commit('setUser', data)
+		commit('setUsername', data.username)
+		commit('setToken', data.token)
 	}
 }
 
 // mutations
 const mutations = {
-	setUser(state, payload) {
-		state.username = payload.username
-		state.token = payload.token
+	setUsername(state, username) {
+		state.username = username
+	},
+	setToken(state, token) {
+		state.token = token
 	},
 }
 

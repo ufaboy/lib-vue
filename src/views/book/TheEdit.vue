@@ -6,12 +6,12 @@
         <button class="positive-btn" @click="sendBook">save</button>
         <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
         <div class="switch-label" v-if="username === 'admin'">
-          <span class="switch-title">{{ $store.state.isDesktop ? 'SFW' : 'S' }}</span>
+          <span class="switch-title">{{ isDesktop ? 'SFW' : 'S' }}</span>
           <label class="switch">
             <input type="checkbox" v-model="book.ad">
             <span class="slider round"/>
           </label>
-          <span class="switch-title">{{ $store.state.isDesktop ? 'NSFW' : 'N' }}</span>
+          <span class="switch-title">{{ isDesktop ? 'NSFW' : 'N' }}</span>
         </div>
       </div>
 
@@ -192,24 +192,20 @@ export default {
       this.genres = []
     },
     async checkBook() {
-      let verification = true
+      let validation = true
       let messages = []
       if (!this.book.name) {
         messages.push('empty name')
-        verification = false
+        validation = false
       }
       if (this.genres.length < 1) {
         messages.push('choose at least one genre')
-        verification = false
+        validation = false
       }
-      if (this.book.text.length === 0) {
-        messages.push('empty text')
-        verification = false
-      }
-      if (!verification) {
+      if (!validation) {
         this.$toast.error(messages);
       }
-      return verification
+      return validation
     },
     async getBook() {
       if (this.$route.params.id) {
@@ -244,7 +240,6 @@ export default {
       }
     },
     async sendFile(file, index) {
-      console.log({'index': index})
       return new Promise(function (resolve) {
         let formData = new FormData();
         formData.append('file', file);
@@ -381,6 +376,9 @@ export default {
   computed: {
     username() {
       return this.$store.state.user.username
+    },
+    isDesktop() {
+      return this.$store.state.main.isDesktop
     }
   },
   watch: {
@@ -626,7 +624,72 @@ export default {
     margin-right: 0.3rem;
     cursor: pointer;
   }
+.switch-label {
+  display: flex;
+  align-items: center;
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    margin: 0 0.3rem;
+  }
 
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+}
   .media-container {
     display: flex;
     min-width: 200px;
