@@ -43,7 +43,7 @@ export default {
       this.ascending = !this.ascending
     },
     closeModal() {
-      this.$parent.$parent.hide('sortings', this)
+      this.$parent.hide('sortings', this)
     },
   },
 }

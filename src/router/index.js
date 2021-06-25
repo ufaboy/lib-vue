@@ -1,4 +1,4 @@
-// import { defineAsyncComponent } from 'vue'
+import store from '@/store'
 import { createRouter, createWebHistory } from 'vue-router'
 const Home = () => import('@/views/Home.vue')
 const ListBook = () => import('@/views/ListBook.vue')
@@ -10,6 +10,7 @@ const BookEdit = () => import('@/views/book/TheEdit.vue')
 const BookMedia = () => import('@/views/book/TheMedia.vue')
 const TheSettings = () => import('@/views/TheSettings.vue')
 const TheNote = () => import('@/views/TheNote.vue')
+const TheError = () => import('@/views/TheError.vue')
 
 
 const routes = [
@@ -74,7 +75,24 @@ const routes = [
   {
     path: '/note',
     name: 'note',
-    component: TheNote
+    component: TheNote,
+    beforeEnter: (to, from, next) => {
+      const user = store.state.user.username
+      console.log({'user': user, 'to': to, 'from': from})
+      if (user === 'admin' ) {
+        next()
+      } else {
+        next(new Error('dont panic'))
+      }
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'error',
+    component: TheError,
+    meta: {
+      layout: 'layout-error'
+    }
   },
   {
     path: '/test',
@@ -103,6 +121,10 @@ router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem('lib-token') ?? ''
   if (to.name !== 'login' && !token) next({ name: 'login' })
   else next()
+})
+
+router.onError(() => {
+  router.push('/error')
 })
 
 export default router

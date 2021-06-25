@@ -144,7 +144,8 @@ export default {
           border: none;
         }
         .breadcrumb-link {
-          display: none;
+          //display: none;
+          visibility: hidden;
           border: none;
           padding: 0;
         }
@@ -160,13 +161,15 @@ export default {
           height: auto;
           margin-bottom: 1rem;
           border: 1px solid var(--color-p);
+          transition: all linear 0.3s;
         }
         .breadcrumb-li:last-of-type {
           margin-bottom: 0;
         }
         .breadcrumb-link {
           padding: 0.5rem;
-          display: block;
+          visibility: visible;
+          transition: all linear 0.3s;
         }
       }
       .icon-btn {

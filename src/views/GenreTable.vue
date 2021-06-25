@@ -57,7 +57,7 @@ export default {
     },
     modalOpen: false,
     genres: [],
-    ascending: 0,
+    ascending: 1,
     orderBy: null,
     columns: ['id', 'name', 'description', 'parent'],
     columnsClasses: {

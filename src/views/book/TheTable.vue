@@ -58,27 +58,26 @@
       </select>
     </div>
     <modal ref="filterBookModal">
-      <filter-modal @active-filter="updateFilterPage" @reset-filter="resetTable" :rating="filter.rating"
-                    :genre="filter.genre" :ad="filter.ad"/>
+      <filter-modal @active-filter="updateFilterPage"
+                    @reset-filter="resetTable"
+                    :rating="filter.rating"
+                    :genre="filter.genre"
+                    :ad="filter.ad"/>
     </modal>
   </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
-import {defineAsyncComponent} from "vue";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import FilterModal from '@/components/FilterModal.vue'
 
 export default {
   name: "BooksTable",
   layout: 'basement',
   middleware: [],
-  components: {
-    FilterModal: defineAsyncComponent(() => import('@/components/FilterModal.vue')),
-    IconSortAsc,
-    IconSortDesc,
-  },
+  components: {FilterModal, IconSortAsc, IconSortDesc},
   props: {},
   data: () => ({
     books: {

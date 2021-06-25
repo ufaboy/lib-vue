@@ -8,9 +8,10 @@
 import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
 import LayoutTest from "@/layouts/LayoutTest";
+import LayoutError from "@/layouts/LayoutError";
 
 export default {
-  components: { LayoutDefault, LayoutAuth, LayoutTest},
+  components: { LayoutDefault, LayoutAuth, LayoutTest, LayoutError},
   data: () => ({
     book: {},
   }),

@@ -2,7 +2,7 @@
   <form class="edit-genre" @submit.prevent="sendGenre">
     <header class="header">
       <h1>Genre</h1>
-        <button v-if="$store.state.user.name === 'admin'"
+        <button v-if="username === 'admin'"
                 type="button"
                 class="btn-switch btn"
                 :class="{'active': genre.ad}"
@@ -52,6 +52,9 @@ export default {
     },
   }),
   computed: {
+    username() {
+      return this.$store.state.user.username
+    }
   },
   watch: {},
   created() {
