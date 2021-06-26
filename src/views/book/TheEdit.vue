@@ -73,8 +73,13 @@
           </button>
         </span>
         </span>
-        <textarea class="editor clarity" v-model="book.text" rows="22" v-if="editor === 'raw'" ref="editor"></textarea>
-        <div class="editor" v-else v-html="book.text"></div>
+        <textarea class="editor clarity"
+                  v-model="book.text"
+                  v-if="editor === 'raw'"
+                  ref="editor"
+                  @input="autoResize"
+        ></textarea>
+        <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
     </div>
     <div class="media-container" v-if="book.id">
@@ -153,6 +158,11 @@ export default {
     expandIllustration: false,
   }),
   methods: {
+    autoResize() {
+      const editor = this.$refs.editor
+      editor.style.cssText = 'height:auto; padding:0';
+      editor.style.cssText = 'height:' + (Number(editor.scrollHeight) + 250) + 'px';
+    },
     calcProgressUpload(index) {
       return this.uploadingProgress[index]
     },
@@ -216,6 +226,8 @@ export default {
           this.book = {...result, annotation: result.annotation ? result.annotation : ''}
           this.genres = [...result.genres]
           this.files.push(...result.files)
+          await this.$nextTick()
+          this.autoResize()
         } else {
           console.log(result)
         }
@@ -293,13 +305,6 @@ export default {
         this.$forceUpdate()
       } else {
         console.log(result)
-      }
-    },
-    resizeSelect(e) {
-      if (e.type === 'focusin' && e.target.attributes.size) {
-        e.target.attributes.size.value = 4
-      } else if (e.type === 'focusout' && e.target.attributes.size) {
-        e.target.attributes.size.value = 1
       }
     },
 
@@ -394,6 +399,9 @@ export default {
     document.title = 'Editor';
   },
   mounted() {
+  },
+  unmounted() {
+
   },
   updated() {
   },

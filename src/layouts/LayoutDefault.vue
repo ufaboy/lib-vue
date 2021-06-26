@@ -198,25 +198,27 @@ export default {
     .breadcrumb-li {
       margin-right: 0.5rem;
       display: flex;
-      border: 1px solid var(--color-p);
+      border: 1px solid var(--text1);
       border-radius: 5px;
     }
     .breadcrumb-li:last-of-type {
       margin-right: 0;
     }
+    .breadcrumb-li:hover {
+      background-color: var(--surface4);
+    }
     .breadcrumb-link {
       width: 100%;
       padding: 0.5rem;
       background: transparent;
-      color: var(--color-2);
+      color: var(--text1);
       text-decoration: none;
       outline: none;
       cursor: pointer;
       white-space: nowrap;
       text-transform: capitalize;
-
-
     }
+
     .select {
       width: 100%;
     }
