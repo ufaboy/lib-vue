@@ -23,7 +23,7 @@
       </div>
     </section>
     <observer @intersect="loadBooks('push')"/>
-    <div class="loader" v-if="infinityLoading"></div>
+<!--    <div class="loader" v-if="infinityLoading"></div>-->
     <modal ref="sortings">
       <sorting-modal @sorting="updateBySorting"/>
     </modal>
@@ -200,9 +200,8 @@ export default {
     .search-input {
       display: flex;
       flex: 1;
-
-      color: (var(--color));
-      background-color: var(--background-2);
+      border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
+      background-color: var(--surface3);
       padding: 5px;
     }
 
@@ -223,7 +222,8 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    background: var(--background-2);
+    background: var(--surface2);
+
 
     .book-text-wrap {
       max-height: 100px;

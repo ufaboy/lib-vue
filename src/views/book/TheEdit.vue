@@ -407,8 +407,6 @@ export default {
   padding: 0 1rem;
   display: flex;
   flex-flow: row;
-  background: var(--background);
-
 
   .header {
     width: 100%;
@@ -461,8 +459,8 @@ export default {
   .value {
     padding: 0.3rem;
     width: 100%;
-    color: var(--color);
-    background-color: var(--background-2);
+    color: var(--text2);
+    background-color: var(--surface2);
     outline: none;
   }
 
@@ -476,7 +474,7 @@ export default {
     margin-right: 1rem;
 
     .ml {
-      background-color: var(--background-2);
+      background-color: var(--surface2);
       margin-bottom: 1rem;
     }
 
@@ -552,8 +550,8 @@ export default {
 
     .editor {
       width: 100%;
-      color: var(--color);
-      background-color: var(--background-2);
+      color: var(--text2);
+      background-color: var(--surface2);
       text-transform: initial;
       padding: 0.3rem;
 
@@ -587,7 +585,7 @@ export default {
       margin-right: 0.5rem;
 
       .icon {
-        fill: var(--color-p);
+        fill: var(--brand);
       }
     }
 

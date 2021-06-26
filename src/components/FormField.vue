@@ -44,7 +44,7 @@ export default {
   top: -13px;
   left: 13px;
   padding: 0 3px;
-  background-color: var(--background-2);
+  background-color: var(--surface2);
   border-radius: 5px;
 }
 

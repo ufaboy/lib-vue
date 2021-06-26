@@ -5,9 +5,9 @@
     <!--     eslint-disable-next-line vue/no-mutating-props-->
     <textarea class="textarea" rows="10" v-else v-model="editorNode.innerHTML"/>
     <footer class="btn-bar">
-      <button class="negative-btn" @click="closeModal">сброс</button>
+      <button class="negative-btn" @click="closeModal">Reset</button>
       <button class="regular-btn" @click="rawEditor = !rawEditor">{{rawEditor ? 'HTML' : 'RAW'}}</button>
-      <button class="positive-btn" @click="saveEditor">сохранить</button>
+      <button class="positive-btn" @click="saveEditor">Save</button>
     </footer>
   </div>
 </template>
@@ -46,8 +46,8 @@ export default {
 <style lang="scss">
 .editor-modal {
   padding: 1rem;
-  color: var(--color);
-  background-color: var(--background-2);
+  //color: var(--color);
+  //background-color: var(--background-2);
   .textarea {
     width: 100%;
     resize: vertical;

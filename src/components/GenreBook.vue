@@ -49,9 +49,6 @@ export default {
     searchField: '',
     selectedGenre: [],
     genres: [],
-    baseGenres: [
-      {id: null, title: '', childes: []}
-    ],
   }),
   computed: {
   },
@@ -120,6 +117,9 @@ export default {
     margin-bottom: 0.5rem;
     padding: 0.5rem;
   }
+  .fieldset-genre {
+    margin-right: 5px;
+  }
   .genres {
     display: flex;
     flex-flow: row nowrap;
@@ -155,8 +155,9 @@ export default {
   }
   .footer {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: 1rem;
+    width: 100%;
   }
   button {
     display: flex;

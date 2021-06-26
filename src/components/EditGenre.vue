@@ -22,7 +22,7 @@
     </label>
     <label class="label">
       <span class="title">parent genre</span>
-      <select class="value" v-model="localGenre.parent_id">
+      <select class="select value" v-model="localGenre.parent_id">
         <option v-for="genre of $store.state.genre.items" :key="genre.id" :value="genre.id">{{genre.name}}</option>
       </select>
     </label>
@@ -126,7 +126,7 @@ export default {
   flex-flow: wrap;
   height: 100%;
   width: 100%;
-  color: var(--color-2);
+  color: var(--text2);
   background-color: var(--background-2);
   .header {
     margin-bottom: 1rem;

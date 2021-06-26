@@ -1,0 +1,143 @@
+.table {
+  width: 100%;
+  border: 1px solid;
+  color: var(--text2);
+  background-color: var(--surface2);
+  border-color: var(--border-color);
+
+  thead {
+    border-bottom: 1px solid;
+    border-color: inherit;
+  }
+
+  border-collapse: collapse;
+  line-height: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  .th {
+    font-size: 1.2rem;
+    line-height: normal;
+    padding: 0.5rem;
+    position: sticky;
+    top: -1px;
+    background-color: var(--background);
+  }
+
+  th, td {
+    text-align: center;
+  }
+
+  .table-cell {
+    display: inline-flex;
+
+    .td-title {
+      margin-right: 0.75rem;
+    }
+
+    .td-action {
+      position: relative;
+      cursor: pointer;
+
+      .icon {
+        fill: var(--brand);
+        //background-color: var(--background-2);
+      }
+
+      .sort-up {
+        top: 0;
+      }
+
+      .sort-down {
+        bottom: 0;
+      }
+    }
+  }
+
+  .table-cell.active {
+    .td-action {
+      .icon {
+        fill: var(--color-s);
+      }
+    }
+  }
+
+  .row {
+    display: table-row;
+    //background: #f6f6f6;
+    cursor: pointer;
+    line-height: inherit;
+    border-bottom: 1px solid;
+    border-bottom-color: inherit;
+
+    .td {
+      padding: 1rem;
+      line-height: inherit;
+      //word-break: break-all;
+    }
+
+    &:nth-of-type(odd) {
+      //background: #e9e9e9;
+    }
+  }
+
+  .row:hover {
+    background: var(--hovered);
+  }
+
+  .row.picante {
+    background: var(--background-picante);
+  }
+
+  .row.parent {
+    background: var(--background-parent);
+  }
+
+  .row.picante:hover {
+    background: var(--hovered-picante);
+  }
+
+  .row.parent:hover {
+    background: var(--hovered-parent);
+  }
+
+  .table-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+}
+
+.table-paginator {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--surface2);
+  padding: 1rem 0 0 0;
+
+  .paginator--desktop, .paginator--mobile {
+    margin-right: 0.5rem;
+  }
+
+  .paginator--mobile {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  .table-pag__btn {
+    margin-right: 0.5rem;
+  }
+
+  .active-page {
+    background-color: var(--background-3);
+  }
+
+  .not-allowed {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .table-pag__btn:last-of-type {
+    margin-right: 0;
+  }
+}

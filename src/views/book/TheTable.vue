@@ -3,7 +3,7 @@
     <header class="header">
       <router-link :to="{ name: 'book-create'}" class="btn create-btn">create</router-link>
       <button class="btn" @click="showFilterModal">filter</button>
-      <input type="search" class="searchText" v-model.trim="bookName" placeholder="Search by name..."
+      <input type="search" class="search-text" v-model.trim="bookName" placeholder="Search by name..."
              @input="searchByName">
     </header>
     <table class="table">
@@ -138,9 +138,7 @@ export default {
       if (filter?.rating) {
         this.filter.rating = filter.rating
       }
-      if (filter?.ad) {
-        this.filter.ad = filter.ad
-      }
+      this.filter.ad = filter.ad ? 1 : 0
       this.getBooksPage()
     },
     async getBooksPage() {
@@ -154,8 +152,8 @@ export default {
       if (this.filter.rating) {
         url += `&rating=${this.filter.rating}`
       }
-      if (this.filter.ad) {
-        url += `&ad=1`
+      if (Number.isInteger(this.filter.ad)) {
+        url += `&ad=${this.filter.ad}`
       }
       this.$loader.show()
       const result = await this.$get(url);
@@ -220,9 +218,9 @@ export default {
     flex-flow: row nowrap;
     margin-bottom: 0.5rem;
 
-    .searchText {
-      color: var(--color-2);
-      background-color: var(--background-3);
+    .search-text {
+      color: var(--text2);
+      background-color: var(--surface3);
       border-radius: 5px;
       border: none;
       padding: 0 3px;
@@ -235,7 +233,6 @@ export default {
       align-items: center;
       justify-content: center;
       text-transform: capitalize;
-      background: var(--background-2);
       white-space: nowrap;
     }
 

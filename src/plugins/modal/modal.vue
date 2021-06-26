@@ -61,7 +61,6 @@ export default {
   .modal {
     position: absolute;
     margin: auto;
-    padding: 0 1rem;
     height: fit-content;
     bottom: 0;
     right: 0;

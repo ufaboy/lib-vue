@@ -84,8 +84,9 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    color: var(--color-2);
-    background: var(--background-2);
+    color: var(--text1);
+    background: var(--surface2);
+    border-radius: 5px;
 
     .title {
       margin-right: 0.5rem;

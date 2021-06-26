@@ -1,17 +1,17 @@
 .btn {
   border: none;
   border-radius: 5px;
-  color: white;
+  color: #FFFFFF;
   padding: 10px 25px;
-  align-items: center;
-  justify-content: center;
+  //align-items: center;
+  //justify-content: center;
   text-decoration: none;
-  display: flex;
-  font-size: 16px;
-  margin-right: 0.5rem;
+  //display: flex;
+  //font-size: 16px;
+  //margin-right: 0.5rem;
   cursor: pointer;
   outline: none;
-  background-color: var(--background-2);
+  background-color: var(--surface3);
   height: fit-content;
 }
 .positive-btn {
@@ -52,7 +52,7 @@
 }
 
 .btn-switch {
-  background-color: var(--background-3);
+  background-color: var(--surface3);
   opacity: 0.7;
 }
 
