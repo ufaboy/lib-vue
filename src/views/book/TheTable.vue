@@ -225,6 +225,7 @@ export default {
       border: none;
       padding: 0 3px;
       display: flex;
+      margin-left: 0.5rem;
     }
 
     .btn {

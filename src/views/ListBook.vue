@@ -311,11 +311,11 @@ export default {
   .list-book {
     .header {
       .search-input {
-        max-width: 180px;
+        width: inherit;
       }
 
       .select {
-        max-width: 157px;
+        width: inherit;
       }
     }
   }

@@ -11,9 +11,9 @@
       </ul>
       <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}">
         <svg class="icon-btn" @click="activeBurger = !activeBurger" width="100%" height="100%" viewBox="0 0 26 24">
-          <rect y="0" width="26" height="4" fill="black"></rect>
-          <rect y="10" width="26" height="4" fill="black"></rect>
-          <rect y="20" width="26" height="4" fill="black" />
+          <rect y="0" width="26" height="4" />
+          <rect y="10" width="26" height="4" />
+          <rect y="20" width="26" height="4" />
         </svg>
         <ul class="breadcrumb" @click="activeBurger = false">
           <li class="breadcrumb-li">
@@ -120,6 +120,7 @@ export default {
       touch-action: manipulation;
       .icon-btn {
         display: none;
+        fill: var(--brand);
       }
     }
     .burger.mobile {
@@ -142,7 +143,8 @@ export default {
         height: 0px;
         z-index: 55;
         padding: 0;
-        background-color: #000000;
+        color: var(--text2);
+        background-color: var(--surface2);
         .breadcrumb-li {
           width: 100%;
           height: 0;
@@ -166,7 +168,7 @@ export default {
         .breadcrumb-li {
           height: auto;
           margin-bottom: 1rem;
-          border: 1px solid var(--color-p);
+          border: 1px solid var(--brand);
           transition: all linear 0.3s;
         }
         .breadcrumb-li:last-of-type {
