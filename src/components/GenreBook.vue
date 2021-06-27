@@ -52,7 +52,7 @@ export default {
   }),
   computed: {
     parentGenres() {
-      return this.$store.state.genres.items
+      return this.$store.state.genre.items
     }
   },
   watch: {},

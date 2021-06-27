@@ -37,7 +37,7 @@ export default {
   props: {},
 
   data: () => ({
-    book: {annotation: null, text: null, genres: []},
+    book: {annotation: null, text: null, genres: [], bookmark: null},
     progress: 0,
     progressLoad: 0,
     windowScroll: 0,
@@ -55,10 +55,18 @@ export default {
       if (result) {
         this.book = await this.prepareUrlForMedia(result)
         document.title = `Book: ${result.name}`;
+
+        this.scrollToBookmark()
       } else {
         console.log({'result': result})
       }
      },
+    async scrollToBookmark() {
+      if (this.book.bookmark) {
+        await this.$nextTick()
+        this.$refs.book.scrollTo(0, this.book.bookmark)
+      }
+    },
     async relocateToMedia(book) {
       await this.$emit('loaded-book', book)
       await this.$router.push({name: 'book-media', params: {id: book.id}})
@@ -67,7 +75,6 @@ export default {
       let w = document.getElementById("progressbar").clientWidth;
       let o = e.offsetX;
       let x = (100 * o) / w;
-      console.log({'scrollByClick': e, 'y': y, 'x': x, 'o': o})
       document.getElementById("progressbar").value = x;
       let y = (this.windowHeights * x) / 100;
       document.getElementById('book').scrollTo(0, y);
@@ -89,6 +96,8 @@ export default {
     },
     handleScroll(e) {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
+      this.windowScroll = e.target.scrollTop
+
     },
     prepareUrlForMedia(book) {
       if(book.text) {
@@ -108,10 +117,7 @@ export default {
         toggleSide = !toggleSide
       }
     },
-    scrollLog(e) {
-      console.log({'e': e})
-    },
-    listenClickbyImg() {
+    listenClickByImg() {
       let images = document.getElementsByClassName('picture')
       for (let image of images) {
         image.addEventListener("click", this.openImage);
@@ -137,6 +143,16 @@ export default {
     getSrcImgUrl(e) {
       return e.url ? `${apiUrl}/${e.url}` : ''
     },
+    async updateScrollProgress() {
+      const url = `/book/update-book?id=${this.book.id}`;
+      const formData = {bookmark: this.windowScroll}
+      const result = await this.$patch(url, formData)
+      if (result) {
+        console.log({'result': result})
+      } else {
+        console.log({'result': result})
+      }
+    }
   },
   computed: {
     windowHeights() {
@@ -150,9 +166,12 @@ export default {
   mounted() {
 
   },
+  beforeUnmount() {
+    this.updateScrollProgress()
+  },
   updated() {
     this.moveMedia()
-    this.listenClickbyImg()
+    this.listenClickByImg()
   },
 }
 </script>

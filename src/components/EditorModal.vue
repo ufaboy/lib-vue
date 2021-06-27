@@ -53,8 +53,8 @@ export default {
     resize: vertical;
     padding: 0.5rem;
     margin-bottom: 1rem;
-    color: var(--color-2);
-    background-color: var(--background-3);
+    color: var(--text2);
+    background-color: var(--surface4);
   }
 
   .btn-bar {
