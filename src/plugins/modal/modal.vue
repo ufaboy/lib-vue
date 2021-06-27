@@ -66,6 +66,31 @@ export default {
     right: 0;
     left: 0;
     top: 0;
+    animation-name: zoomIn;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+  }
+  /*the animation definition*/
+  @-webkit-keyframes zoomIn {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale3d(.3, .3, .3);
+      transform: scale3d(.3, .3, .3)
+    }
+    50% {
+      opacity: 1
+    }
+  }
+  @keyframes zoomIn {
+    0% {
+      opacity: 0;
+      -webkit-transform: scale3d(.3, .3, .3);
+      -ms-transform: scale3d(.3, .3, .3);
+      transform: scale3d(.3, .3, .3)
+    }
+    50% {
+      opacity: 1
+    }
   }
 }
 .modal-wrap.active {

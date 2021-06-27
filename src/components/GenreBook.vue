@@ -16,7 +16,7 @@
     </fieldset>
     <fieldset class="genres" v-if="$store.state.main.isDesktop">
       <legend>all genres</legend>
-      <div class="parent" :class="{'checked-childes': calcCheckedChildes(parent)}" v-for="parent of $store.state.genre.items" :key="parent.id" @click="activeParent = Number(parent.id)">
+      <div class="parent" :class="{'checked-childes': calcCheckedChildes(parent)}" v-for="parent of parentGenres" :key="parent.id" @click="activeParent = Number(parent.id)">
         <div class="parent-title">{{parent.name}}</div>
         <label class="checkbox-container" v-for="genre of parent.childes" :key="genre.id">{{ genre.name }}
           <input type="checkbox" :value="genre" v-model="selectedGenre">
@@ -25,8 +25,8 @@
       </div>
     </fieldset>
     <select class="select-genre" multiple v-model="genres" size="1" v-if="$store.state.main.isMobile">
-      <optgroup v-for="parent of $store.state.genre.items" :key="parent.id" :label="parent.title">
-        <option v-for="genre of parent.childes" :key="genre.id">{{ genre.title }}</option>
+      <optgroup v-for="parent of parentGenres" :key="parent.id" :label="parent.name">
+        <option v-for="genre of parent.childes" :key="genre.id">{{ genre.nane }}</option>
       </optgroup>
     </select>
     <footer class="footer">
@@ -51,6 +51,9 @@ export default {
     genres: [],
   }),
   computed: {
+    parentGenres() {
+      return this.$store.state.genres.items
+    }
   },
   watch: {},
   created() {

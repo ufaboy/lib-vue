@@ -267,7 +267,6 @@ export default {
         };
         xhr.onloadend = () => {
           if (xhr.status === 200) {
-            console.log({'xhr': xhr.response, 'index': index});
             this.files[index] = xhr.response
             this.$forceUpdate()
             resolve(xhr.response);
