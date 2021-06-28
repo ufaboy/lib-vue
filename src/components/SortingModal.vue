@@ -55,10 +55,6 @@ export default {
   color: var(--color-2);
   background-color: var(--background-2);
 
-  .icon {
-    fill: var(--color-p);
-    background-color: var(--background-2);
-  }
 .close-find {
   color: var(--color-2);
   background-color: #35495e;

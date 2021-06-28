@@ -1,17 +1,19 @@
 <template>
   <div class="edit-book">
     <div class="text-container">
-      <div class="text-container__action">
-        <button class="negative-btn" type="reset" @click="resetBook">reset</button>
-        <button class="positive-btn" @click="sendBook">save</button>
-        <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
-        <div class="switch-label" v-if="username === 'admin'">
-          <span class="switch-title">{{ isDesktop ? 'SFW' : 'S' }}</span>
-          <label class="switch">
-            <input type="checkbox" v-model="book.ad">
-            <span class="slider round"/>
-          </label>
-          <span class="switch-title">{{ isDesktop ? 'NSFW' : 'N' }}</span>
+      <div class="btn-tab">
+        <div class="btn-tab--left">
+          <button class="negative-btn" type="reset" @click="resetBook">reset</button>
+          <button class="positive-btn" @click="sendBook">save</button>
+        </div>
+        <div class="btn-tab--right">
+          <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
+          <div class="toggle toggle--knob" v-if="username === 'admin'">
+            <input type="checkbox" id="toggle--knob" class="toggle--checkbox">
+            <label class="toggle--btn" for="toggle--knob">
+              <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
+            </label>
+          </div>
         </div>
       </div>
 
@@ -37,7 +39,8 @@
                optimum="150"/>
         </span>
         </template>
-        <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation" placeholder="annotation" @focus="$event.target.placeholder = ''"
+        <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation"
+                  placeholder="annotation" @focus="$event.target.placeholder = ''"
                   @blur="$event.target.placeholder = 'annotation'"/>
       </form-field>
       <section class="section genre" @click="openGenreModal">
@@ -97,14 +100,14 @@
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
           <div class="action-panel">
-            <button class="image-entry-btn" @click="sendFile(media, index)" v-if="media.id === undefined">load</button>
+            <button class="image-entry-btn btn--green" @click="sendFile(media, index)" v-if="media.id === undefined">load</button>
             <button class="image-entry-btn"
                     @click="book.cover_id = media.id"
                     v-if="media.type === 'image/webp' && media.id !== undefined">
               {{ book.cover_id === media.id ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn" @click="copyFileName(media)" v-if="media.id !== undefined">tag</button>
-            <button class="image-entry-btn" @click="deleteFile(index)" v-if="media.id !== undefined">delete</button>
+            <button class="image-entry-btn btn--green" @click="copyFileName(media)" v-if="media.id !== undefined">tag</button>
+            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.id !== undefined">delete</button>
           </div>
           <progress-ring v-show="calcProgressUpload(index) < 100 && calcProgressUpload(index) > 0" :radius="60"
                          :progress="calcProgressUpload(index)" :stroke="10" :color="'#ff2400'"/>
@@ -136,7 +139,7 @@ import FormField from '@/components/FormField.vue'
 
 export default {
   name: "BookEdit",
-  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, ProgressRing, FormField, StarRating, },
+  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, ProgressRing, FormField, StarRating,},
   props: {},
   data: () => ({
     files: [],
@@ -161,7 +164,7 @@ export default {
     autoResize() {
       const editor = this.$refs.editor
       editor.style.cssText = 'height:auto; padding:0';
-      editor.style.cssText = 'height:' + (Number(editor.scrollHeight) + 250) + 'px';
+      editor.style.cssText = 'height:' + editor.scrollHeight * 1.018 + 'px';
     },
     calcProgressUpload(index) {
       return this.uploadingProgress[index]
@@ -444,6 +447,7 @@ export default {
   .section, .label {
     //margin-bottom: 1rem;
   }
+
   .label-header {
     display: flex;
     flex-flow: row nowrap;
@@ -507,12 +511,29 @@ export default {
       flex-grow: 1;
     }
 
-    .text-container__action {
+    .btn-tab {
       display: flex;
-      justify-content: space-around;
+      flex-flow: row wrap;
+      justify-content: space-between;
       width: 100%;
       margin-bottom: 1rem;
       align-items: center;
+      .btn-tab--left, .btn-tab--right {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+
+      }
+      .btn-tab--left {
+        :first-child {
+          margin-right: 1rem;
+        }
+      }
+      .btn-tab--right {
+        .vue-star-rating {
+          margin-right: 1rem;
+        }
+      }
     }
 
     .reset-field-btn {
@@ -590,10 +611,6 @@ export default {
       border: 1px solid var(--color-p);
       border-radius: 5px;
       margin-right: 0.5rem;
-
-      .icon {
-        fill: var(--brand);
-      }
     }
 
     .editor-btn:last-of-type {
@@ -629,72 +646,75 @@ export default {
     margin-right: 0.3rem;
     cursor: pointer;
   }
-.switch-label {
-  display: flex;
-  align-items: center;
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-    margin: 0 0.3rem;
+
+  .switch-label {
+    display: flex;
+    align-items: center;
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      margin: 0 0.3rem;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
   }
 
-  /* Hide default HTML checkbox */
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  /* The slider */
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 34px;
-  }
-
-  .slider.round:before {
-    border-radius: 50%;
-  }
-}
   .media-container {
     display: flex;
     min-width: 200px;
@@ -705,7 +725,11 @@ export default {
     .header-media {
       margin-bottom: 1rem;
       display: flex;
+
       .upload-dropbox {
+        margin-right: 0.5rem;
+      }
+      .positive-btn {
         margin-right: 0.5rem;
       }
     }
@@ -752,8 +776,8 @@ export default {
 
         .action-panel {
           position: absolute;
-          top: 0;
-          left: 0;
+          top: 1rem;
+          left: 1rem;
           padding: 0.3rem;
           background: transparent;
           display: block;
@@ -761,6 +785,14 @@ export default {
           align-items: center;
           z-index: 7;
 
+          .image-entry-btn {
+            margin-right: 5px;
+            background: black;
+            border: none;
+            padding: 3px;
+            border-radius: 3px;
+            cursor: pointer;
+          }
           .loader-ring {
             width: 120px;
             height: 120px;
@@ -780,6 +812,10 @@ export default {
           overflow: hidden;
           cursor: pointer;
           margin-top: 0.5rem;
+        }
+        .ring {
+          top: calc(50% - 72px);
+          left: calc(50% - 60px);
         }
       }
 
@@ -896,7 +932,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
+@media only screen and (max-width: 892px) and (orientation: landscape) {
   .edit-book {
     .text-container {
       width: 100%;
@@ -908,7 +944,7 @@ export default {
   }
 }
 
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
+@media only screen and (max-width: 892px) and (orientation: portrait) {
   .edit-book {
     .text-container {
       width: 100%;
@@ -932,6 +968,12 @@ export default {
         .zone-selected {
           display: none;
         }
+      }
+      .btn-tab--left, .btn-tab--right {
+        width: 100%;
+      }
+      .btn-tab--left {
+        margin-bottom: 0.5rem;
       }
     }
 

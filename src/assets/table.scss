@@ -3,7 +3,7 @@
   border: 1px solid;
   color: var(--text2);
   background-color: var(--surface2);
-  border-color: var(--border-color);
+  border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
 
   thead {
     border-bottom: 1px solid;
@@ -20,7 +20,7 @@
     padding: 0.5rem;
     position: sticky;
     top: -1px;
-    background-color: var(--background);
+    background-color: var(--surface3);
   }
 
   th, td {
@@ -37,11 +37,6 @@
     .td-action {
       position: relative;
       cursor: pointer;
-
-      .icon {
-        fill: var(--brand);
-        //background-color: var(--background-2);
-      }
 
       .sort-up {
         top: 0;
@@ -113,7 +108,8 @@
   align-items: center;
   justify-content: center;
   background-color: var(--surface2);
-  padding: 1rem 0 0 0;
+  padding: 1rem 0;
+  border-radius: 0 0 5px 5px;
 
   .paginator--desktop, .paginator--mobile {
     margin-right: 0.5rem;

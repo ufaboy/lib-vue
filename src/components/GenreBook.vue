@@ -166,9 +166,6 @@ export default {
     display: flex;
     align-items: center;
   }
-  .icon {
-    cursor: pointer;
-  }
 }
 @media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
   .genre-book {
