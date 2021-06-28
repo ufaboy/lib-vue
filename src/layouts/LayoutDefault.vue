@@ -5,8 +5,8 @@
         <li class="breadcrumb-li">
           <router-link class="breadcrumb-link" to="/">Home</router-link>
         </li>
-        <li class="breadcrumb-li" v-if="listParentTitle"><router-link class="breadcrumb-link" :to="{ name: 'list-genre', params: { id: $route.params.id }}">{{listParentTitle}}</router-link></li>
-        <li class="breadcrumb-li" v-if="listGenreTitle"><router-link class="breadcrumb-link" :to="{ name: 'list-book', params: { id: $route.params.id }}" >{{listGenreTitle}}</router-link></li>
+<!--        <li class="breadcrumb-li" v-if="listParentTitle"><router-link class="breadcrumb-link" :to="{ name: 'list-genre', params: { id: $route.params.id }}">{{listParentTitle}}</router-link></li>-->
+<!--        <li class="breadcrumb-li" v-if="listGenreTitle"><router-link class="breadcrumb-link" :to="{ name: 'list-book', params: { id: $route.params.id }}" >{{listGenreTitle}}</router-link></li>-->
 
       </ul>
       <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}">
@@ -56,28 +56,28 @@ export default {
     }
   },
   computed: {
-    listParentTitle() {
-      if (this.$store.state.main.isMobile) {
-        return false
-      } else if (this.$route.name === 'list-genre' && this.$route.params.id) {
-        const parent = this.genresParent.find(item => item.id === +this.$route.params.id)
-        return parent.name
-      } else if (this.$route.name === 'list-book' && this.$route.params.id) {
-        return this.$route.params.parent
-      } else return null
-    },
-    listGenreTitle() {
-      if (this.$store.state.main.isMobile) {
-        return false
-      } else if (this.$route.name === 'list-book' && this.$route.params.id) {
-        return this.$route.params.name
-      } else return null
-    },
-    bookTitle() {
-      if (this.$route.name === 'book-view' && this.$route.params.id) {
-        return this.$route.params.name
-      } else return null
-    },
+    // listParentTitle() {
+    //   if (this.$store.state.main.isMobile) {
+    //     return false
+    //   } else if (this.$route.name === 'list-genre' && this.$route.params.id) {
+    //     const parent = this.genresParent.find(item => item.id === +this.$route.params.id)
+    //     return parent.name
+    //   } else if (this.$route.name === 'list-book' && this.$route.params.id) {
+    //     return this.$route.params.parent
+    //   } else return null
+    // },
+    // listGenreTitle() {
+    //   if (this.$store.state.main.isMobile) {
+    //     return false
+    //   } else if (this.$route.name === 'list-book' && this.$route.params.id) {
+    //     return this.$route.params.name
+    //   } else return null
+    // },
+    // bookTitle() {
+    //   if (this.$route.name === 'book-view' && this.$route.params.id) {
+    //     return this.$route.params.name
+    //   } else return null
+    // },
     genresParent() {
       return this.$store.state.genre.items
     },
