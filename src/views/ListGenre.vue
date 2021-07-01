@@ -1,7 +1,7 @@
 <template>
   <div class="list-genre">
     <header class="header" v-if="$store.state.main.isMobile">
-      <select class="select" v-model="activeParent" @change="loadGenre">
+      <select class="select" v-model="activeParent">
         <option class="option" :value="genre" v-for="genre of genresParent" :key="genre.id">
           {{ genre.name }}
         </option>
@@ -30,22 +30,23 @@ export default {
     genres: []
   }),
   computed: {
-    parentId() {
-      return this.activeParent.id ? this.activeParent.id : this.$route.params.id ? this.$route.params.id : null
-    },
     genresParent() {
       return this.$store.state.genre.items
+    },
+  },
+
+  watch: {
+    genresParent: function () {
+      this.prepareGenres()
+    },
+    activeParent: function (newValue) {
+      this.prepareGenres(newValue)
     }
   },
-  watch: {},
   created() {
     document.title = 'Genres';
     if (this.$route.params.id) {
-        const parent = this.genresParent.find(item=>item.id === +this.$route.params.id)
-      if (parent) {
-        this.activeParent = parent
-      }
-    this.loadGenre()
+      this.prepareGenres()
     }
   },
   mounted() {
@@ -53,16 +54,23 @@ export default {
   },
   methods: {
     openGenre(genre) {
-      this.$router.push({name: 'list-book', params: {'id': genre.id, name: genre.name, parent: this.genresParent.find(item=>item.id === +this.$route.params.id).name}})
+      this.$router.push({name: 'list-book',
+        params: {
+          'id': genre.id,
+          name: genre.name,
+          parent: this.genresParent.find(item => item.id === +this.$route.params.id).name
+        }
+      })
     },
-    async loadGenre() {
-      this.$loader.show()
-      const result = await this.$get(`/genre?parent_id=${this.parentId}`)
-      this.$loader.hide()
-      if (result) {
-        this.genres = result
+    async prepareGenres(element = null) {
+      const genreId = element ? element.id : +this.$route.params.id
+      const parent = this.genresParent.find(item => item.id === genreId)
+      if (parent) {
+        this.activeParent = parent
+        this.genres = parent.childes
+        this.$emit('loaded-parent', {name: parent.name, id: parent.id})
       }
-    }
+    },
   },
 }
 </script>
@@ -71,7 +79,7 @@ export default {
 .list-genre {
   display: flex;
   flex-flow: row wrap;
-  padding: 0 1rem;
+  padding: 1rem;
 
   .genre {
     display: flex;
@@ -117,6 +125,7 @@ export default {
       .select {
         flex: 1;
         padding: 0.5rem;
+
         .option {
           padding: 0.5rem;
         }

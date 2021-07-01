@@ -76,8 +76,8 @@ export default {
 <style lang="scss" scoped>
 .notes {
   width: 100%;
-  height: calc(100% - 4rem);
-  padding: 0 1.5rem;
+  height: calc(100% - 3.5rem);
+  padding: 1rem 1.5rem;
 
   .notes-table {
     border: 1px solid;

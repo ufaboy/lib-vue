@@ -125,8 +125,8 @@ export default {
 <style scoped lang="scss">
 .genre-table {
   width: 100%;
-  height: calc(100% - 4rem);
-  padding: 0 1.5rem;
+  height: calc(100% - 3.5rem);
+  padding: 1rem 1.5rem;
 
   .header {
     margin-bottom: 0.5rem;

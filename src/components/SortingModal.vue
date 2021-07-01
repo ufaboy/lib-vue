@@ -21,6 +21,7 @@ import IconSortDesc from "@/components/icons/IconSortDesc"
 export default {
   name: "SortingModal",
   components: {IconSortAsc, IconSortDesc},
+  emits: ['sorting'],
   props: {},
   data: () => ({
     ascending: 0,

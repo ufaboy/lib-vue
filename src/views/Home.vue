@@ -44,7 +44,7 @@ export default {
 .home {
   //height: calc(100% - 4.5rem);
   display: flex;
-  padding: 0 1.5rem;
+  padding: 1rem 1.5rem;
   .nav {
     flex: 1;
     display: flex;

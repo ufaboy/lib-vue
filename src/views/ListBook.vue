@@ -65,7 +65,14 @@ export default {
       return this.$store.state.genre.items
     }
   },
-  watch: {},
+  watch: {
+    // activeGenre: function (newVal) {
+    //   this.prepareGenre(newVal)
+    // },
+    genres: function () {
+      this.prepareGenre()
+    }
+  },
   created() {
     document.title = 'Books';
   },
@@ -116,16 +123,17 @@ export default {
       this.page = 1
       this.loadBooks()
     },
-    prepareGenre() {
-      if (this.$route.params.id) {
+    prepareGenre(element = null) {
+      const genreId = element ? element.id : this.$route.params.id ? +this.$route.params.id : null
+      if (genreId) {
         for (const parent of this.genres) {
-          let x = parent.childes.find(genre => genre.id === +this.$route.params.id)
+          let x = parent.childes.find(genre => genre.id === genreId)
           if (x) {
             this.activeGenre = x
+            this.$emit('loaded-genre', {id: x.id, name: x.name, parent: x.parent})
             break;
           }
         }
-
       }
     },
     async openBook(book) {
@@ -184,9 +192,9 @@ export default {
 .list-book {
   display: flex;
   flex-flow: row wrap;
-  height: calc(100% - 4rem);
+  height: calc(100% - 3.5rem);
   overflow-y: auto;
-  padding: 0 1rem;
+  padding: 1rem;
   align-content: baseline;
 
   .header {

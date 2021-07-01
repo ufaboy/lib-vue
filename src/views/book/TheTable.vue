@@ -206,7 +206,8 @@ export default {
 
 <style lang="scss">
 .books-table {
-  padding: 0 1.5rem;
+  height: calc(100% - 3.5rem);
+  padding: 1rem 1.5rem;
 
   .btn {
     text-transform: capitalize;

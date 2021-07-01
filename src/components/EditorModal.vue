@@ -16,6 +16,7 @@
 export default {
   name: "EditorModal",
   components: {},
+  emits: ['save-editor'],
   props: {
     editorNode: {},
   },
@@ -46,15 +47,13 @@ export default {
 <style lang="scss">
 .editor-modal {
   padding: 1rem;
-  //color: var(--color);
-  //background-color: var(--background-2);
   .textarea {
     width: 100%;
     resize: vertical;
     padding: 0.5rem;
     margin-bottom: 1rem;
     color: var(--text2);
-    background-color: var(--surface4);
+    background-color: var(--surface2);
   }
 
   .btn-bar {

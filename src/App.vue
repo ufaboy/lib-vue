@@ -1,8 +1,19 @@
 <template>
-  <component :is="layout" @resize="onResize">
-    <router-view @loaded-book="loadBook" :book-props="book" v-bind="$attrs" v-slot="{ Component }">
+  <component
+      :is="layout"
+      @resize="onResize"
+      :parent-props="parentData"
+      :genre-props="genreData"
+  :book-name="book">
+    <router-view
+        @loaded-parent="loadedParent"
+        @loaded-book="loadedBook"
+        @loaded-genre="loadedGenre"
+        :book-props="book"
+        v-bind="$attrs"
+        v-slot="{ Component }">
       <transition name="component-fade" mode="out-in" appear>
-        <component :is="Component" />
+        <component :is="Component"/>
       </transition>
     </router-view>
   </component>
@@ -20,12 +31,27 @@ export default {
     LayoutError: defineAsyncComponent(() => import('@/layouts/LayoutError.vue'))
   },
   data: () => ({
-    book: {},
+    parent: null,
+    book: null,
+    genre: null
   }),
   computed: {
     layout() {
       return this.$route.meta.layout || 'layout-default'
-    }
+    },
+    parentData() {
+      if (['list-genre', 'list-book', 'book-view'].includes(this.$route.name)) {
+        return this.parent ? {name: this.parent.name, id: this.parent.id} : null
+      }
+      return null
+    },
+    genreData() {
+      if (['list-book', 'book-view'].includes(this.$route.name)) {
+        return this.genre ? {id: this.genre.id, name: this.genre.name} : null
+      }
+      return null
+    },
+
   },
   methods: {
     onResize() {
@@ -35,8 +61,17 @@ export default {
         this.$store.commit('main/setIsMobile')
       }
     },
-    loadBook(book) {
-      this.book = book
+    loadedParent(parent) {
+      this.parent = parent
+    },
+    loadedGenre(genre) {
+      this.genre = genre
+      this.parent = genre.parent
+    },
+    loadedBook(book) {
+      this.book = book.name
+      this.genre = book.genre
+      this.parent = book.genre.parent
     }
   },
   created() {

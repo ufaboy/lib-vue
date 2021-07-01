@@ -3,30 +3,31 @@
     <div class="book" ref="book" @scroll.passive="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
-  </div>
-  <footer class="footer" v-if="book.annotation !== 'media'">
-    <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
-    <div class="progress-value">{{ progress }}</div>
-  </footer>
-  <modal ref="editor">
-    <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
-  </modal>
-  <div id="image-modal" class="image-modal" v-if="activeImage">
-    <span class="close" @click="activeImage = null">&times;</span>
-    <aside class="picture-action-panel">
-      <button class="picture-arrow-btn" @click="showSlide('first')">1</button>
-      <button class="picture-arrow-btn" @click="showSlide('prev')">Back</button>
-    </aside>
-    <img class="modal-content" id="img01" :src="activeImage">
-    <aside class="picture-action-panel">
-      <button class="picture-arrow-btn" @click="showSlide('last')">e</button>
-      <button class="picture-arrow-btn" @click="showSlide('next')">Forward</button>
-    </aside>
+    <footer class="footer" v-if="book.annotation !== 'media'">
+      <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
+      <div class="progress-value">{{ progress }}</div>
+    </footer>
+    <modal ref="editor">
+      <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
+    </modal>
+    <div id="image-modal" class="image-modal" v-if="activeImage">
+      <span class="close" @click="activeImage = null">&times;</span>
+      <aside class="picture-action-panel">
+        <button class="picture-arrow-btn" @click="showSlide('first')">1</button>
+        <button class="picture-arrow-btn" @click="showSlide('prev')">Back</button>
+      </aside>
+      <img class="modal-content" id="img01" :src="activeImage">
+      <aside class="picture-action-panel">
+        <button class="picture-arrow-btn" @click="showSlide('last')">e</button>
+        <button class="picture-arrow-btn" @click="showSlide('next')">Forward</button>
+      </aside>
+    </div>
   </div>
 </template>
 
 <script>
 import {defineAsyncComponent} from "vue";
+
 const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
@@ -34,6 +35,7 @@ export default {
   components: {
     EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
   },
+  emits: ['loaded-book'],
   props: {},
 
   data: () => ({
@@ -55,12 +57,12 @@ export default {
       if (result) {
         this.book = await this.prepareUrlForMedia(result)
         document.title = `Book: ${result.name}`;
-
+        this.$emit('loaded-book', {name: result.name, genre: result.genres[0]})
         this.scrollToBookmark()
       } else {
         console.log({'result': result})
       }
-     },
+    },
     async scrollToBookmark() {
       if (this.book.bookmark) {
         await this.$nextTick()
@@ -68,17 +70,17 @@ export default {
       }
     },
     async relocateToMedia(book) {
-      await this.$emit('loaded-book', book)
       await this.$router.push({name: 'book-media', params: {id: book.id}})
     },
     scrollByClick(e) {
+      // console.log({scrollHeight: document.getElementById('book').scrollHeight, clientHeight: document.getElementById('book').clientHeight})
       let w = document.getElementById("progressbar").clientWidth;
       let o = e.offsetX;
       let x = (100 * o) / w;
       document.getElementById("progressbar").value = x;
       let y = (this.windowHeights * x) / 100;
       document.getElementById('book').scrollTo(0, y);
-
+      // console.log({'scrollTo': e, w:w, o:o, x: x, y: y})
     },
     editMode(e) {
       this.editorNode = e.target
@@ -100,7 +102,7 @@ export default {
 
     },
     prepareUrlForMedia(book) {
-      if(book.text) {
+      if (book.text) {
         const regexp = new RegExp("APIURL", "g");
         book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
         return book
@@ -178,7 +180,7 @@ export default {
 
 <style lang="scss">
 .book-container {
-  height: calc(100vh - 5.5rem);
+  height: calc(100vh - 5rem);
   background-color: var(--surface1);
 }
 
@@ -197,6 +199,7 @@ export default {
     text-indent: 1rem;
     margin: 0 0 0.3rem;
     position: relative;
+
     span[data-tooltip]:hover {
       color: crimson;
     }
@@ -246,14 +249,14 @@ export default {
 
 .footer {
   width: 100%;
-  height: 2rem;
+  height: 1.5rem;
   display: flex;
-  padding: 0.2rem 0.5rem;
+  padding: 0 0.5rem;
   position: relative;
 
   .progress {
     width: 100%;
-    height: calc(100% - 5px);
+    height: 100%;
     background: var(--bg-secondary);
     position: absolute;
     left: 0;
@@ -262,13 +265,15 @@ export default {
   .progress-value {
     position: absolute;
     left: 50%;
-    bottom: 5px;
-    color: var(--color);
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .progress::-webkit-progress-value {
   }
 }
+
 .image-modal {
   //display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -306,6 +311,7 @@ export default {
     animation-duration: 0.6s;
   }
 }
+
 @keyframes zoom {
   from {
     transform: scale(0)

@@ -45,6 +45,7 @@ export default {
   components: {
     IconClose,
   },
+  emits: ['active-filter', 'reset-filter'],
   props: {
     rating: Number,
     ad: Number,

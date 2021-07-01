@@ -412,9 +412,9 @@ export default {
 
 <style scoped lang="scss">
 .edit-book {
-  height: calc(100% - 4.5rem);
+  height: calc(100% - 4rem);
   overflow-y: auto;
-  padding: 0 1rem;
+  padding: 1rem;
   display: flex;
   flex-flow: row;
 

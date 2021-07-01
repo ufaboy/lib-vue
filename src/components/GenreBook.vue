@@ -41,6 +41,7 @@ import IconClose from "@/components/icons/IconClose"
 export default {
   name: "GenreBook",
   components: {IconClose},
+  emits: ['set-genres'],
   props: {
     genresProps: Array,
   },

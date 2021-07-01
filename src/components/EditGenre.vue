@@ -38,6 +38,7 @@ import IconClose from "@/components/icons/IconClose"
 export default {
   name: "EditGenre",
   components: {IconClose},
+  emits: ['update-genres'],
   props: {
     genre: Object,
     dataProps: Object,
