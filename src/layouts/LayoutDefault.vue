@@ -1,6 +1,7 @@
 <template>
   <div class="basement">
-    <header class="header">
+    <canvas-space :count-dots="50"/>
+    <header class="header" :class="{'header--dark': $route.name === 'book-view'}">
       <ul class="breadcrumb">
         <li class="breadcrumb-li">
           <router-link class="breadcrumb-link" to="/">Home</router-link>
@@ -33,13 +34,15 @@
 
     </header>
     <slot/>
+
   </div>
 </template>
 
 <script>
+import CanvasSpace from "@/components/CanvasSpace";
 export default {
   name: "LayoutDefault",
-  components: {},
+  components: {CanvasSpace},
   props: {},
   data: () => ({
     activeBurger: false
@@ -225,6 +228,8 @@ export default {
       width: 100%;
     }
   }
-
+  .header.header--dark {
+    background-color: var(--surface2);
+  }
 }
 </style>

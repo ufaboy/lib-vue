@@ -73,6 +73,7 @@ export default {
 <style scoped lang="scss">
 .login-box {
   position: absolute;
+  z-index: 10;
   top: 50%;
   left: 50%;
   width: 22rem;

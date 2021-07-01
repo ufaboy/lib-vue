@@ -179,6 +179,7 @@ export default {
 <style lang="scss">
 .book-container {
   height: calc(100vh - 6rem);
+  background-color: var(--surface1);
 }
 
 .book {
