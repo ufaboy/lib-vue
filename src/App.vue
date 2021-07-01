@@ -1,5 +1,5 @@
 <template>
-  <component :is="layout">
+  <component :is="layout" @resize="onResize">
     <router-view @loaded-book="loadBook" :book-props="book" v-bind="$attrs" v-slot="{ Component }">
       <transition name="component-fade" mode="out-in" appear>
         <component :is="Component" />
@@ -36,13 +36,12 @@ export default {
       }
     },
     loadBook(book) {
-      console.log({'event': book})
       this.book = book
     }
   },
   created() {
     this.onResize()
-    window.addEventListener('resize', this.onResize);
+    // window.addEventListener('resize', this.onResize);
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <main class="home">
   <nav class="nav">
-    <router-link class="content-link rad-shadow"
+    <router-link class="content-link" :class="{'rad-shadow': isDesktop}"
                :to="{ name: 'list-genre', params: { id: genre.id }}"
                v-for="genre of parentsArr"
                :key="genre.id">{{ genre.name }}
@@ -23,6 +23,9 @@ export default {
   computed: {
     parentsArr() {
       return this.$store.state.genre.items
+    },
+    isDesktop() {
+      return this.$store.state.main.isDesktop
     }
   },
   watch: {},

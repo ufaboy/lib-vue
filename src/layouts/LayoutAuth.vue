@@ -1,7 +1,7 @@
 <template>
   <div class="auth-wrap">
     <login/>
-    <canvas-space/>
+    <canvas-space :count-dots="countDots"/>
   </div>
 </template>
 
@@ -13,6 +13,14 @@ export default {
   components: {CanvasSpace, Login},
   data: () => ({
   }),
+  computed: {
+    isMobile() {
+      return this.$store.state.main.isMobile
+    },
+    countDots() {
+      return this.isMobile ? 100 : 500
+    }
+  },
   methods: {
   },
   mounted() {

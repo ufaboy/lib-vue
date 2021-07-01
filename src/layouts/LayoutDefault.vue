@@ -1,6 +1,6 @@
 <template>
   <div class="basement">
-    <canvas-space :count-dots="50"/>
+    <canvas-space :count-dots="countDots"/>
     <header class="header" :class="{'header--dark': $route.name === 'book-view'}">
       <ul class="breadcrumb">
         <li class="breadcrumb-li">
@@ -87,7 +87,9 @@ export default {
     isMobile() {
       return this.$store.state.main.isMobile
     },
-
+    countDots() {
+      return this.isMobile ? 100 : 500
+    }
   },
   watch: {},
   async created() {
@@ -111,7 +113,7 @@ export default {
     height: 3.5rem;
     padding: 0.5rem 1.5rem;
     align-items: center;
-    margin-bottom: 0.5rem;
+    //margin-bottom: 0.5rem;
     justify-content: space-between;
 
     .burger {
