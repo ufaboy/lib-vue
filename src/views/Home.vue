@@ -1,7 +1,7 @@
 <template>
 <main class="home">
   <nav class="nav">
-    <router-link class="content-link" :class="{'rad-shadow': isDesktop}"
+    <router-link class="content-link"
                :to="{ name: 'list-genre', params: { id: genre.id }}"
                v-for="genre of parentsArr"
                :key="genre.id">{{ genre.name }}
@@ -57,7 +57,8 @@ export default {
       padding: 1rem 0.5rem;
       border: 1px solid;
       color: var(--text2);
-      background: var(--surface3);
+      //background: var(--surface2);
+      background: transparent;
       text-transform: capitalize;
       outline: none;
       cursor: pointer;
@@ -68,7 +69,8 @@ export default {
     }
 
     .content-link:hover {
-      background: var(--surface4);
+      color: #FFFFFF;
+      background: hsla(0, 0%, 0%, 0.5);
     }
 
     .content-link:last-of-type {

@@ -1,8 +1,10 @@
 .table {
   width: 100%;
   border: 1px solid;
-  color: var(--text2);
-  background-color: var(--surface2);
+  color: #FFFFFF;
+  //color: var(--text2);
+  //background-color: var(--surface2);
+  background-color: hsla(240, 100%, 1%, 0.4);
   border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
 
   thead {
@@ -20,7 +22,8 @@
     padding: 0.5rem;
     position: sticky;
     top: -1px;
-    background-color: var(--surface3);
+    //background-color: var(--surface3);
+    background-color: hsla(240, 100%, 1%, 0.7);
   }
 
   th, td {

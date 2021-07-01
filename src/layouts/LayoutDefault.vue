@@ -1,6 +1,7 @@
 <template>
   <div class="basement">
-    <canvas-space :count-dots="countDots"/>
+<!--    <canvas-space :count-dots="countDots"/>-->
+    <the-sunrise/>
     <header class="header" :class="{'header--dark': $route.name === 'book-view'}">
       <div class="header--left">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
@@ -50,11 +51,11 @@
 </template>
 
 <script>
-import CanvasSpace from "@/components/CanvasSpace";
+import TheSunrise from "../components/TheSunrise";
 
 export default {
   name: "LayoutDefault",
-  components: {CanvasSpace},
+  components: {TheSunrise},
   props: {
     parentProps: Object,
     genreProps: Object,
