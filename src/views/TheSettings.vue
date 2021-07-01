@@ -2,6 +2,7 @@
   <div class="settings">
     <button @click="changeTheme('auto')">auto</button>
     <button @click="changeTheme('light')">light</button>
+    <button @click="changeTheme('black')">black</button>
     <button @click="changeTheme('dark')">dark</button>
     <button @click="changeTheme('dim')">dim</button>
   </div>

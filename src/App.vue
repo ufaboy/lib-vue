@@ -4,7 +4,7 @@
       @resize="onResize"
       :parent-props="parentData"
       :genre-props="genreData"
-  :book-name="book">
+      :book-name="bookName">
     <router-view
         @loaded-parent="loadedParent"
         @loaded-book="loadedBook"
@@ -51,6 +51,9 @@ export default {
       }
       return null
     },
+    bookName() {
+      return this.$route.name === 'book-view' ? this.book : null
+    }
 
   },
   methods: {
