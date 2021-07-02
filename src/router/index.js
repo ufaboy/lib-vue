@@ -113,13 +113,21 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+  history: createWebHistory(),
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 })
 
 router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem('lib-token') ?? ''
-  if (to.name !== 'login' && !token) next({ name: 'login' })
+  const routeWithoutToken = ['login', 'error']
+  if (!routeWithoutToken.includes(to.name) && !token) next({ name: 'login' })
   else next()
 })
 
