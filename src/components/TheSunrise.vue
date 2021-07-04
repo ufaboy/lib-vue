@@ -46,7 +46,7 @@ export default {
 
 }
 .line {
-  background: url(https://josetxu.com/demos/img/bg-line.png) no-repeat center top transparent;
+  background: url(~@/assets/img/bg-line.webp) no-repeat center top transparent;
   animation: shining 60s linear 1s infinite alternate;
   z-index: 1;
   opacity: 0;
@@ -54,7 +54,7 @@ export default {
   background-size: cover;
 }
 .surface {
-  background: url(https://josetxu.com/demos/img/bg-earth.png) no-repeat center top transparent;
+  background: url(~@/assets/img/bg-earth.webp) no-repeat center top transparent;
   background-size: cover;
   position: absolute;
   height: 100%;
