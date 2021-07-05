@@ -3,6 +3,8 @@
     <ul>
       <li></li>
     </ul>
+    <select name="" id="">select</select>
+    <button>button</button>
   </div>
 </template>
 
@@ -10,7 +12,6 @@
 export default {
   name: "TestPage",
   components: {},
-//mixins: {},
   props: {},
   data: () => ({}),
   computed: {},

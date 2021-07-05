@@ -14,7 +14,7 @@
   --surface4-light: hsl(var(--brand-hue) 20% 85%);
   --surface5-light: hsl(var(--brand-hue) 20% 95%);
   --surface-shadow-light: var(--brand-hue) 10% 20%;
-  --shadow-strength-light: .02;
+  --shadow-strength-light: 0.02;
 
   /* black */
   --brand-black: hsl(
@@ -25,12 +25,12 @@
   --text1-black: hsla(0, 0%, 98%, 1);
   --text2-black: hsla(0, 0%, 93%, 1);
   --surface1-black: hsl(var(--brand-hue) 0% 0%);
-  --surface2-black: hsla(0, 0%, 13%, 1);
-  --surface3-black: hsla(0, 0%, 28%, 1);
-  --surface4-black: hsla(0, 0%, 43%, 1);
-  --surface5-black: hsla(0, 0%, 58%, 1);
+  --surface2-black: hsla(0, 0%, 10%, 1);
+  --surface3-black: hsla(0, 0%, 20%, 1);
+  --surface4-black: hsla(0, 0%, 30%, 1);
+  --surface5-black: hsla(0, 0%, 40%, 1);
   --surface-shadow-black: var(--brand-hue) 50% 3%;
-  --shadow-strength-black: .8;
+  --shadow-strength-black: 0.8;
 
   /* dark */
   --brand-dark: hsl(
@@ -46,7 +46,7 @@
   --surface4-dark: hsl(var(--brand-hue) 5% 25%);
   --surface5-dark: hsl(var(--brand-hue) 5% 30%);
   --surface-shadow-dark: var(--brand-hue) 50% 3%;
-  --shadow-strength-dark: .8;
+  --shadow-strength-dark: 0.8;
 
   /* dim */
   --brand-dim: hsl(
@@ -62,7 +62,7 @@
   --surface4-dim: hsl(var(--brand-hue) 5% 35%);
   --surface5-dim: hsl(var(--brand-hue) 5% 40%);
   --surface-shadow-dim: var(--brand-hue) 30% 13%;
-  --shadow-strength-dim: .2;
+  --shadow-strength-dim: 0.2;
 }
 
 :root {

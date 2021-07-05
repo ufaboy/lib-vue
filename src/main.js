@@ -9,7 +9,7 @@ import store from './store'
 const app = createApp(App)
 
 //styles
-import '@/assets/style.scss'
+import '@/assets/main.scss'
 //styles
 
 //self plugins

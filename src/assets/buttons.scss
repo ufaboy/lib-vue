@@ -1,5 +1,6 @@
 .btn {
-  border: none;
+  border: 2px solid;
+  border-color: transparent;
   border-radius: 5px;
   color: #FFFFFF;
   padding: 10px 25px;
@@ -11,7 +12,7 @@
   //margin-right: 0.5rem;
   cursor: pointer;
   outline: none;
-  background-color: var(--surface3);
+  background-color: var(--surface2);
   height: fit-content;
 }
 .positive-btn {

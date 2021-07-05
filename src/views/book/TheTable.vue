@@ -249,8 +249,9 @@ export default {
 
   .table-paginator {
     .select {
-      width: 65px;
+      min-width: 3.5rem;
       padding: 5px;
+      margin-left: 5px;
     }
   }
 
@@ -281,8 +282,13 @@ export default {
     }
 
     .table-paginator {
+      justify-content: space-around;
       .table-pag__btn {
-        padding: 10px 1rem;
+        padding: 5px;
+        margin-right: 5px;
+      }
+      .table-pag__btn:last-of-type {
+        margin-right: 0;
       }
     }
   }

@@ -47,7 +47,7 @@ export default {
 }
 .line {
   background: url(~@/assets/img/bg-line.webp) no-repeat center top transparent;
-  animation: shining 60s linear 1s infinite alternate;
+  animation: shining 10s linear 1s infinite alternate;
   z-index: 1;
   opacity: 0;
   filter: hue-rotate(-333deg) blur(1px);
@@ -65,7 +65,7 @@ export default {
   width: 150vw;
   height: 600px;
   background: radial-gradient(#000 0%, #000 50%, transparent 70%, transparent 90%, transparent 100%);
-  animation: shading 60s linear 0s infinite alternate;
+  animation: shading 10s linear 0s infinite alternate;
   border-radius: 50%;
   position: absolute;
   z-index: 1;
@@ -83,7 +83,7 @@ export default {
   left: calc(50% - 10px);
   bottom: 260px;
   z-index: -1;
-  animation: suntrack 60s linear 1s infinite alternate;
+  animation: suntrack 10s linear 1s infinite alternate;
   transform: scale(2.5);
   opacity: 0;
 }
@@ -105,7 +105,7 @@ export default {
   width: 50px;
   height: 50px;
   background: #ffffff;
-  animation: flash 60s ease-in 1s infinite alternate;
+  animation: flash 10s ease-in 1s infinite alternate;
   opacity: 0;
   z-index: 4;
 }
@@ -155,4 +155,40 @@ export default {
   100% { opacity: 0; }
 }
 
+
+@media only screen and (max-width: 892px) {
+  .earth, .line {
+    /*height: 296px;*/
+    height: 31vh;
+  }
+  .shadow {
+    height: 355px;
+    bottom: -111px;
+  }
+  .shine {
+    bottom: 175px;
+  }
+  .sun {
+    bottom: 175px;
+  }
+  @keyframes suntrack {
+    0% { opacity:0; transform: scale(2.5)  rotate(0deg);   bottom: 175px; filter: blur(1); }
+    1% { opacity:1; transform: scale(2.5); background: #ff9800; box-shadow: 0 0 5px 3px #ff6600; filter: blur(0); }
+    1.5% { opacity:1; transform: scale(2.5); background: #ffc776; box-shadow: 0 0 5px 3px #ffc776; filter: blur(1) brightness(5); }
+    2% { opacity:1; transform: scale(2.5); background: #fff6e8; box-shadow: 0 0 5px 3px #fff2e0; filter: blur(0); }
+    100% { opacity:1; transform: scale(2.5)  rotate(360deg); bottom: 110vh; filter: blur(1); }
+  }
+  @keyframes shading {
+    0% { bottom: -111px; opacity: 1; }
+    99% { bottom: -355px; opacity: 1; }
+    100% { bottom: -355px; opacity: 0; }
+  }
+}
+
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
+}
+
+@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
+
+}
 </style>

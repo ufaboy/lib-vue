@@ -238,7 +238,7 @@ export default {
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .login-box {
-    width: 100%;
+    width: 80%;
 
   }
 }
