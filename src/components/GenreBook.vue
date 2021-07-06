@@ -101,7 +101,7 @@ export default {
   height: 100%;
   width: 100%;
   color: var(--color-2);
-  background-color: var(--background-2);
+  background-color: var(--surface3);
   .modal-header {
     display: flex;
     flex-flow: row nowrap;

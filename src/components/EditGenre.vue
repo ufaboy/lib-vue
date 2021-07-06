@@ -128,7 +128,7 @@ export default {
   height: 100%;
   width: 100%;
   color: var(--text2);
-  background-color: var(--background-2);
+  background-color: var(--surface3);
   .header {
     margin-bottom: 1rem;
     width: 100%;

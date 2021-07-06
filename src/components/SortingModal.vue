@@ -54,7 +54,7 @@ export default {
 .sorting {
   padding: 1rem;
   color: var(--color-2);
-  background-color: var(--background-2);
+  background-color: var(--surface3);
 
 .close-find {
   color: var(--color-2);
