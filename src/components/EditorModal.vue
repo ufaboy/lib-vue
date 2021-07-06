@@ -47,7 +47,6 @@ export default {
 <style lang="scss">
 .editor-modal {
   padding: 1rem;
-  background-color: var(--surface3);
   .textarea {
     width: 100%;
     resize: vertical;

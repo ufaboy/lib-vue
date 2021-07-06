@@ -4,8 +4,6 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
-// import toaster from "@meforma/vue-toaster";
-
 const app = createApp(App)
 
 //styles

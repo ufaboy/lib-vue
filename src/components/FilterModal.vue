@@ -95,7 +95,6 @@ export default {
 <style lang="scss">
 .filter {
   padding: 1rem;
-  background-color: var(--surface3);
 
   .header {
     display: flex;

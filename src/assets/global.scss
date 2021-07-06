@@ -37,6 +37,39 @@ select {
   border-radius: 5px;
 }
 
+.modal {
+  color: var(--text2);
+  background-color: var(--surface3);
+  border-radius: 1rem;
+}
+.select {
+  padding: 5px;
+  background-color: var(--surface3);
+  color: var(--text2);
+}
+
+.icon {
+  fill: var(--brand);
+  cursor: pointer;
+}
+
+.label {
+  display: flex;
+  width: 100%;
+  margin-bottom: 1rem;
+  flex-flow: row wrap;
+  .title {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+  .value {
+    width: 100%;
+    padding: 5px 10px;
+    color: var(--text2);
+    background-color: var(--surface4);
+  }
+}
+
 @media only screen and (max-width: 892px) {
 
 }

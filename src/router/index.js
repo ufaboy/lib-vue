@@ -1,5 +1,9 @@
-import store from '@/store'
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '@/store'
+
+import {authMiddleware} from "@/middleware/auth";
+// import {rolesMiddleware} from "@/middleware/roles";
+
 import Home from '@/views/Home.vue'
 // const Home = () => import('@/views/Home.vue')
 const ListBook = () => import('@/views/ListBook.vue')
@@ -100,6 +104,8 @@ const routes = [
     component: () => import('@/views/TestPage.vue'),
     meta: {
       layout: 'layout-test'
+      // auth: true,
+      // roles: ["admin"]
     }
   },
   // {
@@ -124,15 +130,18 @@ const router = createRouter({
   }
 })
 
-router.beforeEach((to, from, next) => {
-  const token = sessionStorage.getItem('lib-token') ?? ''
-  const routeWithoutToken = ['login', 'error']
-  if (!routeWithoutToken.includes(to.name) && !token) next({ name: 'login' })
-  else next()
+router.beforeEach(async (to, from, next) => {
+  await authMiddleware(to, from, next);
+  // await rolesMiddleware(to, from, next);
+
+  // const token = sessionStorage.getItem('lib-token') ?? ''
+  // const routeWithoutToken = ['login', 'error']
+  // if (!routeWithoutToken.includes(to.name) && !token) next({ name: 'login' })
+  // else next()
 })
 
 router.onError(() => {
-  router.push('/error')
+  router.replace('/error')
 })
 
 export default router
