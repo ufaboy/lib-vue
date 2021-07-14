@@ -182,6 +182,7 @@ export default {
 .book-container {
   height: calc(100vh - 5rem);
   background-color: var(--surface1);
+
 }
 
 .book {
@@ -192,7 +193,7 @@ export default {
   height: 100%;
   padding: 1rem;
   justify-content: center;
-
+  content-visibility: auto;
   p {
     word-break: break-word;
     padding: initial;
