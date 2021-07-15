@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  DEPLOY_PATH: ${{ PROJECT_PATH }}
+  DEPLOY_PATH: ${{ secrets.PROJECT_PATH }}
   # В теории можно собрать не только Vue-приложение, так как принцип сборки мало где отличается
   BUILD_SCRIPT: npm run build
   BUILD_SCRIPT_OUTPUT: dist
@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSHKEY }}
           source: ${{ env.BUILD_SCRIPT_OUTPUT }}
-          target: ${{ env.DEPLOY_PATH }}
+          target: /${{ env.DEPLOY_PATH }}
           strip_components: 1
       - name: Print Info
         run: echo "Deployed at https://${BRANCH_NAME}.app.example.ru/"
