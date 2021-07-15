@@ -25,4 +25,4 @@ jobs:
           USERNAME: ${{ secrets.USERNAME }}
           PORT: ${{ secrets.PORT }}
           KEY: ${{ secrets.SSHKEY }}
-          script: cd /var/deployment/lib-vue && ./deploy.sh'
+          script: cd /var/deployment/lib-vue && npm run build && cp -i /var/deployment/lib-vue/dist/. /var/www/librarydev.xyz/
