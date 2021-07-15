@@ -16,7 +16,7 @@ jobs:
           KEY: ${{ secrets.SSHKEY }}
         with:
           source: "."
-          target: "/var/deployment/lib-vue"
+          target: "/home/ufaboy/temp/deployment/lib-vue"
 
       - name: Executing remote command
         uses: appleboy/ssh-action@master
