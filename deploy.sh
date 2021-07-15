@@ -1,9 +1,9 @@
 #!/usr/bin/env sh
 
-# остановить публикацию при ошибках
-set -e
+npm install
 
-# сборка
 npm run build
 
-cp -i /var/deployment/lib-vue/dist/. /${{ secrets.PROJECT_PATH }}/
+rm -rf /${{ secrets.PROJECT_PATH }}/*
+
+cp -r /var/deployment/lib-vue/dist/. /${{ secrets.PROJECT_PATH }}/
