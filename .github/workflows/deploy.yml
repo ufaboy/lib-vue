@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  DEPLOY_PATH: ${{PROJECT_PATH}}
+  DEPLOY_PATH: ${{ PROJECT_PATH }}
   # В теории можно собрать не только Vue-приложение, так как принцип сборки мало где отличается
   BUILD_SCRIPT: npm run build
   BUILD_SCRIPT_OUTPUT: dist
