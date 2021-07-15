@@ -21,10 +21,11 @@ jobs:
       # Устанавливаем зависимости для сборки
       - name: Install Dependencies
         run: npm i
+      # Устанавливаем env
+      - name: Install env
+        run: "VUE_APP_API_URL="${{ secrets.PROJECT_PATH }} > .env.production
       # Собираем приложение
       - name: Build Appliction
-        with:
-          VUE_APP_API_URL: ${{ secrets.API_URL }}
         run: $BUILD_SCRIPT
       # Доставляем собранное приложение на сервер
       - name: Deploy to Server
