@@ -6,4 +6,4 @@ set -e
 # сборка
 npm run build
 
-cp -i /var/deployment/lib-vue/dist/. /var/www/librarydev.xyz/
+cp -i /var/deployment/lib-vue/dist/. /${{ secrets.PROJECT_PATH }}/
