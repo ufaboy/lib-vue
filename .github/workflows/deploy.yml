@@ -23,6 +23,8 @@ jobs:
         run: npm i
       # Собираем приложение
       - name: Build Appliction
+        with:
+          VUE_APP_API_URL: ${{ secrets.API_URL }}
         run: $BUILD_SCRIPT
       # Доставляем собранное приложение на сервер
       - name: Deploy to Server
