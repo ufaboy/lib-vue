@@ -22,7 +22,7 @@ jobs:
         run: npm i
       # Устанавливаем env
       - name: Install env
-        run: echo "VUE_APP_API_URL="${{ secrets.PROJECT_PATH }} > .env.production
+        run: echo "VUE_APP_API_URL="${{ secrets.API_URL }} > .env.production
       # Собираем приложение
       - name: Build Appliction
         run: $BUILD_SCRIPT
