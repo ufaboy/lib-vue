@@ -1,12 +1,12 @@
 <template v-slot:default="dataProps">
-  <form class="edit-genre" @submit.prevent="sendGenre">
+  <form class="edit-genre" @submit.prevent="updateGenre">
     <header class="header">
       <h1>Genre</h1>
         <button v-if="username === 'admin'"
                 type="button"
                 class="btn-switch btn"
-                :class="{'active': genre.ad}"
-                @click="localGenre.genre.ad = !genre.ad">ad
+                :class="{'active': localGenre.ad}"
+                @click="localGenre.ad = !localGenre.ad">ad
         </button>
       <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
@@ -21,9 +21,9 @@
       <textarea class="value textarea" v-model.trim="localGenre.description" rows="5"></textarea>
     </label>
     <label class="label">
-      <span class="title">parent genre</span>
-      <select class="select value" v-model="localGenre.parent_id">
-        <option v-for="genre of $store.state.genre.items" :key="genre.id" :value="genre.id">{{genre.name}}</option>
+      <span class="title">division</span>
+      <select class="select value" v-model="localGenre.division">
+        <option v-for="division of divisions" :key="division.id" :value="division">{{division.name}}</option>
       </select>
     </label>
     <footer class="footer">
@@ -35,6 +35,7 @@
 
 <script>
 import IconClose from "@/components/icons/IconClose"
+import {sendGenre} from "@/service/uploadData";
 export default {
   name: "EditGenre",
   components: {IconClose},
@@ -46,52 +47,56 @@ export default {
   data: () => ({
     localGenre: {
       id: null,
-      title: null,
-      description: null,
-      parent_id: null,
+      name: '',
+      description: '',
+      division: {id: null, name: ''},
       ad: null,
     },
   }),
   computed: {
+    invalidGenre() {
+      return {
+        name: !this.localGenre.name,
+        division: !this.localGenre.division
+      }
+    },
     username() {
       return this.$store.state.user.username
-    }
+    },
+    divisions() {
+      return this.$store.state.genre.divisions.map(division => {
+        return {id: division.id, name: division.name}
+      })
+    },
   },
   watch: {},
   created() {
     this.prepareGenre()
-    if (this.$store.state.genre.items.length === 0) {
-      this.$store.dispatch('genre/loadGenres')
-    }
   },
   mounted() {
   },
   methods: {
-    async sendGenre() {
-      if (!this.localGenre.name) {
-        this.$toast.error('name not specified')
-        return;
+    async updateGenre() {
+      if (this.checkGenreToHaveErrors()) {
+        return false;
       }
-      let result, url = `/genre/create`;
-      const formData = {
+      let genreForm = {
         name: this.localGenre.name,
         description: this.localGenre.description,
         ad: this.localGenre.ad,
+        division_id: this.localGenre.division.id,
       }
-      if (this.localGenre.parent_id) {
-        formData.parent_id = this.localGenre.parent_id
+      if (this.localGenre.id) {
+        genreForm.id = this.localGenre.id
       }
-       if (this.localGenre.id) {
-        url = `/genre/update?id=${this.genre.id}`
-        result = await this.$patch(url, formData)
-      } else {
-        result = await this.$post(url, formData)
-      }
-      if (result) {
-
+      try {
+        await sendGenre(genreForm)
         this.$emit('update-genres')
         this.closeModal();
+      } catch (e) {
+        console.log({'error updateGenre': e})
       }
+
     },
     async deleteGenre() {
       if (!this.genre.parent_id) {
@@ -113,6 +118,16 @@ export default {
     closeModal() {
       this.$parent.hide('editGenre', this)
     },
+    checkGenreToHaveErrors() {
+      let haveErrors = false
+      for (const field in this.invalidGenre) {
+        if (this.invalidGenre[field]) {
+          haveErrors = true
+          this.$toast.error(`invalid field: ${field}`)
+        }
+      }
+      return haveErrors
+    },
     prepareGenre() {
       this.localGenre = Object.assign({}, this.genre)
     },
@@ -120,21 +135,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .edit-genre {
   padding: 1rem;
   display: flex;
   flex-flow: wrap;
   height: 100%;
   width: 100%;
-  color: var(--text2);
+  color: var(--text1);
   .header {
     margin-bottom: 1rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
   }
-
 
   .footer {
     display: flex;

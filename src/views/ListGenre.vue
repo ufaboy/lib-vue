@@ -1,9 +1,9 @@
 <template>
   <div class="list-genre">
-    <header class="header" v-if="$store.state.main.isMobile">
-      <select class="select" v-model="activeParent">
-        <option class="option" :value="genre" v-for="genre of genresParent" :key="genre.id">
-          {{ genre.name }}
+    <header class="header" v-if="isMobile">
+      <select class="select" v-model="activeDivision">
+        <option class="option" :value="division" v-for="division of divisions" :key="division.id">
+          {{ division.name }}
         </option>
       </select>
     </header>
@@ -24,29 +24,38 @@ export default {
   components: {},
   props: {},
   data: () => ({
-    activeParent: {
-      childes: []
+    activeDivision: {
+      genres: []
     },
-    genres: []
   }),
   computed: {
-    genresParent() {
-      return this.$store.state.genre.items
+    divisions() {
+      return this.$store.state.genre.divisions
     },
+    genres() {
+      let selectedDivision
+      if (this.activeDivision.name) {
+        selectedDivision = this.divisions.find(item => item.id === this.activeDivision.id || item.name === this.activeDivision.name)
+      } else if (this.$route.params.id) {
+        selectedDivision = this.divisions.find(item => item.id === +this.$route.params.id)
+      } else if (this.$route.params.name) {
+        selectedDivision = this.divisions.find(item => item.name === this.$route.params.name)
+      } else {
+        return []
+      }
+      return selectedDivision ? Array.isArray(selectedDivision.genres) ? selectedDivision.genres : [] : []
+    },
+    isMobile() {
+      return this.$store.state.main.isMobile
+    }
   },
 
   watch: {
-    genresParent: function () {
-      this.prepareGenres()
-    },
-    activeParent: function (newValue) {
-      this.prepareGenres(newValue)
-    }
   },
   created() {
     document.title = 'Genres';
-    if (this.$route.params.id) {
-      this.prepareGenres()
+    if (this.$route.params.id || this.$route.params.name) {
+      // this.prepareDivision()
     }
   },
   mounted() {
@@ -58,17 +67,15 @@ export default {
         params: {
           'id': genre.id,
           name: genre.name,
-          parent: this.genresParent.find(item => item.id === +this.$route.params.id).name
+          // parent: this.genresParent.find(item => item.id === +this.$route.params.id).name
         }
       })
     },
-    async prepareGenres(element = null) {
-      const genreId = element ? element.id : +this.$route.params.id
-      const parent = this.genresParent.find(item => item.id === genreId)
-      if (parent) {
-        this.activeParent = parent
-        this.genres = parent.childes
-        this.$emit('loaded-parent', {name: parent.name, id: parent.id})
+    async prepareDivision() {
+      if (this.$route.params.id) {
+        this.activeDivision = this.divisions.find(item => item.id === +this.$route.params.id)
+      } else if (this.$route.params.name) {
+        this.activeDivision = this.divisions.find(item => item.name === this.$route.params.name)
       }
     },
   },

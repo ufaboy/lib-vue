@@ -9,7 +9,7 @@
         <div class="btn-tab--right">
           <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
           <div class="toggle toggle--knob" v-if="username === 'admin'">
-            <input type="checkbox" id="toggle--knob" class="toggle--checkbox">
+            <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
             <label class="toggle--btn" for="toggle--knob">
               <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
             </label>
@@ -136,6 +136,8 @@ import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
 import ProgressRing from '@/components/ProgressRing.vue'
 import FormField from '@/components/FormField.vue'
+import {loadBook} from "../../service/loadData";
+import {deleteFiles, uploadFiles} from "../../service/uploadData";
 
 export default {
   name: "BookEdit",
@@ -221,21 +223,15 @@ export default {
       return validation
     },
     async getBook() {
-      if (this.$route.params.id) {
-        const url = `/book/view?id=${this.$route.params.id}`
-        const result = await this.$get(url)
-        if (result) {
-          // this.book = Object.assign({}, result)
-          this.book = {...result, annotation: result.annotation ? result.annotation : ''}
-          this.genres = [...result.genres]
-          this.files.push(...result.files)
-          await this.$nextTick()
-          this.autoResize()
-        } else {
-          console.log(result)
-        }
-      } else {
-        return false
+      try {
+        const result = await loadBook(+this.$route.params.id)
+        this.book = {...result, annotation: result.annotation ? result.annotation : ''}
+        this.files.push(...result.files)
+        this.genres = [...result.genres]
+        await this.$nextTick()
+        this.autoResize()
+      } catch (e) {
+        console.log({getBook: e})
       }
     },
 
@@ -250,63 +246,37 @@ export default {
       return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media);
     },
     async sendAllFiles() {
-      for (const [i, v] of this.files.entries()) {
-        await this.sendFile(v, i)
+      try {
+        const response = await uploadFiles(this.files, this.book.id)
+        console.log({'sendAllFiles success': response})
+        for await (const element of response.filter(item=>item.status === 'fulfilled')) {
+          console.log({element: element})
+            this.files.push(element.value.json())
+        }
+        console.log({files: this.files})
+        // this.book.files.push(elem)
+        // this.files.splice(index, 1)
+      } catch (e) {
+        console.log({sendAllFiles: e})
       }
-    },
-    async sendFile(file, index) {
-      return new Promise(function (resolve) {
-        let formData = new FormData();
-        formData.append('file', file);
-        let xhr = new XMLHttpRequest();
-        const token = sessionStorage.getItem('lib-token')
-        xhr.open("POST", `${process.env.VUE_APP_API_URL}/media-storage/upload?book_id=${this.book.id}`);
-        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-        xhr.responseType = 'json';
 
-        xhr.upload.onprogress = async (event) => {
-          this.uploadingProgress[index] = Math.round(event.loaded * 100 / event.total)
-          this.$forceUpdate()
-        };
-        xhr.onloadend = () => {
-          if (xhr.status === 200) {
-            this.files[index] = xhr.response
-            this.$forceUpdate()
-            resolve(xhr.response);
-          } else {
-            console.log("Ошибка " + this.status);
-            // reject(xhr.status);
-          }
-        };
-        xhr.send(formData);
-
-      }.bind(this))
-      //worked fetch
-      // let formData = new FormData();
-      // const url = `${process.env.VUE_APP_API_URL}/file-storage/upload?book_id=${this.book.id}`;
-      // formData.append('file', file);
-      // console.log(formData, file)
-      // const response = await fetch(url, {
-      //   method: 'POST',
-      //   body: formData
-      // } );
-      // if (response) {
-      //   const elem = await response.json();
-      //   console.log(elem)
-      //   this.book.files.push(elem)
-      //   this.files.splice(index, 1)
+      // const result = await Promise.allSettled(
+      //     this.files.map((file, index) => {
+      //       return this.sendFile(file, index)
+      //     })
+      // )
+      // for await (const [i, v] of this.files.entries()) {
+      //   await this.sendFile(v, i)
       // }
-      //worked fetch
+      // console.log({sendAllFiles: result})
     },
+
     async deleteAllFiles() {
-      const url = `/book/delete-all-media?id=${this.book.id}`
-      const result = await this.$delete(url);
-      if (result) {
-        this.files.length = 0
-        this.uploadingProgress.length = 0
-        this.$forceUpdate()
-      } else {
-        console.log(result)
+      try {
+        await deleteFiles(this.book.id)
+        this.files.splice(0, this.files.length)
+      } catch (e) {
+        console.log({deleteAllFiles: e})
       }
     },
 
@@ -470,7 +440,7 @@ export default {
   .value {
     padding: 0.3rem;
     width: 100%;
-    color: var(--text2);
+    color: var(--text1);
     background-color: var(--surface2);
     outline: none;
   }
@@ -540,8 +510,8 @@ export default {
       cursor: pointer;
       padding: 0.3rem;
       display: block;
-      color: var(--color-2);
-      background-color: var(--background-3);
+      color: var(--text1);
+      background-color: var(--surface4);
     }
 
     .fieldset {
@@ -578,7 +548,7 @@ export default {
 
     .editor {
       width: 100%;
-      color: var(--text2);
+      color: var(--text1);
       background-color: var(--surface2);
       text-transform: initial;
       padding: 0.3rem;

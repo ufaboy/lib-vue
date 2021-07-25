@@ -1,5 +1,7 @@
-import {$get} from "@/service/superFetch";
+import {loadDivisions} from "@/service/loadData";
+
 const state = () => ({
+  divisions: [],
   items: []
 })
 
@@ -9,20 +11,20 @@ const getters = {
 
 // actions
 const actions = {
-  async loadGenres({commit}) {
+  async loadDivisions({commit}, payload) {
     try {
-      const result = await $get('/genre?type=parent')
-      commit('setGenre', result)
+      const result = await loadDivisions(payload)
+      commit('setDivisions', result)
     } catch (e) {
-      console.log({'result': e})
+      console.log({'loadDivisions': e})
     }
   }
 }
 
 // mutations
 const mutations = {
-  setGenre(state, data) {
-    state.items = [...data]
+  setDivisions(state, data) {
+    state.divisions = [...data]
   }
 }
 

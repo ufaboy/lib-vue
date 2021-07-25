@@ -9,11 +9,11 @@
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
-        <div class="table-cell" :class="{'active' : orderBy === column}">
+        <div class="table-cell" :class="{'active' : orderBy.name === column}">
           <div class="td-title">{{ column }}</div>
-          <div class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
+          <div class="td-action" @click="sortBy(column)">
             <base-icon class="icon" icon-name="sort">
-              <icon-sort-asc v-if="ascending"/>
+              <icon-sort-asc v-if="orderBy.name === column && orderBy.asc"/>
               <icon-sort-desc v-else/>
             </base-icon>
           </div>
@@ -53,7 +53,7 @@
       <button class="btn table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksPage" v-model="page" v-if="$store.state.main.isMobile">
+      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="main.isMobile">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
@@ -69,6 +69,7 @@
 
 <script>
 import {mapState} from "vuex";
+import {loadBooks, goPage} from "../../service/loadData";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
@@ -94,8 +95,7 @@ export default {
     page: 1,
     pagBtnArr: [],
     limit: 10,
-    ascending: 0,
-    orderBy: null,
+    orderBy: {name: 'updated_at', asc: false},
     columns: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
     columnsClasses: {
       id: 'cell-id',
@@ -110,7 +110,7 @@ export default {
   }),
   methods: {
     searchByName() {
-      this.getBooksPage()
+      this.getBooksAndReplace()
     },
 
     getDate(timestamp) {
@@ -119,7 +119,7 @@ export default {
       return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
     },
     async openBook(book, type) {
-      const comicsBook = book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
+      const comicsBook = book.genres.findIndex(genre => genre.division.name === 'comics') > -1
       await this.$router.push({
         name: type === 'edit' ? 'book-edit' : comicsBook ? 'book-media' : 'book-view',
         params: {id: book.id}
@@ -129,55 +129,50 @@ export default {
       this.filter.genre = null
       this.filter.rating = null
       this.filter.ad = null
-      this.getBooksPage()
+      this.getBooksAndReplace()
     },
     updateFilterPage(filter) {
       if (filter?.genre) {
-        this.filter.genre = filter.genre
+        this.filter.genre = filter.genre.id
       }
       if (filter?.rating) {
         this.filter.rating = filter.rating
       }
       this.filter.ad = filter.ad ? 1 : 0
-      this.getBooksPage()
+      this.getBooksAndReplace()
     },
-    async getBooksPage() {
-      let url = `/book?page=${this.page}&limit=${this.limit}&sort=${this.ascending ? '' : '-'}${this.orderBy ? this.orderBy : 'id'}`
-      if (this.bookName) {
-        url += `&name=${this.bookName}`
-      }
-      if (this.filter.genre) {
-        url += `&genre_id=${this.filter.genre.id}`
-      }
-      if (this.filter.rating) {
-        url += `&rating=${this.filter.rating}`
-      }
-      if (Number.isInteger(this.filter.ad)) {
-        url += `&ad=${this.filter.ad}`
-      }
-      this.$loader.show()
-      const result = await this.$get(url);
-      this.$loader.hide()
-      if (result) {
-        this.books = result
+    async getBooksAndReplace() {
+      const sort = `${this.orderBy.asc ? '' : '-'}${this.orderBy.name}`
+      const filter = {...this.filter, name: this.bookName}
+      try {
+        const result = await loadBooks(this.page, this.limit, sort, filter)
+        this.books._links = result._links
+        this.books._meta = result._meta
+        this.books.items.splice(0, this.books.items.length)
+        this.books.items.push(...result.items)
         this.page = result._meta.currentPage
-        // const count = result._meta.pageCount
         this.pagBtnArr = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
+      } catch (e) {
+        console.log({getBooksAndReplace: e})
       }
+
+
+
     },
-    sortBy(orderBy, asc) {
-      this.orderBy = orderBy
-      this.ascending = asc
-      this.getBooksPage();
+    sortBy(column) {
+      this.orderBy.asc = !this.orderBy.asc
+      this.orderBy.name = column
+      this.getBooksAndReplace();
     },
     getThumbs(book) {
       return book.cover_url ? `${this.$config.apiUrl}/${book.cover_url}` : '/img/book-cover.jpg'
     },
     async toPage(url) {
-      const result = await this.goPage(url.href)
-      if (result) {
-        this.books = result;
-      } else console.log({'goPage': result})
+      try {
+        this.books = await goPage(url.href);
+      } catch (e) {
+        console.log({'goPage': e})
+      }
     },
 
     showFilterModal() {
@@ -195,9 +190,10 @@ export default {
   watch: {},
   created() {
     document.title = 'Table Books';
+    this.getBooksAndReplace();
   },
   mounted() {
-    this.getBooksPage();
+
   },
   updated() {
   },
@@ -220,7 +216,7 @@ export default {
     margin-bottom: 0.5rem;
 
     .search-text {
-      color: var(--text2);
+      color: var(--text1);
       background-color: var(--surface3);
       border-radius: 5px;
       border: none;
@@ -241,6 +237,7 @@ export default {
     .button:hover {
       background: var(--hovered);
     }
+
 
     //.button:last-of-type {
     //  margin-right: 0;
@@ -283,10 +280,12 @@ export default {
 
     .table-paginator {
       justify-content: space-around;
+
       .table-pag__btn {
         padding: 5px;
         margin-right: 5px;
       }
+
       .table-pag__btn:last-of-type {
         margin-right: 0;
       }

@@ -38,7 +38,7 @@ const routes = [
     component: ListBook
   },
   {
-    path: '/list-genre/:id',
+    path: '/list-genre/:name',
     name: 'list-genre',
     component: ListGenre
   },

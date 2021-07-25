@@ -2,9 +2,9 @@
 <main class="home">
   <nav class="nav">
     <router-link class="content-link"
-               :to="{ name: 'list-genre', params: { id: genre.id }}"
-               v-for="genre of parentsArr"
-               :key="genre.id">{{ genre.name }}
+               :to="{ name: 'list-genre', params: { id: division.id, name: division.name}}"
+               v-for="division of divisions"
+               :key="division.id">{{ division.name }}
     </router-link>
   </nav>
 </main>
@@ -21,8 +21,8 @@ export default {
 
   },
   computed: {
-    parentsArr() {
-      return this.$store.state.genre.items
+    divisions() {
+      return this.$store.state.genre.divisions
     },
     isDesktop() {
       return this.$store.state.main.isDesktop
@@ -56,7 +56,8 @@ export default {
       margin-right: 1rem;
       padding: 1rem 0.5rem;
       border: 1px solid;
-      color: var(--text2);
+      border-color: var(--primary);
+      color: var(--text1);
       //background: var(--surface2);
       background: transparent;
       text-transform: capitalize;

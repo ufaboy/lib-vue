@@ -18,27 +18,23 @@
       </th>
       </thead>
       <transition-group name="flip-list" tag="tbody">
-        <tr class="row" :class="{picante: genre.ad, parent: genre.parent === null}" v-for="genre of genres" :key="genre.id"
+        <tr class="row" :class="{picante: genre.ad}" v-for="genre of genres" :key="genre.id"
             @click="openRow(genre)">
           <td class="td" :class="columnsClasses.id">{{ genre.id }}</td>
           <td class="td" :class="columnsClasses.title">{{ genre.name }}</td>
           <td class="td" :class="columnsClasses.description">{{ genre.description }}</td>
-          <td class="td" :class="columnsClasses.parent">{{ genre.parent ? genre.parent.name : '' }}</td>
+          <td class="td" :class="columnsClasses.division">{{ genre.division ? genre.division.name : '' }}</td>
         </tr>
       </transition-group>
     </table>
     <modal ref="editGenre">
       <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>
     </modal>
-<!--    <teleport to="body">-->
-<!--      <div v-if="modalOpen" class="modal">-->
-<!--        <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>-->
-<!--      </div>-->
-<!--    </teleport>-->
   </div>
 </template>
 
 <script>
+import {loadGenres} from "@/service/loadData";
 import EditGenre from '@/components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
@@ -52,25 +48,24 @@ export default {
       id: null,
       name: null,
       description: null,
-      parentGenre: {id: null, name: null},
-      parent: {id: null, name: null},
+      division: {id: null, name: null},
     },
     modalOpen: false,
     genres: [],
     ascending: 1,
     orderBy: null,
-    columns: ['id', 'name', 'description', 'parent'],
+    columns: ['id', 'name', 'description', 'division'],
     columnsClasses: {
       id: 'cell-id',
       name: 'cell-name',
       description: 'cell-description',
-      parent: 'cell-parent'
+      division: 'cell-division'
     },
   }),
   methods: {
     async loadGenres() {
       this.$loader.show()
-      const result = await this.$get('/genre?type=all')
+      const result = await loadGenres()
       this.$loader.hide()
       if (result) {
         this.genres = result
@@ -85,8 +80,7 @@ export default {
         id: null,
         name: null,
         description: null,
-        parentGenre: {id: null, name: null},
-        parent: {id: null, name: null},
+        division: {id: null, name: null},
       };
       this.$modal.show('editGenre', this)
     },
@@ -149,7 +143,6 @@ export default {
   .flip-list-move {
     transition: transform 1s;
   }
-
 }
 
 @media only screen and (max-width: 892px) {

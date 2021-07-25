@@ -1,7 +1,7 @@
 <template>
   <main class="sorting">
     <fieldset class="fieldset">
-      <legend>sorting
+      <legend class="fieldset__legend">sorting
         <base-icon class="icon"><icon-sort-asc v-if="ascending"/><icon-sort-desc v-else/></base-icon>
       </legend>
       <button class="srt-btn" :class="{active: this.orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
@@ -53,8 +53,12 @@ export default {
 <style lang="scss">
 .sorting {
   padding: 1rem;
-  color: var(--color-2);
+  color: var(--text1);
 
+  .fieldset__legend {
+    padding: 5px;
+    border-radius: 5px;
+  }
 .close-find {
   color: var(--color-2);
   background-color: #35495e;
@@ -67,8 +71,8 @@ export default {
     display: flex;
     margin-bottom: 0.5rem;
     width: 100%;
-    color: var(--color-2);
-    background-color: var(--background-3);
+    color: var(--text1);
+    background-color: var(--surface4);
     text-transform: capitalize;
   }
   .srt-btn:last-of-type {

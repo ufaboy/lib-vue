@@ -10,9 +10,12 @@
     </header>
     <label class="label">
       <span class="title">genre</span>
-      <select class="select" ref="filterBook" name="selectGenre" v-model="filter.genre">
-        <optgroup v-for="parent of genres" :key="parent.id" :label="parent.name">
-          <option class="value" :value="genre" v-for="genre of parent.childes" :key="genre.id">{{ genre.name }}</option>
+      <select class="select" v-model="filter.genre">
+        <optgroup :label="division.name" v-for="division of divisions" :key="'division-' + division.id">
+          <option v-for="genre of division.genres"
+                  :key="'select-genre'+genre.id"
+                  :value="genre">{{ genre.name }}
+          </option>
         </optgroup>
       </select>
     </label>
@@ -59,8 +62,8 @@ export default {
     },
   }),
   computed: {
-    genres() {
-      return this.$store.state.genre.items
+    divisions() {
+      return this.$store.state.genre.divisions
     },
     username() {
       return this.$store.state.user.username
@@ -92,9 +95,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .filter {
   padding: 1rem;
+  color: var(--text1);
 
   .header {
     display: flex;
@@ -167,7 +171,7 @@ export default {
     }
 
     label:active:after {
-      width: 130px;
+      width: 60px;
     }
   }
 

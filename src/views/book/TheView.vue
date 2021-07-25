@@ -1,5 +1,5 @@
 <template>
-  <div class="book-container" v-bind="$attrs">
+  <div class="book-container">
     <div class="book" ref="book" @scroll.passive="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
@@ -27,6 +27,8 @@
 
 <script>
 import {defineAsyncComponent} from "vue";
+import {loadBook} from "../../service/loadData";
+import {updateBookMark} from "../../service/uploadData";
 
 const apiUrl = process.env.VUE_APP_API_URL
 
@@ -51,17 +53,17 @@ export default {
     initialText: ''
   }),
   methods: {
-    async loadBook() {
-      const url = `/book/view?id=${this.$route.params.id}`;
-      const result = await this.$get(url)
-      if (result) {
+    async downloadBook() {
+      try {
+        const result = await loadBook(this.$route.params.id)
         this.book = await this.prepareUrlForMedia(result)
         document.title = `Book: ${result.name}`;
         this.$emit('loaded-book', {name: result.name, genre: result.genres[0]})
         this.scrollToBookmark()
-      } else {
-        console.log({'result': result})
+      } catch (e) {
+        console.log({downloadBook: e})
       }
+
     },
     async scrollToBookmark() {
       if (this.book.bookmark) {
@@ -146,12 +148,9 @@ export default {
       return e.url ? `${apiUrl}/${e.url}` : ''
     },
     async updateScrollProgress() {
-      const url = `/book/update-book?id=${this.book.id}`;
-      const formData = {bookmark: this.windowScroll}
-      const result = await this.$patch(url, formData)
-      if (result) {
-        console.log({'result': result})
-      } else {
+      const formData = {bookId: this.book.id, bookmark: this.windowScroll}
+      const result = await updateBookMark(formData)
+      if (!result) {
         console.log({'result': result})
       }
     }
@@ -163,7 +162,7 @@ export default {
   },
   watch: {},
   created() {
-    this.loadBook()
+    this.downloadBook()
   },
   mounted() {
 
@@ -181,7 +180,7 @@ export default {
 <style lang="scss">
 .book-container {
   height: calc(100vh - 5rem);
-  background-color: var(--surface1);
+  background-color: var(--background);
 
 }
 
@@ -194,6 +193,7 @@ export default {
   padding: 1rem;
   justify-content: center;
   content-visibility: auto;
+
   p {
     word-break: break-word;
     padding: initial;

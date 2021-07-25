@@ -11,7 +11,7 @@ import '@/assets/main.scss'
 //styles
 
 //self plugins
-import improvedFetch from "@/plugins/fetch/improvedFetch";
+// import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal";
 import scroll from "@/plugins/scroll"
 import observer from "@/plugins/IntersectionObserver";
@@ -61,7 +61,7 @@ requireComponent.keys().forEach(fileName => {
 		.use(observer)
 		.use(scroll)
 		.use(autoFocus)
-		.use(improvedFetch, {API_URL: process.env.VUE_APP_API_URL, API_TOKEN: sessionStorage.getItem('lib-token')})
+		// .use(improvedFetch, {API_URL: process.env.VUE_APP_API_URL, API_TOKEN: sessionStorage.getItem('lib-token')})
 		.use(loader, loader)
 		.use(toaster, {time: 1000, position: 'top-right'})
 		// .use(toaster, toaster, {time: 5000})

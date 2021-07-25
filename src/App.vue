@@ -78,8 +78,10 @@ export default {
     }
   },
   created() {
-    this.onResize()
     // window.addEventListener('resize', this.onResize);
+  },
+  mounted() {
+    this.onResize()
   }
 }
 </script>

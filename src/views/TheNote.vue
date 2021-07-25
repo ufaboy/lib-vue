@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import {loadNotes} from "../service/loadData";
+
 export default {
   name: "TheNote",
   components: {},
@@ -38,8 +40,8 @@ export default {
     notes: [],
   }),
   methods: {
-    async loadNotes() {
-      const result = await this.$get('/book/view?id=1')
+    async getNotes() {
+      const result = await loadNotes()
       if (result) {
         this.notes.push(...JSON.parse(result.text))
       }
@@ -64,7 +66,7 @@ export default {
   watch: {},
   created() {
     document.title = 'Notes';
-    this.loadNotes()
+    this.getNotes()
   },
   mounted() {
   },

@@ -7,22 +7,22 @@
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
       <select class="select" v-model="activeGenre" @change="changeGenre" v-if="isMobile">
-        <optgroup :label="parent.name" v-for="parent of genres" :key="'parent-' + parent.id">
-          <option v-for="genre of parent.childes"
+        <optgroup :label="division.name" v-for="division of divisions" :key="'division-' + division.id">
+          <option v-for="genre of division.genres"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
           </option>
         </optgroup>
       </select>
     </header>
-    <section class="book" v-for="book of data.items" @click="openBook(book)" :key="'book'+book.id">
+    <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
       </div>
     </section>
-    <observer @intersect="loadBooks('push')"/>
+    <observer @intersect="getBooksAndPush('push')"/>
 <!--    <div class="loader" v-if="infinityLoading"></div>-->
     <modal ref="sortings">
       <sorting-modal @sorting="updateBySorting"/>
@@ -33,6 +33,8 @@
 
 <script>
 import SortingModal from '@/components/SortingModal.vue'
+import {loadBooks} from "../service/loadData";
+
 export default {
   name: "ListBook",
   components: {
@@ -40,14 +42,13 @@ export default {
   },
   props: {},
   data: () => ({
-    data: {
+    books: {
       items: [],
       _links: {},
       _meta: {}
     },
+    genreId: null,
     searchParams: null,
-    activeGenre: null,
-    activeParent: null,
     infinityState: true,
     infinityLoading: false,
     orderBy: 'updated_at',
@@ -61,56 +62,69 @@ export default {
     isMobile() {
       return this.$store.state.main.isMobile
     },
-    genres() {
-      return this.$store.state.genre.items
+    divisions() {
+      return this.$store.state.genre.divisions
+    },
+    activeGenre: {
+      get: function () {
+        const division = this.divisions.find(division => division.genres.some(genre => genre.id === +this.genreId))
+        return division ? division.genres.find(genre => genre.id === this.genreId) : null
+      },
+      set: function (newValue) {
+        this.genreId = newValue.id
+      }
     }
   },
   watch: {
-    // activeGenre: function (newVal) {
-    //   this.prepareGenre(newVal)
-    // },
-    genres: function () {
-      this.prepareGenre()
-    }
   },
   created() {
     document.title = 'Books';
+    if (this.$route.params.id) {
+      this.genreId = +this.$route.params.id
+    }
   },
   mounted() {
-    this.prepareGenre()
   },
   methods: {
     async searchByName() {
       this.page = 1
-      this.loadBooks()
+      this.getBooksAndPush()
     },
-    async loadBooks(method = null) {
-      let genreId = this.activeGenre ? this.activeGenre.id : this.$route.params.id ? this.$route.params.id : null
+
+    async getBooksAndPush(method = null) {
+      let filter = {}
+      let genreId = null
+      if (this.activeGenre) {
+        genreId = this.activeGenre.id
+      } else if (this.$route.params.id) {
+        genreId = this.$route.params.id
+      }
       if (genreId === null) {
         return false
+      } else {
+        filter.genre = genreId
       }
       if (!this.infinityState && method) {
         return false
       } else if (method === null) {
         this.infinityState = true
       }
-      let url = `/book?page=${this.page}&limit=${this.limit}&sort=${this.ascending ? '' : '-'}${this.orderBy ? this.orderBy : 'id'}&genre_id=${genreId}`
 
       if (this.searchParams) {
-        url += `&name=${this.searchParams}`
+        filter.name += `&name=${this.searchParams}`
       }
       this.infinityLoading = true
       this.$loader.show()
-      const result = await this.$get(url);
+      const result = await loadBooks(this.page, this.limit, `${this.ascending ? '' : '-'}${this.orderBy}`, filter);
       this.$loader.hide()
       this.infinityLoading = false
       if (result) {
         if (method === 'push') {
-          this.data.items.push(...result.items)
+          this.books.items.push(...result.items)
           this.page = ++this.page
         } else {
-          this.data.items.length = 0
-          this.data.items.push(...result.items)
+          this.books.items.length = 0
+          this.books.items.push(...result.items)
           this.page = ++this.page
         }
         if (result.items.length < this.limit) {
@@ -121,23 +135,23 @@ export default {
     },
     async changeGenre() {
       this.page = 1
-      this.loadBooks()
+      this.getBooksAndPush()
     },
-    prepareGenre(element = null) {
-      const genreId = element ? element.id : this.$route.params.id ? +this.$route.params.id : null
-      if (genreId) {
-        for (const parent of this.genres) {
-          let x = parent.childes.find(genre => genre.id === genreId)
-          if (x) {
-            this.activeGenre = x
-            this.$emit('loaded-genre', {id: x.id, name: x.name, parent: x.parent})
-            break;
-          }
-        }
-      }
+    prepareGenre() {
+      // const genreId = element ? element.id : this.$route.params.id ? +this.$route.params.id : null
+      // if (genreId) {
+      //   for (const parent of this.genres) {
+      //     let x = parent.childes.find(genre => genre.id === genreId)
+      //     if (x) {
+      //       this.activeGenre = x
+      //       this.$emit('loaded-genre', {id: x.id, name: x.name, parent: x.parent})
+      //       break;
+      //     }
+      //   }
+      // }
     },
     async openBook(book) {
-      const comicsBook = book.genres.findIndex(genre => genre.parent.name === 'comics') > -1
+      const comicsBook = book.genres.findIndex(genre => genre.division.name === 'comics') > -1
       await this.$router.push({name: comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
     },
     getCover(book) {
@@ -160,7 +174,7 @@ export default {
       this.orderBy = e.orderBy
       this.ascending = e.ascending
       this.page = 1
-      this.loadBooks()
+      this.getBooksAndPush()
     },
     onScroll() {
       // if (!this.infinityState) {
@@ -178,9 +192,9 @@ export default {
       //   this.loadAndPush()
       // }
     },
-    loadAndPush() {
-      this.loadBooks('push')
-    },
+    // loadAndPush() {
+    //   this.loadBooks('push')
+    // },
     scrollToTop() {
       this.$el.scrollTop = 0
     },
@@ -209,6 +223,7 @@ export default {
       display: flex;
       flex: 1;
       border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
+      color: var(--text1);
       background-color: var(--surface3);
       padding: 5px;
     }

@@ -66,8 +66,8 @@ export default {
   }),
   methods: {
     async loadParents() {
-      if (this.genresParent && this.genresParent.length === 0 && sessionStorage.getItem('lib-token')) {
-        await this.$store.dispatch('genre/loadGenres')
+      if (this.divisions && this.divisions.length === 0 && sessionStorage.getItem('lib-token')) {
+        await this.$store.dispatch('genre/loadDivisions')
       }
     },
     getUsername() {
@@ -76,8 +76,8 @@ export default {
     }
   },
   computed: {
-    genresParent() {
-      return this.$store.state.genre.items
+    divisions() {
+      return this.$store.state.genre.divisions
     },
     isMobile() {
       return this.$store.state.main.isMobile
@@ -106,7 +106,7 @@ export default {
 .basement {
   .header {
     //color: var(--color-2);
-    //background: var(--background-2);
+    //background: var(--surface1);
     display: flex;
     height: 3.5rem;
     padding: 0.5rem 1.5rem;
@@ -127,14 +127,14 @@ export default {
 
       .icon-btn {
         display: none;
-        fill: var(--brand);
+        fill: var(--primary);
       }
     }
 
     .burger.mobile {
       width: 26px;
       height: 24px;
-      background-color: var(--background-2);
+      background-color: var(--surface2);
 
       .icon-btn {
         display: block;
@@ -150,7 +150,7 @@ export default {
         flex-flow: row wrap;
         width: 100vw;
         left: 0;
-        top: 65px;
+        top: 63px;
         height: 0px;
         z-index: 55;
         padding: 0;
@@ -183,7 +183,8 @@ export default {
         .breadcrumb-li {
           height: auto;
           margin-bottom: 1rem;
-          border: 1px solid var(--brand);
+          border: 1px solid var(--primary-light);
+          border-radius: 5px;
           transition: all linear 0.3s;
         }
 
@@ -222,8 +223,6 @@ export default {
     .breadcrumb-li {
       margin-right: 0.5rem;
       display: flex;
-      border: 1px solid var(--text1);
-      border-radius: 5px;
     }
 
     .breadcrumb-li:last-of-type {
@@ -231,7 +230,7 @@ export default {
     }
 
     .breadcrumb-li:hover {
-      background-color: var(--surface4);
+      background-color: var(--surface2);
     }
 
     .breadcrumb-link {
@@ -244,6 +243,11 @@ export default {
       cursor: pointer;
       white-space: nowrap;
       text-transform: capitalize;
+      border: 1px solid var(--primary-dark);
+      border-radius: 5px;
+    }
+    .router-link-active.breadcrumb-link {
+      background-color: var(--surface4);
     }
 
     .select {
@@ -260,7 +264,7 @@ export default {
     margin-right: 0.5rem;
     display: flex;
     color: var(--text1);
-    border: 1px solid var(--text1);
+    border: 1px solid var(--primary-dark);
     border-radius: 5px;
     text-decoration: none;
   }

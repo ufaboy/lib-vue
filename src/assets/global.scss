@@ -39,18 +39,18 @@ select {
 }
 
 .modal {
-  color: var(--text2);
-  background-color: var(--surface3);
+  color: var(--text1);
+  background-color: var(--surface2);
   border-radius: 1rem;
 }
 .select {
   padding: 5px;
   background-color: var(--surface3);
-  color: var(--text2);
+  color: var(--primary-light);
 }
 
 .icon {
-  fill: var(--brand);
+  fill: var(--primary);
   cursor: pointer;
 }
 
@@ -66,7 +66,7 @@ select {
   .value {
     width: 100%;
     padding: 5px 10px;
-    color: var(--text2);
+    color: var(--text1);
     background-color: var(--surface4);
   }
 }
