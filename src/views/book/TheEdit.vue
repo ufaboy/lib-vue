@@ -264,7 +264,7 @@ export default {
             if (fileIndex > -1) {
               this.files.splice(fileIndex, 1)
             }
-          this.files.push({name: item.value.full_name, status: 'fulfilled', file: item.value})
+          this.files.push({name: item.value.full_name, status: item.status, file: item.value})
           } else if (item.status === 'rejected') {
             const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
             this.files[fileIndex].status = 'rejected'
@@ -772,14 +772,7 @@ export default {
           align-items: center;
           z-index: 7;
 
-          .image-entry-btn {
-            margin-right: 5px;
-            background: black;
-            border: none;
-            padding: 3px;
-            border-radius: 3px;
-            cursor: pointer;
-          }
+
           .loader-ring {
             width: 120px;
             height: 120px;

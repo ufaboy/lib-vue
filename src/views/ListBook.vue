@@ -155,8 +155,8 @@ export default {
       await this.$router.push({name: comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
     },
     getCover(book) {
-      if (book.cover_url) {
-        return `${process.env.VUE_APP_API_URL}/${book.cover_url}`
+      if (book.cover_path) {
+        return `${process.env.VUE_APP_API_URL}/${book.cover_path}`
       } else return '/img/book-dead-solid.svg'
     },
 
