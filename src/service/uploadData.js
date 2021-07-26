@@ -17,7 +17,7 @@ async function updateBookMark(formData) {
 async function uploadFiles(files, bookId) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}/media-storage/upload?book_id=${bookId}`;
-    return Promise.allSettled(
+    const resultPromise = await Promise.allSettled(
         files.map(async file => {
             let formData = new FormData();
             formData.append('file', file);
@@ -30,8 +30,9 @@ async function uploadFiles(files, bookId) {
                 }
             })
         })
-    );
-
+    ).then(results => Promise.all(results.map(r => r.json()))
+        .then())
+    console.log({resultPromise: resultPromise})
     // if (response) {
     //   const elem = await response.json();
     //   console.log(elem)

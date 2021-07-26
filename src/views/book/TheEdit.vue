@@ -247,13 +247,20 @@ export default {
     },
     async sendAllFiles() {
       try {
-        const response = await uploadFiles(this.files, this.book.id)
-        console.log({'sendAllFiles success': response})
-        for await (const element of response.filter(item=>item.status === 'fulfilled')) {
-          console.log({element: element})
-            this.files.push(element.value.json())
-        }
-        console.log({files: this.files})
+        const results = await uploadFiles(this.files, this.book.id)
+        console.log({'sendAllFiles success': results})
+        // for await (const element of response.filter(item=>item.status === 'fulfilled')) {
+        //   console.log({element: element})
+        //     this.files.push(element.value.json())
+        // }
+        // const result = response.map(async element => {
+        //   return {status: element.status, value: await element.value}
+        // } )
+        const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
+        const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
+        const fin = fulfilled.map(async item => await item.json())
+
+        console.log({fin: fin, fulfilled: fulfilled, rejected: rejected})
         // this.book.files.push(elem)
         // this.files.splice(index, 1)
       } catch (e) {
