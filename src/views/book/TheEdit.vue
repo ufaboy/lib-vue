@@ -93,25 +93,23 @@
                  multiple
                  @change="loadFiles($event.target.files)">
         </label>
-        <button class="positive-btn" @click="sendAllFiles">all upload</button>
+        <button class="positive-btn" @click="sendFiles()">all upload</button>
         <button class="negative-btn" @click="deleteAllFiles">remove files</button>
       </header>
 
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
           <div class="action-panel">
-            <button class="image-entry-btn btn--green" @click="sendFile(media, index)" v-if="media.id === undefined">load</button>
+            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.file.id === undefined">load</button>
             <button class="image-entry-btn"
-                    @click="book.cover_id = media.id"
-                    v-if="media.type === 'image/webp' && media.id !== undefined">
-              {{ book.cover_id === media.id ? 'current' : 'set' }}cover
+                    @click="book.cover_path = media.file.url"
+                    v-if="media.file.type === 'image/webp' && media.file.id !== undefined">
+              {{ book.cover_path === media.file.url ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn btn--green" @click="copyFileName(media)" v-if="media.id !== undefined">tag</button>
-            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.id !== undefined">delete</button>
+            <button class="image-entry-btn btn--green" @click="copyFileName(media.file)" v-if="media.file.id !== undefined">tag</button>
+            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.file.id !== undefined">delete</button>
           </div>
-          <progress-ring v-show="calcProgressUpload(index) < 100 && calcProgressUpload(index) > 0" :radius="60"
-                         :progress="calcProgressUpload(index)" :stroke="10" :color="'#ff2400'"/>
-          <img class="media image" :src="getSrc(media)" v-if="checkType(media.type) === 'image'">
+          <img class="media image" :src="getSrc(media)" v-if="checkType(media.file.type) === 'image'">
           <video v-else-if="checkType(media.type) === 'video'" class="media video" controls>
             <source :src="getSrc(media)">
           </video>
@@ -134,18 +132,16 @@ import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
-import ProgressRing from '@/components/ProgressRing.vue'
 import FormField from '@/components/FormField.vue'
 import {loadBook} from "../../service/loadData";
-import {deleteFiles, uploadFiles} from "../../service/uploadData";
+import {deleteFiles, deleteFile, updateBook, uploadFiles} from "../../service/uploadData";
 
 export default {
   name: "BookEdit",
-  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, ProgressRing, FormField, StarRating,},
+  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
   props: {},
   data: () => ({
     files: [],
-    uploadingProgress: [],
     book: {
       id: null,
       name: null,
@@ -155,7 +151,7 @@ export default {
       cover: null,
       rating: null,
       ad: null,
-      files: [],
+      cover_path: '',
     },
     genres: [],
     editor: 'raw',
@@ -168,28 +164,34 @@ export default {
       editor.style.cssText = 'height:auto; padding:0';
       editor.style.cssText = 'height:' + editor.scrollHeight * 1.018 + 'px';
     },
-    calcProgressUpload(index) {
-      return this.uploadingProgress[index]
-    },
     async sendBook() {
       const check = await this.checkBook()
       if (!check) {
         return false
       }
-      let result;
-      let url = `/book/create`
-      const formData = {...this.book, genres: this.genres.map(item => item.id)}
-      this.$loader.show()
-      if (this.$route.params.id) {
-        url = `/book/update?id=${this.$route.params.id}`
-        result = await this.$patch(url, formData)
-      } else {
-        result = await this.$post(url, formData)
-      }
-      this.$loader.hide()
-      if (result) {
+      try {
+        const bookData = {...this.book, genres: this.genres.map(item => item.id)}
+        const result = await updateBook(bookData)
+        console.log({result: result})
         this.$router.replace('/book')
+      } catch (e) {
+        console.log({sendBook: e})
       }
+
+      // let result;
+      // let url = `/book/create`
+      // const formData = {...this.book, genres: this.genres.map(item => item.id)}
+      // this.$loader.show()
+      // if (this.$route.params.id) {
+      //   url = `/book/update?id=${this.$route.params.id}`
+      //   result = await this.$patch(url, formData)
+      // } else {
+      //   result = await this.$post(url, formData)
+      // }
+      // this.$loader.hide()
+      // if (result) {
+      //   this.$router.replace('/book')
+      // }
     },
     resetBook() {
       this.book = {
@@ -223,10 +225,15 @@ export default {
       return validation
     },
     async getBook() {
+      if(!this.$route.params.id) {
+        return null;
+      }
       try {
         const result = await loadBook(+this.$route.params.id)
         this.book = {...result, annotation: result.annotation ? result.annotation : ''}
-        this.files.push(...result.files)
+        this.files.push(...result.files.map(file=>{
+          return {name: file.name, status: null, file: file}
+        }))
         this.genres = [...result.genres]
         await this.$nextTick()
         this.autoResize()
@@ -237,46 +244,50 @@ export default {
 
     loadFiles(e) {
       for (const file of e) {
-        this.files.push(file)
-        this.uploadingProgress.push(null)
+        this.files.push({name: file.name, status: null, file: file})
       }
     },
     getSrc(media) {
-      const loaded = !!media.id
-      return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media);
+      const loaded = !!media.file.id
+      return loaded ? `${process.env.VUE_APP_API_URL}/${media.file.url}` : window.URL.createObjectURL(media.file);
     },
-    async sendAllFiles() {
+    async sendFiles(fileToUpload) {
       try {
-        const results = await uploadFiles(this.files, this.book.id)
-        console.log({'sendAllFiles success': results})
-        // for await (const element of response.filter(item=>item.status === 'fulfilled')) {
-        //   console.log({element: element})
-        //     this.files.push(element.value.json())
-        // }
-        // const result = response.map(async element => {
-        //   return {status: element.status, value: await element.value}
-        // } )
-        const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
-        const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
-        const fin = fulfilled.map(async item => await item.json())
-
-        console.log({fin: fin, fulfilled: fulfilled, rejected: rejected})
-        // this.book.files.push(elem)
-        // this.files.splice(index, 1)
+        const fileArray = fileToUpload ? [fileToUpload] : this.files.map(fileObject => fileObject.file)
+        const results = await uploadFiles(fileArray, this.book.id)
+        // const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
+        // const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
+        // console.log({results:results, fulfilled: fulfilled, rejected: rejected})
+        for (const item of results) {
+          if (item.status === 'fulfilled') {
+            const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
+            if (fileIndex > -1) {
+              this.files.splice(fileIndex, 1)
+            }
+          this.files.push({name: item.value.full_name, status: 'fulfilled', file: item.value})
+          } else if (item.status === 'rejected') {
+            const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
+            this.files[fileIndex].status = 'rejected'
+            this.files[fileIndex].error= item.value
+          }
+        }
       } catch (e) {
-        console.log({sendAllFiles: e})
+        console.log({sendFiles: e})
       }
-
-      // const result = await Promise.allSettled(
-      //     this.files.map((file, index) => {
-      //       return this.sendFile(file, index)
-      //     })
-      // )
-      // for await (const [i, v] of this.files.entries()) {
-      //   await this.sendFile(v, i)
-      // }
-      // console.log({sendAllFiles: result})
     },
+    // async sendFile(file) {
+    //   try {
+    //     const results = await uploadFiles([file], this.book.id)
+    //     console.log({sendFile: results})
+    //     const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
+    //     if (fileIndex > -1) {
+    //       this.files.splice(fileIndex, 1)
+    //     }
+    //     this.files.push({name: item.value.full_name, status: 'fulfilled', file: item.value})
+    //   } catch (e) {
+    //     console.log({sendFile: e})
+    //   }
+    // },
 
     async deleteAllFiles() {
       try {
@@ -299,14 +310,13 @@ export default {
       }
     },
 
-    async deleteFile(file) {
-      const url = `/media-storage/delete?id=${this.files[file].id}`;
-      const result = await this.$delete(url);
-      if (result) {
-        this.files.splice(file, 1)
-        this.uploadingProgress.splice(file, 1)
-      } else {
-        console.error(result)
+    async deleteFile(fileIndex) {
+      try {
+        const result = await deleteFile(this.files[fileIndex].file.id);
+        this.files.splice(fileIndex, 1)
+        console.log({deleteFile: result})
+      } catch (e) {
+        console.error({deleteFile: e})
       }
     },
     async copyFileName(file) {

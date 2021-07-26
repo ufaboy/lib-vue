@@ -13,6 +13,14 @@ async function updateBookMark(formData) {
     const url = `/book/update-book?id=${formData.bookId}`;
     return  await $patch(url, {bookmark: formData.bookmark})
 }
+async function updateBook(bookData) {
+    const url = bookData.id ? `/book/update?id=${bookData.id}` : `/book/create`
+    if (bookData.id) {
+        return await $patch(url, bookData)
+    } else {
+        return await $post(url, bookData)
+    }
+}
 
 async function uploadFiles(files, bookId) {
     const token = sessionStorage.getItem('lib-token')
@@ -21,57 +29,26 @@ async function uploadFiles(files, bookId) {
         files.map(async file => {
             let formData = new FormData();
             formData.append('file', file);
-            console.log({formData: formData})
-            return await fetch(url, {
+            const result = await fetch(url, {
                 method: 'POST',
                 body: formData,
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             })
+            return await result.json()
         })
-    ).then(results => Promise.all(results.map(r => r.json()))
-        .then())
+    )
     console.log({resultPromise: resultPromise})
-    // if (response) {
-    //   const elem = await response.json();
-    //   console.log(elem)
-    //   this.book.files.push(elem)
-    //   this.files.splice(index, 1)
-    // }
-    // async sendFile(file, index) {
-        // return new Promise(function (resolve, reject) {
-        //     let formData = new FormData();
-        //     formData.append('file', file);
-        //     let xhr = new XMLHttpRequest();
-        //     const token = sessionStorage.getItem('lib-token')
-        //     xhr.open("POST", `${process.env.VUE_APP_API_URL}/media-storage/upload?book_id=${this.book.id}`);
-        //     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-        //     xhr.responseType = 'json';
-        //
-        //     xhr.upload.onprogress = async (event) => {
-        //         this.uploadingProgress[index] = Math.round(event.loaded * 100 / event.total)
-        //         this.$forceUpdate()
-        //     };
-        //     xhr.onloadend = () => {
-        //         if (xhr.status === 200) {
-        //             this.files[index] = xhr.response
-        //             this.$forceUpdate()
-        //             resolve(xhr.response);
-        //         } else {
-        //             console.log("Ошибка " + this.status);
-        //             reject(xhr.status);
-        //         }
-        //     };
-        //     xhr.send(formData);
-        //
-        // }.bind(this))
+    return resultPromise
 }
-
+async function deleteFile(fileId) {
+    return  await $delete(`/media-storage/delete?id=${fileId}`);
+}
 async function deleteFiles(bookId) {
     return  await $delete(`/book/delete-all-media?id=${bookId}`);
 }
 
 
 
-export {sendGenre, updateBookMark, uploadFiles, deleteFiles};
+export {sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles};
