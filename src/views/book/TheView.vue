@@ -28,7 +28,7 @@
 <script>
 import {defineAsyncComponent} from "vue";
 import {loadBook} from "../../service/loadData";
-import {updateBookMark} from "../../service/uploadData";
+import {updateBook, updateBookMark} from "../../service/uploadData";
 
 const apiUrl = process.env.VUE_APP_API_URL
 
@@ -63,7 +63,6 @@ export default {
       } catch (e) {
         console.log({downloadBook: e})
       }
-
     },
     async scrollToBookmark() {
       if (this.book.bookmark) {
@@ -89,14 +88,20 @@ export default {
       this.$modal.show('editor', this)
     },
     async saveEditor() {
-      this.book.text = this.$refs.text.innerHTML
-      const url = `/book/update?id=${this.$route.params.id}`
-      const result = await this.$patch(url, {text: this.book.text})
-      if (result) {
-        this.$toast.success('Успешно сохранено')
-      } else {
-        console.log({editor: result})
+      try {
+        await updateBook({text: this.book.text})
+      } catch (e) {
+        console.log({saveEditor: e})
       }
+
+      // this.book.text = this.$refs.text.innerHTML
+      // const url = `/book/update?id=${this.$route.params.id}`
+      // const result = await this.$patch(url, {text: this.book.text})
+      // if (result) {
+      //   this.$toast.success('Успешно сохранено')
+      // } else {
+      //   console.log({editor: result})
+      // }
     },
     handleScroll(e) {
       this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
