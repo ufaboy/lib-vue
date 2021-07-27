@@ -90,7 +90,9 @@ export default {
     async saveEditor() {
       try {
         await updateBook({text: this.book.text})
+        this.$toast.success('Успешно сохранено')
       } catch (e) {
+        this.$toast.error(`Ошибка: ${e}`)
         console.log({saveEditor: e})
       }
 
