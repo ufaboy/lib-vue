@@ -58,20 +58,28 @@ export default {
       border: 1px solid;
       border-color: var(--primary);
       color: var(--text1);
-      //background: var(--surface2);
-      background: transparent;
+      background: rgba(0, 0, 0, 0.7);
       text-transform: capitalize;
-      outline: none;
       cursor: pointer;
       border-radius: 0.5rem;
       font-size: 2rem;
       align-items: center;
       justify-content: space-around;
+
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
+      outline: none;
+      text-shadow: none;
+      transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     .content-link:hover {
-      color: #FFFFFF;
-      background: hsla(0, 0%, 0%, 0.5);
+      outline: 1px solid;
+      outline-color: rgba(255, 255, 255, .5);
+      outline-offset: 0px;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, .5), 0 0 20px rgba(255, 255, 255, .2);
+      outline-color: rgba(255, 255, 255, 0);
+      outline-offset: 15px;
+      text-shadow: 1px 1px 2px #427388;
     }
 
     .content-link:last-of-type {

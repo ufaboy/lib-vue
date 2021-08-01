@@ -4,7 +4,7 @@
   color: #FFFFFF;
   //color: var(--text2);
   //background-color: var(--surface2);
-  background-color: hsla(240, 100%, 1%, 0.4);
+  background-color: hsla(240, 100%, 1%, 0.7);
   border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
 
   thead {
@@ -22,8 +22,8 @@
     padding: 0.5rem;
     position: sticky;
     top: -1px;
-    //background-color: var(--surface3);
-    background-color: hsla(240, 100%, 1%, 0.7);
+    //background-color: hsla(240, 100%, 1%, 0.7);
+    background-color: hsla(240, 100%, 1%, 1);
   }
 
   th, td {
@@ -79,23 +79,13 @@
   }
 
   .row:hover {
-    background: var(--hovered);
+    background: var(--surface4);
   }
 
   .row.picante {
-    background: var(--background-picante);
-  }
-
-  .row.parent {
-    background: var(--background-parent);
   }
 
   .row.picante:hover {
-    background: var(--hovered-picante);
-  }
-
-  .row.parent:hover {
-    background: var(--hovered-parent);
   }
 
   .table-icon {

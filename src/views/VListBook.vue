@@ -231,7 +231,7 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    background: var(--surface2);
+    background: rgba(100, 100, 100, 0.5);
 
 
     .book-text-wrap {
@@ -270,6 +270,9 @@ export default {
       text-overflow: ellipsis;
 
     }
+  }
+  .book:hover {
+    background: rgba(100, 100, 100, 0.8);
   }
 
   .loader {

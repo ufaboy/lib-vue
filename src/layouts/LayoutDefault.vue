@@ -186,7 +186,9 @@ export default {
           padding: 0;
         }
       }
-
+      .day-night-toggle {
+        display: none;
+      }
     }
 
     .burger.mobile.active {
@@ -205,6 +207,7 @@ export default {
 
         .breadcrumb-li:last-of-type {
           margin-bottom: 0;
+          border: none;
         }
 
         .breadcrumb-link {
@@ -226,6 +229,9 @@ export default {
         rect:nth-child(3) {
           transform: rotate(-45deg) translate(-50%, -20%);
         }
+      }
+      .day-night-toggle {
+        display: block;
       }
     }
 

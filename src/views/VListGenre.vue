@@ -107,6 +107,9 @@ export default {
       margin-right: 0.5rem;
     }
   }
+  .genre:hover {
+    background: var(--surface4);
+  }
 }
 
 @media only screen and (max-width: 892px) {
