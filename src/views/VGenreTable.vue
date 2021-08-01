@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {loadGenres} from "@/service/loadData";
+import {loadGenres} from "@/utils/loadData";
 import EditGenre from '@/components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
@@ -85,7 +85,6 @@ export default {
       this.$modal.show('editGenre', this)
     },
     sortBy(orderBy, asc) {
-      console.log({'orderBy': orderBy, 'asc': asc})
       this.genres.sort(function (a, b) {
         if (a[orderBy] > b[orderBy]) {
           return asc ? 1 : -1;
@@ -93,7 +92,6 @@ export default {
         if (a[orderBy] < b[orderBy]) {
           return asc ? -1 : 1;
         }
-        // a должно быть равным b
         return 0;
       })
       this.ascending = this.ascending ? 0 : 1

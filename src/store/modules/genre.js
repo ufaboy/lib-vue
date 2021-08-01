@@ -1,4 +1,4 @@
-import {loadDivisions} from "@/service/loadData";
+import {loadDivisions} from "@/utils/loadData";
 
 const state = () => ({
   divisions: [],

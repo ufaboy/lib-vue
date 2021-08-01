@@ -27,17 +27,18 @@
 
 <script>
 import {mapState} from "vuex";
-import {loadBook} from "../../service/loadData";
-
 const apiUrl = process.env.VUE_APP_API_URL
+
 export default {
-  name: "TheMedia",
+  name: "BookMedia",
   components: {},
   props: {
-    bookProps: Object
+    book: Object
   },
+  emits: [],
+//Composition API (the entry point for using the Composition API)
+//setup: {},
   data: () => ({
-    book: {annotation: null, text: null, genres: []},
     activeImage: null,
     activeImageIndex: 0,
     activeMedia: {type: null, url: null},
@@ -61,24 +62,10 @@ export default {
   },
   watch: {},
   created() {
-    this.checkBook()
   },
   mounted() {
   },
   methods: {
-    checkBook() {
-      if (this.bookProps.id && this.bookProps.id === +this.$route.params.id) {
-        this.book = Object.assign({}, this.bookProps)
-      } else this.loadBook()
-    },
-    async loadBook() {
-      try {
-        this.book = await loadBook(this.$route.params.id)
-        document.title = `Book: ${this.book.name}`;
-      }catch (e) {
-        console.log({'loadBook': e})
-      }
-    },
     getSrcImgUrl(e) {
       return e.url ? `${apiUrl}/${e.url}` : ''
     },
@@ -89,62 +76,62 @@ export default {
 <style scoped lang="scss">
 .book-container {
   width: 100%;
-  .book-picture {
-    display: flex;
-    flex-flow: row wrap;
-  }
-  .book-picture_img {
-    object-fit: cover;
-  }
-  .book-video {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    padding: 1rem 2rem;
+.book-picture {
+  display: flex;
+  flex-flow: row wrap;
+}
+.book-picture_img {
+  object-fit: cover;
+}
+.book-video {
+  display: flex;
+  flex-flow: row nowrap;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  padding: 1rem 2rem;
 
-    .media-list {
-      width: 440px;
-      margin-right: 1rem;
+.media-list {
+  width: 440px;
+  margin-right: 1rem;
 
-      li {
-        cursor: pointer;
-        margin-bottom: 0.5rem;
-      }
+li {
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
 
-      li.active {
-        color: var(--color-p)
-      }
+li.active {
+  color: var(--color-p)
+}
 
-      .media-name {
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
+.media-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+}
 
-    .media-video {
-      flex: 1;
-      text-align: center;
+.media-video {
+  flex: 1;
+  text-align: center;
 
-      video {
-        width: 100%;
-      }
-    }
-  }
+video {
+  width: 100%;
+}
+}
+}
 }
 @media only screen and (max-width: 892px) {
   .book-container {
-    .book-video {
-      display: block;
-      padding: 0.5rem;
-    }
-    .select {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
+  .book-video {
+    display: block;
+    padding: 0.5rem;
   }
+  .select {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {

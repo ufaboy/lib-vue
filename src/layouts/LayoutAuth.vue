@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Login from "@/views/TheLogin";
+import Login from "@/views/VLogin";
 import CanvasSpace from "@/components/CanvasSpace";
 export default {
   name: "LayoutAuth",

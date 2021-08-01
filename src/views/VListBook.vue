@@ -33,7 +33,7 @@
 
 <script>
 import SortingModal from '@/components/SortingModal.vue'
-import {loadBooks} from "../service/loadData";
+import {loadBooks} from "../utils/loadData";
 
 export default {
   name: "ListBook",
@@ -137,22 +137,8 @@ export default {
       this.page = 1
       this.getBooksAndPush()
     },
-    prepareGenre() {
-      // const genreId = element ? element.id : this.$route.params.id ? +this.$route.params.id : null
-      // if (genreId) {
-      //   for (const parent of this.genres) {
-      //     let x = parent.childes.find(genre => genre.id === genreId)
-      //     if (x) {
-      //       this.activeGenre = x
-      //       this.$emit('loaded-genre', {id: x.id, name: x.name, parent: x.parent})
-      //       break;
-      //     }
-      //   }
-      // }
-    },
     async openBook(book) {
-      const comicsBook = book.genres.findIndex(genre => genre.division.name === 'comics') > -1
-      await this.$router.push({name: comicsBook ? 'book-media' : 'book-view', params: {id: book.id}})
+      await this.$router.push({name: 'book-view', params: {id: book.id}})
     },
     getCover(book) {
       if (book.cover_path) {

@@ -69,7 +69,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {loadBooks, goPage} from "../../service/loadData";
+import {loadBooks, goPage} from "../../utils/loadData";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
@@ -80,6 +80,8 @@ export default {
   middleware: [],
   components: {FilterModal, IconSortAsc, IconSortDesc},
   props: {},
+  setup() {
+  },
   data: () => ({
     books: {
       items: [],
@@ -119,9 +121,8 @@ export default {
       return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
     },
     async openBook(book, type) {
-      const comicsBook = book.genres.findIndex(genre => genre.division.name === 'comics') > -1
       await this.$router.push({
-        name: type === 'edit' ? 'book-edit' : comicsBook ? 'book-media' : 'book-view',
+        name: type === 'edit' ? 'book-edit' : 'book-view',
         params: {id: book.id}
       })
     },

@@ -41,7 +41,8 @@
             <router-link class="breadcrumb-link" to="/note">Note</router-link>
           </li>
           <li class="breadcrumb-li">
-            <router-link class="breadcrumb-link" to="/settings">Settings</router-link>
+            <button-day-night @change-theme="changeTheme" :theme-value="theme" />
+            <!--            <router-link class="breadcrumb-link" to="/settings">Settings</router-link>-->
           </li>
         </ul>
       </div>
@@ -52,17 +53,19 @@
 
 <script>
 import TheSunrise from "../components/TheSunrise";
+import ButtonDayNight from "../components/ButtonDayNight";
 
 export default {
   name: "LayoutDefault",
-  components: {TheSunrise},
+  components: {ButtonDayNight, TheSunrise},
   props: {
     parentProps: Object,
     genreProps: Object,
     bookName: String,
   },
   data: () => ({
-    activeBurger: false
+    activeBurger: false,
+    theme: ''
   }),
   methods: {
     async loadParents() {
@@ -73,6 +76,17 @@ export default {
     getUsername() {
       const username = sessionStorage.getItem('lib-username')
       if (username) this.$store.commit('user/setUsername', username)
+    },
+    changeTheme(theme) {
+      localStorage.setItem('lib-theme', theme)
+      this.theme = theme
+      const doc = document.firstElementChild
+      doc.setAttribute('color-scheme', this.theme)
+    },
+    getSavedTheme() {
+      this.theme = localStorage.getItem('lib-theme')
+      const doc = document.firstElementChild
+      doc.setAttribute('color-scheme', this.theme)
     }
   },
   computed: {
@@ -90,9 +104,10 @@ export default {
     }
   },
   watch: {},
-  async created() {
-    await this.loadParents()
+  created() {
+    this.loadParents()
     this.getUsername()
+    this.getSavedTheme()
   },
   mounted() {
   },
@@ -268,5 +283,6 @@ export default {
     border-radius: 5px;
     text-decoration: none;
   }
+
 }
 </style>

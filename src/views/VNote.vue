@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import {loadNotes} from "../service/loadData";
+import {loadNotes} from "../utils/loadData";
 
 export default {
   name: "TheNote",

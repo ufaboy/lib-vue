@@ -1,15 +1,15 @@
 <template>
   <div class="error-wrap">
-    <the-error/>
+    <v-error/>
   </div>
 </template>
 
 <script>
-import TheError from "@/views/TheError";
+import VError from "@/views/VError";
 
 export default {
   name: "LayoutError",
-  components: {TheError}
+  components: {VError}
 }
 </script>
 

@@ -1,4 +1,4 @@
-import {$post, $patch, $delete} from "@/service/superFetch";
+import {$post, $patch, $delete} from "@/utils/superFetch";
 
 async function sendGenre(genreForm) {
     let result;

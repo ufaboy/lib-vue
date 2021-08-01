@@ -64,5 +64,4 @@ requireComponent.keys().forEach(fileName => {
 		// .use(improvedFetch, {API_URL: process.env.VUE_APP_API_URL, API_TOKEN: sessionStorage.getItem('lib-token')})
 		.use(loader, loader)
 		.use(toaster, {time: 1000, position: 'top-right'})
-		// .use(toaster, toaster, {time: 5000})
 	app.mount('#app')

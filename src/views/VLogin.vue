@@ -3,7 +3,7 @@
     <h2 class="header-title">Login</h2>
     <form class="login-form" @submit.prevent="login">
       <div class="user-box">
-        <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off"><!--v-focus для автофокуса-->
+        <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off">
         <label class="label" for="login-username">Username</label>
       </div>
       <div class="user-box">

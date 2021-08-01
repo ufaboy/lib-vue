@@ -35,7 +35,7 @@
 
 <script>
 import IconClose from "@/components/icons/IconClose"
-import {sendGenre} from "@/service/uploadData";
+import {sendGenre} from "@/utils/uploadData";
 export default {
   name: "EditGenre",
   components: {IconClose},

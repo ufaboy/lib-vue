@@ -133,8 +133,8 @@ import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
 import FormField from '@/components/FormField.vue'
-import {loadBook} from "../../service/loadData";
-import {deleteFiles, deleteFile, updateBook, uploadFiles} from "../../service/uploadData";
+import {loadBook} from "../../utils/loadData";
+import {deleteFiles, deleteFile, updateBook, uploadFiles} from "../../utils/uploadData";
 
 export default {
   name: "BookEdit",

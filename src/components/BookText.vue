@@ -1,6 +1,6 @@
 <template>
   <div class="book-container">
-    <div class="book" ref="book" @scroll.passive="handleScroll" id="book">
+    <div class="book" ref="bookRef" @scroll.passive="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
     <footer class="footer" v-if="book.annotation !== 'media'">
@@ -26,52 +26,49 @@
 </template>
 
 <script>
-import {defineAsyncComponent} from "vue";
-import {loadBook} from "../../service/loadData";
-import {updateBook, updateBookMark} from "../../service/uploadData";
-
 const apiUrl = process.env.VUE_APP_API_URL
+import {defineAsyncComponent} from "vue";
+import {updateBook, updateBookMark} from "../utils/uploadData";
 
 export default {
-  name: "Book",
+  name: "BookText",
   components: {
     EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
   },
-  emits: ['loaded-book'],
-  props: {},
-
-  data: () => ({
-    book: {annotation: null, text: null, genres: [], bookmark: null},
-    progress: 0,
-    progressLoad: 0,
-    windowScroll: 0,
-    timer: null,
-    activeImage: null,
-    activeImageIndex: 0,
-    activeMedia: {type: null, url: null},
-    editorNode: {},
-    initialText: ''
-  }),
-  methods: {
-    async downloadBook() {
-      try {
-        const result = await loadBook(this.$route.params.id)
-        this.book = await this.prepareUrlForMedia(result)
-        document.title = `Book: ${result.name}`;
-        this.$emit('loaded-book', {name: result.name, genre: result.genres[0]})
-        this.scrollToBookmark()
-      } catch (e) {
-        console.log({downloadBook: e})
-      }
+  props: {
+    book: Object
+  },
+  emits: [],
+//setup: {},
+  data() {
+    return {
+      progress: 0,
+      progressLoad: 0,
+      windowScroll: 0,
+      timer: null,
+      activeImage: null,
+      activeImageIndex: 0,
+      activeMedia: {type: null, url: null},
+      editorNode: {},
+      initialText: ''
+    }
+},
+  computed: {
+    windowHeights() {
+      return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
     },
+  },
+  watch: {},
+  created() {
+  },
+  mounted() {
+  },
+  methods: {
     async scrollToBookmark() {
       if (this.book.bookmark) {
         await this.$nextTick()
-        this.$refs.book.scrollTo(0, this.book.bookmark)
+        this.$refs.bookRef.scrollTo(0, this.book.bookmark)
       }
-    },
-    async relocateToMedia(book) {
-      await this.$router.push({name: 'book-media', params: {id: book.id}})
     },
     scrollByClick(e) {
       // console.log({scrollHeight: document.getElementById('book').scrollHeight, clientHeight: document.getElementById('book').clientHeight})
@@ -162,29 +159,17 @@ export default {
       }
     }
   },
-  computed: {
-    windowHeights() {
-      return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
-    },
-  },
-  watch: {},
-  created() {
-    this.downloadBook()
-  },
-  mounted() {
-
-  },
-  beforeUnmount() {
-    this.updateScrollProgress()
-  },
   updated() {
     this.moveMedia()
     this.listenClickByImg()
   },
+  beforeUnmount() {
+    this.updateScrollProgress()
+  },
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .book-container {
   height: calc(100vh - 5rem);
   background-color: var(--background);
@@ -201,57 +186,57 @@ export default {
   justify-content: center;
   content-visibility: auto;
 
-  p {
-    word-break: break-word;
-    padding: initial;
-    text-indent: 1rem;
-    margin: 0 0 0.3rem;
-    position: relative;
+p {
+  word-break: break-word;
+  padding: initial;
+  text-indent: 1rem;
+  margin: 0 0 0.3rem;
+  position: relative;
 
-    span[data-tooltip]:hover {
-      color: crimson;
-    }
-  }
+span[data-tooltip]:hover {
+  color: crimson;
+}
+}
 
-  .text {
-    max-width: 700px;
-    position: relative;
+.text {
+  max-width: 700px;
+  position: relative;
 
-    .media {
-      border: none;
-      //display: none;
-      cursor: pointer;
-      width: 480px;
-      height: 320px;
-    }
+.media {
+  border: none;
+//display: none;
+  cursor: pointer;
+  width: 480px;
+  height: 320px;
+}
 
-    .media--right {
-      position: absolute;
-      right: -500px;
-    }
+.media--right {
+  position: absolute;
+  right: -500px;
+}
 
-    .media--left {
-      position: absolute;
-      left: -500px;
-    }
+.media--left {
+  position: absolute;
+  left: -500px;
+}
 
-    h1, h2, h3 {
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-  }
+h1, h2, h3 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+}
 
-  .picture {
-    width: inherit;
-    height: inherit;
-    object-fit: cover;
-  }
+.picture {
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+}
 
-  .illustrations {
-    display: flex;
-    flex: 1;
+.illustrations {
+  display: flex;
+  flex: 1;
 
-  }
+}
 
 }
 
@@ -262,28 +247,28 @@ export default {
   padding: 0 0.5rem;
   position: relative;
 
-  .progress {
-    width: 100%;
-    height: 100%;
-    background: var(--bg-secondary);
-    position: absolute;
-    left: 0;
-  }
+.progress {
+  width: 100%;
+  height: 100%;
+  background: var(--bg-secondary);
+  position: absolute;
+  left: 0;
+}
 
-  .progress-value {
-    position: absolute;
-    left: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
+.progress-value {
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
 
-  .progress::-webkit-progress-value {
-  }
+.progress::-webkit-progress-value {
+}
 }
 
 .image-modal {
-  //display: none; /* Hidden by default */
+//display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -294,30 +279,30 @@ export default {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
-  .modal-content {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-  }
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
 
-  /* Caption of Modal Image (Image Text) - Same Width as the Image */
-  #caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-    height: 150px;
-  }
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
 
-  /* Add Animation - Zoom in the Modal */
-  .modal-content, #caption {
-    animation-name: zoom;
-    animation-duration: 0.6s;
-  }
+/* Add Animation - Zoom in the Modal */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
 }
 
 @keyframes zoom {
@@ -349,51 +334,51 @@ export default {
 
 @media only screen and (max-width: 892px) {
   .book-container {
-    .book {
-      .text {
-        max-width: initial;
-        width: 100%;
+  .book {
+  .text {
+    max-width: initial;
+    width: 100%;
 
-        .media {
-          position: static;
-          width: 100%;
-          max-height: calc(var(--media-width) / 1.5);
-        }
-      }
-    }
-
-    .image-modal {
-      padding: 0.3rem;
-      height: 100%;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-      align-items: center;
-
-      .close {
-        top: 0;
-      }
-
-      .picture-action-panel {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-      }
-
-      .picture-arrow-btn {
-        height: 5rem;
-        width: 5rem;
-        color: var(--color-2);
-        background-color: var(--background-3);
-      }
-
-      .modal-content {
-        height: 100%;
-        object-fit: cover;
-      }
-    }
+  .media {
+    position: static;
+    width: 100%;
+    max-height: calc(var(--media-width) / 1.5);
   }
+}
+}
+
+.image-modal {
+  padding: 0.3rem;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+.close {
+  top: 0;
+}
+
+.picture-action-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.picture-arrow-btn {
+  height: 5rem;
+  width: 5rem;
+  color: var(--color-2);
+  background-color: var(--background-3);
+}
+
+.modal-content {
+  height: 100%;
+  object-fit: cover;
+}
+}
+}
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
