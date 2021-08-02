@@ -73,9 +73,10 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .book-container {
-  width: 100%;
+  height: calc(100vh - 1.5rem);
+  background-color: var(--background);
 .book-picture {
   display: flex;
   flex-flow: row wrap;

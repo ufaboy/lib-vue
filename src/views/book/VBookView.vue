@@ -50,12 +50,6 @@ export default {
 </script>
 
 <style lang="scss">
-.book-container {
-  height: calc(100vh - 5rem);
-  background-color: var(--background);
-
-}
-
 .book {
   display: flex;
   flex-flow: row wrap;

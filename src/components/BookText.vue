@@ -169,11 +169,10 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .book-container {
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 1.5rem);
   background-color: var(--background);
-
 }
 
 .book {
