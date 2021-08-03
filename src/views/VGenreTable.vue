@@ -23,7 +23,7 @@
           <td class="td" :class="columnsClasses.id">{{ genre.id }}</td>
           <td class="td" :class="columnsClasses.title">{{ genre.name }}</td>
           <td class="td" :class="columnsClasses.description">{{ genre.description }}</td>
-          <td class="td" :class="columnsClasses.division">{{ genre.division ? genre.division.name : '' }}</td>
+          <td class="td" :class="columnsClasses.category">{{ genre.category ? genre.category.name : '' }}</td>
         </tr>
       </transition-group>
     </table>
@@ -48,18 +48,18 @@ export default {
       id: null,
       name: null,
       description: null,
-      division: {id: null, name: null},
+      category: {id: null, name: null},
     },
     modalOpen: false,
     genres: [],
     ascending: 1,
     orderBy: null,
-    columns: ['id', 'name', 'description', 'division'],
+    columns: ['id', 'name', 'description', 'category'],
     columnsClasses: {
       id: 'cell-id',
       name: 'cell-name',
       description: 'cell-description',
-      division: 'cell-division'
+      category: 'cell-category'
     },
   }),
   methods: {
@@ -80,7 +80,7 @@ export default {
         id: null,
         name: null,
         description: null,
-        division: {id: null, name: null},
+        category: {id: null, name: null},
       };
       this.$modal.show('editGenre', this)
     },

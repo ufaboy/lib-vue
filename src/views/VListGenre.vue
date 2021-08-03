@@ -1,9 +1,9 @@
 <template>
   <div class="list-genre">
     <header class="header" v-if="isMobile">
-      <select class="select" v-model="activeDivision">
-        <option class="option" :value="division" v-for="division of divisions" :key="division.id">
-          {{ division.name }}
+      <select class="select" v-model="activeCategory">
+        <option class="option" :value="category" v-for="category of categories" :key="category.id">
+          {{ category.name }}
         </option>
       </select>
     </header>
@@ -24,26 +24,26 @@ export default {
   components: {},
   props: {},
   data: () => ({
-    activeDivision: {
+    activeCategory: {
       genres: []
     },
   }),
   computed: {
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories
     },
     genres() {
-      let selectedDivision
-      if (this.activeDivision.name) {
-        selectedDivision = this.divisions.find(item => item.id === this.activeDivision.id || item.name === this.activeDivision.name)
+      let selectedCategory
+      if (this.activeCategory.name) {
+        selectedCategory = this.categories.find(item => item.id === this.activeCategory.id || item.name === this.activeCategory.name)
       } else if (this.$route.params.id) {
-        selectedDivision = this.divisions.find(item => item.id === +this.$route.params.id)
+        selectedCategory = this.categories.find(item => item.id === +this.$route.params.id)
       } else if (this.$route.params.name) {
-        selectedDivision = this.divisions.find(item => item.name === this.$route.params.name)
+        selectedCategory = this.categories.find(item => item.name === this.$route.params.name)
       } else {
         return []
       }
-      return selectedDivision ? Array.isArray(selectedDivision.genres) ? selectedDivision.genres : [] : []
+      return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
     },
     isMobile() {
       return this.$store.state.main.isMobile
@@ -71,11 +71,11 @@ export default {
         }
       })
     },
-    async prepareDivision() {
+    async prepareCategory() {
       if (this.$route.params.id) {
-        this.activeDivision = this.divisions.find(item => item.id === +this.$route.params.id)
+        this.activeCategory = this.categories.find(item => item.id === +this.$route.params.id)
       } else if (this.$route.params.name) {
-        this.activeDivision = this.divisions.find(item => item.name === this.$route.params.name)
+        this.activeCategory = this.categories.find(item => item.name === this.$route.params.name)
       }
     },
   },

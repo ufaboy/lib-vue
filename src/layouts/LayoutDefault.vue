@@ -68,9 +68,9 @@ export default {
     theme: ''
   }),
   methods: {
-    async loadParents() {
-      if (this.divisions && this.divisions.length === 0 && sessionStorage.getItem('lib-token')) {
-        await this.$store.dispatch('genre/loadDivisions')
+    async loadCategories() {
+      if (this.categories && this.categories.length === 0 && sessionStorage.getItem('lib-token')) {
+        await this.$store.dispatch('genre/loadCategories')
       }
     },
     getUsername() {
@@ -90,8 +90,8 @@ export default {
     }
   },
   computed: {
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories
     },
     isMobile() {
       return this.$store.state.main.isMobile
@@ -105,7 +105,7 @@ export default {
   },
   watch: {},
   created() {
-    this.loadParents()
+    this.loadCategories()
     this.getUsername()
     this.getSavedTheme()
   },

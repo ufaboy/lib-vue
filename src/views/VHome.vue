@@ -2,9 +2,9 @@
 <main class="home">
   <nav class="nav">
     <router-link class="content-link"
-               :to="{ name: 'list-genre', params: { id: division.id, name: division.name}}"
-               v-for="division of divisions"
-               :key="division.id">{{ division.name }}
+               :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
+               v-for="category of categories"
+               :key="category.id">{{ category.name }}
     </router-link>
   </nav>
 </main>
@@ -21,8 +21,8 @@ export default {
 
   },
   computed: {
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories
     },
     isDesktop() {
       return this.$store.state.main.isDesktop

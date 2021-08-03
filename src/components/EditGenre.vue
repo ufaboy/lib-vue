@@ -21,9 +21,9 @@
       <textarea class="value textarea" v-model.trim="localGenre.description" rows="5"></textarea>
     </label>
     <label class="label">
-      <span class="title">division</span>
-      <select class="select value" v-model="localGenre.division">
-        <option v-for="division of divisions" :key="division.id" :value="division">{{division.name}}</option>
+      <span class="title">category</span>
+      <select class="select value" v-model="localGenre.category">
+        <option v-for="category of categories" :key="category.id" :value="category">{{category.name}}</option>
       </select>
     </label>
     <footer class="footer">
@@ -49,7 +49,7 @@ export default {
       id: null,
       name: '',
       description: '',
-      division: {id: null, name: ''},
+      category: {id: null, name: ''},
       ad: null,
     },
   }),
@@ -57,15 +57,15 @@ export default {
     invalidGenre() {
       return {
         name: !this.localGenre.name,
-        division: !this.localGenre.division
+        category: !this.localGenre.category
       }
     },
     username() {
       return this.$store.state.user.username
     },
-    divisions() {
-      return this.$store.state.genre.divisions.map(division => {
-        return {id: division.id, name: division.name}
+    categories() {
+      return this.$store.state.genre.categories.map(category => {
+        return {id: category.id, name: category.name}
       })
     },
   },
@@ -84,7 +84,7 @@ export default {
         name: this.localGenre.name,
         description: this.localGenre.description,
         ad: this.localGenre.ad,
-        division_id: this.localGenre.division.id,
+        category_id: this.localGenre.category.id,
       }
       if (this.localGenre.id) {
         genreForm.id = this.localGenre.id

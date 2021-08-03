@@ -1,7 +1,7 @@
-import {loadDivisions} from "@/utils/loadData";
+import {loadCategories} from "@/utils/loadData";
 
 const state = () => ({
-  divisions: [],
+  categories: [],
   items: []
 })
 
@@ -11,20 +11,20 @@ const getters = {
 
 // actions
 const actions = {
-  async loadDivisions({commit}, payload) {
+  async loadCategories({commit}, payload) {
     try {
-      const result = await loadDivisions(payload)
-      commit('setDivisions', result)
+      const result = await loadCategories(payload)
+      commit('setCategories', result)
     } catch (e) {
-      console.log({'loadDivisions': e})
+      console.log({'loadCategories': e})
     }
   }
 }
 
 // mutations
 const mutations = {
-  setDivisions(state, data) {
-    state.divisions = [...data]
+  setCategories(state, data) {
+    state.categories = [...data]
   }
 }
 

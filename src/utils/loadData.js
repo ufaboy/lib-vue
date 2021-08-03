@@ -1,7 +1,7 @@
 import {$get, $goPage} from "./superFetch";
-async function loadDivisions(name) {
+async function loadCategories(name) {
     try {
-        const url = name ? `/division?name=${name}` : '/division'
+        const url = name ? `/category?name=${name}` : '/category'
         return await $get(url)
     }catch (e) {
         console.log(e)
@@ -46,4 +46,4 @@ async function goPage(page) {
     return await $goPage(page)
 }
 
-export {loadDivisions, loadGenres, loadBooks, loadBook, loadNotes, goPage};
+export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage};

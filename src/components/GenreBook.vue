@@ -16,9 +16,9 @@
     </fieldset>
     <fieldset class="genres" v-if="$store.state.main.isDesktop">
       <legend>all genres</legend>
-      <div class="parent" :class="{'checked-childes': calcCheckedChildes(division)}" v-for="division of divisions" :key="division.id" @click="activeDivision = Number(division.id)">
-        <div class="parent-title">{{division.name}}</div>
-        <label class="checkbox-container" v-for="genre of division.genres" :key="genre.id">{{ genre.name }}
+      <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories" :key="category.id" @click="activeCategory = Number(category.id)">
+        <div class="parent-title">{{category.name}}</div>
+        <label class="checkbox-container" v-for="genre of category.genres" :key="genre.id">{{ genre.name }}
           <input type="checkbox" :value="genre" v-model="selectedGenre">
           <span class="checkmark"></span>
         </label>
@@ -30,8 +30,8 @@
 <!--      </optgroup>-->
 <!--    </select>-->
     <select class="select" v-model="activeGenre" v-if="isMobile" multiple>
-      <optgroup :label="division.name" v-for="division of divisions" :key="'division-' + division.id">
-        <option v-for="genre of division.genres"
+      <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+        <option v-for="genre of category.genres"
                 :key="'select-genre'+genre.id"
                 :value="genre">{{ genre.name }}
         </option>
@@ -54,14 +54,14 @@ export default {
     genresProps: Array,
   },
   data: () => ({
-    activeDivision: '',
+    activeCategory: '',
     searchField: '',
     selectedGenre: [],
     genres: [],
   }),
   computed: {
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories()
     },
     isMobile() {
       return this.$store.state.main.isMobile

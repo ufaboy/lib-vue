@@ -7,8 +7,8 @@
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
       <select class="select" v-model="activeGenre" @change="changeGenre" v-if="isMobile">
-        <optgroup :label="division.name" v-for="division of divisions" :key="'division-' + division.id">
-          <option v-for="genre of division.genres"
+        <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+          <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
           </option>
@@ -62,13 +62,13 @@ export default {
     isMobile() {
       return this.$store.state.main.isMobile
     },
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories
     },
     activeGenre: {
       get: function () {
-        const division = this.divisions.find(division => division.genres.some(genre => genre.id === +this.genreId))
-        return division ? division.genres.find(genre => genre.id === this.genreId) : null
+        const category = this.categories.find(category => category.genres.some(genre => genre.id === +this.genreId))
+        return category ? category.genres.find(genre => genre.id === this.genreId) : null
       },
       set: function (newValue) {
         this.genreId = newValue.id

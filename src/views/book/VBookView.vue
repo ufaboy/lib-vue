@@ -23,7 +23,7 @@ export default {
 
     const downloadBook = async () => {
       book.value = await loadBook(route.params.id)
-      const comicsBook = book.value.genres.findIndex(genre => genre.division.name === 'comics') > -1
+      const comicsBook = book.value.genres.findIndex(genre => genre.category.name === 'comics') > -1
       typeBook.value = comicsBook ? 'book-media' : 'book-text'
     }
     downloadBook()

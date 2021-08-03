@@ -11,8 +11,8 @@
     <label class="label">
       <span class="title">genre</span>
       <select class="select" v-model="filter.genre">
-        <optgroup :label="division.name" v-for="division of divisions" :key="'division-' + division.id">
-          <option v-for="genre of division.genres"
+        <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+          <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
           </option>
@@ -62,8 +62,8 @@ export default {
     },
   }),
   computed: {
-    divisions() {
-      return this.$store.state.genre.divisions
+    categories() {
+      return this.$store.state.genre.categories
     },
     username() {
       return this.$store.state.user.username
