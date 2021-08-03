@@ -40,10 +40,10 @@
           <li class="breadcrumb-li">
             <router-link class="breadcrumb-link" to="/note">Note</router-link>
           </li>
-          <li class="breadcrumb-li">
-            <button-day-night @change-theme="changeTheme" :theme-value="theme" />
-            <!--            <router-link class="breadcrumb-link" to="/settings">Settings</router-link>-->
-          </li>
+<!--          <li class="breadcrumb-li">-->
+<!--            <button-day-night @change-theme="changeTheme" :theme-value="theme" />-->
+<!--                        <router-link class="breadcrumb-link" to="/settings">Settings</router-link>-->
+<!--          </li>-->
         </ul>
       </div>
     </header>
@@ -53,11 +53,10 @@
 
 <script>
 import TheSunrise from "../components/TheSunrise";
-import ButtonDayNight from "../components/ButtonDayNight";
 
 export default {
   name: "LayoutDefault",
-  components: {ButtonDayNight, TheSunrise},
+  components: {TheSunrise},
   props: {
     parentProps: Object,
     genreProps: Object,
