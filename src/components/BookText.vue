@@ -1,5 +1,5 @@
 <template>
-  <div class="book-container">
+  <div class="book-container" :class="{mobile: isMobile}">
     <div class="book" ref="bookRef" @scroll.passive="handleScroll" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
@@ -56,6 +56,9 @@ export default {
   computed: {
     windowHeights() {
       return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
+    },
+    isMobile() {
+      return this.$store.state.main.isMobile
     },
   },
   watch: {},
@@ -114,7 +117,6 @@ export default {
         return book
       }
       return book
-
     },
     moveMedia() {
       let toggleSide = true
@@ -171,8 +173,11 @@ export default {
 
 <style lang="scss">
 .book-container {
-  height: calc(100vh - 1.5rem);
+  height: calc(100vh - 5rem);
   background-color: var(--background);
+}
+.book-container.mobile {
+  height: calc(100vh - 1.5rem);
 }
 
 .book {

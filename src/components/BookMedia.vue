@@ -1,5 +1,5 @@
 <template>
-  <div class="book-container">
+  <div class="book-container" :class="{mobile: main.isMobile}">
     <div class="book-video" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
       <ol class="media-list" v-if="main.isDesktop">
         <li :class="{active: media.id === activeMedia.id}"
@@ -75,7 +75,7 @@ export default {
 
 <style lang="scss">
 .book-container {
-  height: calc(100vh - 1.5rem);
+  height: calc(100vh - 5rem);
   background-color: var(--background);
 .book-picture {
   display: flex;
@@ -122,6 +122,11 @@ video {
 }
 }
 }
+
+.book-container.mobile {
+  height: calc(100vh - 1.5rem);
+}
+
 @media only screen and (max-width: 892px) {
   .book-container {
   .book-video {
