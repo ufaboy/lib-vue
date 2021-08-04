@@ -61,7 +61,7 @@ export default {
   }),
   computed: {
     categories() {
-      return this.$store.state.genre.categories()
+      return this.$store.state.genre.categories
     },
     isMobile() {
       return this.$store.state.main.isMobile
