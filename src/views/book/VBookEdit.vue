@@ -253,7 +253,8 @@ export default {
     },
     async sendFiles(fileToUpload) {
       try {
-        const fileArray = fileToUpload ? [fileToUpload] : this.files.map(fileObject => fileObject.file)
+        const fileArray = fileToUpload ? [fileToUpload.file] : this.files.map(fileObject => fileObject.file)
+        console.log({fileArray: fileArray})
         const results = await uploadFiles(fileArray, this.book.id)
         // const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
         // const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
