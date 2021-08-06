@@ -97,7 +97,6 @@
 .toggle {
   display: block;
   text-align: center;
-  //margin-top: 40px;
   user-select: none;
 }
 .toggle--checkbox {
@@ -157,8 +156,8 @@ $toggle-textColor: #fff;
     text-transform: uppercase;
     color: $toggle-textColor;
 
-    background: $toggle-bgColor--active;
-    box-shadow: inset 0 20px 40px -10px #7b9d25;
+    background: $toggle-bgColor--inactive;
+    box-shadow: inset 0 20px 40px -10px #7e7e7e;
     border-radius: 40px;
 
     //contains the actual knob part of the button and the 'on' text
@@ -166,7 +165,7 @@ $toggle-textColor: #fff;
       display: block;
       position: absolute;
       top: 50%;
-      left: 60%;
+      left: 0;
       transform: translateY(-50%);
 
       width: $toggleBtnRadius;
@@ -198,25 +197,25 @@ $toggle-textColor: #fff;
     }
     &:before {
       content: attr(data-label-on);
-      left: 20%;
+      left: -60%;
     }
     &:after {
       content: attr(data-label-off);
-      right: -60%;
+      right: 20%;
     }
   }
 
   & .toggle--checkbox {
     &:checked {
       & + .toggle--btn {
-        background: $toggle-bgColor--inactive;
-        box-shadow: inset 0 20px 40px -10px #7e7e7e;
+        background: $toggle-bgColor--active;
+        box-shadow: inset 0 20px 40px -10px #7b9d25;
 
-        &:before { left: 0; }
+        &:before { left: 60%; }
 
         & .toggle--feature {
-          &:before	{ left: -60%; }
-          &:after		{ right: 20%; }
+          &:before	{ left: 20%; }
+          &:after		{ right: -60%; }
         }
       }
     }
