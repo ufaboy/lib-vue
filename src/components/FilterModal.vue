@@ -26,7 +26,7 @@
       </select>
     </label>
 
-    <div class="switch">
+    <div class="switch" v-if="adAccess">
       <span>ad off</span>
       <input type="checkbox" id="switch" class="switch-input" v-model="filter.ad"/>
       <label for="switch" class="switch-label"></label>
@@ -42,6 +42,7 @@
 
 <script>
 import IconClose from "@/components/icons/IconClose"
+import {adAccess} from "@/utils/userData";
 
 export default {
   name: "FilterModal",
@@ -65,9 +66,9 @@ export default {
     categories() {
       return this.$store.state.genre.categories
     },
-    username() {
-      return this.$store.state.user.username
-    }
+    adAccess() {
+      return adAccess()
+    },
   },
   methods: {
     async findBookByFilter() {

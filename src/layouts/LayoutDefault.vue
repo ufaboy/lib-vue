@@ -72,10 +72,6 @@ export default {
         await this.$store.dispatch('genre/loadCategories')
       }
     },
-    getUsername() {
-      const username = sessionStorage.getItem('lib-username')
-      if (username) this.$store.commit('user/setUsername', username)
-    },
     changeTheme(theme) {
       localStorage.setItem('lib-theme', theme)
       this.theme = theme
@@ -108,7 +104,6 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    this.getUsername()
     this.getSavedTheme()
   },
   mounted() {

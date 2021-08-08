@@ -8,7 +8,7 @@
         </div>
         <div class="btn-tab--right">
           <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
-          <div class="toggle toggle--knob" v-if="username === 'admin'">
+          <div class="toggle toggle--knob" v-if="adAccess">
             <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
             <label class="toggle--btn" for="toggle--knob">
               <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
@@ -133,8 +133,9 @@ import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
 import FormField from '@/components/FormField.vue'
-import {loadBook} from "../../utils/loadData";
-import {deleteFiles, deleteFile, updateBook, uploadFiles} from "../../utils/uploadData";
+import {loadBook} from "@/utils/loadData";
+import {adAccess} from "@/utils/userData";
+import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
 
 export default {
   name: "BookEdit",
@@ -369,8 +370,8 @@ export default {
     },
   },
   computed: {
-    username() {
-      return this.$store.state.user.username
+    adAccess() {
+      return adAccess()
     },
     isDesktop() {
       return this.$store.state.main.isDesktop

@@ -2,7 +2,7 @@
   <form class="edit-genre" @submit.prevent="updateGenre">
     <header class="header">
       <h1>Genre</h1>
-        <button v-if="username === 'admin'"
+        <button v-if="adAccess"
                 type="button"
                 class="btn-switch btn"
                 :class="{'active': localGenre.ad}"
@@ -36,6 +36,7 @@
 <script>
 import IconClose from "@/components/icons/IconClose"
 import {sendGenre} from "@/utils/uploadData";
+import {adAccess} from "@/utils/userData";
 export default {
   name: "EditGenre",
   components: {IconClose},
@@ -60,8 +61,8 @@ export default {
         category: !this.localGenre.category
       }
     },
-    username() {
-      return this.$store.state.user.username
+    adAccess() {
+      return adAccess()
     },
     categories() {
       return this.$store.state.genre.categories.map(category => {

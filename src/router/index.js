@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import store from '@/store'
+import {adAccess} from "@/utils/userData";
 
 import {authMiddleware} from "@/middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
@@ -76,8 +76,7 @@ const routes = [
     name: 'note',
     component: VNote,
     beforeEnter: (to, from, next) => {
-      const user = store.state.user.username
-      if (user === 'admin' ) {
+      if (adAccess) {
         next()
       } else {
         next(new Error('dont panic'))
@@ -98,8 +97,6 @@ const routes = [
     component: () => import('@/views/VTestPage.vue'),
     meta: {
       layout: 'layout-test'
-      // auth: true,
-      // roles: ["admin"]
     }
   },
   // {
