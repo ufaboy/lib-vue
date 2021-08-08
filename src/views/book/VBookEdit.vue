@@ -151,7 +151,7 @@ export default {
       source: null,
       cover: null,
       rating: null,
-      ad: null,
+      ad: false,
       cover_path: '',
     },
     genres: [],
@@ -172,27 +172,11 @@ export default {
       }
       try {
         const bookData = {...this.book, genres: this.genres.map(item => item.id)}
-        const result = await updateBook(bookData)
-        console.log({result: result})
+        await updateBook(bookData)
         this.$router.replace('/book')
       } catch (e) {
         console.log({sendBook: e})
       }
-
-      // let result;
-      // let url = `/book/create`
-      // const formData = {...this.book, genres: this.genres.map(item => item.id)}
-      // this.$loader.show()
-      // if (this.$route.params.id) {
-      //   url = `/book/update?id=${this.$route.params.id}`
-      //   result = await this.$patch(url, formData)
-      // } else {
-      //   result = await this.$post(url, formData)
-      // }
-      // this.$loader.hide()
-      // if (result) {
-      //   this.$router.replace('/book')
-      // }
     },
     resetBook() {
       this.book = {
@@ -205,6 +189,7 @@ export default {
         cover_url: null,
         rating: null,
         book: null,
+        ad: false,
         files: []
       }
       this.genres = []
@@ -231,7 +216,8 @@ export default {
       }
       try {
         const result = await loadBook(+this.$route.params.id)
-        this.book = {...result, annotation: result.annotation ? result.annotation : ''}
+        console.log({getBook: !!result.ad})
+        this.book = {...result, annotation: result.annotation ? result.annotation : '', ad: !!result.ad}
         this.files.push(...result.files.map(file=>{
           return {name: file.name, status: null, file: file}
         }))
