@@ -1,6 +1,15 @@
 <template>
   <div class="login-box">
-    <h2 class="header-title">Login</h2>
+    <header class="login-header">
+      <button class="login-type" @click="signIn = !signIn">
+        <transition name="fade" mode="out-in">
+<!--          {{signIn ? 'SignIn' : 'LogIn'}}-->
+          <div v-if="signIn" key="SignIn">SignIn</div>
+          <div v-else key="LogIn">LogIn</div>
+        </transition>
+      </button>
+    </header>
+<!--    <h2 class="header-title">Login</h2>-->
     <form class="login-form" @submit.prevent="login">
       <div class="user-box">
         <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off">
@@ -22,7 +31,7 @@
 </template>
 
 <script>
-import {setUser} from "../utils/userData";
+import {setUser} from "@/utils/userData";
 
 export default {
   name: "login",
@@ -36,7 +45,8 @@ export default {
   methods: {
     async login() {
       const formData = {username: this.username, password: this.password};
-      const response = await fetch(`${process.env.VUE_APP_API_URL}/auth/login`, {
+      const url = `${process.env.VUE_APP_API_URL}/auth/${this.signIn ? 'signin' : 'login'}`
+      const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(formData),
         headers: {
@@ -82,12 +92,32 @@ export default {
   box-shadow: 0 15px 25px rgba(0,0,0,.6);
   border-radius: 10px;
 
-  .header-title {
-    margin: 0 0 30px;
-    padding: 0;
-    color: #fff;
+  //.header-title {
+  //  margin: 0 0 30px;
+  //  padding: 0;
+  //  color: #fff;
+  //  text-align: center;
+  //}
+  .login-header {
     text-align: center;
+    .login-type {
+      width: 100px;
+      padding: 10px 20px;
+      color: #03e9f4;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s ease
+    }
+
+    .fade-enter-from, .fade-leave-to {
+      opacity: 0
+    }
+
   }
+
   .login-form {
     text-align: center;
   }

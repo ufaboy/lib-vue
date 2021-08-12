@@ -1,24 +1,24 @@
 import {$post, $patch, $delete} from "@/utils/superFetch";
 
-async function sendGenre(genreForm) {
+function sendGenre(genreForm) {
     let result;
     if (genreForm.id) {
-        result = await $patch(`/genre/update?id=${genreForm.id}`, genreForm)
+        result = $patch(`/genre/update?id=${genreForm.id}`, genreForm)
     } else {
-        result = await $post(`/genre/create`, genreForm)
+        result = $post(`/genre/create`, genreForm)
     }
     return result
 }
-async function updateBookMark(formData) {
+function updateBookMark(formData) {
     const url = `/book/update-book?id=${formData.bookId}`;
-    return  await $patch(url, {bookmark: formData.bookmark})
+    return $patch(url, {bookmark: formData.bookmark})
 }
-async function updateBook(bookData) {
+function updateBook(bookData) {
     const url = bookData.id ? `/book/update?id=${bookData.id}` : `/book/create`
     if (bookData.id) {
-        return await $patch(url, bookData)
+        return $patch(url, bookData)
     } else {
-        return await $post(url, bookData)
+        return $post(url, bookData)
     }
 }
 
@@ -42,11 +42,11 @@ async function uploadFiles(files, bookId) {
     console.log({resultPromise: resultPromise})
     return resultPromise
 }
-async function deleteFile(fileId) {
-    return  await $delete(`/media-storage/delete?id=${fileId}`);
+function deleteFile(fileId) {
+    return $delete(`/media-storage/delete?id=${fileId}`);
 }
-async function deleteFiles(bookId) {
-    return  await $delete(`/book/delete-all-media?id=${bookId}`);
+function deleteFiles(bookId) {
+    return $delete(`/book/delete-all-media?id=${bookId}`);
 }
 
 

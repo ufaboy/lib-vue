@@ -1,4 +1,4 @@
-export async function $goPage(url) {
+async function $goPage(url) {
     const token = sessionStorage.getItem('lib-token')
     if (!token) {
         console.log({token: token})
@@ -11,13 +11,13 @@ export async function $goPage(url) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
 }
 
-export async function $get(rawUrl) {
+async function $get(rawUrl) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -31,13 +31,13 @@ export async function $get(rawUrl) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
 }
 
-export async function $post(rawUrl, data = null) {
+async function $post(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -52,13 +52,13 @@ export async function $post(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
 }
 
-export async function $patch(rawUrl, data = null) {
+async function $patch(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -73,13 +73,13 @@ export async function $patch(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
 }
 
-export async function $delete(rawUrl, data = null) {
+async function $delete(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -94,11 +94,13 @@ export async function $delete(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
 }
+
+export {$goPage, $get, $post, $patch, $delete}
 
 
 
