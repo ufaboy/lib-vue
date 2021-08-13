@@ -6,10 +6,6 @@ import store from './store'
 
 const app = createApp(App)
 
-//styles
-import '@/assets/main.scss'
-//styles
-
 //self plugins
 // import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal";

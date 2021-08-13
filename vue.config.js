@@ -1,5 +1,15 @@
 module.exports = {
   // publicPath: process.env.NODE_ENV === 'production' ? '/library-example/' : '/',
+  css: {
+    loaderOptions: {
+      css: {
+        // эти настройки будут переданы в css-loader
+      },
+      scss : {
+        additionalData: `@import "@/assets/main.scss";`
+      }
+    }
+  },
   pwa: {
     name: 'Library',
     themeColor: '#4285f4',

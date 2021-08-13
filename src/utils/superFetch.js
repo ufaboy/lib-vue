@@ -11,7 +11,7 @@ export async function $goPage(url) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
@@ -31,7 +31,7 @@ export async function $get(rawUrl) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
@@ -52,7 +52,7 @@ export async function $post(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
@@ -73,7 +73,7 @@ export async function $patch(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
@@ -94,7 +94,7 @@ export async function $delete(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return await response.json();
+        return response.json();
     } else {
         return Promise.reject(response);
     }
