@@ -1,4 +1,4 @@
-export async function $goPage(url) {
+async function $goPage(url) {
     const token = sessionStorage.getItem('lib-token')
     if (!token) {
         console.log({token: token})
@@ -17,7 +17,7 @@ export async function $goPage(url) {
     }
 }
 
-export async function $get(rawUrl) {
+async function $get(rawUrl) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -37,7 +37,7 @@ export async function $get(rawUrl) {
     }
 }
 
-export async function $post(rawUrl, data = null) {
+async function $post(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -58,7 +58,7 @@ export async function $post(rawUrl, data = null) {
     }
 }
 
-export async function $patch(rawUrl, data = null) {
+async function $patch(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
@@ -79,14 +79,14 @@ export async function $patch(rawUrl, data = null) {
     }
 }
 
-export async function $delete(rawUrl, data = null) {
+async function $delete(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
         console.log({token: token})
     }
     const response = await fetch(url, {
-        method: 'PATCH',
+        method: 'DELETE',
         body: data ? JSON.stringify(data) : data,
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -99,6 +99,6 @@ export async function $delete(rawUrl, data = null) {
         return Promise.reject(response);
     }
 }
-
+ export {$goPage, $get, $post, $patch, $delete}
 
 

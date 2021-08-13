@@ -16,9 +16,9 @@ async function updateBookMark(formData) {
 async function updateBook(bookData) {
     const url = bookData.id ? `/book/update?id=${bookData.id}` : `/book/create`
     if (bookData.id) {
-        return await $patch(url, bookData)
+        return $patch(url, bookData)
     } else {
-        return await $post(url, bookData)
+        return $post(url, bookData)
     }
 }
 
@@ -36,17 +36,17 @@ async function uploadFiles(files, bookId) {
                     Authorization: `Bearer ${token}`
                 }
             })
-            return await result.json()
+            return result.json()
         })
     )
     console.log({resultPromise: resultPromise})
     return resultPromise
 }
 async function deleteFile(fileId) {
-    return  await $delete(`/media-storage/delete?id=${fileId}`);
+    return $delete(`/media-storage/delete?id=${fileId}`);
 }
 async function deleteFiles(bookId) {
-    return  await $delete(`/book/delete-all-media?id=${bookId}`);
+    return $delete(`/book/delete-all-media?id=${bookId}`);
 }
 
 
