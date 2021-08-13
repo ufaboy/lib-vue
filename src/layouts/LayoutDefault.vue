@@ -104,7 +104,7 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    this.getSavedTheme()
+    // this.getSavedTheme()
   },
   mounted() {
   },
