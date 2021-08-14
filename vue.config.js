@@ -15,7 +15,7 @@ module.exports = {
     themeColor: '#4285f4',
     msTileColor: '#000000',
     background_color: "#000000",
-    workboxPluginMode: 'GenerateSW',
+    workboxPluginMode: 'InjectManifest',
 
     // настройки манифеста
     manifestOptions: {
