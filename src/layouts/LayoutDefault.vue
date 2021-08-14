@@ -49,7 +49,7 @@
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup />
+      <refresh-popup v-if="updateAvailable" />
     </teleport>
   </div>
 </template>
@@ -68,7 +68,8 @@ export default {
   },
   data: () => ({
     activeBurger: false,
-    theme: ''
+    theme: '',
+    updateAvailable: false
   }),
   methods: {
     async loadCategories() {
@@ -109,6 +110,7 @@ export default {
   created() {
     this.loadCategories()
     // this.getSavedTheme()
+    document.addEventListener('swUpdated', () => this.updateAvailable = true, { once: true })
   },
   mounted() {
   },

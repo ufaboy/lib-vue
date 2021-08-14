@@ -17,8 +17,8 @@ export default {
   computed: {},
   watch: {},
   created() {
-    document.addEventListener('swUpdated', this.updateAvailable, { once: true })
     navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log({controllerchange: navigator.serviceWorker})
       // We'll also need to add 'refreshing' to our data originally set to false.
       if (this.refreshing) return
       this.refreshing = true
