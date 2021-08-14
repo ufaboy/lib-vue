@@ -52,7 +52,7 @@ export default {
       editorNode: {},
       initialText: ''
     }
-},
+  },
   computed: {
     windowHeights() {
       return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
@@ -176,6 +176,7 @@ export default {
   height: calc(100vh - 5rem);
   background-color: var(--background);
 }
+
 .book-container.mobile {
   height: calc(100vh - 1.5rem);
 }
@@ -190,57 +191,59 @@ export default {
   justify-content: center;
   content-visibility: auto;
 
-p {
-  word-break: break-word;
-  padding: initial;
-  text-indent: 1rem;
-  margin: 0 0 0.3rem;
-  position: relative;
+  p {
+    word-break: break-word;
+    padding: initial;
+    text-indent: 1rem;
+    margin: 0 0 0.3rem;
+    position: relative;
 
-span[data-tooltip]:hover {
-  color: crimson;
-}
-}
+    span[data-tooltip]:hover {
+      color: crimson;
+    }
+  }
 
-.text {
-  max-width: 700px;
-  position: relative;
+  .text {
+    max-width: 700px;
+    position: relative;
+    letter-spacing: 0.3px;
+    line-height: 27px;
 
-.media {
-  border: none;
-//display: none;
-  cursor: pointer;
-  width: 480px;
-  height: 320px;
-}
+    .media {
+      border: none;
+      //display: none;
+      cursor: pointer;
+      width: 480px;
+      height: 320px;
+    }
 
-.media--right {
-  position: absolute;
-  right: -500px;
-}
+    .media--right {
+      position: absolute;
+      right: -500px;
+    }
 
-.media--left {
-  position: absolute;
-  left: -500px;
-}
+    .media--left {
+      position: absolute;
+      left: -500px;
+    }
 
-h1, h2, h3 {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-}
+    h1, h2, h3 {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+  }
 
-.picture {
-  width: inherit;
-  height: inherit;
-  object-fit: cover;
-}
+  .picture {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;
+  }
 
-.illustrations {
-  display: flex;
-  flex: 1;
+  .illustrations {
+    display: flex;
+    flex: 1;
 
-}
+  }
 
 }
 
@@ -251,28 +254,28 @@ h1, h2, h3 {
   padding: 0 0.5rem;
   position: relative;
 
-.progress {
-  width: 100%;
-  height: 100%;
-  background: var(--bg-secondary);
-  position: absolute;
-  left: 0;
-}
+  .progress {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-secondary);
+    position: absolute;
+    left: 0;
+  }
 
-.progress-value {
-  position: absolute;
-  left: 50%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
+  .progress-value {
+    position: absolute;
+    left: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
 
-.progress::-webkit-progress-value {
-}
+  .progress::-webkit-progress-value {
+  }
 }
 
 .image-modal {
-//display: none; /* Hidden by default */
+  //display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -283,30 +286,30 @@ h1, h2, h3 {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0, 0, 0); /* Fallback color */
   background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
-.modal-content {
-  margin: auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-}
+  .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+  }
 
-/* Caption of Modal Image (Image Text) - Same Width as the Image */
-#caption {
-  margin: auto;
-  display: block;
-  width: 80%;
-  max-width: 700px;
-  text-align: center;
-  color: #ccc;
-  padding: 10px 0;
-  height: 150px;
-}
+  /* Caption of Modal Image (Image Text) - Same Width as the Image */
+  #caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+    height: 150px;
+  }
 
-/* Add Animation - Zoom in the Modal */
-.modal-content, #caption {
-  animation-name: zoom;
-  animation-duration: 0.6s;
-}
+  /* Add Animation - Zoom in the Modal */
+  .modal-content, #caption {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+  }
 }
 
 @keyframes zoom {
@@ -338,51 +341,51 @@ h1, h2, h3 {
 
 @media only screen and (max-width: 892px) {
   .book-container {
-  .book {
-  .text {
-    max-width: initial;
-    width: 100%;
+    .book {
+      .text {
+        max-width: initial;
+        width: 100%;
 
-  .media {
-    position: static;
-    width: 100%;
-    max-height: calc(var(--media-width) / 1.5);
+        .media {
+          position: static;
+          width: 100%;
+          max-height: calc(var(--media-width) / 1.5);
+        }
+      }
+    }
+
+    .image-modal {
+      padding: 0.3rem;
+      height: 100%;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
+
+      .close {
+        top: 0;
+      }
+
+      .picture-action-panel {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+
+      .picture-arrow-btn {
+        height: 5rem;
+        width: 5rem;
+        color: var(--color-2);
+        background-color: var(--background-3);
+      }
+
+      .modal-content {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
   }
-}
-}
-
-.image-modal {
-  padding: 0.3rem;
-  height: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
-
-.close {
-  top: 0;
-}
-
-.picture-action-panel {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-
-.picture-arrow-btn {
-  height: 5rem;
-  width: 5rem;
-  color: var(--color-2);
-  background-color: var(--background-3);
-}
-
-.modal-content {
-  height: 100%;
-  object-fit: cover;
-}
-}
-}
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
