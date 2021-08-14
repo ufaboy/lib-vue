@@ -204,10 +204,10 @@ export default {
   }
 
   .text {
-    max-width: 700px;
+    max-width: 800px;
     position: relative;
     letter-spacing: 0.3px;
-    line-height: 27px;
+    line-height: 1.5;
 
     .media {
       border: none;
