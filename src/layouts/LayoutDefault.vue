@@ -48,15 +48,19 @@
       </div>
     </header>
     <slot/>
+    <teleport to="body">
+      <refresh-popup />
+    </teleport>
   </div>
 </template>
 
 <script>
 import TheSunrise from "../components/TheSunrise";
+import RefreshPopup from "../components/RefreshPopup";
 
 export default {
   name: "LayoutDefault",
-  components: {TheSunrise},
+  components: {RefreshPopup, TheSunrise},
   props: {
     parentProps: Object,
     genreProps: Object,

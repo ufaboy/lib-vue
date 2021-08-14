@@ -76,14 +76,9 @@ export default {
       this.genre = book.genre
       this.parent = book.genre.parent
     },
-    updateAvailable(e) {
-      console.log({updateAvailable: e})
-    }
   },
   created() {
     // window.addEventListener('resize', this.onResize);
-    document.addEventListener('swUpdated', this.updateAvailable, { once: true })
-
   },
   mounted() {
     this.onResize()
