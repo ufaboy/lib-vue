@@ -1,7 +1,9 @@
+import router from "@/router";
+
 async function $goPage(url) {
     const token = sessionStorage.getItem('lib-token')
     if (!token) {
-        console.log({token: token})
+        throw new Error(`Token Error: token: ${token}`)
     }
     const response = await fetch(url, {
         method: 'PATCH',
@@ -12,8 +14,11 @@ async function $goPage(url) {
     })
     if (response.ok) {
         return response.json();
+    } else if (response.status === 401) {
+        router.push('/login')
     } else {
-        return Promise.reject(response);
+        console.log({'$goPage': response})
+        return Promise.reject(response)
     }
 }
 
@@ -21,7 +26,7 @@ async function $get(rawUrl) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
-        console.log({token: token})
+        throw new Error(`Token Error: token: ${token}`)
     }
     const response = await fetch(url, {
         method: 'GET',
@@ -32,8 +37,12 @@ async function $get(rawUrl) {
     })
     if (response.ok) {
         return response.json();
+    } else if (response.status === 401) {
+        router.push('/login')
     } else {
-        return Promise.reject(response);
+        console.log({'$get': response})
+        // throw new Error(`HTTP Error: status: ${response.status}, message: ${response.message}`)
+        return Promise.reject(response)
     }
 }
 
@@ -41,7 +50,7 @@ async function $post(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
-        console.log({token: token})
+        throw new Error(`Token Error: token: ${token}`)
     }
     const response = await fetch(url, {
         method: 'POST',
@@ -53,8 +62,11 @@ async function $post(rawUrl, data = null) {
     })
     if (response.ok) {
         return response.json();
+    } else if (response.status === 401) {
+        router.push('/login')
     } else {
-        return Promise.reject(response);
+        console.log({'$get': response})
+        return Promise.reject(response)
     }
 }
 
@@ -74,8 +86,11 @@ async function $patch(rawUrl, data = null) {
     })
     if (response.ok) {
         return response.json();
+    } else if (response.status === 401) {
+        router.push('/login')
     } else {
-        return Promise.reject(response);
+        console.log({'$patch': response})
+        return Promise.reject(response)
     }
 }
 
@@ -83,7 +98,7 @@ async function $delete(rawUrl, data = null) {
     const token = sessionStorage.getItem('lib-token')
     const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
     if (!token) {
-        console.log({token: token})
+        throw new Error(`Token Error: token: ${token}`)
     }
     const response = await fetch(url, {
         method: 'DELETE',
@@ -95,10 +110,14 @@ async function $delete(rawUrl, data = null) {
     })
     if (response.ok) {
         return response.json();
+    } else if (response.status === 401) {
+        router.push('/login')
     } else {
-        return Promise.reject(response);
+        console.log({'$delete': response})
+        return Promise.reject(response)
     }
 }
- export {$goPage, $get, $post, $patch, $delete}
+
+export {$goPage, $get, $post, $patch, $delete}
 
 
