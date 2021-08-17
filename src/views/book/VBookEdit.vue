@@ -216,7 +216,6 @@ export default {
       }
       try {
         const result = await loadBook(+this.$route.params.id)
-        console.log({getBook: !!result.ad})
         this.book = {...result, annotation: result.annotation ? result.annotation : '', ad: !!result.ad}
         this.files.push(...result.files.map(file=>{
           return {name: file.name, status: null, file: file}
@@ -241,7 +240,6 @@ export default {
     async sendFiles(fileToUpload) {
       try {
         const fileArray = fileToUpload ? [fileToUpload.file] : this.files.map(fileObject => fileObject.file)
-        console.log({fileArray: fileArray})
         const results = await uploadFiles(fileArray, this.book.id)
         // const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
         // const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
@@ -263,19 +261,6 @@ export default {
         console.log({sendFiles: e})
       }
     },
-    // async sendFile(file) {
-    //   try {
-    //     const results = await uploadFiles([file], this.book.id)
-    //     console.log({sendFile: results})
-    //     const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
-    //     if (fileIndex > -1) {
-    //       this.files.splice(fileIndex, 1)
-    //     }
-    //     this.files.push({name: item.value.full_name, status: 'fulfilled', file: item.value})
-    //   } catch (e) {
-    //     console.log({sendFile: e})
-    //   }
-    // },
 
     async deleteAllFiles() {
       try {
@@ -300,9 +285,8 @@ export default {
 
     async deleteFile(fileIndex) {
       try {
-        const result = await deleteFile(this.files[fileIndex].file.id);
+        await deleteFile(this.files[fileIndex].file.id);
         this.files.splice(fileIndex, 1)
-        console.log({deleteFile: result})
       } catch (e) {
         console.error({deleteFile: e})
       }

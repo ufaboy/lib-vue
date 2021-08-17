@@ -13,7 +13,7 @@ async function $goPage(url) {
         }
     })
     if (response.ok) {
-        return response.json();
+        return await response.json();
     } else if (response.status === 401) {
         router.push('/login')
     } else {
@@ -36,7 +36,7 @@ async function $get(rawUrl) {
         }
     })
     if (response.ok) {
-        return response.json();
+        return await response.json();
     } else if (response.status === 401) {
         router.push('/login')
     } else {
@@ -61,7 +61,7 @@ async function $post(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return response.json();
+        return await response.json();
     } else if (response.status === 401) {
         router.push('/login')
     } else {
@@ -85,7 +85,7 @@ async function $patch(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return response.json();
+        return await response.json();
     } else if (response.status === 401) {
         router.push('/login')
     } else {
@@ -109,7 +109,7 @@ async function $delete(rawUrl, data = null) {
         }
     })
     if (response.ok) {
-        return response.json();
+        return await response.json();
     } else if (response.status === 401) {
         router.push('/login')
     } else {

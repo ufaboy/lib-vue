@@ -16,7 +16,7 @@ const actions = {
       const result = await loadCategories(payload)
       commit('setCategories', result)
     } catch (e) {
-      console.log({'loadCategories': e})
+      console.log({'actions loadCategories': e})
     }
   }
 }
