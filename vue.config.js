@@ -3,7 +3,6 @@ module.exports = {
   css: {
     loaderOptions: {
       css: {
-        // эти настройки будут переданы в css-loader
       },
       scss : {
         additionalData: `@import "@/assets/main.scss";`
