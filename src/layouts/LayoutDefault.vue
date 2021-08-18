@@ -40,10 +40,6 @@
           <li class="breadcrumb-li">
             <router-link class="breadcrumb-link" to="/note">Note</router-link>
           </li>
-<!--          <li class="breadcrumb-li">-->
-<!--            <button-day-night @change-theme="changeTheme" :theme-value="theme" />-->
-<!--                        <router-link class="breadcrumb-link" to="/settings">Settings</router-link>-->
-<!--          </li>-->
         </ul>
       </div>
     </header>
@@ -109,7 +105,6 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    // this.getSavedTheme()
     document.addEventListener('swUpdated', () => this.updateAvailable = true, { once: true })
   },
   mounted() {
@@ -123,8 +118,6 @@ export default {
 
 .basement {
   .header {
-    //color: var(--color-2);
-    //background: var(--surface1);
     display: flex;
     height: 3.5rem;
     padding: 0.5rem 1.5rem;
@@ -163,7 +156,6 @@ export default {
       }
 
       .breadcrumb {
-        //opacity: 0;
         position: absolute;
         flex-flow: row wrap;
         width: 100vw;
