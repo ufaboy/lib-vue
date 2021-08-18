@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {ref} from "vue";
+import {ref, reactive} from "vue";
 import {loadGenres} from "@/utils/loadData";
 import EditGenre from '@/components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
@@ -49,7 +49,7 @@ export default {
     const genres = ref([]);
     const ascending = ref(1);
     const orderBy = ref(null);
-    const activeGenre = ref({
+    const activeGenre = reactive({
       id: null,
       name: null,
       description: null,
