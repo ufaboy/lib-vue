@@ -25,10 +25,8 @@ export default {
     }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log({controllerchange: navigator.serviceWorker})
-      // We'll also need to add 'refreshing' to our data originally set to false.
       if (this.refreshing) return
       this.refreshing = true
-      // Here the actual reload of the page occurs
       window.location.reload()
     })
   },
