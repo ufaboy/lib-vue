@@ -36,8 +36,6 @@ export default {
     book: Object
   },
   emits: [],
-//Composition API (the entry point for using the Composition API)
-//setup: {},
   data: () => ({
     activeImage: null,
     activeImageIndex: 0,
