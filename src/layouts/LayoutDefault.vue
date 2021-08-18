@@ -111,7 +111,7 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    document.addEventListener('swUpdated', () => this.swUpdate, { once: true })
+    document.addEventListener('swUpdated', this.swUpdate, { once: true })
   },
   mounted() {
   },
