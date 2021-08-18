@@ -23,27 +23,32 @@ async function $goPage(url) {
 }
 
 async function $get(rawUrl) {
-    const token = sessionStorage.getItem('lib-token')
-    const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
-    if (!token) {
-        throw new Error(`Token Error: token: ${token}`)
-    }
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            Authorization: `Bearer ${token}`
+    try {
+        const token = sessionStorage.getItem('lib-token')
+        const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
+        if (!token) {
+            throw new Error(`Token Error: token: ${token}`)
         }
-    })
-    if (response.ok) {
-        return await response.json();
-    } else if (response.status === 401) {
-        router.push('/login')
-    } else {
-        console.log({'$get': response})
-        // throw new Error(`HTTP Error: status: ${response.status}, message: ${response.message}`)
-        return Promise.reject(response)
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.ok) {
+            return await response.json();
+        } else if (response.status === 401) {
+            router.push('/login')
+        } else {
+            throw new Error(`HTTP Error: status: ${response.status}, message: ${response.statusText}`)
+            // return Promise.reject(response)
+        }
+    } catch (e) {
+        console.log({'catch $get': e})
     }
+
 }
 
 async function $post(rawUrl, data = null) {
@@ -65,7 +70,7 @@ async function $post(rawUrl, data = null) {
     } else if (response.status === 401) {
         router.push('/login')
     } else {
-        console.log({'$get': response})
+        console.log({'$post': response})
         return Promise.reject(response)
     }
 }
