@@ -45,7 +45,7 @@
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup v-if="updateAvailable" @sw-update="console.log('sw-update')" />
+      <refresh-popup v-if="updateAvailable" :sw-reg="swReg" @sw-update="console.log('sw-update')" />
     </teleport>
   </div>
 </template>
@@ -65,7 +65,8 @@ export default {
   data: () => ({
     activeBurger: false,
     theme: '',
-    updateAvailable: false
+    updateAvailable: false,
+    swReg: null
   }),
   methods: {
     async loadCategories() {
@@ -73,17 +74,21 @@ export default {
         await this.$store.dispatch('genre/loadCategories')
       }
     },
-    changeTheme(theme) {
-      localStorage.setItem('lib-theme', theme)
-      this.theme = theme
-      const doc = document.firstElementChild
-      doc.setAttribute('color-scheme', this.theme)
-    },
-    getSavedTheme() {
-      this.theme = localStorage.getItem('lib-theme')
-      const doc = document.firstElementChild
-      doc.setAttribute('color-scheme', this.theme)
+    swUpdate(event) {
+      this.updateAvailable = true
+      this.swReg = event.detail
     }
+    // changeTheme(theme) {
+    //   localStorage.setItem('lib-theme', theme)
+    //   this.theme = theme
+    //   const doc = document.firstElementChild
+    //   doc.setAttribute('color-scheme', this.theme)
+    // },
+    // getSavedTheme() {
+    //   this.theme = localStorage.getItem('lib-theme')
+    //   const doc = document.firstElementChild
+    //   doc.setAttribute('color-scheme', this.theme)
+    // }
   },
   computed: {
     showHeader() {
@@ -105,7 +110,7 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    document.addEventListener('swUpdated', () => this.updateAvailable = true, { once: true })
+    document.addEventListener('swUpdated', () => this.swUpdate, { once: true })
   },
   mounted() {
   },
