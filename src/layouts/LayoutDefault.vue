@@ -121,7 +121,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .basement {
   .header {
     display: flex;

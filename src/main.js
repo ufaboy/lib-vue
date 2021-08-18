@@ -7,7 +7,6 @@ import store from './store'
 const app = createApp(App)
 
 //self plugins
-// import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal";
 import scroll from "@/plugins/scroll"
 import observer from "@/plugins/IntersectionObserver";
