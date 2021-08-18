@@ -1,7 +1,7 @@
 <template>
-  <div class="sw-update-popup">
+  <div class="sw-update-popup" @click="refreshApp">
     Доступен новый контент.
-    <button class="sw-update-popup__btn" @click="refreshApp">Обновить</button>
+    <button class="sw-update-popup__btn" >Обновить</button>
   </div>
 </template>
 
