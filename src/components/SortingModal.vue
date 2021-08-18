@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .sorting {
   padding: 1rem;
   color: var(--text1);
