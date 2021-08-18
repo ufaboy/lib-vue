@@ -35,11 +35,11 @@ export default {
   mounted() {},
   methods: {
     refreshApp() {
-      console.log({refreshApp: this.registration})
-      this.updateExists = false
-      if (!this.registration || !this.registration.waiting) return
-      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-      this.$emit('sw-updated', this.registration)
+      console.log({refreshApp: this.registration});
+      this.updateExists = false;
+      if (!this.registration || !this.registration.waiting) return null;
+      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      this.$emit('sw-updated', this.registration);
     }
   },
 }
