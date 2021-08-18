@@ -15,7 +15,6 @@ import loader from "@/plugins/loader"
 import toaster from "@/plugins/toaster";
 import autoFocus from "@/plugins/focus";
 //self plugins
-
 //components
 import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";
