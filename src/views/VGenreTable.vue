@@ -5,7 +5,7 @@
     </header>
     <table class="table">
       <thead class="thead">
-      <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
+      <th class="th" :class="$options.columnsClasses[column]" v-for="(column, index) of $options.columns" :key="index">
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
           <div class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
@@ -20,20 +20,21 @@
       <transition-group name="flip-list" tag="tbody">
         <tr class="row" :class="{picante: genre.ad}" v-for="genre of genres" :key="genre.id"
             @click="openRow(genre)">
-          <td class="td" :class="columnsClasses.id">{{ genre.id }}</td>
-          <td class="td" :class="columnsClasses.title">{{ genre.name }}</td>
-          <td class="td" :class="columnsClasses.description">{{ genre.description }}</td>
-          <td class="td" :class="columnsClasses.category">{{ genre.category ? genre.category.name : '' }}</td>
+          <td class="td" :class="$options.columnsClasses.id">{{ genre.id }}</td>
+          <td class="td" :class="$options.columnsClasses.title">{{ genre.name }}</td>
+          <td class="td" :class="$options.columnsClasses.description">{{ genre.description }}</td>
+          <td class="td" :class="$options.columnsClasses.category">{{ genre.category ? genre.category.name : '' }}</td>
         </tr>
       </transition-group>
     </table>
     <modal ref="editGenre">
-      <edit-genre :genre="activeGenre" @update-genres="loadGenres"/>
+      <edit-genre :genre="activeGenre" @update-genres="getGenres"/>
     </modal>
   </div>
 </template>
 
 <script>
+import {ref} from "vue";
 import {loadGenres} from "@/utils/loadData";
 import EditGenre from '@/components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
@@ -43,34 +44,51 @@ export default {
   name: "GenreTable",
   components: {EditGenre, IconSortAsc, IconSortDesc},
   props: {},
-  data: () => ({
-    activeGenre: {
+  setup() {
+    document.title = 'Table Genres';
+    const genres = ref([]);
+    const ascending = ref(1);
+    const orderBy = ref(null);
+    const activeGenre = ref({
       id: null,
       name: null,
       description: null,
       category: {id: null, name: null},
-    },
-    modalOpen: false,
-    genres: [],
-    ascending: 1,
-    orderBy: null,
-    columns: ['id', 'name', 'description', 'category'],
-    columnsClasses: {
-      id: 'cell-id',
-      name: 'cell-name',
-      description: 'cell-description',
-      category: 'cell-category'
-    },
-  }),
+    });
+    const getGenres = async () => {
+      const result = ref({})
+      result.value = await loadGenres()
+      if (result.value) {
+        genres.value = result.value
+      } else console.log({'getGenres': result.value})
+    };
+    if (genres.value.length === 0) {
+      getGenres();
+    }
+    const sortBy = (orderBy, asc) => {
+      genres.value.sort(function (a, b) {
+        if (a[orderBy] > b[orderBy]) {
+          return asc ? 1 : -1;
+        }
+        if (a[orderBy] < b[orderBy]) {
+          return asc ? -1 : 1;
+        }
+        return 0;
+      })
+      ascending.value = ascending.value ? 0 : 1
+    }
+
+    return {getGenres, genres, ascending, orderBy, activeGenre, sortBy}
+  },
+  data: () => ({}),
+  columns: ['id', 'name', 'description', 'category'],
+  columnsClasses: {
+    id: 'cell-id',
+    name: 'cell-name',
+    description: 'cell-description',
+    category: 'cell-category'
+  },
   methods: {
-    async loadGenres() {
-      this.$loader.show()
-      const result = await loadGenres()
-      this.$loader.hide()
-      if (result) {
-        this.genres = result
-      } else console.log({'loadGenres': result})
-    },
     openRow(row) {
       this.activeGenre = row
       this.$modal.show('editGenre', this, row)
@@ -84,32 +102,6 @@ export default {
       };
       this.$modal.show('editGenre', this)
     },
-    sortBy(orderBy, asc) {
-      this.genres.sort(function (a, b) {
-        if (a[orderBy] > b[orderBy]) {
-          return asc ? 1 : -1;
-        }
-        if (a[orderBy] < b[orderBy]) {
-          return asc ? -1 : 1;
-        }
-        return 0;
-      })
-      this.ascending = this.ascending ? 0 : 1
-    },
-  },
-  computed: {
-
-  },
-  watch: {},
-  created() {
-    document.title = 'Table Genres';
-    if (this.genres.length === 0) {
-      this.loadGenres()
-    }
-  },
-  mounted() {
-  },
-  updated() {
   },
 }
 </script>

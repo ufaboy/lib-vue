@@ -42,20 +42,6 @@ export default {
       book,
     }
   },
-  data: () => ({
-  }),
-  methods: {
-  },
-  computed: {
-  },
-  watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  beforeUnmount() {
-  },
-
 }
 </script>
 
