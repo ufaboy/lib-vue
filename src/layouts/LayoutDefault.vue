@@ -45,7 +45,7 @@
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup v-if="updateAvailable" />
+      <refresh-popup v-if="updateAvailable" @sw-update="console.log('sw-update')" />
     </teleport>
   </div>
 </template>

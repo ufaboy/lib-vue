@@ -35,12 +35,12 @@ export default {
       this.updateExists = true
     },
     refreshApp() {
+      console.log({refreshApp: this.registration})
       this.updateExists = false
       // Make sure we only send a 'skip waiting' message if the SW is waiting
       if (!this.registration || !this.registration.waiting) return
       // Send message to SW to skip the waiting and activate the new SW
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-      console.log({refreshApp: this.registration})
       this.$emit('sw-update')
     }
   },
