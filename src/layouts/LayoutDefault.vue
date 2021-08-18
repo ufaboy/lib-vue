@@ -45,7 +45,7 @@
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup v-if="updateAvailable" :sw-reg="swReg" @sw-updated="swUpdated" />
+      <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp" />
     </teleport>
   </div>
 </template>
@@ -66,7 +66,7 @@ export default {
     activeBurger: false,
     theme: '',
     updateAvailable: false,
-    swReg: null
+    registration: null
   }),
   methods: {
     async loadCategories() {
@@ -77,13 +77,14 @@ export default {
     swUpdate(event) {
       console.log({'swUpdate': event})
       this.updateAvailable = true
-      this.swReg = event.detail
+      this.registration = event.detail
     },
-    swUpdated(event) {
-      console.log({'swUpdated': event})
-      this.updateAvailable = false
-      this.swReg = event.detail
-    }
+    refreshApp() {
+      console.log({refreshApp: this.registration, waiting: this.registration.waiting});
+      this.updateAvailable = false;
+      if (!this.registration || !this.registration.waiting) return null;
+      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    },
     // changeTheme(theme) {
     //   localStorage.setItem('lib-theme', theme)
     //   this.theme = theme
