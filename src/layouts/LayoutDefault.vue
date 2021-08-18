@@ -75,7 +75,7 @@ export default {
       }
     },
     swUpdate(event) {
-      console.log({swUpdate: event})
+      console.log({'swUpdate': event})
       this.updateAvailable = true
       this.swReg = event.detail
     }
