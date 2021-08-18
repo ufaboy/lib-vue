@@ -8,6 +8,7 @@
 <script>
 import Login from "@/views/VLogin";
 import CanvasSpace from "@/components/CanvasSpace";
+
 export default {
   name: "LayoutAuth",
   components: {CanvasSpace, Login},

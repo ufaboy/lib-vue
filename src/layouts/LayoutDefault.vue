@@ -40,16 +40,12 @@
           <li class="breadcrumb-li">
             <router-link class="breadcrumb-link" to="/note">Note</router-link>
           </li>
-<!--          <li class="breadcrumb-li">-->
-<!--            <button-day-night @change-theme="changeTheme" :theme-value="theme" />-->
-<!--                        <router-link class="breadcrumb-link" to="/settings">Settings</router-link>-->
-<!--          </li>-->
         </ul>
       </div>
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup v-if="updateAvailable" />
+      <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp" />
     </teleport>
   </div>
 </template>
@@ -69,7 +65,8 @@ export default {
   data: () => ({
     activeBurger: false,
     theme: '',
-    updateAvailable: false
+    updateAvailable: false,
+    registration: null
   }),
   methods: {
     async loadCategories() {
@@ -77,17 +74,28 @@ export default {
         await this.$store.dispatch('genre/loadCategories')
       }
     },
-    changeTheme(theme) {
-      localStorage.setItem('lib-theme', theme)
-      this.theme = theme
-      const doc = document.firstElementChild
-      doc.setAttribute('color-scheme', this.theme)
+    swUpdate(event) {
+      console.log({'swUpdate': event})
+      this.updateAvailable = true
+      this.registration = event.detail
     },
-    getSavedTheme() {
-      this.theme = localStorage.getItem('lib-theme')
-      const doc = document.firstElementChild
-      doc.setAttribute('color-scheme', this.theme)
-    }
+    refreshApp() {
+      console.log({refreshApp: this.registration, waiting: this.registration.waiting});
+      this.updateAvailable = false;
+      if (!this.registration || !this.registration.waiting) return null;
+      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    },
+    // changeTheme(theme) {
+    //   localStorage.setItem('lib-theme', theme)
+    //   this.theme = theme
+    //   const doc = document.firstElementChild
+    //   doc.setAttribute('color-scheme', this.theme)
+    // },
+    // getSavedTheme() {
+    //   this.theme = localStorage.getItem('lib-theme')
+    //   const doc = document.firstElementChild
+    //   doc.setAttribute('color-scheme', this.theme)
+    // }
   },
   computed: {
     showHeader() {
@@ -109,8 +117,7 @@ export default {
   watch: {},
   created() {
     this.loadCategories()
-    // this.getSavedTheme()
-    document.addEventListener('swUpdated', () => this.updateAvailable = true, { once: true })
+    document.addEventListener('swUpdated', this.swUpdate, { once: true })
   },
   mounted() {
   },
@@ -120,11 +127,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .basement {
   .header {
-    //color: var(--color-2);
-    //background: var(--surface1);
     display: flex;
     height: 3.5rem;
     padding: 0.5rem 1.5rem;
@@ -163,7 +167,6 @@ export default {
       }
 
       .breadcrumb {
-        //opacity: 0;
         position: absolute;
         flex-flow: row wrap;
         width: 100vw;

@@ -7,7 +7,6 @@ import store from './store'
 const app = createApp(App)
 
 //self plugins
-// import improvedFetch from "@/plugins/fetch/improvedFetch";
 import modal from "@/plugins/modal";
 import scroll from "@/plugins/scroll"
 import observer from "@/plugins/IntersectionObserver";
@@ -15,7 +14,6 @@ import loader from "@/plugins/loader"
 import toaster from "@/plugins/toaster";
 import autoFocus from "@/plugins/focus";
 //self plugins
-
 //components
 import LayoutAuth from "@/layouts/LayoutAuth";
 import LayoutDefault from "@/layouts/LayoutDefault";

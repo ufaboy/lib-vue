@@ -1,7 +1,7 @@
 <template>
-  <div class="sw-update-popup">
+  <div class="sw-update-popup" @click="refreshApp">
     Доступен новый контент.
-    <button class="sw-update-popup__btn" @click="refreshApp">Обновить</button>
+    <button class="sw-update-popup__btn">Обновить</button>
   </div>
 </template>
 
@@ -9,7 +9,9 @@
 export default {
   name: "RefreshPopup",
   components: {},
-  props: {},
+  props: {
+    swReg: Object
+  },
   data: () => ({
     registration: null,
     updateExists: false,
@@ -17,30 +19,21 @@ export default {
   computed: {},
   watch: {},
   created() {
+    if (this.swReg) {
+      console.log({created: this.swReg})
+      this.registration = Object.assign({}, this.swReg)
+    }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log({controllerchange: navigator.serviceWorker})
-      // We'll also need to add 'refreshing' to our data originally set to false.
       if (this.refreshing) return
       this.refreshing = true
-      // Here the actual reload of the page occurs
       window.location.reload()
     })
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
-    updateAvailable(event) {
-      console.log({updateAvailable: event})
-      this.registration = event.detail
-      this.updateExists = true
-    },
     refreshApp() {
-      this.updateExists = false
-      // Make sure we only send a 'skip waiting' message if the SW is waiting
-      if (!this.registration || !this.registration.waiting) return
-      // Send message to SW to skip the waiting and activate the new SW
-      this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-      this.$emit('sw-update')
+      this.$emit('refresh-sw');
     }
   },
 }

@@ -55,7 +55,7 @@ export default {
   created() {
     document.title = 'Genres';
     if (this.$route.params.id || this.$route.params.name) {
-      // this.prepareDivision()
+      this.prepareCategory()
     }
   },
   mounted() {
