@@ -45,7 +45,7 @@
     </header>
     <slot/>
     <teleport to="body">
-      <refresh-popup v-if="updateAvailable" :sw-reg="swReg" @sw-update="console.log('sw-update')" />
+      <refresh-popup v-if="updateAvailable" :sw-reg="swReg" @sw-updated="swUpdated" />
     </teleport>
   </div>
 </template>
@@ -77,6 +77,11 @@ export default {
     swUpdate(event) {
       console.log({'swUpdate': event})
       this.updateAvailable = true
+      this.swReg = event.detail
+    },
+    swUpdated(event) {
+      console.log({'swUpdated': event})
+      this.updateAvailable = false
       this.swReg = event.detail
     }
     // changeTheme(theme) {

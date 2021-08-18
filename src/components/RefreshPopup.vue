@@ -39,7 +39,7 @@ export default {
       this.updateExists = false
       if (!this.registration || !this.registration.waiting) return
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-      this.$emit('sw-update')
+      this.$emit('sw-updated', this.registration)
     }
   },
 }
