@@ -2,13 +2,23 @@
   <main class="sorting">
     <fieldset class="fieldset">
       <legend class="fieldset__legend">sorting
-        <base-icon class="icon"><icon-sort-asc v-if="ascending"/><icon-sort-desc v-else/></base-icon>
+        <base-icon class="icon">
+          <icon-sort-asc v-if="ascending"/>
+          <icon-sort-desc v-else/>
+        </base-icon>
       </legend>
       <button class="srt-btn" :class="{active: this.orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'view_count'}" @click="changeOrderBy('view_count')">view_count</button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'rating'}" @click="changeOrderBy('rating')">rating</button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'updated_at'}" @click="changeOrderBy('updated_at')">updated</button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'last_read'}" @click="changeOrderBy('last_read')">last read</button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'view_count'}" @click="changeOrderBy('view_count')">
+        view_count
+      </button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'rating'}" @click="changeOrderBy('rating')">rating
+      </button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'updated_at'}" @click="changeOrderBy('updated_at')">
+        updated
+      </button>
+      <button class="srt-btn" :class="{active: this.orderBy === 'last_read'}" @click="changeOrderBy('last_read')">last
+        read
+      </button>
       <button class="close-find" @click="sorting">close&filter</button>
     </fieldset>
   </main>
@@ -59,13 +69,15 @@ export default {
     padding: 5px;
     border-radius: 5px;
   }
-.close-find {
-  color: var(--color-2);
-  background-color: #35495e;
-  width: 100%;
-  padding: 1rem;
-  text-align: center;
-}
+
+  .close-find {
+    color: var(--color-2);
+    background-color: #35495e;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+  }
+
   .srt-btn {
     padding: 0.5rem;
     display: flex;
@@ -75,12 +87,15 @@ export default {
     background-color: var(--surface4);
     text-transform: capitalize;
   }
+
   .srt-btn:last-of-type {
     margin-bottom: 1rem;
   }
+
   .srt-btn.active {
     color: var(--color-p);
   }
+
   .random-btn {
     margin-left: 2rem;
   }
