@@ -20,6 +20,7 @@ export default {
   watch: {},
   created() {
     if (this.swReg) {
+      console.log({created: this.swReg})
       this.registration = Object.assign({}, this.swReg)
     }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
