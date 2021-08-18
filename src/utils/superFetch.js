@@ -52,27 +52,32 @@ async function $get(rawUrl) {
 }
 
 async function $post(rawUrl, data = null) {
-    const token = sessionStorage.getItem('lib-token')
-    const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
-    if (!token) {
-        throw new Error(`Token Error: token: ${token}`)
-    }
-    const response = await fetch(url, {
-        method: 'POST',
-        body: data ? JSON.stringify(data) : data,
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            Authorization: `Bearer ${token}`
+    try {
+        const token = sessionStorage.getItem('lib-token')
+        const url = `${process.env.VUE_APP_API_URL}${rawUrl}`;
+        if (!token) {
+            throw new Error(`Token Error: token: ${token}`)
         }
-    })
-    if (response.ok) {
-        return await response.json();
-    } else if (response.status === 401) {
-        router.push('/login')
-    } else {
-        console.log({'$post': response})
-        return Promise.reject(response)
+        const response = await fetch(url, {
+            method: 'POST',
+            body: data ? JSON.stringify(data) : data,
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+                Authorization: `Bearer ${token}`
+            }
+        })
+        if (response.ok) {
+            return await response.json();
+        } else if (response.status === 401) {
+            router.push('/login')
+        } else {
+
+            return Promise.reject(response)
+        }
+    } catch (e) {
+        console.log({'$post': e})
     }
+
 }
 
 async function $patch(rawUrl, data = null) {
