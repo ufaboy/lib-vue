@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {ref, reactive, computed} from "vue";
+import {ref, reactive, computed, inject} from "vue";
 import {useRouter} from 'vue-router'
 import {useStore} from "vuex";
 import {loadBooks, goPage} from "@/utils/loadData";
@@ -84,6 +84,7 @@ export default {
   components: {TheModal, FilterModal, IconSortAsc, IconSortDesc},
   setup() {
     document.title = 'Table Books';
+    const loader = inject("loader");
     const router = useRouter();
     const store = useStore()
     const showModal = ref(false);
@@ -112,7 +113,9 @@ export default {
       // const formFilter = {...toRefs(filter), name: bookName.value}
       const formFilter = {genre: filter.genre, rating: filter.rating, ad: filter.ad, name: bookName.value}
       try {
+        loader.showLoader();
         const result = await loadBooks(page.value, limit.value, sort, formFilter)
+        loader.hideLoader();
         books._links = result._links
         books._meta = result._meta
         books.items.splice(0, books.items.length)

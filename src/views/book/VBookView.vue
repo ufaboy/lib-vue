@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {defineAsyncComponent, ref} from "vue";
+import {defineAsyncComponent, inject, ref} from "vue";
 import {useRoute} from 'vue-router';
 import {loadBook} from "../../utils/loadData";
 
@@ -16,6 +16,7 @@ export default {
   },
   props: {},
   setup() {
+    const loader = inject("loader");
     const route = useRoute();
     const book = ref({})
     const typeBook = ref('book-empty')
@@ -28,7 +29,9 @@ export default {
       return book
     }
     const downloadBook = async () => {
+      loader.showLoader();
       book.value = await loadBook(route.params.id)
+      loader.hideLoader();
       const comicsBook = book.value.genres.findIndex(genre => genre.category.name === 'comics') > -1
       typeBook.value = comicsBook ? 'book-media' : 'book-text'
       if (!comicsBook) {

@@ -11,7 +11,6 @@
         <th class="th">url</th>
         <th class="th">actions</th>
       </tr>
-
       </thead>
       <tbody>
       <tr class="note" v-for="(note, index) of notes" :key="'note-' + index">

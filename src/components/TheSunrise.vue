@@ -13,18 +13,6 @@
 <script>
 export default {
   name: "TheSunrise",
-  components: {},
-  props: {},
-  data: () => ({}),
-  methods: {},
-  computed: {},
-  watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  updated() {
-  },
 }
 </script>
 

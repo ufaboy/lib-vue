@@ -100,14 +100,20 @@
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
           <div class="action-panel">
-            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.file.id === undefined">load</button>
+            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.file.id === undefined">
+              load
+            </button>
             <button class="image-entry-btn"
                     @click="book.cover_path = media.file.url"
                     v-if="media.file.type === 'image/webp' && media.file.id !== undefined">
               {{ book.cover_path === media.file.url ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn btn--green" @click="copyFileName(media.file)" v-if="media.file.id !== undefined">tag</button>
-            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.file.id !== undefined">delete</button>
+            <button class="image-entry-btn btn--green" @click="copyFileName(media.file)"
+                    v-if="media.file.id !== undefined">tag
+            </button>
+            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.file.id !== undefined">
+              delete
+            </button>
           </div>
           <img class="media image" :src="getSrc(media)" v-if="checkType(media.file.type) === 'image'">
           <video v-else-if="checkType(media.type) === 'video'" class="media video" controls>
@@ -120,13 +126,14 @@
         </figure>
       </div>
     </div>
-    <modal ref="genreBook" :width="750">
+    <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
       <genre-book :genres-props="genres" @set-genres="setGenres"/>
-    </modal>
+    </the-modal>
   </div>
 </template>
 
 <script>
+import {ref} from 'vue'
 import StarRating from 'vue-star-rating'
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
@@ -136,11 +143,20 @@ import FormField from '@/components/FormField.vue'
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
+import TheModal from "../../components/TheModal";
 
 export default {
   name: "BookEdit",
-  components: {IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
-  props: {},
+  components: {TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
+  setup() {
+    const showGenreBookModal = ref(false);
+
+    const openGenreModal = () => {
+      showGenreBookModal.value = true
+    };
+
+    return {showGenreBookModal, openGenreModal}
+  },
   data: () => ({
     files: [],
     book: {
@@ -211,13 +227,13 @@ export default {
       return validation
     },
     async getBook() {
-      if(!this.$route.params.id) {
+      if (!this.$route.params.id) {
         return null;
       }
       try {
         const result = await loadBook(+this.$route.params.id)
         this.book = {...result, annotation: result.annotation ? result.annotation : '', ad: !!result.ad}
-        this.files.push(...result.files.map(file=>{
+        this.files.push(...result.files.map(file => {
           return {name: file.name, status: null, file: file}
         }))
         this.genres = [...result.genres]
@@ -246,15 +262,15 @@ export default {
         // console.log({results:results, fulfilled: fulfilled, rejected: rejected})
         for (const item of results) {
           if (item.status === 'fulfilled') {
-            const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
+            const fileIndex = this.files.findIndex(element => element.name === item.value.full_name)
             if (fileIndex > -1) {
               this.files.splice(fileIndex, 1)
             }
-          this.files.push({name: item.value.full_name, status: item.status, file: item.value})
+            this.files.push({name: item.value.full_name, status: item.status, file: item.value})
           } else if (item.status === 'rejected') {
-            const fileIndex = this.files.findIndex(element=>element.name === item.value.full_name)
+            const fileIndex = this.files.findIndex(element => element.name === item.value.full_name)
             this.files[fileIndex].status = 'rejected'
-            this.files[fileIndex].error= item.value
+            this.files[fileIndex].error = item.value
           }
         }
       } catch (e) {
@@ -328,9 +344,7 @@ export default {
         this.editor = 'raw'
       }
     },
-    openGenreModal() {
-      this.$modal.show('genreBook', this)
-    },
+
     setGenres(e) {
       this.genres = e
     },
@@ -477,17 +491,20 @@ export default {
       width: 100%;
       margin-bottom: 1rem;
       align-items: center;
+
       .btn-tab--left, .btn-tab--right {
         display: flex;
         flex-flow: row nowrap;
         justify-content: space-between;
 
       }
+
       .btn-tab--left {
         :first-child {
           margin-right: 1rem;
         }
       }
+
       .btn-tab--right {
         .vue-star-rating {
           margin-right: 1rem;
@@ -688,6 +705,7 @@ export default {
       .upload-dropbox {
         margin-right: 0.5rem;
       }
+
       .positive-btn {
         margin-right: 0.5rem;
       }
@@ -765,6 +783,7 @@ export default {
           cursor: pointer;
           margin-top: 0.5rem;
         }
+
         .ring {
           top: calc(50% - 72px);
           left: calc(50% - 60px);
@@ -921,9 +940,11 @@ export default {
           display: none;
         }
       }
+
       .btn-tab--left, .btn-tab--right {
         width: 100%;
       }
+
       .btn-tab--left {
         margin-bottom: 0.5rem;
       }

@@ -28,12 +28,12 @@
       <sorting-modal @sorting="updateBySorting"/>
     </the-modal>
 
-    <button class="scroll-btn" ref="topBtn" title="Go to top" @click="scrollToTop">Top</button>
+    <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
   </main>
 </template>
 
 <script>
-import {reactive, computed, ref} from 'vue';
+import {reactive, computed, ref, inject} from 'vue';
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex';
 import SortingModal from '@/components/SortingModal.vue'
@@ -48,6 +48,7 @@ export default {
   },
   setup() {
     document.title = 'Books';
+    const loader = inject("loader");
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
@@ -57,6 +58,7 @@ export default {
       _meta: {},
     });
     const showSortingModal = ref(false);
+    const showTopButton = ref(false);
     const genreId = ref(null);
     const searchParams = ref('');
     const page = ref(1);
@@ -105,9 +107,11 @@ export default {
       if (searchParams.value) {
         filter.name += `&name=${searchParams.value}`
       }
-      infinityLoading.value = true
+      infinityLoading.value = true;
+      loader.showLoader();
       const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy}`, filter);
-      infinityLoading.value = false
+      loader.hideLoader();
+      infinityLoading.value = false;
       if (result) {
         if (method === 'push') {
           books.items.push(...result.items)
@@ -156,11 +160,18 @@ export default {
       page.value = 1
       getBooksAndPush()
     };
+    const onScroll = (e) => {
+      showTopButton.value = e.target.scrollTop > 50;
+    };
+    const scrollToTop = () => {
+      window.scrollTo(0,0);
+    }
 
     return {
       books,
       page,
       showSortingModal,
+      showTopButton,
       limit,
       ascending,
       infinityState,
@@ -181,28 +192,9 @@ export default {
       touchStart,
       touchEnd,
       updateBySorting,
+      onScroll,
+      scrollToTop,
     }
-  },
-  methods: {
-    onScroll() {
-      // if (!this.infinityState) {
-      //   return false
-      // }
-      // const windowHeights = e.target.scrollHeight -  e.target.clientHeight
-      // const scroll = this.$el.scrollTop
-      // if (scroll > 20) {
-      //   this.$refs.topBtn.style.display = "block";
-      // } else {
-      //   this.$refs.topBtn.style.display = "none";
-      // }
-      // if (windowHeights > 0 && (scroll === windowHeights)) {
-      //   this.page = ++this.page
-      //   this.loadAndPush()
-      // }
-    },
-    scrollToTop() {
-      this.$el.scrollTop = 0
-    },
   },
 }
 </script>
