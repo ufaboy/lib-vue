@@ -14,7 +14,6 @@ export default {
     BookMedia: defineAsyncComponent(() => import('@/components/BookMedia.vue')),
     BookEmpty: defineAsyncComponent(() => import('@/components/BookEmpty.vue'))
   },
-  emits: ['loaded-book'],
   props: {},
   setup() {
     const route = useRoute();

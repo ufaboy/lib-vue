@@ -27,9 +27,9 @@
         </tr>
       </transition-group>
     </table>
-    <modal ref="editGenre">
-      <edit-genre :genre="activeGenre" @update-genres="getGenres"/>
-    </modal>
+    <the-modal v-if="showModal" @hide-modal="showModal = false">
+      <edit-genre :genre="activeGenre" @update-genres="getGenres" @hide-modal="showModal = false" />
+    </the-modal>
   </div>
 </template>
 
@@ -39,22 +39,25 @@ import {loadGenres} from "@/utils/loadData";
 import EditGenre from '@/components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import TheModal from "@/components/TheModal";
 
 export default {
   name: "GenreTable",
-  components: {EditGenre, IconSortAsc, IconSortDesc},
+  components: {TheModal, EditGenre, IconSortAsc, IconSortDesc},
   props: {},
   setup() {
     document.title = 'Table Genres';
     const genres = ref([]);
     const ascending = ref(1);
     const orderBy = ref(null);
+    const showModal = ref(false);
     const activeGenre = reactive({
       id: null,
       name: null,
       description: null,
       category: {id: null, name: null},
     });
+
     const getGenres = async () => {
       const result = ref({})
       result.value = await loadGenres()
@@ -77,8 +80,21 @@ export default {
       })
       ascending.value = ascending.value ? 0 : 1
     }
+   const openRow = (row) => {
+      activeGenre.value = row
+      showModal.value = true
+    }
+    const createGenre = () => {
+      activeGenre.value = reactive({
+        id: null,
+        name: null,
+        description: null,
+        category: {id: null, name: null},
+      });
+      showModal.value = true
+    }
 
-    return {getGenres, genres, ascending, orderBy, activeGenre, sortBy}
+    return {getGenres, genres, ascending, orderBy, activeGenre, sortBy, showModal, openRow, createGenre}
   },
   data: () => ({}),
   columns: ['id', 'name', 'description', 'category'],
@@ -88,21 +104,7 @@ export default {
     description: 'cell-description',
     category: 'cell-category'
   },
-  methods: {
-    openRow(row) {
-      this.activeGenre = row
-      this.$modal.show('editGenre', this, row)
-    },
-    createGenre() {
-      this.activeGenre = {
-        id: null,
-        name: null,
-        description: null,
-        category: {id: null, name: null},
-      };
-      this.$modal.show('editGenre', this)
-    },
-  },
+  methods: {},
 }
 </script>
 

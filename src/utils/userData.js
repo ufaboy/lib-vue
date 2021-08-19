@@ -12,11 +12,11 @@ function setUser(user = {}) {
     sessionStorage.setItem('lib-role', user.role)
     sessionStorage.setItem('lib-token', user.token)
 }
-function adAccess() {
+function getAdAccess() {
     return sessionStorage.getItem('lib-role') === 'librarian'
 }
 
-export {getUsername, getRole, getToken, setUser, adAccess}
+export {getUsername, getRole, getToken, setUser, getAdAccess}
 
 
 

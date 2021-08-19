@@ -3,13 +3,11 @@
     <header class="login-header">
       <button class="login-type" @click="signIn = !signIn">
         <transition name="fade" mode="out-in">
-<!--          {{signIn ? 'SignIn' : 'LogIn'}}-->
           <div v-if="signIn" key="SignIn">SignIn</div>
           <div v-else key="LogIn">LogIn</div>
         </transition>
       </button>
     </header>
-<!--    <h2 class="header-title">Login</h2>-->
     <form class="login-form" @submit.prevent="login">
       <div class="user-box">
         <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off">
@@ -31,21 +29,24 @@
 </template>
 
 <script>
-import {setUser} from "@/utils/userData";
+import {ref} from 'vue';
+import {useRouter} from 'vue-router'
+import {setUser} from '@/utils/userData';
 
 export default {
   name: "login",
   components: {},
-  props: {},
-  data: () => ({
-    username: '',
-    password: '',
-    signIn: false,
-  }),
-  methods: {
-    async login() {
-      const formData = {username: this.username, password: this.password};
-      const url = `${process.env.VUE_APP_API_URL}/auth/${this.signIn ? 'signin' : 'login'}`
+  setup() {
+    document.title = 'Login';
+
+    const router = useRouter()
+    const username = ref('')
+    const password = ref('')
+    const signIn = ref(false)
+
+    const login = async () => {
+      const formData = {username: username.value, password: password.value};
+      const url = `${process.env.VUE_APP_API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(formData),
@@ -57,23 +58,19 @@ export default {
         const result = await response.json();
         if (result.token) {
           setUser(result)
-          await this.$router.push('/')
-        } else this.$toast.error('Empty Token')
+          router.push('/')
+        } else {
+          console.log({'response.not token': response})
+          // this.$toast.error('Empty Token')
+        }
       } else {
-        const result = await response.json();
-        this.$toast.error(result.message)
+        console.log({'response.notOk': response})
+        // const result = await response.json();
+        // this.$toast.error(result.message)
       }
-    },
+    }
 
-  },
-  computed: {},
-  watch: {},
-  created() {
-    document.title = 'Login';
-  },
-  mounted() {
-  },
-  updated() {
+    return {username, password, signIn, login}
   },
 }
 </script>

@@ -1,4 +1,4 @@
-<template v-slot:default="dataProps">
+<template>
   <form class="edit-genre" @submit.prevent="updateGenre">
     <header class="header">
       <h1>Genre</h1>
@@ -34,104 +34,89 @@
 </template>
 
 <script>
+import {reactive, computed, } from "vue";
+import {useStore} from 'vuex'
 import IconClose from "@/components/icons/IconClose"
 import {sendGenre} from "@/utils/uploadData";
-import {adAccess} from "@/utils/userData";
+import {getAdAccess} from "@/utils/userData";
 export default {
   name: "EditGenre",
   components: {IconClose},
-  emits: ['update-genres'],
+  emits: ['update-genres', 'hide-modal'],
   props: {
     genre: Object,
-    dataProps: Object,
   },
-  data: () => ({
-    localGenre: {
+  setup(props, {emit}) {
+    const store = useStore()
+    const localGenre = reactive({})
+    const adAccess = getAdAccess()
+    localGenre.value = Object.assign({
       id: null,
       name: '',
       description: '',
       category: {id: null, name: ''},
       ad: null,
-    },
-  }),
-  computed: {
-    invalidGenre() {
+    }, props.genre)
+
+    const invalidGenre = computed(() => {
       return {
-        name: !this.localGenre.name,
-        category: !this.localGenre.category
+        name: !localGenre.value.name,
+        category: !localGenre.value.category
       }
-    },
-    adAccess() {
-      return adAccess()
-    },
-    categories() {
-      return this.$store.state.genre.categories.map(category => {
+    })
+    const categories = computed(() => {
+      return store.state.genre.categories.map(category => {
         return {id: category.id, name: category.name}
       })
-    },
-  },
-  watch: {},
-  created() {
-    this.prepareGenre()
-  },
-  mounted() {
-  },
-  methods: {
-    async updateGenre() {
-      if (this.checkGenreToHaveErrors()) {
+    })
+
+    const checkGenreToHaveErrors = () => {
+      let haveErrors = false
+      for (const field in invalidGenre) {
+        if (invalidGenre.value[field]) {
+          haveErrors = true
+        }
+      }
+      return haveErrors
+    }
+    const updateGenre = async() => {
+      if (checkGenreToHaveErrors()) {
         return false;
       }
       let genreForm = {
-        name: this.localGenre.name,
-        description: this.localGenre.description,
-        ad: this.localGenre.ad,
-        category_id: this.localGenre.category.id,
+        name: localGenre.value.name,
+        description: localGenre.value.description,
+        ad: localGenre.value.ad,
+        category_id: localGenre.value.category.id,
       }
-      if (this.localGenre.id) {
-        genreForm.id = this.localGenre.id
+      if (localGenre.value.id) {
+        genreForm.id = localGenre.value.id
       }
       try {
         await sendGenre(genreForm)
-        this.$emit('update-genres')
-        this.closeModal();
+        emit('update-genres')
+        closeModal();
       } catch (e) {
         console.log({'error updateGenre': e})
       }
 
-    },
-    async deleteGenre() {
-      if (!this.genre.parent_id) {
+    }
+    const deleteGenre = async () => {
+      if (!props.genre.parent_id) {
         return false;
       }
-      const url = `/genre/delete?id=${this.genre.id}`
+      const url = `/genre/delete?id=${props.genre.id}`
       const result = await this.$delete(url)
       if (result) {
-        this.$store.dispatch('genre/loadGenre')
-        this.closeModal();
+        await store.dispatch('genre/loadGenre')
+        closeModal();
       }
-    },
-    selectGenre(genre) {
-      this.parent = genre
-    },
-    clearGenre() {
-      this.parent = {id: null, name: null}
-    },
-    closeModal() {
-      this.$parent.hide('editGenre', this)
-    },
-    checkGenreToHaveErrors() {
-      let haveErrors = false
-      for (const field in this.invalidGenre) {
-        if (this.invalidGenre[field]) {
-          haveErrors = true
-          this.$toast.error(`invalid field: ${field}`)
-        }
-      }
-      return haveErrors
-    },
-    prepareGenre() {
-      this.localGenre = Object.assign({}, this.genre)
-    },
+    }
+    const closeModal = () => {
+      emit('hide-modal')
+    }
+
+    return {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess}
   },
 }
 </script>
