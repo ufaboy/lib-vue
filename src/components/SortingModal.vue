@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import {ref} from "vue";
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
 
@@ -32,30 +33,24 @@ export default {
   name: "SortingModal",
   components: {IconSortAsc, IconSortDesc},
   emits: ['sorting'],
-  props: {},
-  data: () => ({
-    ascending: 0,
-    orderBy: '',
-    orderRandom: false
-  }),
-  computed: {},
-  watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  methods: {
-    sorting() {
-      this.$emit('sorting', {orderBy: this.orderBy, ascending: this.ascending})
-      this.closeModal()
-    },
-    changeOrderBy(e) {
-      this.orderBy = e
-      this.ascending = !this.ascending
-    },
-    closeModal() {
-      this.$parent.hide('sortings', this)
-    },
+  setup(props, {emit}) {
+    const ascending = ref(0);
+    const orderBy = ref('');
+    const orderRandom = ref(false);
+
+    const sorting = () => {
+      emit('sorting', {orderBy: orderBy.value, ascending: ascending.value})
+      closeModal()
+    };
+    const changeOrderBy = (e) => {
+      orderBy.value = e
+      ascending.value = Number(!ascending.value)
+    };
+    const closeModal = () => {
+      emit('hide-modal')
+    };
+
+    return {ascending, orderBy, orderRandom, sorting, changeOrderBy, closeModal}
   },
 }
 </script>

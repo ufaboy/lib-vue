@@ -23,145 +23,167 @@
       </div>
     </section>
     <observer @intersect="getBooksAndPush('push')"/>
-<!--    <div class="loader" v-if="infinityLoading"></div>-->
-    <modal ref="sortings">
+    <!--    <div class="loader" v-if="infinityLoading"></div>-->
+    <the-modal v-if="showSortingModal" @hide-modal="showSortingModal = false">
       <sorting-modal @sorting="updateBySorting"/>
-    </modal>
+    </the-modal>
+
     <button class="scroll-btn" ref="topBtn" title="Go to top" @click="scrollToTop">Top</button>
   </main>
 </template>
 
 <script>
+import {reactive, computed, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router'
+import {useStore} from 'vuex';
 import SortingModal from '@/components/SortingModal.vue'
-import {loadBooks} from "../utils/loadData";
+import {loadBooks} from "@/utils/loadData";
+import TheModal from "@/components/TheModal";
 
 export default {
   name: "ListBook",
   components: {
+    TheModal,
     SortingModal
   },
-  props: {},
-  data: () => ({
-    books: {
+  setup() {
+    document.title = 'Books';
+    const store = useStore();
+    const route = useRoute();
+    const router = useRouter();
+    const books = reactive({
       items: [],
       _links: {},
-      _meta: {}
-    },
-    genreId: null,
-    searchParams: null,
-    infinityState: true,
-    infinityLoading: false,
-    orderBy: 'updated_at',
-    limit: 25,
-    page: 1,
-    ascending: 0,
-    startPos: {x: 0, y: 0},
-    endPos: {x: 0, y: 0},
-  }),
-  computed: {
-    isMobile() {
-      return this.$store.state.main.isMobile
-    },
-    categories() {
-      return this.$store.state.genre.categories
-    },
-    activeGenre: {
-      get: function () {
-        const category = this.categories.find(category => category.genres.some(genre => genre.id === +this.genreId))
-        return category ? category.genres.find(genre => genre.id === this.genreId) : null
-      },
-      set: function (newValue) {
-        this.genreId = newValue.id
-      }
+      _meta: {},
+    });
+    const showSortingModal = ref(false);
+    const genreId = ref(null);
+    const searchParams = ref('');
+    const page = ref(1);
+    const limit = ref(25);
+    const ascending = ref(0);
+    const orderBy = reactive({name: 'updated_at', asc: false});
+    const startPos = reactive({x: 0, y: 0});
+    const endPos = reactive({x: 0, y: 0});
+    if (route.params.id) {
+      genreId.value = +route.params.id
     }
-  },
-  watch: {
-  },
-  created() {
-    document.title = 'Books';
-    if (this.$route.params.id) {
-      this.genreId = +this.$route.params.id
-    }
-  },
-  mounted() {
-  },
-  methods: {
-    async searchByName() {
-      this.page = 1
-      this.getBooksAndPush()
-    },
+    const infinityState = ref(true);
+    const infinityLoading = ref(false);
 
-    async getBooksAndPush(method = null) {
-      let filter = {}
-      let genreId = null
-      if (this.activeGenre) {
-        genreId = this.activeGenre.id
-      } else if (this.$route.params.id) {
-        genreId = this.$route.params.id
+    const isMobile = computed(() => store.state.main.isMobile);
+    const categories = computed(() => store.state.genre.categories);
+    const activeGenre = computed(() => ({
+      get() {
+        const category = categories.value.find(category => category.genres.some(genre => genre.id === +genreId.value))
+        return category ? category.genres.find(genre => genre.id === genreId.value) : null
+      },
+      set(newValue) {
+        genreId.value = newValue.id
       }
-      if (genreId === null) {
+    }))
+
+    const getBooksAndPush = async (method = '') => {
+      let filter = {}
+      let genreIdForm = null
+      if (activeGenre.value) {
+        genreIdForm = activeGenre.value.id
+      } else if (route.params.id) {
+        genreIdForm = route.params.id
+      }
+      if (genreIdForm === null) {
         return false
       } else {
-        filter.genre = genreId
+        filter.genre = genreIdForm
       }
-      if (!this.infinityState && method) {
+      if (!infinityState.value && method) {
         return false
       } else if (method === null) {
-        this.infinityState = true
+        infinityState.value = true
       }
 
-      if (this.searchParams) {
-        filter.name += `&name=${this.searchParams}`
+      if (searchParams.value) {
+        filter.name += `&name=${searchParams.value}`
       }
-      this.infinityLoading = true
-      this.$loader.show()
-      const result = await loadBooks(this.page, this.limit, `${this.ascending ? '' : '-'}${this.orderBy}`, filter);
-      this.$loader.hide()
-      this.infinityLoading = false
+      infinityLoading.value = true
+      const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy}`, filter);
+      infinityLoading.value = false
       if (result) {
         if (method === 'push') {
-          this.books.items.push(...result.items)
-          this.page = ++this.page
+          books.items.push(...result.items)
+          page.value = ++page.value
         } else {
-          this.books.items.length = 0
-          this.books.items.push(...result.items)
-          this.page = ++this.page
+          books.items.length = 0
+          books.items.push(...result.items)
+          page.value = ++page.value
         }
-        if (result.items.length < this.limit) {
-          this.infinityState = false
+        if (result.items.length < limit.value) {
+          infinityState.value = false
         }
-
       }
-    },
-    async changeGenre() {
-      this.page = 1
-      this.getBooksAndPush()
-    },
-    async openBook(book) {
-      await this.$router.push({name: 'book-view', params: {id: book.id}})
-    },
-    getCover(book) {
+    };
+    const searchByName = () => {
+      page.value = 1
+      getBooksAndPush()
+    };
+    const changeGenre = () => {
+      page.value = 1
+      getBooksAndPush()
+    };
+    const openBook = (book) => {
+      router.push({name: 'book-view', params: {id: book.id}})
+    };
+    const getCover = (book) => {
       if (book.cover_path) {
         return `${process.env.VUE_APP_API_URL}/${book.cover_path}`
       } else return '/img/book-dead-solid.svg'
-    },
+    };
 
-    touchStart(e) {
-      this.startPos = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
-      this.endPos = {x: 0, y: 0}
-    },
-    touchEnd(e) {
-      this.endPos = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
-      let difX = this.endPos.x - this.startPos.x
-      let difY = this.startPos.y - this.endPos.y
-      if (difX > 100 && difY < 50) this.$modal.show('sortings', this)
-    },
-    async updateBySorting(e) {
-      this.orderBy = e.orderBy
-      this.ascending = e.ascending
-      this.page = 1
-      this.getBooksAndPush()
-    },
+    const touchStart = (e) => {
+      startPos.value = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
+      endPos.value = {x: 0, y: 0}
+    };
+    const touchEnd = (e) => {
+      endPos.value = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
+      let difX = endPos.value.x - startPos.value.x
+      let difY = startPos.value.y - endPos.value.y
+      if (difX > 100 && difY < 50) showSortingModal.value = true
+    };
+    const updateBySorting = (e) => {
+      showSortingModal.value = false
+      orderBy.value = e.orderBy
+      ascending.value = e.ascending
+      page.value = 1
+      getBooksAndPush()
+    };
+
+    return {
+      books,
+      page,
+      showSortingModal,
+      limit,
+      ascending,
+      infinityState,
+      infinityLoading,
+      orderBy,
+      genreId,
+      searchParams,
+      startPos,
+      endPos,
+      isMobile,
+      categories,
+      activeGenre,
+      getBooksAndPush,
+      searchByName,
+      changeGenre,
+      openBook,
+      getCover,
+      touchStart,
+      touchEnd,
+      updateBySorting,
+    }
+  },
+  methods: {
     onScroll() {
       // if (!this.infinityState) {
       //   return false
@@ -178,9 +200,6 @@ export default {
       //   this.loadAndPush()
       // }
     },
-    // loadAndPush() {
-    //   this.loadBooks('push')
-    // },
     scrollToTop() {
       this.$el.scrollTop = 0
     },
@@ -271,6 +290,7 @@ export default {
 
     }
   }
+
   .book:hover {
     background: rgba(100, 100, 100, 0.8);
   }

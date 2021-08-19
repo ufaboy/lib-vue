@@ -11,31 +11,19 @@
 </template>
 
 <script>
+import {computed} from 'vue';
+import {useStore} from 'vuex'
+
 export default {
   name: 'Home',
   components: {},
-  props: {},
-  data: () => ({
-  }),
-  methods: {
-
-  },
-  computed: {
-    categories() {
-      return this.$store.state.genre.categories
-    },
-    isDesktop() {
-      return this.$store.state.main.isDesktop
-    }
-  },
-  watch: {},
-  created() {
+  setup() {
     document.title = 'Home';
-  },
-  mounted() {
+    const store = useStore();
+    const categories = computed(() => store.state.genre.categories)
+    const isDesktop = computed(() => store.state.main.isDesktop)
 
-  },
-  updated() {
+    return {categories, isDesktop}
   },
 }
 </script>

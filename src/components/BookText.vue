@@ -7,9 +7,9 @@
       <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
       <div class="progress-value">{{ progress }}</div>
     </footer>
-    <modal ref="editor">
+    <the-modal v-if="showEditorModal">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
-    </modal>
+    </the-modal>
     <div id="image-modal" class="image-modal" v-if="activeImage">
       <span class="close" @click="activeImage = null">&times;</span>
       <aside class="picture-action-panel">
@@ -26,45 +26,44 @@
 </template>
 
 <script>
+import {ref, reactive, defineAsyncComponent, computed} from "vue";
+import {useStore} from "vuex";
+import TheModal from "@/components/TheModal";
 const apiUrl = process.env.VUE_APP_API_URL
-import {defineAsyncComponent} from "vue";
-import {updateBook, updateBookMark} from "../utils/uploadData";
+import {updateBook, updateBookMark} from "@/utils/uploadData";
 
 export default {
   name: "BookText",
   components: {
+    TheModal,
     EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
   },
   props: {
     book: Object
   },
   emits: [],
-//setup: {},
-  data() {
-    return {
-      progress: 0,
-      progressLoad: 0,
-      windowScroll: 0,
-      timer: null,
-      activeImage: null,
-      activeImageIndex: 0,
-      activeMedia: {type: null, url: null},
-      editorNode: {},
-      initialText: ''
-    }
-  },
-  computed: {
-    windowHeights() {
-      return document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight
-    },
-    isMobile() {
-      return this.$store.state.main.isMobile
-    },
-  },
-  watch: {},
-  created() {
-  },
-  mounted() {
+  setup() {
+    const store = useStore();
+    const showEditorModal = ref(false);
+    const progress = ref(0);
+    const progressLoad = ref(0);
+    const windowScroll = ref(0);
+    const timer = ref(null);
+    const activeImage = ref(null);
+    const activeImageIndex = ref(0);
+    const activeMedia = reactive({type: null, url: null});
+    const editorNode = reactive({});
+    const initialText = ref('');
+
+    const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
+    const isMobile = computed(() => store.state.main.isMobile);
+
+    const editMode = (e) => {
+      editorNode.value = e.target
+      showEditorModal.value = true
+    };
+
+    return {progress, progressLoad, windowScroll, showEditorModal, timer, activeMedia, activeImage, activeImageIndex, editorNode, initialText, windowHeights, isMobile, editMode}
   },
   methods: {
     async scrollToBookmark() {
@@ -83,10 +82,7 @@ export default {
       document.getElementById('book').scrollTo(0, y);
       // console.log({'scrollTo': e, w:w, o:o, x: x, y: y})
     },
-    editMode(e) {
-      this.editorNode = e.target
-      this.$modal.show('editor', this)
-    },
+
     async saveEditor() {
       try {
         await updateBook({text: this.book.text})

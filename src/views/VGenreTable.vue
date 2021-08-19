@@ -104,7 +104,6 @@ export default {
     description: 'cell-description',
     category: 'cell-category'
   },
-  methods: {},
 }
 </script>
 

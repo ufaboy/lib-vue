@@ -88,7 +88,7 @@ export default {
     const store = useStore()
     const showModal = ref(false);
     const bookName = ref('');
-    let books = reactive({
+    const books = reactive({
       items: [],
       _links: {},
       _meta: {},
@@ -163,7 +163,7 @@ export default {
     };
     const toPage = async(url) => {
       try {
-        books = await goPage(url.href);
+        books.value = await goPage(url.href);
       } catch (e) {
         console.log({'goPage': e})
       }

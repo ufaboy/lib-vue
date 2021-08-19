@@ -18,66 +18,59 @@
 </template>
 
 <script>
+import {reactive, computed} from 'vue';
+import {useRoute, useRouter} from 'vue-router'
+import {useStore} from 'vuex';
 
 export default {
   name: "ListGenre",
   components: {},
-  props: {},
-  data: () => ({
-    activeCategory: {
+  setup() {
+    document.title = 'Genres';
+    const store = useStore();
+    const route = useRoute();
+    const router = useRouter();
+    const activeCategory = reactive({
       genres: []
-    },
-  }),
-  computed: {
-    categories() {
-      return this.$store.state.genre.categories
-    },
-    genres() {
-      let selectedCategory
-      if (this.activeCategory.name) {
-        selectedCategory = this.categories.find(item => item.id === this.activeCategory.id || item.name === this.activeCategory.name)
-      } else if (this.$route.params.id) {
-        selectedCategory = this.categories.find(item => item.id === +this.$route.params.id)
-      } else if (this.$route.params.name) {
-        selectedCategory = this.categories.find(item => item.name === this.$route.params.name)
+    })
+    const categories = computed(() => store.state.genre.categories)
+    const isMobile = computed(() => store.state.main.isMobile)
+    const genres = computed(() => {
+      let selectedCategory = {}
+      if (activeCategory.name) {
+        selectedCategory = categories.value.find(item => item.id === activeCategory.id || item.name === activeCategory.name)
+      } else if (route.params.id) {
+        selectedCategory = categories.value.find(item => item.id === +route.params.id)
+      } else if (route.params.name) {
+        selectedCategory = categories.value.find(item => item.name === route.params.name)
       } else {
         return []
       }
       return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
-    },
-    isMobile() {
-      return this.$store.state.main.isMobile
-    }
-  },
+    })
 
-  watch: {
-  },
-  created() {
-    document.title = 'Genres';
-    if (this.$route.params.id || this.$route.params.name) {
-      this.prepareCategory()
-    }
-  },
-  mounted() {
-
-  },
-  methods: {
-    openGenre(genre) {
-      this.$router.push({name: 'list-book',
+    const openGenre = (genre) => {
+      router.push({
+        name: 'list-book',
         params: {
           'id': genre.id,
-          name: genre.name,
-          // parent: this.genresParent.find(item => item.id === +this.$route.params.id).name
+          'name': genre.name,
         }
       })
-    },
-    async prepareCategory() {
-      if (this.$route.params.id) {
-        this.activeCategory = this.categories.find(item => item.id === +this.$route.params.id)
-      } else if (this.$route.params.name) {
-        this.activeCategory = this.categories.find(item => item.name === this.$route.params.name)
+    };
+    const prepareCategory = async () => {
+      if (route.params.id) {
+        activeCategory.value = categories.value.find(item => item.id === +route.params.id)
+      } else if (route.params.name) {
+        activeCategory.value = categories.value.find(item => item.name === route.params.name)
       }
-    },
+    };
+
+    if (route.params.id || route.params.name) {
+      prepareCategory()
+    }
+
+    return {activeCategory, categories, genres, isMobile, openGenre}
   },
 }
 </script>
@@ -107,6 +100,7 @@ export default {
       margin-right: 0.5rem;
     }
   }
+
   .genre:hover {
     background: var(--surface4);
   }
