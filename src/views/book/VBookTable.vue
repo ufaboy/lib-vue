@@ -109,10 +109,10 @@ export default {
 
     const getBooksAndReplace = async () => {
       const sort = `${orderBy.asc ? '' : '-'}${orderBy.name}`
-      // const filter = {...toRefs(filter), name: bookName.value}
-      const filter = {genre: filter.genre, rating: filter.rating, ad: filter.ad, name: bookName.value}
+      const formFilter = {...toRefs(filter), name: bookName.value}
+      // const filter = {genre: filter.genre, rating: filter.rating, ad: filter.ad, name: bookName.value}
       try {
-        const result = await loadBooks(page.value, limit.value, sort, filter)
+        const result = await loadBooks(page.value, limit.value, sort, formFilter)
         books._links = result._links
         books._meta = result._meta
         books.items.splice(0, books.items.length)
