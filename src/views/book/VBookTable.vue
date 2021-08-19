@@ -8,7 +8,7 @@
     </header>
     <table class="table">
       <thead class="thead">
-      <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
+      <th class="th" :class="$options.columnsClasses[column]" v-for="(column, index) of $options.columns" :key="index">
         <div class="table-cell" :class="{'active' : orderBy.name === column}">
           <div class="td-title">{{ column }}</div>
           <div class="td-action" @click="sortBy(column)">
@@ -23,16 +23,16 @@
       <tbody>
       <!--      <transition-group name="flip-list" tag="tbody">-->
       <tr class="row" :class="{'picante': book.ad}" v-for="book of books.items" :key="book.id">
-        <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
-        <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
-        <td class="td" :class="columnsClasses.annotation">{{ book.annotation }}</td>
-        <td class="td" :class="columnsClasses.genres">
+        <td class="td" :class="$options.columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
+        <td class="td" :class="$options.columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
+        <td class="td" :class="$options.columnsClasses.annotation">{{ book.annotation }}</td>
+        <td class="td" :class="$options.columnsClasses.genres">
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.name : '' }}</div>
         </td>
-        <td class="td" :class="columnsClasses.rating">{{ book.rating }}</td>
-        <td class="td" :class="columnsClasses.view_count">{{ book.view_count }}</td>
-        <td class="td" :class="columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
-        <td class="td" :class="columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
+        <td class="td" :class="$options.columnsClasses.rating">{{ book.rating }}</td>
+        <td class="td" :class="$options.columnsClasses.view_count">{{ book.view_count }}</td>
+        <td class="td" :class="$options.columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
+        <td class="td" :class="$options.columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
       </tr>
       <!--</transition-group>-->
       </tbody>
@@ -57,146 +57,156 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <modal ref="filterBookModal">
+    <the-modal v-if="showModal" @hide-modal="showModal = false">
       <filter-modal @active-filter="updateFilterPage"
                     @reset-filter="resetTable"
                     :rating="filter.rating"
                     :genre="filter.genre"
                     :ad="filter.ad"/>
-    </modal>
+    </the-modal>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
-import {loadBooks, goPage} from "../../utils/loadData";
+import {ref, reactive, computed} from "vue";
+import {useRouter} from 'vue-router'
+import {useStore} from "vuex";
+import {loadBooks, goPage} from "@/utils/loadData";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
+import TheModal from "@/components/TheModal";
 
 export default {
   name: "BooksTable",
   layout: 'basement',
   middleware: [],
-  components: {FilterModal, IconSortAsc, IconSortDesc},
-  props: {},
+  components: {TheModal, FilterModal, IconSortAsc, IconSortDesc},
   setup() {
-  },
-  data: () => ({
-    books: {
+    document.title = 'Table Books';
+    const router = useRouter();
+    const store = useStore()
+    const showModal = ref(false);
+    const bookName = ref('');
+    let books = reactive({
       items: [],
       _links: {},
       _meta: {},
-    },
-    bookName: null,
-    filter: {
+    });
+    const filter = reactive({
       genre: null,
       rating: null,
       ad: null,
-    },
-    page: 1,
-    pagBtnArr: [],
-    limit: 10,
-    orderBy: {name: 'updated_at', asc: false},
-    columns: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
-    columnsClasses: {
-      id: 'cell-id',
-      name: 'cell-name',
-      annotation: 'cell-annotation',
-      genres: 'cell-genre',
-      rating: 'cell-rating',
-      view_count: 'cell-view_count',
-      last_read: 'cell-last_read',
-      updated_at: 'cell-updated_at'
-    },
-  }),
-  methods: {
-    searchByName() {
-      this.getBooksAndReplace()
-    },
+    });
+    const page = ref(1);
+    const pagBtnArr = reactive([]);
+    const limit = ref(10);
+    const orderBy = reactive({name: 'updated_at', asc: false});
+    const main = computed(()=> store.state.main);
+    const modalSize = computed(() => {
+      return main.value.isDesktop.value ? 600 : '100%'
+    });
 
-    getDate(timestamp) {
+    const getBooksAndReplace = async () => {
+      const sort = `${orderBy.asc ? '' : '-'}${orderBy.name}`
+      const filter = {...filter, name: bookName.value}
+      try {
+        const result = await loadBooks(page.value, limit.value, sort, filter)
+        books._links = result._links
+        books._meta = result._meta
+        books.items.splice(0, books.items.length)
+        books.items.push(...result.items)
+        page.value = result._meta.currentPage
+        pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
+      } catch (e) {
+        console.log({'getBooksAndReplace': e})
+      }
+    };
+    const searchByName = () => {
+      getBooksAndReplace()
+    };
+    const getDate = (timestamp) => {
       if (!timestamp) return null
       const date = new Date(timestamp * 1000);
       return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
-    },
-    async openBook(book, type) {
-      await this.$router.push({
+    };
+    const openBook = async (book, type) => {
+      await router.push({
         name: type === 'edit' ? 'book-edit' : 'book-view',
         params: {id: book.id}
       })
-    },
-    resetTable() {
-      this.filter.genre = null
-      this.filter.rating = null
-      this.filter.ad = null
-      this.getBooksAndReplace()
-    },
-    updateFilterPage(filter) {
-      if (filter?.genre) {
-        this.filter.genre = filter.genre.id
+    };
+    const resetTable = () => {
+      filter.genre = null
+      filter.rating = null
+      filter.ad = null
+      getBooksAndReplace()
+    };
+    const updateFilterPage = (newFilter) => {
+      if (newFilter?.genre) {
+        filter.genre = newFilter.genre.id
       }
-      if (filter?.rating) {
-        this.filter.rating = filter.rating
+      if (newFilter?.rating) {
+        filter.rating = newFilter.rating
       }
-      this.filter.ad = filter.ad ? 1 : 0
-      this.getBooksAndReplace()
-    },
-    async getBooksAndReplace() {
-      const sort = `${this.orderBy.asc ? '' : '-'}${this.orderBy.name}`
-      const filter = {...this.filter, name: this.bookName}
+      filter.ad = newFilter.ad ? 1 : 0
+      getBooksAndReplace()
+    };
+    const sortBy = (column) => {
+      orderBy.asc = !orderBy.asc
+      orderBy.name = column
+      getBooksAndReplace();
+    };
+    const getThumbs = (book) => {
+      return book.cover_url ? `${process.env.VUE_APP_API_URL}/${book.cover_url}` : '/img/book-cover.jpg'
+    };
+    const toPage = async(url) => {
       try {
-        const result = await loadBooks(this.page, this.limit, sort, filter)
-        this.books._links = result._links
-        this.books._meta = result._meta
-        this.books.items.splice(0, this.books.items.length)
-        this.books.items.push(...result.items)
-        this.page = result._meta.currentPage
-        this.pagBtnArr = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
-      } catch (e) {
-        console.log({getBooksAndReplace: e})
-      }
-
-
-
-    },
-    sortBy(column) {
-      this.orderBy.asc = !this.orderBy.asc
-      this.orderBy.name = column
-      this.getBooksAndReplace();
-    },
-    getThumbs(book) {
-      return book.cover_url ? `${this.$config.apiUrl}/${book.cover_url}` : '/img/book-cover.jpg'
-    },
-    async toPage(url) {
-      try {
-        this.books = await goPage(url.href);
+        books = await goPage(url.href);
       } catch (e) {
         console.log({'goPage': e})
       }
-    },
+    };
 
-    showFilterModal() {
-      this.$modal.show('filterBookModal', this)
+    const showFilterModal =() => {
+      showModal.value = true
+    };
+
+    getBooksAndReplace();
+
+    return {
+      books,
+      bookName,
+      filter,
+      showModal,
+      page,
+      pagBtnArr,
+      limit,
+      orderBy,
+      main,
+      modalSize,
+      getBooksAndReplace,
+      searchByName,
+      getDate,
+      openBook,
+      resetTable,
+      updateFilterPage,
+      sortBy,
+      getThumbs,
+      toPage,
+      showFilterModal
     }
   },
-  computed: {
-    ...mapState({
-      main: state => state.main,
-    }),
-    modalSize() {
-      return this.main.isDesktop ? 600 : '100%'
-    },
-  },
-  watch: {},
-  created() {
-    document.title = 'Table Books';
-    this.getBooksAndReplace();
-  },
-  mounted() {
-
-  },
-  updated() {
+  columns: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
+  columnsClasses: {
+    id: 'cell-id',
+    name: 'cell-name',
+    annotation: 'cell-annotation',
+    genres: 'cell-genre',
+    rating: 'cell-rating',
+    view_count: 'cell-view_count',
+    last_read: 'cell-last_read',
+    updated_at: 'cell-updated_at'
   },
 }
 </script>

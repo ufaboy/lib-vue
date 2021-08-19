@@ -42,7 +42,7 @@
 
 <script>
 import IconClose from "@/components/icons/IconClose"
-import {adAccess} from "@/utils/userData";
+import {getAdAccess} from "@/utils/userData";
 
 export default {
   name: "FilterModal",
@@ -67,7 +67,7 @@ export default {
       return this.$store.state.genre.categories
     },
     adAccess() {
-      return adAccess()
+      return getAdAccess()
     },
   },
   methods: {

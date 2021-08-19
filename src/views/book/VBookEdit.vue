@@ -134,7 +134,7 @@ import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
 import FormField from '@/components/FormField.vue'
 import {loadBook} from "@/utils/loadData";
-import {adAccess} from "@/utils/userData";
+import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
 
 export default {
@@ -341,7 +341,7 @@ export default {
   },
   computed: {
     adAccess() {
-      return adAccess()
+      return getAdAccess()
     },
     isDesktop() {
       return this.$store.state.main.isDesktop
