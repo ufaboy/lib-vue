@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import {ref, reactive, computed} from "vue";
+import {ref, reactive, toRefs, computed} from "vue";
 import {useRouter} from 'vue-router'
 import {useStore} from "vuex";
 import {loadBooks, goPage} from "@/utils/loadData";
@@ -109,7 +109,7 @@ export default {
 
     const getBooksAndReplace = async () => {
       const sort = `${orderBy.asc ? '' : '-'}${orderBy.name}`
-      const filter = {...filter, name: bookName.value}
+      const filter = {...toRefs(filter), name: bookName.value}
       try {
         const result = await loadBooks(page.value, limit.value, sort, filter)
         books._links = result._links
