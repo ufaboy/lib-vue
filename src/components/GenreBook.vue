@@ -15,7 +15,7 @@
       <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
     </fieldset>
-    <fieldset class="genres" v-if="$store.state.main.isDesktop">
+    <fieldset class="genres" v-if="isDesktop">
       <legend>all genres</legend>
       <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
            :key="category.id" @click="activeCategory = Number(category.id)">
@@ -26,7 +26,7 @@
         </label>
       </div>
     </fieldset>
-    <select class="select" v-model="activeGenre" v-if="isMobile" multiple>
+    <select class="select" v-model="selectedGenre" v-if="isMobile" multiple>
       <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
         <option v-for="genre of category.genres"
                 :key="'select-genre'+genre.id"
@@ -49,7 +49,7 @@ import IconClose from "@/components/icons/IconClose"
 export default {
   name: "GenreBook",
   components: {IconClose},
-  emits: ['set-genres'],
+  emits: ['set-genres', 'hide-modal'],
   props: {
     genresProps: Array,
   },
@@ -57,11 +57,15 @@ export default {
     const store = useStore()
     const activeCategory = ref('');
     const searchField = ref('');
-    const selectedGenre = reactive([]);
+    const selectedGenre = ref([]);
     const genres = reactive([]);
     const categories = computed(() => store.state.genre.categories);
     const isMobile = computed(() => store.state.main.isMobile);
+    const isDesktop = computed(() => store.state.main.isDesktop);
 
+    if (props.genresProps && props.genresProps.length) {
+      selectedGenre.value.push(...props.genresProps)
+    }
     const sendGenre = () => {
       emit('set-genres', selectedGenre)
     };
@@ -81,10 +85,9 @@ export default {
       emit('hide-modal')
     };
 
-    return {activeCategory, searchField, selectedGenre, genres, categories, isMobile, sendGenre, calcCheckedChildes, colorizeGenre, reset, closeModal}
-  },
-  methods: {
+    reset()
 
+    return {activeCategory, searchField, selectedGenre, genres, categories, isMobile, isDesktop, sendGenre, calcCheckedChildes, colorizeGenre, reset, closeModal}
   },
 }
 </script>

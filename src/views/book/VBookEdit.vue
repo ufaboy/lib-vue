@@ -127,13 +127,13 @@
       </div>
     </div>
     <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <genre-book :genres-props="genres" @set-genres="setGenres"/>
+      <genre-book :genres-props="genres" @set-genres="setGenres" @hide-modal="showGenreBookModal = false" />
     </the-modal>
   </div>
 </template>
 
 <script>
-import {ref} from 'vue'
+import {ref, reactive} from 'vue'
 import StarRating from 'vue-star-rating'
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
@@ -143,38 +143,37 @@ import FormField from '@/components/FormField.vue'
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
-import TheModal from "../../components/TheModal";
+import TheModal from "@/components/TheModal";
 
 export default {
   name: "BookEdit",
   components: {TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
   setup() {
+    document.title = 'Editor';
     const showGenreBookModal = ref(false);
+    const files = ref([]);
+    const book = reactive({
+          id: null,
+          name: null,
+          annotation: '',
+          text: '',
+          source: null,
+          cover: null,
+          rating: null,
+          ad: false,
+          cover_path: '',
+        });
+    const genres = ref([]);
+    const editor =  ref('raw');
+    const expandText = ref(false);
+    const expandIllustration = ref(false);
 
     const openGenreModal = () => {
       showGenreBookModal.value = true
     };
 
-    return {showGenreBookModal, openGenreModal}
+    return {showGenreBookModal, files, book, genres, editor, expandText, expandIllustration, openGenreModal}
   },
-  data: () => ({
-    files: [],
-    book: {
-      id: null,
-      name: null,
-      annotation: '',
-      text: '',
-      source: null,
-      cover: null,
-      rating: null,
-      ad: false,
-      cover_path: '',
-    },
-    genres: [],
-    editor: 'raw',
-    expandText: false,
-    expandIllustration: false,
-  }),
   methods: {
     autoResize() {
       const editor = this.$refs.editor
@@ -346,7 +345,8 @@ export default {
     },
 
     setGenres(e) {
-      this.genres = e
+      this.genres = e;
+      this.showGenreBookModal = false;
     },
     colorizeGenre(i) {
       const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
@@ -371,7 +371,7 @@ export default {
   },
   created() {
     this.getBook();
-    document.title = 'Editor';
+
   },
   mounted() {
   },
