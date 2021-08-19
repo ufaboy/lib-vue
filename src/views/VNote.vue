@@ -30,47 +30,41 @@
 </template>
 
 <script>
-import {loadNotes} from "../utils/loadData";
+import {reactive} from 'vue';
+import {loadNotes} from "@/utils/loadData";
 
 export default {
   name: "TheNote",
   components: {},
-  props: {},
-  data: () => ({
-    notes: [],
-  }),
-  methods: {
-    async getNotes() {
+  setup() {
+    document.title = 'Notes';
+    const notes = reactive([]);
+
+    const getNotes = async() => {
       const result = await loadNotes()
+      console.log({getNotes: result})
       if (result) {
-        this.notes.push(...JSON.parse(result.text))
+        notes.push(...JSON.parse(result.text))
       }
-    },
-    addNote() {
-      this.notes.push({url: ''})
-    },
-    deleteNote(index) {
-      this.notes.splice(index, 1)
-      this.sendNotes()
-    },
-    async sendNotes() {
-      const formData = {text: JSON.stringify(this.notes)}
+    };
+    const addNote = () => {
+      notes.push({url: ''})
+    };
+    const deleteNote = (index) => {
+      notes.splice(index, 1)
+      sendNotes()
+    }
+    const sendNotes = async() => {
+      const formData = {text: JSON.stringify(notes)}
       const result = await this.$patch('/book/update?id=1', formData)
       if (result) {
         console.log({'result': result})
       }
-
     }
-  },
-  computed: {},
-  watch: {},
-  created() {
-    document.title = 'Notes';
-    this.getNotes()
-  },
-  mounted() {
-  },
-  updated() {
+
+    getNotes()
+
+    return {notes, getNotes, addNote, deleteNote, sendNotes}
   },
 }
 </script>

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import {adAccess} from "@/utils/userData";
+import {getAdAccess} from "@/utils/userData";
 
 import {authMiddleware} from "@/middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
@@ -76,7 +76,7 @@ const routes = [
     name: 'note',
     component: VNote,
     beforeEnter: (to, from, next) => {
-      if (adAccess) {
+      if (getAdAccess) {
         next()
       } else {
         next(new Error('dont panic'))

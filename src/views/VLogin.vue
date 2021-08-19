@@ -38,7 +38,6 @@ export default {
   components: {},
   setup() {
     document.title = 'Login';
-
     const router = useRouter()
     const username = ref('')
     const password = ref('')
@@ -58,7 +57,7 @@ export default {
         const result = await response.json();
         if (result.token) {
           setUser(result)
-          router.push('/')
+          await router.push('/')
         } else {
           console.log({'response.not token': response})
           // this.$toast.error('Empty Token')
