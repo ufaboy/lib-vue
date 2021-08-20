@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {inject, ref} from 'vue';
+import {ref} from 'vue';
 import {useRouter} from 'vue-router'
 import {setUser} from '@/utils/userData';
 
@@ -38,7 +38,6 @@ export default {
   components: {},
   setup() {
     document.title = 'Login';
-    const loader = inject("loader");
     const router = useRouter()
     const username = ref('')
     const password = ref('')
@@ -47,7 +46,6 @@ export default {
     const login = async () => {
       const formData = {username: username.value, password: password.value};
       const url = `${process.env.VUE_APP_API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
-      loader.showLoader()
       const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(formData),
@@ -55,7 +53,6 @@ export default {
           'Content-Type': 'application/json;charset=utf-8',
         }
       })
-      loader.hideLoader()
       if (response.ok) {
         const result = await response.json();
         if (result.token) {

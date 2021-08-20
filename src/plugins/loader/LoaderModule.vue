@@ -41,10 +41,10 @@ export default {
     }
   },
   methods: {
-    showLoader() {
+    show() {
       this.loading = true
     },
-    hideLoader() {
+    hide() {
       this.loading = false
     }
   },

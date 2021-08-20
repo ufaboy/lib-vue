@@ -113,9 +113,9 @@ export default {
       // const formFilter = {...toRefs(filter), name: bookName.value}
       const formFilter = {genre: filter.genre, rating: filter.rating, ad: filter.ad, name: bookName.value}
       try {
-        loader.showLoader();
+        loader.show();
         const result = await loadBooks(page.value, limit.value, sort, formFilter)
-        loader.hideLoader();
+        loader.hide();
         books._links = result._links
         books._meta = result._meta
         books.items.splice(0, books.items.length)

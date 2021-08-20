@@ -232,7 +232,11 @@ export default {
         console.log({sendBook: e})
       }
     };
-
+    const loadFiles = (e) => {
+      for (const file of e) {
+        files.value.push({name: file.name, status: null, file: file})
+      }
+    };
     const getBook = async () => {
       if (!route.params.id) {
         return null;
@@ -266,7 +270,8 @@ export default {
       resetBook,
       openGenreModal,
       sendBook,
-      getBook
+      getBook,
+      loadFiles,
     }
   },
   methods: {
@@ -274,13 +279,6 @@ export default {
       const editor = this.$refs.editor
       editor.style.cssText = 'height:auto; padding:0';
       editor.style.cssText = 'height:' + editor.scrollHeight * 1.018 + 'px';
-    },
-
-
-    loadFiles(e) {
-      for (const file of e) {
-        this.files.push({name: file.name, status: null, file: file})
-      }
     },
     getSrc(media) {
       const loaded = !!media.file.id

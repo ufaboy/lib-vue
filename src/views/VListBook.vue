@@ -108,9 +108,9 @@ export default {
         filter.name += `&name=${searchParams.value}`
       }
       infinityLoading.value = true;
-      loader.showLoader();
+      loader.show();
       const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy}`, filter);
-      loader.hideLoader();
+      loader.hide();
       infinityLoading.value = false;
       if (result) {
         if (method === 'push') {

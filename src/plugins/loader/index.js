@@ -17,14 +17,14 @@ export default {
 
 		app.component('LoaderModule', require('./LoaderModule.vue').default)
 		app.config.globalProperties.$loader = {
-			show: function () {loader.showLoader()},
-			hide: function () {loader.hideLoader()}
+			show: function () {loader.show()},
+			hide: function () {loader.hide()}
 		}
 		const mountNode = document.createElement('div')
 		mountNode.id = 'loaderNode'
 		mountNode.ref = 'loaderRef'
 		document.body.appendChild(mountNode)
 		let loader = createApp(LoaderModule).mount('#loaderNode')
-		app.provide('loader', {showLoader: loader.showLoader, hideLoader: loader.hideLoader})
+		app.provide('loader', {show: loader.show, hide: loader.hide})
 	}
 }

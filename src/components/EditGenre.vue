@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import {reactive, computed, } from "vue";
+import {reactive, computed, inject,} from "vue";
 import {useStore} from 'vuex'
 import IconClose from "@/components/icons/IconClose"
 import {sendGenre} from "@/utils/uploadData";
@@ -50,6 +50,7 @@ export default {
     const store = useStore()
     const localGenre = reactive({})
     const adAccess = getAdAccess()
+    const loader = inject("loader");
     localGenre.value = Object.assign({
       id: null,
       name: '',
@@ -93,7 +94,9 @@ export default {
         genreForm.id = localGenre.value.id
       }
       try {
+        loader.show()
         await sendGenre(genreForm)
+        loader.hide()
         emit('update-genres')
         closeModal();
       } catch (e) {
