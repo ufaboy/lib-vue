@@ -58,7 +58,7 @@
         <span class="label-header">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
-          <button class="editor-btn" type="button" @click="toggleEditor">{{ editor }}</button>
+          <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
           <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
             <base-icon class="icon">
               <icon-carriage/>
@@ -78,7 +78,7 @@
         </span>
         <textarea class="editor clarity"
                   v-model="book.text"
-                  v-if="editor === 'raw'"
+                  v-if="editorMode === 'raw'"
                   ref="editor"
                   @input="autoResize"
         ></textarea>
@@ -127,13 +127,15 @@
       </div>
     </div>
     <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <genre-book :genres-props="genres" @set-genres="setGenres" @hide-modal="showGenreBookModal = false" />
+      <genre-book :genres-props="genres" @set-genres="setGenres" @hide-modal="showGenreBookModal = false"/>
     </the-modal>
   </div>
 </template>
 
 <script>
-import {ref, reactive} from 'vue'
+import {ref, computed} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {useStore} from 'vuex'
 import StarRating from 'vue-star-rating'
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
@@ -150,9 +152,35 @@ export default {
   components: {TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
   setup() {
     document.title = 'Editor';
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore()
     const showGenreBookModal = ref(false);
     const files = ref([]);
-    const book = reactive({
+    const book = ref({
+      id: null,
+      name: null,
+      annotation: '',
+      text: '',
+      source: null,
+      cover: null,
+      rating: null,
+      ad: false,
+      cover_path: '',
+      files: []});
+    const genres = ref([]);
+    const editorMode = ref('raw');
+    const expandText = ref(false);
+    const expandIllustration = ref(false);
+    const adAccess = computed(() => getAdAccess());
+    const isDesktop = computed(() => store.state.main.isDesktop);
+
+
+    const resetBook = () => {
+      if (book.value.id) {
+        getBook()
+      } else {
+        book.value = {
           id: null,
           name: null,
           annotation: '',
@@ -162,17 +190,84 @@ export default {
           rating: null,
           ad: false,
           cover_path: '',
-        });
-    const genres = ref([]);
-    const editor =  ref('raw');
-    const expandText = ref(false);
-    const expandIllustration = ref(false);
-
+          files: []}
+      }
+      genres.value = []
+    };
     const openGenreModal = () => {
       showGenreBookModal.value = true
     };
+    const checkBook = async () => {
+      let validation = true
+      let messages = []
+      if (!book.value.name) {
+        messages.push('empty name')
+        validation = false
+      }
+      if (genres.value.length < 1) {
+        messages.push('choose at least one genre')
+        validation = false
+      }
+      if (!validation) {
+        // this.$toast.error(messages);
+      }
+      return validation
+    };
+    const toggleEditor = () => {
+      console.log({toggleEditor: editorMode.value})
+      editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
+    };
+    const sendBook = async () => {
+      const check = await checkBook()
+      if (!check) {
+        return false
+      }
+      try {
+        let genresIdArray = genres.value.map(genre => genre.id)
+        const bookData = {...book.value, genres: genresIdArray}
+        console.log({sendBook: bookData, genresIdArray: genresIdArray, 'genres.value': genres.value})
+        await updateBook(bookData)
+        await router.replace('/book')
+      } catch (e) {
+        console.log({sendBook: e})
+      }
+    };
 
-    return {showGenreBookModal, files, book, genres, editor, expandText, expandIllustration, openGenreModal}
+    const getBook = async () => {
+      if (!route.params.id) {
+        return null;
+      }
+      try {
+        const result = await loadBook(+route.params.id)
+        book.value = {...result, ad: !!result.ad}
+        files.value.push(...result.files.map(file => {
+          return {name: file.name, status: null, file: file}
+        }))
+        genres.value = [...result.genres]
+        // await this.$nextTick()
+        // autoResize()
+      } catch (e) {
+        console.log({getBook: e})
+      }
+    };
+    getBook();
+
+    return {
+      showGenreBookModal,
+      files,
+      book,
+      genres,
+      editorMode,
+      expandText,
+      expandIllustration,
+      adAccess,
+      isDesktop,
+      toggleEditor,
+      resetBook,
+      openGenreModal,
+      sendBook,
+      getBook
+    }
   },
   methods: {
     autoResize() {
@@ -180,68 +275,7 @@ export default {
       editor.style.cssText = 'height:auto; padding:0';
       editor.style.cssText = 'height:' + editor.scrollHeight * 1.018 + 'px';
     },
-    async sendBook() {
-      const check = await this.checkBook()
-      if (!check) {
-        return false
-      }
-      try {
-        const bookData = {...this.book, genres: this.genres.map(item => item.id)}
-        await updateBook(bookData)
-        this.$router.replace('/book')
-      } catch (e) {
-        console.log({sendBook: e})
-      }
-    },
-    resetBook() {
-      this.book = {
-        id: null,
-        name: null,
-        annotation: '',
-        text: '',
-        source: null,
-        cover_id: null,
-        cover_url: null,
-        rating: null,
-        book: null,
-        ad: false,
-        files: []
-      }
-      this.genres = []
-    },
-    async checkBook() {
-      let validation = true
-      let messages = []
-      if (!this.book.name) {
-        messages.push('empty name')
-        validation = false
-      }
-      if (this.genres.length < 1) {
-        messages.push('choose at least one genre')
-        validation = false
-      }
-      if (!validation) {
-        this.$toast.error(messages);
-      }
-      return validation
-    },
-    async getBook() {
-      if (!this.$route.params.id) {
-        return null;
-      }
-      try {
-        const result = await loadBook(+this.$route.params.id)
-        this.book = {...result, annotation: result.annotation ? result.annotation : '', ad: !!result.ad}
-        this.files.push(...result.files.map(file => {
-          return {name: file.name, status: null, file: file}
-        }))
-        this.genres = [...result.genres]
-        await this.$nextTick()
-        this.autoResize()
-      } catch (e) {
-        console.log({getBook: e})
-      }
-    },
+
 
     loadFiles(e) {
       for (const file of e) {
@@ -336,13 +370,6 @@ export default {
       e.onerror = null
       e.target.src = '/icons/book-dead-solid.svg'
     },
-    toggleEditor() {
-      if (this.editor === 'raw') {
-        this.editor = 'html'
-      } else {
-        this.editor = 'raw'
-      }
-    },
 
     setGenres(e) {
       this.genres = e;
@@ -353,14 +380,6 @@ export default {
       return color[i]
     },
   },
-  computed: {
-    adAccess() {
-      return getAdAccess()
-    },
-    isDesktop() {
-      return this.$store.state.main.isDesktop
-    }
-  },
   watch: {
     genres: {
       handler: function () {
@@ -369,23 +388,12 @@ export default {
       deep: true
     },
   },
-  created() {
-    this.getBook();
-
-  },
-  mounted() {
-  },
-  unmounted() {
-
-  },
-  updated() {
-  },
 }
 </script>
 
 <style scoped lang="scss">
 .edit-book {
-  height: calc(100% - 4rem);
+  height: calc(100% - 3.5rem);
   overflow-y: auto;
   padding: 1rem;
   display: flex;
