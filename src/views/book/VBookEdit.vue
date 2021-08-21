@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue'
+import {ref, computed, } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex'
 import StarRating from 'vue-star-rating'
@@ -211,14 +211,26 @@ export default {
       if (!validation) {
         // this.$toast.error(messages);
       }
+      console.log({messages: messages, genres: genres})
       return validation
     };
     const toggleEditor = () => {
       console.log({toggleEditor: editorMode.value})
       editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
     };
+    const setGenres = (e) => {
+      console.log({setGenres: e})
+      book.value.ad = e.value.findIndex(item => item.ad) > -1
+      genres.value = e.value;
+      showGenreBookModal.value = false;
+    };
+    const colorizeGenre = (i) => {
+      const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
+      return color[i]
+    };
     const sendBook = async () => {
       const check = await checkBook()
+      console.log({checkBook: check})
       if (!check) {
         return false
       }
@@ -229,7 +241,7 @@ export default {
         await updateBook(bookData)
         await router.replace('/book')
       } catch (e) {
-        console.log({sendBook: e})
+        console.log({sendBook: e, genres: genres.value})
       }
     };
     const loadFiles = (e) => {
@@ -266,6 +278,8 @@ export default {
       expandIllustration,
       adAccess,
       isDesktop,
+      setGenres,
+      colorizeGenre,
       toggleEditor,
       resetBook,
       openGenreModal,
@@ -367,23 +381,6 @@ export default {
     errorImage(e) {
       e.onerror = null
       e.target.src = '/icons/book-dead-solid.svg'
-    },
-
-    setGenres(e) {
-      this.genres = e;
-      this.showGenreBookModal = false;
-    },
-    colorizeGenre(i) {
-      const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
-      return color[i]
-    },
-  },
-  watch: {
-    genres: {
-      handler: function () {
-        this.book.ad = this.genres.findIndex(item => item.ad) > -1
-      },
-      deep: true
     },
   },
 }
