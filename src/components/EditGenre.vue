@@ -34,8 +34,9 @@
 </template>
 
 <script>
-import {reactive, computed, inject,} from "vue";
+import {computed, inject, ref} from "vue";
 import {useStore} from 'vuex'
+import {$delete} from "@/utils/superFetch";
 import IconClose from "@/components/icons/IconClose"
 import {sendGenre} from "@/utils/uploadData";
 import {getAdAccess} from "@/utils/userData";
@@ -48,7 +49,7 @@ export default {
   },
   setup(props, {emit}) {
     const store = useStore()
-    const localGenre = reactive({})
+    const localGenre = ref({})
     const adAccess = getAdAccess()
     const loader = inject("loader");
     localGenre.value = Object.assign({
@@ -105,13 +106,10 @@ export default {
 
     }
     const deleteGenre = async () => {
-      if (!props.genre.parent_id) {
-        return false;
-      }
       const url = `/genre/delete?id=${props.genre.id}`
-      const result = await this.$delete(url)
+      const result = await $delete(url)
       if (result) {
-        await store.dispatch('genre/loadGenre')
+        emit('update-genres')
         closeModal();
       }
     }

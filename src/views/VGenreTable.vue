@@ -51,7 +51,7 @@ export default {
     const ascending = ref(1);
     const orderBy = ref(null);
     const showModal = ref(false);
-    const activeGenre = reactive({
+    const activeGenre = ref({
       id: null,
       name: null,
       description: null,
