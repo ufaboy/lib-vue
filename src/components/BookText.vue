@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {ref, reactive, defineAsyncComponent, computed} from "vue";
+import {ref, reactive, defineAsyncComponent, computed, onBeforeUnmount} from "vue";
 import {useStore} from "vuex";
 import TheModal from "@/components/TheModal";
 const apiUrl = process.env.VUE_APP_API_URL
@@ -42,7 +42,7 @@ export default {
     book: Object
   },
   emits: [],
-  setup() {
+  setup(props) {
     const store = useStore();
     const showEditorModal = ref(false);
     const progress = ref(0);
@@ -62,6 +62,14 @@ export default {
       editorNode.value = e.target
       showEditorModal.value = true
     };
+
+    onBeforeUnmount(async()=> {
+      const formData = {bookId: props.book.id, bookmark: windowScroll.value}
+      const result = await updateBookMark(formData)
+      if (!result) {
+        console.log({'result': result})
+      }
+    });
 
     return {progress, progressLoad, windowScroll, showEditorModal, timer, activeMedia, activeImage, activeImageIndex, editorNode, initialText, windowHeights, isMobile, editMode}
   },
@@ -149,20 +157,11 @@ export default {
     getSrcImgUrl(e) {
       return e.url ? `${apiUrl}/${e.url}` : ''
     },
-    async updateScrollProgress() {
-      const formData = {bookId: this.book.id, bookmark: this.windowScroll}
-      const result = await updateBookMark(formData)
-      if (!result) {
-        console.log({'result': result})
-      }
-    }
+
   },
   updated() {
     this.moveMedia()
     this.listenClickByImg()
-  },
-  beforeUnmount() {
-    this.updateScrollProgress()
   },
 }
 </script>

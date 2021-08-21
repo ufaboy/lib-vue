@@ -3,8 +3,8 @@
     <header class="header">
       <router-link :to="{ name: 'book-create'}" class="btn create-btn">create</router-link>
       <button class="btn" @click="showFilterModal">filter</button>
-      <input type="search" class="search-text" v-model.trim="bookName" placeholder="Search by name..."
-             @input="searchByName">
+      <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search by name..."
+             @input="getBooksAndReplace">
     </header>
     <table class="table">
       <thead class="thead">
@@ -68,10 +68,12 @@
 </template>
 
 <script>
-import {ref, reactive, computed, inject} from "vue";
+import {ref, computed,} from "vue";
 import {useRouter} from 'vue-router'
 import {useStore} from "vuex";
-import {loadBooks, goPage} from "@/utils/loadData";
+import useBooks from "@/composables/useBooks";
+import useDate from "@/composables/useDate";
+import {goPage} from "@/utils/loadData";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
@@ -84,56 +86,19 @@ export default {
   components: {TheModal, FilterModal, IconSortAsc, IconSortDesc},
   setup() {
     document.title = 'Table Books';
-    const loader = inject("loader");
+
     const router = useRouter();
     const store = useStore()
     const showModal = ref(false);
-    const bookName = ref('');
-    const books = reactive({
-      items: [],
-      _links: {},
-      _meta: {},
-    });
-    const filter = reactive({
-      genre: null,
-      rating: null,
-      ad: null,
-    });
-    const page = ref(1);
-    const pagBtnArr = reactive([]);
-    const limit = ref(10);
-    const orderBy = reactive({name: 'updated_at', asc: false});
+
+    const {filter, searchField, limit, orderBy, books, page, pagBtnArr, getBooksAndReplace} = useBooks();
+    const {getDate} = useDate();
     const main = computed(()=> store.state.main);
     const modalSize = computed(() => {
       return main.value.isDesktop.value ? 600 : '100%'
     });
 
-    const getBooksAndReplace = async () => {
-      const sort = `${orderBy.asc ? '' : '-'}${orderBy.name}`
-      // const formFilter = {...toRefs(filter), name: bookName.value}
-      const formFilter = {genre: filter.genre, rating: filter.rating, ad: filter.ad, name: bookName.value}
-      try {
-        loader.show();
-        const result = await loadBooks(page.value, limit.value, sort, formFilter)
-        loader.hide();
-        books._links = result._links
-        books._meta = result._meta
-        books.items.splice(0, books.items.length)
-        books.items.push(...result.items)
-        page.value = result._meta.currentPage
-        pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
-      } catch (e) {
-        console.log({'getBooksAndReplace': e})
-      }
-    };
-    const searchByName = () => {
-      getBooksAndReplace()
-    };
-    const getDate = (timestamp) => {
-      if (!timestamp) return null
-      const date = new Date(timestamp * 1000);
-      return date ? date.toLocaleString('ru-RU', {year: '2-digit', month: '2-digit', day: 'numeric'}) : null
-    };
+
     const openBook = async (book, type) => {
       await router.push({
         name: type === 'edit' ? 'book-edit' : 'book-view',
@@ -180,7 +145,7 @@ export default {
 
     return {
       books,
-      bookName,
+      searchField,
       filter,
       showModal,
       page,
@@ -190,7 +155,6 @@ export default {
       main,
       modalSize,
       getBooksAndReplace,
-      searchByName,
       getDate,
       openBook,
       resetTable,

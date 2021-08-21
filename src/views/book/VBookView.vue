@@ -3,9 +3,10 @@
 </template>
 
 <script>
-import {defineAsyncComponent, inject, ref} from "vue";
+import {defineAsyncComponent, } from "vue";
 import {useRoute} from 'vue-router';
-import {loadBook} from "../../utils/loadData";
+import useBook from "@/composables/useBook";
+
 
 export default {
   name: "Book",
@@ -16,29 +17,9 @@ export default {
   },
   props: {},
   setup() {
-    const loader = inject("loader");
     const route = useRoute();
-    const book = ref({})
-    const typeBook = ref('book-empty')
-    const prepareUrlForMedia = book => {
-      if (book.text) {
-        const regexp = new RegExp("APIURL", "g");
-        book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
-        return book
-      }
-      return book
-    }
-    const downloadBook = async () => {
-      loader.show();
-      book.value = await loadBook(route.params.id)
-      loader.hide();
-      const comicsBook = book.value.genres.findIndex(genre => genre.category.name === 'comics') > -1
-      typeBook.value = comicsBook ? 'book-media' : 'book-text'
-      if (!comicsBook) {
-        book.value = prepareUrlForMedia(book.value)
-      }
-    }
-    downloadBook()
+    const {book, typeBook, downloadBook} = useBook();
+    downloadBook(route.params.id)
     return {
       typeBook,
       book,
