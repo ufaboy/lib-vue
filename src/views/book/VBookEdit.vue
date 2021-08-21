@@ -111,7 +111,7 @@
             <button class="image-entry-btn btn--green" @click="copyFileName(media.file)"
                     v-if="media.file.id !== undefined">tag
             </button>
-            <button class="image-entry-btn btn--red" @click="deleteFile(index)" v-if="media.file.id !== undefined">
+            <button class="image-entry-btn btn--red" @click="deleteOneFile(index)" v-if="media.file.id !== undefined">
               delete
             </button>
           </div>
@@ -211,15 +211,12 @@ export default {
       if (!validation) {
         // this.$toast.error(messages);
       }
-      console.log({messages: messages, genres: genres})
       return validation
     };
     const toggleEditor = () => {
-      console.log({toggleEditor: editorMode.value})
       editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
     };
     const setGenres = (e) => {
-      console.log({setGenres: e})
       book.value.ad = e.value.findIndex(item => item.ad) > -1
       genres.value = e.value;
       showGenreBookModal.value = false;
@@ -230,14 +227,12 @@ export default {
     };
     const sendBook = async () => {
       const check = await checkBook()
-      console.log({checkBook: check})
       if (!check) {
         return false
       }
       try {
         let genresIdArray = genres.value.map(genre => genre.id)
         const bookData = {...book.value, genres: genresIdArray}
-        console.log({sendBook: bookData, genresIdArray: genresIdArray, 'genres.value': genres.value})
         await updateBook(bookData)
         await router.replace('/book')
       } catch (e) {
@@ -248,6 +243,58 @@ export default {
       for (const file of e) {
         files.value.push({name: file.name, status: null, file: file})
       }
+    };
+    const deleteAllFiles = async() => {
+      try {
+        await deleteFiles(book.value.id)
+        files.value.splice(0, files.value.length)
+      } catch (e) {
+        console.log({deleteAllFiles: e})
+      }
+    };
+    const checkType = (type) => {
+      if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
+        return 'image'
+      } else if (type === 'video/webm' || type === 'video/mp4') {
+        return 'video'
+      } else if (type === 'audio/mpeg') {
+        return 'audio'
+      } else if (type === '') {
+        return 'file'
+      }
+    };
+    const deleteOneFile = async(fileIndex) => {
+      try {
+        await deleteFile(files.value[fileIndex].file.id);
+        files.value.splice(fileIndex, 1)
+      } catch (e) {
+        console.error({deleteFile: e})
+      }
+    };
+    const sendFiles = async(fileToUpload) => {
+      try {
+        const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.name).map(fileObject => fileObject.file)
+        const results = await uploadFiles(fileArray, book.value.id)
+        for (const item of results) {
+          if (item.status === 'fulfilled') {
+            const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
+            if (fileIndex > -1) {
+              files.value.splice(fileIndex, 1)
+            }
+            files.value.push({name: item.value.full_name, status: item.status, file: item.value})
+          } else if (item.status === 'rejected') {
+            const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
+            files.value[fileIndex].status = 'rejected'
+            files.value[fileIndex].error = item.value
+          }
+        }
+      } catch (e) {
+        console.log({sendFiles: e})
+      }
+    };
+    const errorImage = (e) => {
+      e.onerror = null
+      e.target.src = '/icons/book-dead-solid.svg'
     };
     const getBook = async () => {
       if (!route.params.id) {
@@ -282,8 +329,13 @@ export default {
       colorizeGenre,
       toggleEditor,
       resetBook,
+      errorImage,
       openGenreModal,
+      checkType,
       sendBook,
+      deleteAllFiles,
+      deleteOneFile,
+      sendFiles,
       getBook,
       loadFiles,
     }
@@ -297,60 +349,6 @@ export default {
     getSrc(media) {
       const loaded = !!media.file.id
       return loaded ? `${process.env.VUE_APP_API_URL}/${media.file.url}` : window.URL.createObjectURL(media.file);
-    },
-    async sendFiles(fileToUpload) {
-      try {
-        const fileArray = fileToUpload ? [fileToUpload.file] : this.files.map(fileObject => fileObject.file)
-        const results = await uploadFiles(fileArray, this.book.id)
-        // const fulfilled = results.filter(result => result.status === 'fulfilled').map(result => result.value)
-        // const rejected = results.filter(result => result.status === 'rejected').map(result => result.reason)
-        // console.log({results:results, fulfilled: fulfilled, rejected: rejected})
-        for (const item of results) {
-          if (item.status === 'fulfilled') {
-            const fileIndex = this.files.findIndex(element => element.name === item.value.full_name)
-            if (fileIndex > -1) {
-              this.files.splice(fileIndex, 1)
-            }
-            this.files.push({name: item.value.full_name, status: item.status, file: item.value})
-          } else if (item.status === 'rejected') {
-            const fileIndex = this.files.findIndex(element => element.name === item.value.full_name)
-            this.files[fileIndex].status = 'rejected'
-            this.files[fileIndex].error = item.value
-          }
-        }
-      } catch (e) {
-        console.log({sendFiles: e})
-      }
-    },
-
-    async deleteAllFiles() {
-      try {
-        await deleteFiles(this.book.id)
-        this.files.splice(0, this.files.length)
-      } catch (e) {
-        console.log({deleteAllFiles: e})
-      }
-    },
-
-    checkType(type) {
-      if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
-        return 'image'
-      } else if (type === 'video/webm' || type === 'video/mp4') {
-        return 'video'
-      } else if (type === 'audio/mpeg') {
-        return 'audio'
-      } else if (type === '') {
-        return 'file'
-      }
-    },
-
-    async deleteFile(fileIndex) {
-      try {
-        await deleteFile(this.files[fileIndex].file.id);
-        this.files.splice(fileIndex, 1)
-      } catch (e) {
-        console.error({deleteFile: e})
-      }
     },
     async copyFileName(file) {
       if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
@@ -378,10 +376,7 @@ export default {
         this.$refs.editor.setRangeText(selectionText)
       }
     },
-    errorImage(e) {
-      e.onerror = null
-      e.target.src = '/icons/book-dead-solid.svg'
-    },
+
   },
 }
 </script>
@@ -470,7 +465,7 @@ export default {
       top: -13px;
       left: 13px;
       padding: 0 3px;
-      background-color: var(--background-2);
+      background-color: var(--surface2);
       border-radius: 5px;
     }
 
