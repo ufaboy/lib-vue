@@ -16,7 +16,7 @@
         <button class="picture-arrow-btn" @click="showSlide('first')">1</button>
         <button class="picture-arrow-btn" @click="showSlide('prev')">Back</button>
       </aside>
-      <img class="modal-content" id="img01" :src="activeImage">
+      <img class="modal-content" :src="activeImage" alt="image">
       <aside class="picture-action-panel">
         <button class="picture-arrow-btn" @click="showSlide('last')">e</button>
         <button class="picture-arrow-btn" @click="showSlide('next')">Forward</button>
@@ -26,9 +26,10 @@
 </template>
 
 <script>
-import {ref, reactive, defineAsyncComponent, computed, onBeforeUnmount} from "vue";
+import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted} from "vue";
 import {useStore} from "vuex";
 import TheModal from "@/components/TheModal";
+
 const apiUrl = process.env.VUE_APP_API_URL
 import {updateBook, updateBookMark} from "@/utils/uploadData";
 
@@ -51,8 +52,8 @@ export default {
     const timer = ref(null);
     const activeImage = ref(null);
     const activeImageIndex = ref(0);
-    const activeMedia = reactive({type: null, url: null});
-    const editorNode = reactive({});
+    const activeMedia = ref({type: null, url: null});
+    const editorNode = ref({});
     const initialText = ref('');
 
     const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
@@ -62,34 +63,119 @@ export default {
       editorNode.value = e.target
       showEditorModal.value = true
     };
+    const openImage = (img) => {
+      activeImage.value = img.target.src
+    };
+    const showSlide = (type) => {
+      let index = 0
+      if (type === 'prev') {
+        index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.value.files.length - 1
+      } else if (type === 'next') {
+        index = activeImageIndex.value < props.book.files.length - 1 ? activeImageIndex.value + 1 : 0
+      } else if (type === 'last') {
+        index = props.book.value.files.length - 1
+      } else if (type === 'first') {
+        index = 0
+      }
+      activeImageIndex.value = index
+      activeImage.value = getSrcImgUrl(props.book.value.files[index])
+    };
+    const getSrcImgUrl = (e) => {
+      return e.url ? `${apiUrl}/${e.url}` : ''
+    };
+    // const prepareUrlForMedia = (book) => {
+    //   if (book.text) {
+    //     const regexp = new RegExp("APIURL", "g");
+    //     book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
+    //     return book
+    //   }
+    //   return book
+    // };
+    const moveMedia = () => {
+      let toggleSide = true
+      let media = document.querySelectorAll('.media')
+      for (const elem of media) {
+        elem.classList.add(toggleSide ? 'media--right' : 'media--left')
+        toggleSide = !toggleSide
+      }
+    };
+    const listenClickByImg = () => {
+      let images = document.getElementsByClassName('picture')
+      for (let image of images) {
+        image.addEventListener("click", openImage);
+      }
+    };
+    const handleScroll = (e) => {
+      progress.value = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
+      windowScroll.value = e.target.scrollTop
+    };
+    const scrollToBookmark = async () => {
+      if (props.book.value.bookmark) {
+        await this.$nextTick()
+        this.$refs.bookRef.scrollTo(0, this.book.bookmark)
+      }
+    };
+    const scrollByClick = (e) => {
+      let w = document.getElementById("progressbar").clientWidth;
+      let o = e.offsetX;
+      let x = (100 * o) / w;
+      document.getElementById("progressbar").value = x;
+      let y = (windowHeights.value * x) / 100;
+      document.getElementById('book').scrollTo(0, y);
+    };
 
-    onBeforeUnmount(async()=> {
+    onBeforeUnmount(async () => {
       const formData = {bookId: props.book.id, bookmark: windowScroll.value}
       const result = await updateBookMark(formData)
       if (!result) {
         console.log({'result': result})
       }
     });
+    onMounted(() => {
+      moveMedia()
+      listenClickByImg()
+    });
 
-    return {progress, progressLoad, windowScroll, showEditorModal, timer, activeMedia, activeImage, activeImageIndex, editorNode, initialText, windowHeights, isMobile, editMode}
+    return {
+      progress,
+      progressLoad,
+      windowScroll,
+      showEditorModal,
+      timer,
+      activeMedia,
+      activeImage,
+      activeImageIndex,
+      editorNode,
+      initialText,
+      windowHeights,
+      isMobile,
+      moveMedia,
+      handleScroll,
+      scrollToBookmark,
+      scrollByClick,
+      // prepareUrlForMedia,
+      listenClickByImg,
+      openImage,
+      editMode,
+      showSlide,
+      getSrcImgUrl,
+    }
   },
   methods: {
-    async scrollToBookmark() {
-      if (this.book.bookmark) {
-        await this.$nextTick()
-        this.$refs.bookRef.scrollTo(0, this.book.bookmark)
-      }
-    },
-    scrollByClick(e) {
-      // console.log({scrollHeight: document.getElementById('book').scrollHeight, clientHeight: document.getElementById('book').clientHeight})
-      let w = document.getElementById("progressbar").clientWidth;
-      let o = e.offsetX;
-      let x = (100 * o) / w;
-      document.getElementById("progressbar").value = x;
-      let y = (this.windowHeights * x) / 100;
-      document.getElementById('book').scrollTo(0, y);
-      // console.log({'scrollTo': e, w:w, o:o, x: x, y: y})
-    },
+    // async scrollToBookmark() {
+    //   if (this.book.bookmark) {
+    //     await this.$nextTick()
+    //     this.$refs.bookRef.scrollTo(0, this.book.bookmark)
+    //   }
+    // },
+    // scrollByClick(e) {
+    //   let w = document.getElementById("progressbar").clientWidth;
+    //   let o = e.offsetX;
+    //   let x = (100 * o) / w;
+    //   document.getElementById("progressbar").value = x;
+    //   let y = (this.windowHeights * x) / 100;
+    //   document.getElementById('book').scrollTo(0, y);
+    // },
 
     async saveEditor() {
       try {
@@ -109,59 +195,6 @@ export default {
       //   console.log({editor: result})
       // }
     },
-    handleScroll(e) {
-      this.progress = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
-      this.windowScroll = e.target.scrollTop
-
-    },
-    prepareUrlForMedia(book) {
-      if (book.text) {
-        const regexp = new RegExp("APIURL", "g");
-        book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
-        return book
-      }
-      return book
-    },
-    moveMedia() {
-      let toggleSide = true
-      let media = document.querySelectorAll('.media')
-
-      for (const elem of media) {
-        elem.classList.add(toggleSide ? 'media--right' : 'media--left')
-        toggleSide = !toggleSide
-      }
-    },
-    listenClickByImg() {
-      let images = document.getElementsByClassName('picture')
-      for (let image of images) {
-        image.addEventListener("click", this.openImage);
-      }
-    },
-    openImage(img) {
-      this.activeImage = img.target.src
-    },
-    showSlide(type) {
-      let index = 0
-      if (type === 'prev') {
-        index = this.activeImageIndex > 1 ? this.activeImageIndex - 1 : this.book.files.length - 1
-      } else if (type === 'next') {
-        index = this.activeImageIndex < this.book.files.length - 1 ? this.activeImageIndex + 1 : 0
-      } else if (type === 'last') {
-        index = this.book.files.length - 1
-      } else if (type === 'first') {
-        index = 0
-      }
-      this.activeImageIndex = index
-      this.activeImage = this.getSrcImgUrl(this.book.files[index])
-    },
-    getSrcImgUrl(e) {
-      return e.url ? `${apiUrl}/${e.url}` : ''
-    },
-
-  },
-  updated() {
-    this.moveMedia()
-    this.listenClickByImg()
   },
 }
 </script>
@@ -388,6 +421,24 @@ export default {
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
+
+}
+@media only screen and (max-width: 1400px) {
+  .book {
+    .text {
+      max-width: 650px;
+      .media {
+        width: 300px;
+        height: 200px;
+      }
+      .media--right {
+        right: -310px;
+      }
+      .media--left {
+        left: -310px;
+      }
+    }
+  }
 
 }
 </style>
