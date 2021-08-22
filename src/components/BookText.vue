@@ -162,21 +162,6 @@ export default {
     }
   },
   methods: {
-    // async scrollToBookmark() {
-    //   if (this.book.bookmark) {
-    //     await this.$nextTick()
-    //     this.$refs.bookRef.scrollTo(0, this.book.bookmark)
-    //   }
-    // },
-    // scrollByClick(e) {
-    //   let w = document.getElementById("progressbar").clientWidth;
-    //   let o = e.offsetX;
-    //   let x = (100 * o) / w;
-    //   document.getElementById("progressbar").value = x;
-    //   let y = (this.windowHeights * x) / 100;
-    //   document.getElementById('book').scrollTo(0, y);
-    // },
-
     async saveEditor() {
       try {
         await updateBook({text: this.book.text})
