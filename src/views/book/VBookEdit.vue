@@ -7,7 +7,8 @@
           <button class="positive-btn" @click="sendBook">save</button>
         </div>
         <div class="btn-tab--right">
-          <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>
+          <star-rating v-model="book.rating"></star-rating>
+<!--          <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>-->
           <div class="toggle toggle--knob" v-if="adAccess">
             <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
             <label class="toggle--btn" for="toggle--knob">
@@ -136,7 +137,7 @@
 import {ref, computed, } from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex'
-import StarRating from 'vue-star-rating'
+// import StarRating from 'vue-star-rating'
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
@@ -146,10 +147,11 @@ import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
 import TheModal from "@/components/TheModal";
+import StarRating from "@/components/StarRating";
 
 export default {
   name: "BookEdit",
-  components: {TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, StarRating,},
+  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, },
   setup() {
     document.title = 'Editor';
     const router = useRouter();
@@ -504,7 +506,7 @@ export default {
       }
 
       .btn-tab--right {
-        .vue-star-rating {
+        .star-rating {
           margin-right: 1rem;
         }
       }

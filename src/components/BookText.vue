@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted} from "vue";
+import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, onUpdated, nextTick} from "vue";
 import {useStore} from "vuex";
 import TheModal from "@/components/TheModal";
 
@@ -94,6 +94,7 @@ export default {
     const moveMedia = () => {
       let toggleSide = true
       let media = document.querySelectorAll('.media')
+      console.log({moveMedia: media})
       for (const elem of media) {
         elem.classList.add(toggleSide ? 'media--right' : 'media--left')
         toggleSide = !toggleSide
@@ -131,10 +132,14 @@ export default {
         console.log({'result': result})
       }
     });
-    onMounted(() => {
+    onMounted(async () => {
+      await nextTick()
       moveMedia()
       listenClickByImg()
     });
+    onUpdated(()=>{
+      console.log({onUpdated: 'onUpdated'})
+    })
 
     return {
       progress,
