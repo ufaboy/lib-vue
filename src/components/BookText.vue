@@ -413,19 +413,19 @@ export default {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
 
 }
-@media only screen and (max-width: 1400px) {
+@media only screen and (max-width: 1600px) {
   .book {
     .text {
       max-width: 650px;
       .media {
-        width: 300px;
-        height: 200px;
+        width: 375px;
+        height: 250px;
       }
       .media--right {
-        right: -310px;
+        right: -385px;
       }
       .media--left {
-        left: -310px;
+        left: -385px;
       }
     }
   }
