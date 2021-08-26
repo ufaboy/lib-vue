@@ -31,6 +31,7 @@
 <script>
 import {reactive} from 'vue';
 import {loadNotes} from "@/utils/loadData";
+import {$patch} from "@/utils/superFetch";
 
 export default {
   name: "TheNote",
@@ -55,7 +56,7 @@ export default {
     }
     const sendNotes = async() => {
       const formData = {text: JSON.stringify(notes)}
-      const result = await this.$patch('/book/update?id=1', formData)
+      const result = await $patch('/book/update?id=1', formData)
       if (result) {
         console.log({'result': result})
       }

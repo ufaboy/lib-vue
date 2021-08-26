@@ -122,8 +122,8 @@ export default {
       getBooksAndReplace()
     };
     const sortBy = (column) => {
-      orderBy.asc = !orderBy.asc
-      orderBy.name = column
+      orderBy.value.asc = !orderBy.value.asc
+      orderBy.value.name = column
       getBooksAndReplace();
     };
     const getThumbs = (book) => {
@@ -199,7 +199,7 @@ export default {
       background-color: var(--surface3);
       border-radius: 5px;
       border: none;
-      padding: 0 3px;
+      padding: 5px;
       display: flex;
       margin-left: 0.5rem;
     }
