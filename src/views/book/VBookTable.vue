@@ -244,7 +244,40 @@ export default {
   .flip-list-move {
     transition: transform 1s;
   }
-
+  .table {
+    .cell-id {
+      min-width: 75px;
+      max-width: 75px;
+    }
+    .cell-name {
+      min-width: 15vw;
+      max-width: 15vw;
+    }
+    .cell-annotation {
+      min-width: 20vw;
+      max-width: 20vw;
+    }
+    .cell-genre {
+      min-width: 10vw;
+      max-width: 10vw;
+    }
+    .cell-rating {
+      min-width: 100px;
+      max-width: 100px;
+    }
+    .cell-view_count {
+      min-width: 150px;
+      max-width: 150px;
+    }
+    .cell-last_read {
+      min-width: 130px;
+      max-width: 130px;
+    }
+    .th cell-updated_at {
+      min-width: 130px;
+      max-width: 130px;
+    }
+  }
 }
 
 @media only screen and (max-width: 892px) {
