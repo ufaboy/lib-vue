@@ -109,7 +109,7 @@ export default {
       }
       infinityLoading.value = true;
       loader.show();
-      const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy}`, filter);
+      const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy.value}`, filter);
       loader.hide();
       infinityLoading.value = false;
       if (result) {
@@ -154,6 +154,7 @@ export default {
       if (difX > 100 && difY < 50) showSortingModal.value = true
     };
     const updateBySorting = (e) => {
+      console.log({updateBySorting: e})
       showSortingModal.value = false
       orderBy.value = e.orderBy
       ascending.value = e.ascending
