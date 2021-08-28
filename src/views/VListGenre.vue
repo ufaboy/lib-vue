@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {reactive, computed} from 'vue';
+import {computed, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex';
 
@@ -30,15 +30,15 @@ export default {
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
-    const activeCategory = reactive({
+    const activeCategory = ref({
       genres: []
     })
     const categories = computed(() => store.state.genre.categories)
     const isMobile = computed(() => store.state.main.isMobile)
     const genres = computed(() => {
       let selectedCategory = {}
-      if (activeCategory.name) {
-        selectedCategory = categories.value.find(item => item.id === activeCategory.id || item.name === activeCategory.name)
+      if (activeCategory.value.name) {
+        selectedCategory = categories.value.find(item => item.id === activeCategory.value.id || item.name === activeCategory.value.name)
       } else if (route.params.id) {
         selectedCategory = categories.value.find(item => item.id === +route.params.id)
       } else if (route.params.name) {
