@@ -164,6 +164,15 @@ export default {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+    .checkmark {
+
+    }
+    .checkmark:after {
+      left: 6px;
+      top: 2px;
+      width: 7px;
+      height: 11px;
+    }
   }
 
   .select-genre {
