@@ -159,9 +159,6 @@ export default {
     const onScroll = (e) => {
       showTopButton.value = e.target.scrollTop > 50;
     };
-    const scrollToTop = () => {
-      window.scrollTo(0,0);
-    }
 
     return {
       books,
@@ -189,9 +186,13 @@ export default {
       touchEnd,
       updateBySorting,
       onScroll,
-      scrollToTop,
     }
   },
+  methods: {
+    scrollToTop() {
+      this.$el.scrollTop = 0
+    }
+  }
 }
 </script>
 
