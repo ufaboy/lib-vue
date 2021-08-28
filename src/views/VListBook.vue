@@ -75,23 +75,19 @@ export default {
 
     const isMobile = computed(() => store.state.main.isMobile);
     const categories = computed(() => store.state.genre.categories);
-    const activeGenre = computed(() => ({
-      get() {
-        const category = categories.value.find(category => category.genres.some(genre => genre.id === +genreId.value))
-        return category ? category.genres.find(genre => genre.id === genreId.value) : null
-      },
-      set(newValue) {
-        genreId.value = newValue.id
-      }
-    }))
+    const activeGenre = ref({})
+    if (route.params.id) {
+      const category = categories.value.find(category => category.genres.some(genre => genre.id === +genreId.value))
+      activeGenre.value = category ? category.genres.find(genre => genre.id === genreId.value) : {}
+    }
 
     const getBooksAndPush = async (method = '') => {
       let filter = {}
       let genreIdForm = null
-      if (activeGenre.value) {
+      if (activeGenre.value.id) {
         genreIdForm = activeGenre.value.id
       } else if (route.params.id) {
-        genreIdForm = route.params.id
+        genreIdForm = Number(route.params.id)
       }
       if (genreIdForm === null) {
         return false
