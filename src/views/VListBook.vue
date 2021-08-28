@@ -154,7 +154,6 @@ export default {
       if (difX > 100 && difY < 50) showSortingModal.value = true
     };
     const updateBySorting = (e) => {
-      console.log({updateBySorting: e})
       showSortingModal.value = false
       orderBy.value = e.orderBy
       ascending.value = e.ascending
