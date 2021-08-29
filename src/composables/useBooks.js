@@ -1,7 +1,8 @@
 import {loadBooks} from "@/utils/loadData";
 import {inject, ref,} from 'vue'
+import router from "../router";
 
-export default function useBooks ()  {
+export default function useBooks() {
     const loader = inject("loader");
     const filter = ref({
         genre: null,
@@ -13,6 +14,7 @@ export default function useBooks ()  {
     const orderBy = ref({name: 'updated_at', asc: false});
     const page = ref(1);
     const pagBtnArr = ref([]);
+    const infinityState = ref(true);
     const books = ref({
         items: [],
         _links: {},
@@ -20,7 +22,12 @@ export default function useBooks ()  {
     });
     const getBooksAndReplace = async () => {
         const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
-        const formFilter = {genre: filter.value.genre, rating: filter.value.rating, ad: filter.value.ad, name: searchField.value}
+        const formFilter = {
+            genre: filter.value.genre,
+            rating: filter.value.rating,
+            ad: filter.value.ad,
+            name: searchField.value
+        }
         try {
             loader.show();
             const result = await loadBooks(page.value, limit.value, sort, formFilter);
@@ -35,5 +42,56 @@ export default function useBooks ()  {
             console.log({'getBooksAndReplace': e})
         }
     };
-    return {filter, searchField, limit, orderBy, books, page, pagBtnArr, getBooksAndReplace}
+    const getBooksAndPush = async (method = '') => {
+        const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
+        const formFilter = {
+            genre: filter.value.genre,
+            rating: filter.value.rating,
+            ad: filter.value.ad,
+            name: searchField.value
+        }
+        if (!infinityState.value && method) {
+            return false
+        } else if (!method) {
+            infinityState.value = true
+        }
+
+        loader.show();
+        const result = await loadBooks(page.value, limit.value, sort, formFilter);
+        loader.hide();
+        if (result) {
+            if (method === 'push') {
+                books.value.items.push(...result.items)
+                page.value = ++page.value
+            } else {
+                books.value.items.splice(0, books.value.items.length)
+                books.value.items.push(...result.items)
+                page.value = ++page.value
+            }
+            if (result.items.length < limit.value) {
+                infinityState.value = false
+            }
+        }
+    };
+
+    const openBook = (book, type) => {
+        router.push({
+            name: type === 'edit' ? 'book-edit' : 'book-view',
+            params: {id: book.id}
+        })
+    };
+
+    return {
+        filter,
+        searchField,
+        limit,
+        orderBy,
+        books,
+        page,
+        pagBtnArr,
+        infinityState,
+        getBooksAndReplace,
+        getBooksAndPush,
+        openBook
+    }
 }

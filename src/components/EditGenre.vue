@@ -34,12 +34,9 @@
 </template>
 
 <script>
-import {computed, inject, ref} from "vue";
-import {useStore} from 'vuex'
-import {$delete} from "@/utils/superFetch";
+
 import IconClose from "@/components/icons/IconClose"
-import {sendGenre} from "@/utils/uploadData";
-import {getAdAccess} from "@/utils/userData";
+import useGenre from "@/composables/useGenre";
 export default {
   name: "EditGenre",
   components: {IconClose},
@@ -48,76 +45,8 @@ export default {
     genre: Object,
   },
   setup(props, {emit}) {
-    const store = useStore()
-    const localGenre = ref({})
-    const adAccess = getAdAccess()
-    const loader = inject("loader");
-    localGenre.value = Object.assign({
-      id: null,
-      name: '',
-      description: '',
-      category: {id: null, name: ''},
-      ad: null,
-    }, props.genre)
-
-    const invalidGenre = computed(() => {
-      return {
-        name: !localGenre.value.name,
-        category: !localGenre.value.category
-      }
-    })
-    const categories = computed(() => {
-      return store.state.genre.categories.map(category => {
-        return {id: category.id, name: category.name}
-      })
-    })
-
-    const checkGenreToHaveErrors = () => {
-      let haveErrors = false
-      for (const field in invalidGenre) {
-        if (invalidGenre.value[field]) {
-          haveErrors = true
-        }
-      }
-      return haveErrors
-    }
-    const updateGenre = async() => {
-      if (checkGenreToHaveErrors()) {
-        return false;
-      }
-      let genreForm = {
-        name: localGenre.value.name,
-        description: localGenre.value.description,
-        ad: localGenre.value.ad,
-        category_id: localGenre.value.category.id,
-      }
-      if (localGenre.value.id) {
-        genreForm.id = localGenre.value.id
-      }
-      try {
-        loader.show()
-        await sendGenre(genreForm)
-        loader.hide()
-        emit('update-genres')
-        closeModal();
-      } catch (e) {
-        console.log({'error updateGenre': e})
-      }
-
-    }
-    const deleteGenre = async () => {
-      const url = `/genre/delete?id=${props.genre.id}`
-      const result = await $delete(url)
-      if (result) {
-        emit('update-genres')
-        closeModal();
-      }
-    }
-    const closeModal = () => {
-      emit('hide-modal')
-    }
-
-    return {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess}
+    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess} = useGenre(props, emit)
+    return {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess};
   },
 }
 </script>

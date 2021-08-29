@@ -3,10 +3,10 @@
     <header class="header">
       <input class="search-input"
              type="search"
-             v-model="searchParams"
+             v-model="searchField"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
-      <select class="select" v-model="activeGenre" @change="changeGenre" v-if="isMobile">
+      <select class="select" v-model="activeGenre" @change="changeGenreLoadBook" v-if="isMobile">
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
@@ -27,18 +27,17 @@
     <the-modal v-if="showSortingModal" @hide-modal="showSortingModal = false">
       <sorting-modal @sorting="updateBySorting"/>
     </the-modal>
-
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
   </main>
 </template>
 
 <script>
-import {computed, ref, inject} from 'vue';
-import {useRoute, useRouter} from 'vue-router'
+import {computed, ref} from 'vue';
+import {useRoute} from 'vue-router'
 import {useStore} from 'vuex';
 import SortingModal from '@/components/SortingModal.vue'
-import {loadBooks} from "@/utils/loadData";
 import TheModal from "@/components/TheModal";
+import useBooks from "@/composables/useBooks";
 
 export default {
   name: "ListBook",
@@ -48,90 +47,41 @@ export default {
   },
   setup() {
     document.title = 'Books';
-    const loader = inject("loader");
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
-    const books = ref({
-      items: [],
-      _links: {},
-      _meta: {},
-    });
+    const {filter, searchField, limit, orderBy, books, page, infinityState, getBooksAndPush, openBook} = useBooks()
     const showSortingModal = ref(false);
     const showTopButton = ref(false);
     const genreId = ref(null);
-    const searchParams = ref('');
-    const page = ref(1);
-    const limit = ref(25);
     const ascending = ref(0);
-    const orderBy = ref({name: 'updated_at', asc: false});
     const startPos = ref({x: 0, y: 0});
     const endPos = ref({x: 0, y: 0});
+    const activeGenre = ref({})
     if (route.params.id) {
       genreId.value = +route.params.id
     }
-    const infinityState = ref(true);
-    const infinityLoading = ref(false);
 
     const isMobile = computed(() => store.state.main.isMobile);
     const categories = computed(() => store.state.genre.categories);
-    const activeGenre = ref({})
+
+    if (activeGenre.value.id) {
+      filter.value.genre = activeGenre.value.id
+    } else if (route.params.id) {
+      filter.value.genre = Number(route.params.id)
+    }
     if (route.params.id) {
       const category = categories.value.find(category => category.genres.some(genre => genre.id === +genreId.value))
       activeGenre.value = category ? category.genres.find(genre => genre.id === genreId.value) : {}
     }
-
-    const getBooksAndPush = async (method = '') => {
-      let filter = {}
-      let genreIdForm = null
-      if (activeGenre.value.id) {
-        genreIdForm = activeGenre.value.id
-      } else if (route.params.id) {
-        genreIdForm = Number(route.params.id)
-      }
-      if (genreIdForm === null) {
-        return false
-      } else {
-        filter.genre = genreIdForm
-      }
-      if (!infinityState.value && method) {
-        return false
-      } else if (method === null) {
-        infinityState.value = true
-      }
-
-      if (searchParams.value) {
-        filter.name += `&name=${searchParams.value}`
-      }
-      infinityLoading.value = true;
-      loader.show();
-      const result = await loadBooks(page.value, limit.value, `${ascending.value ? '' : '-'}${orderBy.value}`, filter);
-      loader.hide();
-      infinityLoading.value = false;
-      if (result) {
-        if (method === 'push') {
-          books.value.items.push(...result.items)
-          page.value = ++page.value
-        } else {
-          books.value.items.splice(0, books.value.items.length)
-          books.value.items.push(...result.items)
-          page.value = ++page.value
-        }
-        if (result.items.length < limit.value) {
-          infinityState.value = false
-        }
-      }
-    };
+    limit.value = 25;
     const searchByName = () => {
       page.value = 1
       getBooksAndPush()
     };
-    const changeGenre = () => {
+    const changeGenreLoadBook = () => {
+      filter.value.genre = activeGenre.value.id
       page.value = 1
       getBooksAndPush()
-    };
-    const openBook = (book) => {
-      router.push({name: 'book-view', params: {id: book.id}})
     };
     const getCover = (book) => {
       if (book.cover_path) {
@@ -168,10 +118,9 @@ export default {
       limit,
       ascending,
       infinityState,
-      infinityLoading,
       orderBy,
       genreId,
-      searchParams,
+      searchField,
       startPos,
       endPos,
       isMobile,
@@ -179,7 +128,7 @@ export default {
       activeGenre,
       getBooksAndPush,
       searchByName,
-      changeGenre,
+      changeGenreLoadBook,
       openBook,
       getCover,
       touchStart,

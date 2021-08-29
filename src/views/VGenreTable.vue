@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import {ref, reactive} from "vue";
-import {loadGenres} from "@/utils/loadData";
+import useGenres from "@/composables/useGenres";
 import EditGenre from '@/components/EditGenre.vue'
+import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import TheModal from "@/components/TheModal";
+
 
 export default {
   name: "GenreTable",
@@ -47,54 +47,13 @@ export default {
   props: {},
   setup() {
     document.title = 'Table Genres';
-    const genres = ref([]);
-    const ascending = ref(1);
-    const orderBy = ref(null);
-    const showModal = ref(false);
-    const activeGenre = ref({
-      id: null,
-      name: null,
-      description: null,
-      category: {id: null, name: null},
-    });
+    const {genres, ascending, orderBy, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
 
-    const getGenres = async () => {
-      const result = ref({})
-      result.value = await loadGenres()
-      if (result.value) {
-        genres.value = result.value
-      } else console.log({'getGenres': result.value})
-    };
     if (genres.value.length === 0) {
       getGenres();
     }
-    const sortBy = (orderBy, asc) => {
-      genres.value.sort(function (a, b) {
-        if (a[orderBy] > b[orderBy]) {
-          return asc ? 1 : -1;
-        }
-        if (a[orderBy] < b[orderBy]) {
-          return asc ? -1 : 1;
-        }
-        return 0;
-      })
-      ascending.value = ascending.value ? 0 : 1
-    }
-   const openRow = (row) => {
-      activeGenre.value = row
-      showModal.value = true
-    }
-    const createGenre = () => {
-      activeGenre.value = reactive({
-        id: null,
-        name: null,
-        description: null,
-        category: {id: null, name: null},
-      });
-      showModal.value = true
-    }
 
-    return {getGenres, genres, ascending, orderBy, activeGenre, sortBy, showModal, openRow, createGenre}
+    return {getGenres, genres, ascending, orderBy, activeGenre, showModal, sortBy, openRow, createGenre}
   },
   data: () => ({}),
   columns: ['id', 'name', 'description', 'category'],
@@ -120,7 +79,6 @@ export default {
 
     .btn {
       display: flex;
-      //flex: 1;
       align-items: center;
       justify-content: center;
       text-transform: capitalize;
