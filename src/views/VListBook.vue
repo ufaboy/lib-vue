@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {reactive, computed, ref, inject} from 'vue';
+import {computed, ref, inject} from 'vue';
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex';
 import SortingModal from '@/components/SortingModal.vue'
@@ -52,7 +52,7 @@ export default {
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
-    const books = reactive({
+    const books = ref({
       items: [],
       _links: {},
       _meta: {},
@@ -64,9 +64,9 @@ export default {
     const page = ref(1);
     const limit = ref(25);
     const ascending = ref(0);
-    const orderBy = reactive({name: 'updated_at', asc: false});
-    const startPos = reactive({x: 0, y: 0});
-    const endPos = reactive({x: 0, y: 0});
+    const orderBy = ref({name: 'updated_at', asc: false});
+    const startPos = ref({x: 0, y: 0});
+    const endPos = ref({x: 0, y: 0});
     if (route.params.id) {
       genreId.value = +route.params.id
     }
@@ -110,11 +110,11 @@ export default {
       infinityLoading.value = false;
       if (result) {
         if (method === 'push') {
-          books.items.push(...result.items)
+          books.value.items.push(...result.items)
           page.value = ++page.value
         } else {
-          books.items.length = 0
-          books.items.push(...result.items)
+          books.value.items.splice(0, books.value.items.length)
+          books.value.items.push(...result.items)
           page.value = ++page.value
         }
         if (result.items.length < limit.value) {
