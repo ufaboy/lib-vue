@@ -134,7 +134,7 @@
 </template>
 
 <script>
-import {ref, computed, } from 'vue'
+import {ref, computed} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {useStore} from 'vuex'
 // import StarRating from 'vue-star-rating'
@@ -176,7 +176,6 @@ export default {
     const expandIllustration = ref(false);
     const adAccess = computed(() => getAdAccess());
     const isDesktop = computed(() => store.state.main.isDesktop);
-
 
     const resetBook = () => {
       if (book.value.id) {
@@ -309,8 +308,6 @@ export default {
           return {name: file.name, status: null, file: file}
         }))
         genres.value = [...result.genres]
-        // await this.$nextTick()
-        // autoResize()
       } catch (e) {
         console.log({getBook: e})
       }
@@ -345,8 +342,15 @@ export default {
   methods: {
     autoResize() {
       const editor = this.$refs.editor
-      editor.style.cssText = 'height:auto; padding:0';
-      editor.style.cssText = 'height:' + editor.scrollHeight * 1.018 + 'px';
+      console.log({editor: editor, scrollHeight: editor.scrollHeight})
+      const scrollHeight = Math.max(
+          document.body.scrollHeight, editor.scrollHeight,
+          document.body.offsetHeight, editor.offsetHeight,
+          document.body.clientHeight, editor.clientHeight
+      ) + 100;
+      // editor.style.cssText = 'height:auto; padding:0';
+      // editor.style.cssText = 'height:' + editor.scrollHeight * 1.001 + 'px';
+      editor.style.cssText = `height: ${scrollHeight}px`;
     },
     getSrc(media) {
       const loaded = !!media.file.id
@@ -380,6 +384,9 @@ export default {
     },
 
   },
+  updated() {
+    this.autoResize()
+  }
 }
 </script>
 
