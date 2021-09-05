@@ -102,7 +102,11 @@ export default function useBooks() {
         orderBy.value.name = column
         getBooksAndReplace();
     };
-
+    const getCover = (book) => {
+        if (book.cover_path) {
+            return `${process.env.VUE_APP_API_URL}/${book.cover_path}`
+        } else return '/img/book-dead-solid.svg'
+    };
 
 
     return {
@@ -114,6 +118,7 @@ export default function useBooks() {
         page,
         pagBtnArr,
         infinityState,
+        getCover,
         resetTable,
         updateFilterPage,
         sortBy,

@@ -38,6 +38,8 @@ import {useStore} from 'vuex';
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
+import useBook from "@/composables/useBook";
+import useSlideButton from "@/composables/useSlideButton";
 
 export default {
   name: "ListBook",
@@ -49,13 +51,13 @@ export default {
     document.title = 'Books';
     const store = useStore();
     const route = useRoute();
-    const {filter, searchField, limit, orderBy, books, page, infinityState, getBooksAndPush, openBook} = useBooks()
-    const showSortingModal = ref(false);
+    const {filter, searchField, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
+    const {openBook} = useBook();
+    const {showSortingModal, touchStart, touchEnd} = useSlideButton();
+
     const showTopButton = ref(false);
     const genreId = ref(null);
-    const ascending = ref(0);
-    const startPos = ref({x: 0, y: 0});
-    const endPos = ref({x: 0, y: 0});
+
     const activeGenre = ref({})
     if (route.params.id) {
       genreId.value = +route.params.id
@@ -83,26 +85,12 @@ export default {
       page.value = 1
       getBooksAndPush()
     };
-    const getCover = (book) => {
-      if (book.cover_path) {
-        return `${process.env.VUE_APP_API_URL}/${book.cover_path}`
-      } else return '/img/book-dead-solid.svg'
-    };
 
-    const touchStart = (e) => {
-      startPos.value = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
-      endPos.value = {x: 0, y: 0}
-    };
-    const touchEnd = (e) => {
-      endPos.value = {x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY}
-      let difX = endPos.value.x - startPos.value.x
-      let difY = startPos.value.y - endPos.value.y
-      if (difX > 100 && difY < 50) showSortingModal.value = true
-    };
+
     const updateBySorting = (e) => {
       showSortingModal.value = false
-      orderBy.value = e.orderBy
-      ascending.value = e.ascending
+      orderBy.value.name = e.orderBy
+      orderBy.value.asc = e.ascending
       page.value = 1
       getBooksAndPush()
     };
@@ -113,26 +101,22 @@ export default {
     return {
       books,
       page,
-      showSortingModal,
       showTopButton,
       limit,
-      ascending,
       infinityState,
       orderBy,
       genreId,
       searchField,
-      startPos,
-      endPos,
       isMobile,
       categories,
       activeGenre,
+      showSortingModal,
+      touchStart, touchEnd,
       getBooksAndPush,
       searchByName,
       changeGenreLoadBook,
       openBook,
       getCover,
-      touchStart,
-      touchEnd,
       updateBySorting,
       onScroll,
     }
