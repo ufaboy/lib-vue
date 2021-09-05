@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import {reactive} from 'vue';
+import {ref} from 'vue';
 import {loadNotes} from "@/utils/loadData";
 import {$patch} from "@/utils/superFetch";
 
@@ -38,24 +38,24 @@ export default {
   components: {},
   setup() {
     document.title = 'Notes';
-    const notes = reactive([]);
+    const notes = ref([]);
 
     const getNotes = async() => {
       const result = await loadNotes()
       console.log({getNotes: result})
       if (result) {
-        notes.push(...JSON.parse(result.text))
+        notes.value.push(...JSON.parse(result.text))
       }
     };
     const addNote = () => {
-      notes.push({url: ''})
+      notes.value.push({url: ''})
     };
     const deleteNote = (index) => {
-      notes.splice(index, 1)
+      notes.value.splice(index, 1)
       sendNotes()
     }
     const sendNotes = async() => {
-      const formData = {text: JSON.stringify(notes)}
+      const formData = {text: JSON.stringify(notes.value)}
       const result = await $patch('/book/update?id=1', formData)
       if (result) {
         console.log({'result': result})

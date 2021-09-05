@@ -1,6 +1,5 @@
-import {loadBooks} from "@/utils/loadData";
+import {goPage, loadBooks} from "@/utils/loadData";
 import {inject, ref,} from 'vue'
-import router from "../router";
 
 export default function useBooks() {
     const loader = inject("loader");
@@ -73,13 +72,38 @@ export default function useBooks() {
             }
         }
     };
-
-    const openBook = (book, type) => {
-        router.push({
-            name: type === 'edit' ? 'book-edit' : 'book-view',
-            params: {id: book.id}
-        })
+    const toPage = async (url) => {
+        try {
+            loader.show();
+            books.value = await goPage(url.href);
+            loader.hide();
+        } catch (e) {
+            console.log({'goPage': e})
+        }
     };
+    const resetTable = () => {
+        filter.value.genre = null
+        filter.value.rating = null
+        filter.value.ad = null
+        getBooksAndReplace()
+    };
+    const updateFilterPage = (newFilter) => {
+        if (newFilter?.genre) {
+            filter.value.genre = newFilter.genre.id
+        }
+        if (newFilter?.rating) {
+            filter.value.rating = newFilter.rating
+        }
+        filter.value.ad = newFilter.ad ? 1 : 0
+        getBooksAndReplace()
+    };
+    const sortBy = (column) => {
+        orderBy.value.asc = !orderBy.value.asc
+        orderBy.value.name = column
+        getBooksAndReplace();
+    };
+
+
 
     return {
         filter,
@@ -90,8 +114,11 @@ export default function useBooks() {
         page,
         pagBtnArr,
         infinityState,
+        resetTable,
+        updateFilterPage,
+        sortBy,
+        toPage,
         getBooksAndReplace,
         getBooksAndPush,
-        openBook
     }
 }

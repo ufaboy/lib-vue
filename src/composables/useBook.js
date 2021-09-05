@@ -1,10 +1,18 @@
 import {inject, ref} from "vue";
 import {loadBook} from "@/utils/loadData";
+import router from "@/router";
 
 export default function useBook() {
     const loader = inject("loader");
     const book = ref({});
     const typeBook = ref('book-empty')
+
+    const openBook = (book, type) => {
+        router.push({
+            name: type === 'edit' ? 'book-edit' : 'book-view',
+            params: {id: book.id}
+        })
+    };
 
     const prepareUrlForMedia = (result) => {
         if (result.text) {
@@ -25,5 +33,5 @@ export default function useBook() {
         }
     };
 
-    return {book, typeBook, downloadBook}
+    return {book, typeBook, downloadBook, openBook}
 }

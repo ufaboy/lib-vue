@@ -71,12 +71,13 @@
 import {ref, computed,} from "vue";
 import {useStore} from "vuex";
 import useBooks from "@/composables/useBooks";
+import useBook from "@/composables/useBook";
 import useDate from "@/composables/useDate";
-import {goPage} from "@/utils/loadData";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
 import TheModal from "@/components/TheModal";
+
 
 export default {
   name: "BooksTable",
@@ -89,7 +90,12 @@ export default {
     const store = useStore()
     const showModal = ref(false);
 
-    const {filter, searchField, limit, orderBy, books, page, pagBtnArr, getBooksAndReplace, openBook} = useBooks();
+    const {
+      filter, searchField, limit, orderBy, books, page, pagBtnArr, resetTable,
+      updateFilterPage,
+      sortBy, toPage, getBooksAndReplace
+    } = useBooks();
+    const {openBook} = useBook();
     const {getDate} = useDate();
     const main = computed(() => store.state.main);
     const modalSize = computed(() => {
@@ -97,43 +103,10 @@ export default {
     });
 
 
-    // const openBook = async (book, type) => {
-    //   await router.push({
-    //     name: type === 'edit' ? 'book-edit' : 'book-view',
-    //     params: {id: book.id}
-    //   })
-    // };
-    const resetTable = () => {
-      filter.genre = null
-      filter.rating = null
-      filter.ad = null
-      getBooksAndReplace()
-    };
-    const updateFilterPage = (newFilter) => {
-      if (newFilter?.genre) {
-        filter.genre = newFilter.genre.id
-      }
-      if (newFilter?.rating) {
-        filter.rating = newFilter.rating
-      }
-      filter.ad = newFilter.ad ? 1 : 0
-      getBooksAndReplace()
-    };
-    const sortBy = (column) => {
-      orderBy.value.asc = !orderBy.value.asc
-      orderBy.value.name = column
-      getBooksAndReplace();
-    };
     const getThumbs = (book) => {
       return book.cover_url ? `${process.env.VUE_APP_API_URL}/${book.cover_url}` : '/img/book-cover.jpg'
     };
-    const toPage = async (url) => {
-      try {
-        books.value = await goPage(url.href);
-      } catch (e) {
-        console.log({'goPage': e})
-      }
-    };
+
 
     const showFilterModal = () => {
       showModal.value = true

@@ -8,7 +8,6 @@
         </div>
         <div class="btn-tab--right">
           <star-rating v-model="book.rating"></star-rating>
-<!--          <star-rating v-model:rating="book.rating" :star-size="20" :show-rating="false"/>-->
           <div class="toggle toggle--knob" v-if="adAccess">
             <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
             <label class="toggle--btn" for="toggle--knob">
@@ -342,14 +341,11 @@ export default {
   methods: {
     autoResize() {
       const editor = this.$refs.editor
-      console.log({editor: editor, scrollHeight: editor.scrollHeight})
       const scrollHeight = Math.max(
           document.body.scrollHeight, editor.scrollHeight,
           document.body.offsetHeight, editor.offsetHeight,
           document.body.clientHeight, editor.clientHeight
       ) + 100;
-      // editor.style.cssText = 'height:auto; padding:0';
-      // editor.style.cssText = 'height:' + editor.scrollHeight * 1.001 + 'px';
       editor.style.cssText = `height: ${scrollHeight}px`;
     },
     getSrc(media) {
