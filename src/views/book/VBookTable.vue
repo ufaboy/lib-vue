@@ -153,7 +153,7 @@ export default {
 <style lang="scss">
 .books-table {
   height: calc(100% - 3.5rem);
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 
   .btn {
     text-transform: capitalize;
