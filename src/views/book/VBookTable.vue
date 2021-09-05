@@ -2,7 +2,7 @@
   <div class="books-table">
     <header class="header">
       <router-link :to="{ name: 'book-create'}" class="btn create-btn">create</router-link>
-      <button class="btn" @click="showFilterModal">filter</button>
+      <button class="btn filter-btn" @click="showFilterModal">filter</button>
       <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search by name..."
              @input="getBooksAndReplace">
     </header>
@@ -165,6 +165,10 @@ export default {
     flex-flow: row nowrap;
     margin-bottom: 0.5rem;
 
+    .filter-btn {
+      margin: 0 0.5rem;
+    }
+
     .search-text {
       color: var(--text1);
       background-color: var(--surface3);
@@ -172,7 +176,6 @@ export default {
       border: none;
       padding: 5px;
       display: flex;
-      margin-left: 0.5rem;
     }
 
     .btn {
@@ -268,6 +271,12 @@ export default {
         flex: 1;
       }
     }
+    .table {
+      .cell-genre, .cell-rating {
+        max-width: initial;
+        min-width: initial;
+      }
+    }
 
     .table-paginator {
       justify-content: space-around;
@@ -287,8 +296,12 @@ export default {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .books-table {
     .table {
-      .cell-annotation, .cell-updated_at {
+      .cell-annotation, .cell-view_count, .cell-updated_at {
         display: none;
+      }
+      .cell-rating {
+        max-width: initial;
+        min-width: initial;
       }
     }
   }
