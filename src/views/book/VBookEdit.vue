@@ -35,7 +35,7 @@
         <template #header>
           <span class="ml-head">
           annotation
-        <meter class="meter" :value="book.annotation.length" min="0" max="300" low="30" high="280"
+        <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280"
                optimum="150"/>
         </span>
         </template>
