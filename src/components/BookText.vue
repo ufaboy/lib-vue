@@ -7,7 +7,7 @@
       <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
       <div class="progress-value">{{ progress }}</div>
     </footer>
-    <the-modal v-if="showEditorModal">
+    <the-modal v-if="showEditorModal" @hide-modal="showEditorModal = false">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
     </the-modal>
     <div id="image-modal" class="image-modal" v-if="activeImage">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, onUpdated, nextTick} from "vue";
+import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, nextTick} from "vue";
 import {useStore} from "vuex";
 import TheModal from "@/components/TheModal";
 
@@ -94,7 +94,6 @@ export default {
     const moveMedia = () => {
       let toggleSide = true
       let media = document.querySelectorAll('.media')
-      console.log({moveMedia: media})
       for (const elem of media) {
         elem.classList.add(toggleSide ? 'media--right' : 'media--left')
         toggleSide = !toggleSide
@@ -137,9 +136,9 @@ export default {
       moveMedia()
       listenClickByImg()
     });
-    onUpdated(()=>{
-      console.log({onUpdated: 'onUpdated'})
-    })
+    // onUpdated(()=>{
+    //   console.log({onUpdated: 'onUpdated'})
+    // })
 
     return {
       progress,

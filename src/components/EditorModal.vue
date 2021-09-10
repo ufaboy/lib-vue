@@ -52,7 +52,7 @@ export default {
     resize: vertical;
     padding: 0.5rem;
     margin-bottom: 1rem;
-    color: var(--text2);
+    color: var(--text1);
     background-color: var(--surface2);
   }
 

@@ -167,6 +167,7 @@ export default {
     flex-flow: row nowrap;
     cursor: pointer;
     width: 450px;
+    border-radius: 5px;
     height: fit-content;
     overflow: hidden;
     margin-bottom: 1rem;

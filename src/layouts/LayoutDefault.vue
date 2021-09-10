@@ -31,6 +31,9 @@
           <rect y="20" width="26" height="4"/>
         </svg>
         <ul class="breadcrumb" @click="activeBurger = false">
+          <li class="breadcrumb-li" v-if="btnViewEditMode.name">
+            <router-link class="breadcrumb-link" :to="btnViewEditMode.path">{{btnViewEditMode.name}}</router-link>
+          </li>
           <li class="breadcrumb-li">
             <router-link class="breadcrumb-link" to="/book">Books</router-link>
           </li>
@@ -112,7 +115,10 @@ export default {
     },
     countDots() {
       return this.isMobile ? 100 : 500
-    }
+    },
+    btnViewEditMode() {
+      return this.$route.name === 'book-view' ? {name: 'Edit', path: `/book/update/${this.$route.params.id}`} : this.$route.name === 'book-edit' ? {name: 'View', path: `/book/${this.$route.params.id}`} : {}
+    },
   },
   watch: {},
   created() {

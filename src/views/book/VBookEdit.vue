@@ -254,7 +254,6 @@ export default {
     };
     const checkType = (media) => {
       const type = media.file ? media.file.type : media.type
-      console.log({checkType: type})
       if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
         return 'image'
       } else if (type === 'video/webm' || type === 'video/mp4') {
