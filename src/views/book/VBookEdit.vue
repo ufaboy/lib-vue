@@ -100,26 +100,26 @@
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
           <div class="action-panel">
-            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.file.id === undefined">
+            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.id === undefined">
               load
             </button>
             <button class="image-entry-btn"
-                    @click="book.cover_path = media.file.url"
-                    v-if="media.file.type === 'image/webp' && media.file.id !== undefined">
-              {{ book.cover_path === media.file.url ? 'current' : 'set' }}cover
+                    @click="book.cover_path = media.url"
+                    v-if="checkType(media) === 'image' && media.id !== undefined">
+              {{ book.cover_path === media.url ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn btn--green" @click="copyFileName(media.file)"
-                    v-if="media.file.id !== undefined">tag
+            <button class="image-entry-btn btn--green" @click="copyFileName(media)"
+                    v-if="media.id !== undefined">tag
             </button>
-            <button class="image-entry-btn btn--red" @click="deleteOneFile(index)" v-if="media.file.id !== undefined">
+            <button class="image-entry-btn btn--red" @click="deleteOneFile(index)" v-if="media.id !== undefined">
               delete
             </button>
           </div>
-          <img class="media image" :src="getSrc(media)" v-if="checkType(media.file.type) === 'image'">
-          <video v-else-if="checkType(media.type) === 'video'" class="media video" controls>
+          <img class="media image" :src="getSrc(media)" v-if="checkType(media) === 'image'" alt="img">
+          <video v-else-if="checkType(media) === 'video'" class="media video" controls>
             <source :src="getSrc(media)">
           </video>
-          <audio v-else-if="checkType(media.type) === 'audio'" class="media audio" controls muted>
+          <audio v-else-if="checkType(media) === 'audio'" class="media audio" controls muted>
             <source :src="getSrc(media)">
           </audio>
           <figcaption class="figure-caption">{{ media.name ? media.name : media.full_name }}</figcaption>
@@ -252,7 +252,9 @@ export default {
         console.log({deleteAllFiles: e})
       }
     };
-    const checkType = (type) => {
+    const checkType = (media) => {
+      const type = media.file ? media.file.type : media.type
+      console.log({checkType: type})
       if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
         return 'image'
       } else if (type === 'video/webm' || type === 'video/mp4') {
@@ -273,7 +275,8 @@ export default {
     };
     const sendFiles = async(fileToUpload) => {
       try {
-        const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.name).map(fileObject => fileObject.file)
+        const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
+        console.log({sendFiles: fileToUpload, fileArray: fileArray})
         const results = await uploadFiles(fileArray, book.value.id)
         for (const item of results) {
           if (item.status === 'fulfilled') {
@@ -281,7 +284,7 @@ export default {
             if (fileIndex > -1) {
               files.value.splice(fileIndex, 1)
             }
-            files.value.push({name: item.value.full_name, status: item.status, file: item.value})
+            files.value.push({...item.value, name: item.value.full_name, status: item.status})
           } else if (item.status === 'rejected') {
             const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
             files.value[fileIndex].status = 'rejected'
@@ -304,7 +307,7 @@ export default {
         const result = await loadBook(+route.params.id)
         book.value = {...result, ad: !!result.ad}
         files.value.push(...result.files.map(file => {
-          return {name: file.name, status: null, file: file}
+          return {...file, status: null}
         }))
         genres.value = [...result.genres]
       } catch (e) {
@@ -349,8 +352,8 @@ export default {
       editor.style.cssText = `height: ${scrollHeight}px`;
     },
     getSrc(media) {
-      const loaded = !!media.file.id
-      return loaded ? `${process.env.VUE_APP_API_URL}/${media.file.url}` : window.URL.createObjectURL(media.file);
+      const loaded = !!media.id
+      return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
     },
     async copyFileName(file) {
       if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
