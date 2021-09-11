@@ -266,7 +266,6 @@ export default {
     };
     const deleteOneFile = async(fileIndex) => {
       try {
-        console.log({deleteOneFile: files.value[fileIndex], index: fileIndex})
         await deleteFile(files.value[fileIndex].id);
         files.value.splice(fileIndex, 1)
       } catch (e) {
