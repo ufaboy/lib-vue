@@ -58,27 +58,33 @@ export default {
 
     const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
     const isMobile = computed(() => store.state.main.isMobile);
+    const isDesktop = computed(() => store.state.main.isDesktop);
 
     const editMode = (e) => {
       editorNode.value = e.target
       showEditorModal.value = true
     };
     const openImage = (img) => {
-      activeImage.value = img.target.src
+      if (document.documentElement.clientWidth > 800) {
+        activeImage.value = img.target.src
+      }
     };
     const showSlide = (type) => {
       let index = 0
       if (type === 'prev') {
-        index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.value.files.length - 1
+        index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.files.length - 1
       } else if (type === 'next') {
         index = activeImageIndex.value < props.book.files.length - 1 ? activeImageIndex.value + 1 : 0
       } else if (type === 'last') {
-        index = props.book.value.files.length - 1
+        index = props.book.files.length - 1
       } else if (type === 'first') {
         index = 0
       }
-      activeImageIndex.value = index
-      activeImage.value = getSrcImgUrl(props.book.value.files[index])
+      if (props.book.files[index].type.includes('image/')) {
+        activeImageIndex.value = index
+        activeImage.value = getSrcImgUrl(props.book.files[index])
+      }
+
     };
     const getSrcImgUrl = (e) => {
       return e.url ? `${apiUrl}/${e.url}` : ''
@@ -133,7 +139,7 @@ export default {
     });
     onMounted(async () => {
       await nextTick()
-      moveMedia()
+      if (isDesktop.value) moveMedia()
       listenClickByImg()
     });
     // onUpdated(()=>{
@@ -292,10 +298,11 @@ export default {
 }
 
 .image-modal {
-  //display: none; /* Hidden by default */
+  display: flex;
+  flex-flow: row nowrap;
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  //padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -306,8 +313,15 @@ export default {
   .modal-content {
     margin: auto;
     display: block;
-    width: 80%;
-    max-width: 700px;
+    //width: 80%;
+    max-width: 90vw;
+    max-height: 95vh;
+  }
+  .picture-action-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
 
   /* Caption of Modal Image (Image Text) - Same Width as the Image */
@@ -365,8 +379,7 @@ export default {
 
         .media {
           position: static;
-          width: 100%;
-          max-height: calc(var(--media-width) / 1.5);
+          max-height: calc(100vw / 1.5);
         }
       }
     }
@@ -383,18 +396,13 @@ export default {
         top: 0;
       }
 
-      .picture-action-panel {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-      }
+
 
       .picture-arrow-btn {
         height: 5rem;
         width: 5rem;
-        color: var(--color-2);
-        background-color: var(--background-3);
+        color: var(--primary);
+        background-color: var(--surface2);
       }
 
       .modal-content {
@@ -406,23 +414,44 @@ export default {
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-
+  .book-container {
+    .book {
+      .text {
+        .media {
+          float: left;
+          margin: 0 0.5rem 0.5rem 0;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-
+  .book-container {
+    .book {
+      .text {
+        .media {
+          width: 100%;
+        }
+      }
+    }
+  }
 }
+
 @media only screen and (max-width: 1600px) {
   .book {
     .text {
       max-width: 650px;
+
       .media {
         width: 375px;
         height: 250px;
       }
+
       .media--right {
         right: -385px;
       }
+
       .media--left {
         left: -385px;
       }

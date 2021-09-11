@@ -27,6 +27,7 @@
 
 <script>
 import {mapState} from "vuex";
+
 const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
@@ -75,50 +76,53 @@ export default {
 .book-container {
   height: calc(100vh - 5rem);
   background-color: var(--background);
-.book-picture {
-  display: flex;
-  flex-flow: row wrap;
-}
-.book-picture_img {
-  object-fit: cover;
-}
-.book-video {
-  display: flex;
-  flex-flow: row nowrap;
-  flex: 1;
-  height: 100%;
-  width: 100%;
-  padding: 1rem 2rem;
 
-.media-list {
-  width: 440px;
-  margin-right: 1rem;
+  .book-picture {
+    display: flex;
+    flex-flow: row wrap;
+  }
 
-li {
-  cursor: pointer;
-  margin-bottom: 0.5rem;
-}
+  .book-picture_img {
+    object-fit: cover;
+  }
 
-li.active {
-  color: var(--color-p)
-}
+  .book-video {
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    padding: 1rem 2rem;
 
-.media-name {
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-}
+    .media-list {
+      width: 440px;
+      margin-right: 1rem;
 
-.media-video {
-  flex: 1;
-  text-align: center;
+      li {
+        cursor: pointer;
+        margin-bottom: 0.5rem;
+      }
 
-video {
-  width: 100%;
-}
-}
-}
+      li.active {
+        color: var(--primary)
+      }
+
+      .media-name {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .media-video {
+      flex: 1;
+      text-align: center;
+
+      video {
+        width: 100%;
+      }
+    }
+  }
 }
 
 .book-container.mobile {
@@ -127,22 +131,25 @@ video {
 
 @media only screen and (max-width: 892px) {
   .book-container {
-  .book-video {
-    display: block;
-    padding: 0.5rem;
+    .book-video {
+      display: block;
+      padding: 0.5rem;
+    }
+
+    .select {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
   }
-  .select {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-}
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .book-container {}
+  .book-container {
+  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-  .book-container {}
+  .book-container {
+  }
 }
 </style>

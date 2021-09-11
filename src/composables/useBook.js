@@ -30,6 +30,8 @@ export default function useBook() {
         typeBook.value = comicsBook ? 'book-media' : 'book-text'
         if (!comicsBook) {
             book.value = prepareUrlForMedia(result)
+        } else {
+            book.value = result
         }
     };
 

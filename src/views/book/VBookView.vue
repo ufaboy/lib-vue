@@ -7,7 +7,6 @@ import {defineAsyncComponent, } from "vue";
 import {useRoute} from 'vue-router';
 import useBook from "@/composables/useBook";
 
-
 export default {
   name: "Book",
   components: {
@@ -120,43 +119,43 @@ export default {
   }
 }
 
-.image-modal {
-  //display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
-  .modal-content {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-  }
-
-  /* Caption of Modal Image (Image Text) - Same Width as the Image */
-  #caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-    height: 150px;
-  }
-
-  /* Add Animation - Zoom in the Modal */
-  .modal-content, #caption {
-    animation-name: zoom;
-    animation-duration: 0.6s;
-  }
-}
+//.image-modal {
+//  //display: none; /* Hidden by default */
+//  position: fixed; /* Stay in place */
+//  z-index: 1; /* Sit on top */
+//  padding-top: 100px; /* Location of the box */
+//  left: 0;
+//  top: 0;
+//  width: 100%; /* Full width */
+//  height: 100%; /* Full height */
+//  overflow: auto; /* Enable scroll if needed */
+//  background-color: rgb(0, 0, 0); /* Fallback color */
+//  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
+//  .modal-content {
+//    margin: auto;
+//    display: block;
+//    width: 80%;
+//    max-width: 700px;
+//  }
+//
+//  /* Caption of Modal Image (Image Text) - Same Width as the Image */
+//  #caption {
+//    margin: auto;
+//    display: block;
+//    width: 80%;
+//    max-width: 700px;
+//    text-align: center;
+//    color: #ccc;
+//    padding: 10px 0;
+//    height: 150px;
+//  }
+//
+//  /* Add Animation - Zoom in the Modal */
+//  .modal-content, #caption {
+//    animation-name: zoom;
+//    animation-duration: 0.6s;
+//  }
+//}
 
 @keyframes zoom {
   from {
@@ -186,52 +185,52 @@ export default {
 }
 
 @media only screen and (max-width: 892px) {
-  .book-container {
-    .book {
-      .text {
-        max-width: initial;
-        width: 100%;
-
-        .media {
-          position: static;
-          width: 100%;
-          max-height: calc(var(--media-width) / 1.5);
-        }
-      }
-    }
-
-    .image-modal {
-      padding: 0.3rem;
-      height: 100%;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-      align-items: center;
-
-      .close {
-        top: 0;
-      }
-
-      .picture-action-panel {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-      }
-
-      .picture-arrow-btn {
-        height: 5rem;
-        width: 5rem;
-        color: var(--color-2);
-        background-color: var(--background-3);
-      }
-
-      .modal-content {
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-  }
+  //.book-container {
+  //  .book {
+  //    .text {
+  //      max-width: initial;
+  //      width: 100%;
+  //
+  //      .media {
+  //        position: static;
+  //        width: 100%;
+  //        max-height: calc(var(--media-width) / 1.5);
+  //      }
+  //    }
+  //  }
+  //
+  //  .image-modal {
+  //    padding: 0.3rem;
+  //    height: 100%;
+  //    display: flex;
+  //    flex-flow: row nowrap;
+  //    justify-content: space-between;
+  //    align-items: center;
+  //
+  //    .close {
+  //      top: 0;
+  //    }
+  //
+  //    .picture-action-panel {
+  //      height: 100%;
+  //      display: flex;
+  //      flex-direction: column;
+  //      justify-content: space-around;
+  //    }
+  //
+  //    .picture-arrow-btn {
+  //      height: 5rem;
+  //      width: 5rem;
+  //      color: var(--color-2);
+  //      background-color: var(--background-3);
+  //    }
+  //
+  //    .modal-content {
+  //      height: 100%;
+  //      object-fit: cover;
+  //    }
+  //  }
+  //}
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
