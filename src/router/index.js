@@ -14,6 +14,7 @@ const VBookTable = () => import('@/views/book/VBookTable.vue')
 const VGenreTable = () => import('@/views/VGenreTable.vue')
 const VBookEdit = () => import('@/views/book/VBookEdit.vue')
 const VSettings = () => import('@/views/VSettings.vue')
+const VMedia = () => import('@/views/VMedia.vue')
 const VNote = () => import('@/views/VNote.vue')
 const VError = () => import('@/views/VError.vue')
 
@@ -71,6 +72,11 @@ const routes = [
         path: '/settings',
         name: 'settings',
         component: VSettings
+      },
+      {
+        path: '/media',
+        name: 'media',
+        component: VMedia
       },
       {
         path: '/note',

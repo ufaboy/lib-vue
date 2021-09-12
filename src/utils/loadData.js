@@ -43,4 +43,8 @@ async function goPage(page) {
     return await $goPage(page);
 }
 
-export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage};
+async function loadMediaFiles() {
+    return await $get('/media-storage/media-manager')
+}
+
+export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage, loadMediaFiles};
