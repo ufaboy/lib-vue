@@ -42,8 +42,8 @@
 </template>
 
 <script>
-import {ref, reactive, computed} from 'vue';
-import {useStore} from 'vuex';
+import {ref} from 'vue';
+import useDevice from "@/composables/useDevice";
 import IconClose from "@/components/icons/IconClose"
 
 export default {
@@ -52,16 +52,14 @@ export default {
   emits: ['set-genres', 'hide-modal'],
   props: {
     genresProps: Array,
+    categories: Array,
   },
   setup(props, {emit}) {
-    const store = useStore()
     const activeCategory = ref('');
     const searchField = ref('');
     const selectedGenre = ref([]);
-    const genres = reactive([]);
-    const categories = computed(() => store.state.genre.categories);
-    const isMobile = computed(() => store.state.main.isMobile);
-    const isDesktop = computed(() => store.state.main.isDesktop);
+    const genres = ref([]);
+    const {isMobile, isDesktop} = useDevice();
 
     if (props.genresProps && props.genresProps.length) {
       selectedGenre.value.push(...props.genresProps)
@@ -71,7 +69,7 @@ export default {
     };
 
     const calcCheckedChildes = (e) => {
-      return e.genres.find(item => genres.map(genre => genre.id).includes(item.id))
+      return e.genres.find(item => genres.value.map(genre => genre.id).includes(item.id))
     };
 
     const colorizeGenre = (i) => {
@@ -87,7 +85,7 @@ export default {
 
     reset()
 
-    return {activeCategory, searchField, selectedGenre, genres, categories, isMobile, isDesktop, sendGenre, calcCheckedChildes, colorizeGenre, reset, closeModal}
+    return {activeCategory, searchField, selectedGenre, genres, isMobile, isDesktop, sendGenre, calcCheckedChildes, colorizeGenre, reset, closeModal}
   },
 }
 </script>

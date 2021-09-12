@@ -127,7 +127,7 @@
       </div>
     </div>
     <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <genre-book :genres-props="genres" @set-genres="setGenres" @hide-modal="showGenreBookModal = false"/>
+      <genre-book :genres-props="genres" :categories="categories" @set-genres="setGenres" @hide-modal="showGenreBookModal = false"/>
     </the-modal>
   </div>
 </template>
@@ -135,8 +135,7 @@
 <script>
 import {ref, computed} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {useStore} from 'vuex'
-// import StarRating from 'vue-star-rating'
+import useDevice from "@/composables/useDevice";
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
@@ -151,11 +150,13 @@ import StarRating from "@/components/StarRating";
 export default {
   name: "BookEdit",
   components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, },
+  props: {
+    categories: Array,
+  },
   setup() {
     document.title = 'Editor';
     const router = useRouter();
     const route = useRoute();
-    const store = useStore()
     const showGenreBookModal = ref(false);
     const files = ref([]);
     const book = ref({
@@ -174,7 +175,7 @@ export default {
     const expandText = ref(false);
     const expandIllustration = ref(false);
     const adAccess = computed(() => getAdAccess());
-    const isDesktop = computed(() => store.state.main.isDesktop);
+    const {isDesktop} = useDevice();
 
     const resetBook = () => {
       if (book.value.id) {

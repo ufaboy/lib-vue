@@ -23,7 +23,7 @@
     <label class="label">
       <span class="title">category</span>
       <select class="select value" v-model="localGenre.category">
-        <option v-for="category of categories" :key="category.id" :value="category">{{category.name}}</option>
+        <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{category.name}}</option>
       </select>
     </label>
     <footer class="footer">
@@ -37,16 +37,22 @@
 
 import IconClose from "@/components/icons/IconClose"
 import useGenre from "@/composables/useGenre";
+import {toRefs} from "vue";
 export default {
   name: "EditGenre",
   components: {IconClose},
   emits: ['update-genres', 'hide-modal'],
   props: {
     genre: Object,
+    categories: Array,
   },
   setup(props, {emit}) {
-    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess} = useGenre(props, emit)
-    return {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, categories, adAccess};
+    const {categories} = toRefs(props)
+    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, adAccess} = useGenre(props, emit)
+    const categoriesSimple = categories.value.map(category=>{
+      return {id: category.id, name: category.name}
+    })
+    return {categoriesSimple, localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, adAccess};
   },
 }
 </script>

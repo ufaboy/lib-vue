@@ -1,29 +1,25 @@
 <template>
-<main class="home">
-  <nav class="nav">
-    <router-link class="content-link"
-               :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
-               v-for="category of categories"
-               :key="category.id">{{ category.name }}
-    </router-link>
-  </nav>
-</main>
+  <main class="home">
+    <nav class="nav">
+      <router-link class="content-link"
+                   :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
+                   v-for="category of categories"
+                   :key="category.id">{{ category.name }}
+      </router-link>
+    </nav>
+  </main>
 </template>
 
 <script>
-import {computed} from 'vue';
-import {useStore} from 'vuex'
 
 export default {
   name: 'Home',
   components: {},
+  props: {
+    categories: Array,
+  },
   setup() {
     document.title = 'Home';
-    const store = useStore();
-    const categories = computed(() => store.state.genre.categories)
-    const isDesktop = computed(() => store.state.main.isDesktop)
-
-    return {categories, isDesktop}
   },
 }
 </script>
@@ -33,6 +29,7 @@ export default {
   //height: calc(100% - 4.5rem);
   display: flex;
   padding: 1rem 1.5rem;
+
   .nav {
     flex: 1;
     display: flex;
@@ -76,6 +73,7 @@ export default {
     }
   }
 }
+
 @media only screen and (max-width: 892px) {
   .home {
     padding: 0.5rem;

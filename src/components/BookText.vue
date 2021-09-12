@@ -27,7 +27,7 @@
 
 <script>
 import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, nextTick} from "vue";
-import {useStore} from "vuex";
+import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 
 const apiUrl = process.env.VUE_APP_API_URL
@@ -44,7 +44,6 @@ export default {
   },
   emits: ['scrolling'],
   setup(props, { emit }) {
-    const store = useStore();
     const showEditorModal = ref(false);
     const progress = ref(0);
     const progressLoad = ref(0);
@@ -57,8 +56,7 @@ export default {
     const initialText = ref('');
 
     const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
-    const isMobile = computed(() => store.state.main.isMobile);
-    const isDesktop = computed(() => store.state.main.isDesktop);
+    const {isMobile, isDesktop} = useDevice();
 
     const editMode = (e) => {
       editorNode.value = e.target
@@ -89,14 +87,6 @@ export default {
     const getSrcImgUrl = (e) => {
       return e.url ? `${apiUrl}/${e.url}` : ''
     };
-    // const prepareUrlForMedia = (book) => {
-    //   if (book.text) {
-    //     const regexp = new RegExp("APIURL", "g");
-    //     book.text = book.text.replace(regexp, process.env.VUE_APP_API_URL)
-    //     return book
-    //   }
-    //   return book
-    // };
     const moveMedia = () => {
       let toggleSide = true
       let media = document.querySelectorAll('.media')
@@ -126,7 +116,7 @@ export default {
     const handleScroll = (e) => {
       if (windowScroll.value < e.target.scrollTop && windowScroll.value > e.target.clientHeight) {
         emit('scrolling', 'down')
-      } else if (windowScroll.value > e.target.scrollTop) {
+      } else if (windowScroll.value - e.target.scrollTop > 100) {
         emit('scrolling', 'up')
       }
       progress.value = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
@@ -159,9 +149,6 @@ export default {
       if (isDesktop.value) moveMedia()
       listenClickByImg()
     });
-    // onUpdated(()=>{
-    //   console.log({onUpdated: 'onUpdated'})
-    // })
 
     return {
       progress,
@@ -198,15 +185,6 @@ export default {
         // this.$toast.error(`Ошибка: ${e}`)
         console.log({saveEditor: e})
       }
-
-      // this.book.text = this.$refs.text.innerHTML
-      // const url = `/book/update?id=${this.$route.params.id}`
-      // const result = await this.$patch(url, {text: this.book.text})
-      // if (result) {
-      //   this.$toast.success('Успешно сохранено')
-      // } else {
-      //   console.log({editor: result})
-      // }
     },
   },
 }
@@ -217,8 +195,7 @@ export default {
   height: calc(100vh - 5rem);
   background-color: var(--background);
 }
-
-.book-container.mobile {
+.header.header-hide + .book-container {
   height: calc(100vh - 1.5rem);
 }
 

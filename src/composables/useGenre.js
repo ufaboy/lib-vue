@@ -1,11 +1,9 @@
 import {computed, inject, ref} from "vue";
-import {useStore} from 'vuex'
 import {sendGenre} from "@/utils/uploadData";
 import {getAdAccess} from "@/utils/userData";
 import {$delete} from "@/utils/superFetch";
 
 export default function useGenre(props, emit) {
-    const store = useStore()
     const localGenre = ref({
         id: null,
         name: '',
@@ -24,11 +22,6 @@ export default function useGenre(props, emit) {
             name: !localGenre.value.name,
             category: !localGenre.value.category
         }
-    })
-    const categories = computed(() => {
-        return store.state.genre.categories.map(category => {
-            return {id: category.id, name: category.name}
-        })
     })
 
     const checkGenreToHaveErrors = () => {
@@ -75,5 +68,5 @@ export default function useGenre(props, emit) {
     const closeModal = () => {
         emit('hide-modal')
     }
-    return {localGenre, categories, adAccess, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre}
+    return {localGenre, adAccess, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre}
 }

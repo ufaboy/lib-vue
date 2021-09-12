@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import {computed, ref} from 'vue';
+import {ref, toRefs} from 'vue';
 import {useRoute} from 'vue-router'
-import {useStore} from 'vuex';
+import useDevice from "@/composables/useDevice";
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
@@ -47,9 +47,13 @@ export default {
     TheModal,
     SortingModal
   },
-  setup() {
+  props: {
+    categories: Array,
+  },
+  setup(props) {
     document.title = 'Books';
-    const store = useStore();
+    const {categories} = toRefs(props)
+    const {isMobile} = useDevice();
     const route = useRoute();
     const {filter, searchField, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
     const {openBook} = useBook();
@@ -62,9 +66,6 @@ export default {
     if (route.params.id) {
       genreId.value = +route.params.id
     }
-
-    const isMobile = computed(() => store.state.main.isMobile);
-    const categories = computed(() => store.state.genre.categories);
 
     if (activeGenre.value.id) {
       filter.value.genre = activeGenre.value.id
@@ -108,7 +109,6 @@ export default {
       genreId,
       searchField,
       isMobile,
-      categories,
       activeGenre,
       showSortingModal,
       touchStart, touchEnd,
