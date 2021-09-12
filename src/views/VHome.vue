@@ -20,7 +20,6 @@ export default {
   },
   setup() {
     document.title = 'Home';
-
   },
 }
 </script>

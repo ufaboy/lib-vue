@@ -1,29 +1,13 @@
 <template>
-  <div class="basement">
+  <div class="basement" @click="activeBurger = false">
     <the-sunrise/>
-    <header id="header" class="header" :class="{'header--dark': $route.name === 'book-view', 'header-hide': hideHeader}">
+    <header id="header" class="header"
+            :class="{'header--dark': $route.name === 'book-view', 'header-hide': hideHeader}">
       <div class="header--left">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
-        <!--      <ul class="breadcrumb" v-if="isDesktop">-->
-        <!--        <li class="breadcrumb-li" v-if="parentProps">-->
-        <!--          <router-link class="breadcrumb-link" :to="{ name: 'list-genre', params: { id: parentProps.id }}">-->
-        <!--            {{ parentProps.name }}-->
-        <!--          </router-link>-->
-        <!--        </li>-->
-        <!--        <li class="breadcrumb-li" v-if="genreProps">-->
-        <!--          <router-link class="breadcrumb-link" :to="{ name: 'list-book', params: { id: genreProps.id }}">-->
-        <!--            {{ genreProps.name }}-->
-        <!--          </router-link>-->
-        <!--        </li>-->
-        <!--        <li class="breadcrumb-li" v-if="bookName">-->
-        <!--          <span class="breadcrumb-link">-->
-        <!--            {{ bookName }}-->
-        <!--          </span>-->
-        <!--        </li>-->
-        <!--      </ul>-->
       </div>
 
-      <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}">
+      <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}" @click.stop>
         <svg class="icon-btn" @click="activeBurger = !activeBurger" width="100%" height="100%" viewBox="0 0 26 24">
           <rect y="0" width="26" height="4"/>
           <rect y="10" width="26" height="4"/>
@@ -78,8 +62,8 @@ export default {
       } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
     });
 
-    const scrolling = function(e) {
-      hideHeader.value = e === 'down'
+    const scrolling = function (e) {
+      hideHeader.value = e === 'down' && isMobile.value
     }
 
     const getCategories = async function () {
@@ -88,12 +72,10 @@ export default {
       }
     }
     const swUpdate = function (event) {
-      console.log({'swUpdate': event})
       updateAvailable.value = true
       registration.value = event.detail
     }
     const refreshApp = function () {
-      console.log({refreshApp: registration.value, waiting: registration.value.waiting});
       updateAvailable.value = false;
       if (!registration.value || !registration.value.waiting) return null;
       registration.value.waiting.postMessage({type: 'SKIP_WAITING'});
@@ -284,11 +266,13 @@ export default {
     width: 100%;
   }
 }
+
 .header.header-hide {
   height: 0;
   display: none;
   animation: slide-top 0.5s linear both;
 }
+
 @keyframes slide-top {
   0% {
     transform: translateY(0);
@@ -297,6 +281,7 @@ export default {
     transform: translateY(-100px);
   }
 }
+
 .header.header--dark {
   background-color: var(--surface2);
 }

@@ -150,7 +150,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .books-table {
   height: calc(100% - 3.5rem);
   padding: 0.5rem 1.5rem;
