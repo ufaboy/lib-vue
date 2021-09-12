@@ -1,47 +1,57 @@
 <template>
-  <div class="login-box">
-    <header class="login-header">
-      <button class="login-type" @click="signIn = !signIn">
-        <transition name="fade" mode="out-in">
-          <div v-if="signIn" key="SignIn">SignIn</div>
-          <div v-else key="LogIn">LogIn</div>
-        </transition>
-      </button>
-    </header>
-    <form class="login-form" @submit.prevent="login">
-      <div class="user-box">
-        <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off">
-        <label class="label" for="login-username">Username</label>
-      </div>
-      <div class="user-box">
-        <input id="login-pass" type="password" class="input" required v-model.trim="password" autocomplete="off">
-        <label class="label" for="login-pass">Password</label>
-      </div>
-      <button class="login-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        Submit
-      </button>
-    </form>
+  <div class="login-page">
+    <div class="login-box">
+      <header class="login-header">
+        <button class="login-type" @click="signIn = !signIn">
+          <transition name="fade" mode="out-in">
+            <div v-if="signIn" key="SignIn">SignIn</div>
+            <div v-else key="LogIn">LogIn</div>
+          </transition>
+        </button>
+      </header>
+      <form class="login-form" @submit.prevent="login">
+        <div class="user-box">
+          <input id="login-username" type="text" class="input" required v-model.trim="username" autocomplete="off">
+          <label class="label" for="login-username">Username</label>
+        </div>
+        <div class="user-box">
+          <input id="login-pass" type="password" class="input" required v-model.trim="password" autocomplete="off">
+          <label class="label" for="login-pass">Password</label>
+        </div>
+        <button class="login-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Submit
+        </button>
+      </form>
+    </div>
+    <canvas-space :count-dots="countDots"/>
   </div>
+
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import {useRouter} from 'vue-router'
 import {setUser} from '@/utils/userData';
+import useDevice from "@/composables/useDevice";
+import CanvasSpace from "@/components/CanvasSpace";
 
 export default {
   name: "login",
-  components: {},
+  components: {CanvasSpace},
   setup() {
     document.title = 'Login';
     const router = useRouter()
     const username = ref('')
     const password = ref('')
     const signIn = ref(false)
+    const {isMobile} = useDevice();
+    const countDots = computed(()=>{
+      return isMobile.value ? 100 : 500
+    });
 
     const login = async () => {
       const formData = {username: username.value, password: password.value};
@@ -69,12 +79,21 @@ export default {
       }
     }
 
-    return {username, password, signIn, login}
+    return {username, password, signIn, isMobile, countDots, login}
   },
 }
 </script>
 
 <style scoped lang="scss">
+.login-page {
+  height: 100%;
+  width: 100%;
+  //background: linear-gradient(#141e30, #243b55);
+  background: linear-gradient(#020120, #243b55);
+  overflow: hidden;
+  position: absolute;
+  z-index: 0;
+}
 .login-box {
   position: absolute;
   z-index: 10;

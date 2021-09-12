@@ -28,7 +28,7 @@
       </transition-group>
     </table>
     <the-modal v-if="showModal" @hide-modal="showModal = false">
-      <edit-genre :genre="activeGenre" @update-genres="getGenres" @hide-modal="showModal = false" />
+      <edit-genre :genre="activeGenre" :categories="categories" @update-genres="getGenres" @hide-modal="showModal = false" />
     </the-modal>
   </div>
 </template>
@@ -40,11 +40,12 @@ import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
-
 export default {
   name: "GenreTable",
   components: {TheModal, EditGenre, IconSortAsc, IconSortDesc},
-  props: {},
+  props: {
+    categories: Array,
+  },
   setup() {
     document.title = 'Table Genres';
     const {genres, ascending, orderBy, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()

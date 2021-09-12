@@ -18,23 +18,25 @@
 </template>
 
 <script>
-import {computed, ref} from 'vue';
+import {computed, ref, toRefs} from 'vue';
 import {useRoute, useRouter} from 'vue-router'
-import {useStore} from 'vuex';
+import useDevice from "@/composables/useDevice";
 
 export default {
   name: "ListGenre",
   components: {},
-  setup() {
+  props: {
+    categories: Array,
+  },
+  setup(props) {
     document.title = 'Genres';
-    const store = useStore();
     const route = useRoute();
     const router = useRouter();
     const activeCategory = ref({
       genres: []
     })
-    const categories = computed(() => store.state.genre.categories)
-    const isMobile = computed(() => store.state.main.isMobile)
+    const {isMobile} = useDevice();
+    const {categories} = toRefs(props)
     const genres = computed(() => {
       let selectedCategory = {}
       if (activeCategory.value.name) {
@@ -70,7 +72,7 @@ export default {
       prepareCategory()
     }
 
-    return {activeCategory, categories, genres, isMobile, openGenre}
+    return {activeCategory, genres, isMobile, openGenre}
   },
 }
 </script>

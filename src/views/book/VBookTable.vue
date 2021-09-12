@@ -53,13 +53,14 @@
       <button class="btn table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="main.isMobile">
+      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="isMobile">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
     <the-modal v-if="showModal" @hide-modal="showModal = false">
       <filter-modal @active-filter="updateFilterPage"
                     @reset-filter="resetTable"
+                    :categories="categories"
                     :rating="filter.rating"
                     :genre="filter.genre"
                     :ad="filter.ad"/>
@@ -69,7 +70,7 @@
 
 <script>
 import {ref, computed,} from "vue";
-import {useStore} from "vuex";
+import useDevice from "@/composables/useDevice";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
 import useDate from "@/composables/useDate";
@@ -78,18 +79,17 @@ import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
 import TheModal from "@/components/TheModal";
 
-
 export default {
   name: "BooksTable",
-  layout: 'basement',
-  middleware: [],
   components: {TheModal, FilterModal, IconSortAsc, IconSortDesc},
+  props: {
+    categories: Array,
+  },
   setup() {
     document.title = 'Table Books';
 
-    const store = useStore()
     const showModal = ref(false);
-
+    const {isMobile, isDesktop} = useDevice();
     const {
       filter, searchField, limit, orderBy, books, page, pagBtnArr, resetTable,
       updateFilterPage,
@@ -97,9 +97,8 @@ export default {
     } = useBooks();
     const {openBook} = useBook();
     const {getDate} = useDate();
-    const main = computed(() => store.state.main);
     const modalSize = computed(() => {
-      return main.value.isDesktop.value ? 600 : '100%'
+      return isDesktop.value ? 600 : '100%'
     });
 
 
@@ -123,7 +122,8 @@ export default {
       pagBtnArr,
       limit,
       orderBy,
-      main,
+      isMobile,
+      isDesktop,
       modalSize,
       getBooksAndReplace,
       getDate,

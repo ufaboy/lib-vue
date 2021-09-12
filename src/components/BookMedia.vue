@@ -1,7 +1,7 @@
 <template>
-  <div class="book-container" :class="{mobile: main.isMobile}">
+  <div class="book-container" :class="{mobile: isMobile}">
     <div class="book-video" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
-      <ol class="media-list" v-if="main.isDesktop">
+      <ol class="media-list" v-if="isDesktop">
         <li :class="{active: media.id === activeMedia.id}"
             v-for="media of book.files"
             :key="media.id"
@@ -9,7 +9,7 @@
           <span class="media-name">{{ media.file_name }}</span>
         </li>
       </ol>
-      <select class="select" v-else-if="main.isMobile" v-model="activeMedia">
+      <select class="select" v-else-if="isMobile" v-model="activeMedia">
         <option :value="media" v-for="media of book.files" :key="media.id">{{ media.file_name }}</option>
       </select>
       <figure class="media-video">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import useDevice from "@/composables/useDevice";
 
 const apiUrl = process.env.VUE_APP_API_URL
 
@@ -36,6 +36,11 @@ export default {
   props: {
     book: Object
   },
+  setup() {
+    const {isMobile, isDesktop} = useDevice();
+
+    return {isMobile, isDesktop}
+  },
   emits: [],
   data: () => ({
     activeImage: null,
@@ -43,9 +48,6 @@ export default {
     activeMedia: {type: null, url: null},
   }),
   computed: {
-    ...mapState({
-      main: state => state.main,
-    }),
     getTypeBook() {
       if (this.book.genres.findIndex(item => item.name === 'picture') !== -1) {
         return 'picture'

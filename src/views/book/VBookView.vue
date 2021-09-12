@@ -14,7 +14,9 @@ export default {
     BookMedia: defineAsyncComponent(() => import('@/components/BookMedia.vue')),
     BookEmpty: defineAsyncComponent(() => import('@/components/BookEmpty.vue'))
   },
-  props: {},
+  props: {
+    categories: Array,
+  },
   setup() {
     const route = useRoute();
     const {book, typeBook, downloadBook} = useBook();
@@ -26,14 +28,13 @@ export default {
   },
   methods: {
     scrolling(e) {
-      let header = document.getElementById('header')
-      if (e === 'down') {
-        header.classList.add('hide')
-      } else {
-        header.classList.remove('hide')
-      }
+      // let header = document.getElementById('header')
+      // if (e === 'down') {
+      //   header.classList.add('hide')
+      // } else {
+      //   header.classList.remove('hide')
+      // }
       this.$emit('scrolling', e)
-      console.log({scrolling: e, header: header})
     }
   },
 }

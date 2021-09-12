@@ -51,6 +51,7 @@ export default {
   },
   emits: ['active-filter', 'reset-filter'],
   props: {
+    categories: Array,
     rating: Number,
     ad: Number,
     genre: Object,
@@ -63,9 +64,6 @@ export default {
     },
   }),
   computed: {
-    categories() {
-      return this.$store.state.genre.categories
-    },
     adAccess() {
       return getAdAccess()
     },

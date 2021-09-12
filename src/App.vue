@@ -1,34 +1,35 @@
 <template>
-  <component
-      :is="layout"
-      @resize="onResize"
-      :parent-props="parentData"
-      :genre-props="genreData"
-      :book-name="bookName">
-    <router-view
-        @loaded-parent="loadedParent"
-        @loaded-book="loadedBook"
-        @loaded-genre="loadedGenre"
-        :book-props="book"
-        v-bind="$attrs"
-        v-slot="{ Component }">
-      <transition name="component-fade" mode="out-in" appear>
-        <component :is="Component"/>
-      </transition>
-    </router-view>
-  </component>
+<!--  <component-->
+<!--      :is="layout"-->
+<!--      @resize="onResize"-->
+<!--      :parent-props="parentData"-->
+<!--      :genre-props="genreData"-->
+<!--      :book-name="bookName">-->
+<!--    <router-view-->
+<!--        @loaded-parent="loadedParent"-->
+<!--        @loaded-book="loadedBook"-->
+<!--        @loaded-genre="loadedGenre"-->
+<!--        :book-props="book"-->
+<!--        v-bind="$attrs"-->
+<!--        v-slot="{ Component }">-->
+<!--      <transition name="component-fade" mode="out-in" appear>-->
+<!--        <component :is="Component"/>-->
+<!--      </transition>-->
+<!--    </router-view>-->
+<!--  </component>-->
+  <router-view></router-view>
 </template>
 
 <script>
-import LayoutDefault from "@/layouts/LayoutDefault";
-import {defineAsyncComponent} from "vue";
+// import LayoutDefault from "@/layouts/LayoutDefault";
+// import {defineAsyncComponent} from "vue";
 
 export default {
   components: {
-    LayoutDefault,
-    LayoutAuth: defineAsyncComponent(() => import('@/layouts/LayoutAuth.vue')),
-    LayoutTest: defineAsyncComponent(() => import('@/layouts/LayoutTest.vue')),
-    LayoutError: defineAsyncComponent(() => import('@/layouts/LayoutError.vue'))
+    // LayoutDefault,
+    // LayoutAuth: defineAsyncComponent(() => import('@/layouts/LayoutAuth.vue')),
+    // LayoutTest: defineAsyncComponent(() => import('@/layouts/LayoutTest.vue')),
+    // LayoutError: defineAsyncComponent(() => import('@/layouts/LayoutError.vue'))
   },
   data: () => ({
     parent: null,
@@ -57,13 +58,6 @@ export default {
 
   },
   methods: {
-    onResize() {
-      if (document.documentElement.clientWidth > 892) {
-        this.$store.commit('main/setIsDesktop')
-      } else {
-        this.$store.commit('main/setIsMobile')
-      }
-    },
     loadedParent(parent) {
       this.parent = parent
     },
@@ -81,7 +75,6 @@ export default {
     // window.addEventListener('resize', this.onResize);
   },
   mounted() {
-    this.onResize()
   }
 }
 </script>

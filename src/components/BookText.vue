@@ -27,7 +27,7 @@
 
 <script>
 import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, nextTick} from "vue";
-import {useStore} from "vuex";
+import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 
 const apiUrl = process.env.VUE_APP_API_URL
@@ -44,7 +44,6 @@ export default {
   },
   emits: ['scrolling'],
   setup(props, { emit }) {
-    const store = useStore();
     const showEditorModal = ref(false);
     const progress = ref(0);
     const progressLoad = ref(0);
@@ -57,8 +56,7 @@ export default {
     const initialText = ref('');
 
     const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
-    const isMobile = computed(() => store.state.main.isMobile);
-    const isDesktop = computed(() => store.state.main.isDesktop);
+    const {isMobile, isDesktop} = useDevice();
 
     const editMode = (e) => {
       editorNode.value = e.target
@@ -124,11 +122,17 @@ export default {
       }
     }
     const handleScroll = (e) => {
+      // if (windowScroll.value < e.target.scrollTop && windowScroll.value > e.target.clientHeight) {
+      //   emit('scrolling', 'down')
+      // } else if (windowScroll.value > e.target.scrollTop) {
+      //   emit('scrolling', 'up')
+      // }
       if (windowScroll.value < e.target.scrollTop && windowScroll.value > e.target.clientHeight) {
         emit('scrolling', 'down')
-      } else if (windowScroll.value > e.target.scrollTop) {
+      } else if (windowScroll.value - e.target.scrollTop > 100) {
         emit('scrolling', 'up')
       }
+      console.log({handleScroll: e.target.scrollTop, 'windowScroll': windowScroll.value})
       progress.value = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
       windowScroll.value = e.target.scrollTop
 
@@ -216,6 +220,10 @@ export default {
 .book-container {
   height: calc(100vh - 5rem);
   background-color: var(--background);
+}
+.header.header-hide + .book-container {
+  height: calc(100vh - 1.5rem);
+  //height: 100%;
 }
 
 .book-container.mobile {
