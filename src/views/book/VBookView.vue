@@ -1,5 +1,5 @@
 <template>
-  <component :is="typeBook" :book="book"></component>
+  <component :is="typeBook" :book="book" @scrolling="scrolling"></component>
 </template>
 
 <script>
@@ -8,7 +8,7 @@ import {useRoute} from 'vue-router';
 import useBook from "@/composables/useBook";
 
 export default {
-  name: "Book",
+  name: "BookView",
   components: {
     BookText: defineAsyncComponent(() => import('@/components/BookText.vue')),
     BookMedia: defineAsyncComponent(() => import('@/components/BookMedia.vue')),
@@ -22,6 +22,18 @@ export default {
     return {
       typeBook,
       book,
+    }
+  },
+  methods: {
+    scrolling(e) {
+      let header = document.getElementById('header')
+      if (e === 'down') {
+        header.classList.add('hide')
+      } else {
+        header.classList.remove('hide')
+      }
+      this.$emit('scrolling', e)
+      console.log({scrolling: e, header: header})
     }
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="book-container" :class="{mobile: isMobile}">
-    <div class="book" ref="bookRef" @scroll.passive="handleScroll" id="book">
+    <div class="book" ref="bookRef" @scroll.passive="scrollThrottler" id="book">
       <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     </div>
     <footer class="footer" v-if="book.annotation !== 'media'">
@@ -42,8 +42,8 @@ export default {
   props: {
     book: Object
   },
-  emits: [],
-  setup(props) {
+  emits: ['scrolling'],
+  setup(props, { emit }) {
     const store = useStore();
     const showEditorModal = ref(false);
     const progress = ref(0);
@@ -111,9 +111,27 @@ export default {
         image.addEventListener("click", openImage);
       }
     };
+    const scrollTimeout = ref(null);
+    const scrollThrottler = function (e) {
+      // ignore resize events as long as an actualResizeHandler execution is in the queue
+      if ( !scrollTimeout.value ) {
+        scrollTimeout.value = setTimeout(function() {
+          scrollTimeout.value = null;
+          handleScroll(e);
+
+          // The actualResizeHandler will execute at a rate of 15fps
+        }, 200);
+      }
+    }
     const handleScroll = (e) => {
+      if (windowScroll.value < e.target.scrollTop && windowScroll.value > e.target.clientHeight) {
+        emit('scrolling', 'down')
+      } else if (windowScroll.value > e.target.scrollTop) {
+        emit('scrolling', 'up')
+      }
       progress.value = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
       windowScroll.value = e.target.scrollTop
+
     };
     const scrollToBookmark = async () => {
       if (props.book.value.bookmark) {
@@ -129,7 +147,6 @@ export default {
       let y = (windowHeights.value * x) / 100;
       document.getElementById('book').scrollTo(0, y);
     };
-
     onBeforeUnmount(async () => {
       const formData = {bookId: props.book.id, bookmark: windowScroll.value}
       const result = await updateBookMark(formData)
@@ -160,6 +177,7 @@ export default {
       windowHeights,
       isMobile,
       moveMedia,
+      scrollThrottler,
       handleScroll,
       scrollToBookmark,
       scrollByClick,

@@ -2,7 +2,7 @@
   <div class="basement">
 <!--    <canvas-space :count-dots="countDots"/>-->
     <the-sunrise/>
-    <header v-if="showHeader" class="header" :class="{'header--dark': $route.name === 'book-view'}">
+    <header id="header" class="header" :class="{'header--dark': $route.name === 'book-view'}">
       <div class="header--left">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
         <ul class="breadcrumb" v-if="isDesktop">
@@ -46,7 +46,7 @@
         </ul>
       </div>
     </header>
-    <slot/>
+    <slot />
     <teleport to="body">
       <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp" />
     </teleport>
@@ -101,9 +101,6 @@ export default {
     // }
   },
   computed: {
-    showHeader() {
-      return this.$route.name === 'book-view' ? !this.isMobile : true
-    },
     categories() {
       return this.$store.state.genre.categories
     },
