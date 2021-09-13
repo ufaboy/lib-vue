@@ -89,9 +89,11 @@ export default {
     }
   }
   .media-wrapper {
+    display: flex;
+    flex-flow: column;
     .media-full {
       max-width: 700px;
-      max-height: 700px;
+      max-height: 600px;
     }
   }
 }
