@@ -8,8 +8,12 @@
     </div>
     <div class="media-wrapper">
       <img class="media-full" :src="activeMedia.url" alt="" v-if="activeMedia.type === 'image'">
-      <video class="media-full" :src="activeMedia.url" v-if="activeMedia.type === 'video'"></video>
-      <audio class="media-full" :src="activeMedia.url" v-if="activeMedia.type === 'audio'"></audio>
+      <video class="media-full" v-else-if="activeMedia.type === 'video'" controls>
+        <source :src="activeMedia.url">
+      </video>
+      <audio class="media-full" v-else-if="activeMedia.type === 'audio'" controls>
+        <source :src="activeMedia.url">
+      </audio>
       <span>{{activeMedia.name}}</span>
     </div>
 
