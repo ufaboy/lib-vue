@@ -165,8 +165,8 @@ export default {
     flex-flow: row nowrap;
     margin-bottom: 0.5rem;
 
-    .filter-btn {
-      margin: 0 0.5rem;
+    .filter-btn, .create-btn {
+      margin: 0 0.5rem 0 0;
     }
 
     .search-text {

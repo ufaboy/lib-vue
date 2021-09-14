@@ -49,6 +49,9 @@
   }
 
   .table-cell.active {
+    .td-title {
+      color: var(--primary-light);
+    }
     .td-action {
       .icon {
         fill: var(--primary-light);

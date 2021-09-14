@@ -41,11 +41,17 @@ async function uploadFiles(files, bookId) {
     console.log({resultPromise: resultPromise})
     return resultPromise
 }
-async function deleteFile(fileId) {
-    return await $delete(`/media-storage/delete?id=${fileId}`);
+function deleteFile(fileId) {
+    return $delete(`/media-storage/delete?id=${fileId}`);
 }
-async function deleteFiles(bookId) {
-    return await $delete(`/book/delete-all-media?id=${bookId}`);
+function deleteFiles(bookId) {
+    return $delete(`/book/delete-all-media?id=${bookId}`);
+}
+function deleteFileByName(directory, name) {
+    return $delete(`/media-storage/delete-file-by-name`, {name: name, directory: directory})
+}
+function attachFileToBook(bookId, name) {
+    return $post(`/media-storage/attach-file?id=${bookId}`, {name: name})
 }
 
-export {sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles};
+export {sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles, deleteFileByName, attachFileToBook};

@@ -1,10 +1,20 @@
 <template>
   <div class="media-manager">
     <ol class="ol-dir">
-      <li class="li-dir" v-for="(dir, index) of mediaFiles" :key="'dir-' + index" @click="activeDirIndex = index">{{dir.name}}</li>
+      <li class="li-dir" v-for="(dir, index) of directories" :key="'dir-' + index" @click="activeDirIndex = index">
+        {{ dir.dir_name }}
+      </li>
     </ol>
     <div class="preview-wrapper">
-      <img class="preview" :src="calcUrl(file)" alt="" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
+      <figure class="figure" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
+        <img class="preview" :src="calcUrl(file)" alt="">
+        <figcaption class="figcaption">{{ file.full_name }}</figcaption>
+        <div class="btn-bar" v-if="!file.id">
+          <button class="fig-btn" @click.stop="attachFile(directories[activeDirIndex].bookId, file.full_name, index)">Attach</button>
+          <button class="fig-btn" @click.stop="deleteFileFromStorage(directories[activeDirIndex].name, file.full_name, index)">Delete</button>
+        </div>
+
+      </figure>
     </div>
     <div class="media-wrapper">
       <img class="media-full" :src="activeMedia.url" alt="" v-if="activeMedia.type === 'image'">
@@ -14,7 +24,7 @@
       <audio class="media-full" v-else-if="activeMedia.type === 'audio'" controls>
         <source :src="activeMedia.url">
       </audio>
-      <span>{{activeMedia.name}}</span>
+      <span>{{ activeMedia.name }}</span>
     </div>
 
   </div>
@@ -22,7 +32,7 @@
 
 <script>
 import useMedia from "../composables/useMedia";
-import {computed, ref} from "vue";
+
 export default {
   name: "VMedia",
   components: {},
@@ -31,22 +41,10 @@ export default {
   },
   emits: [],
   setup() {
-    const activeDirIndex = ref();
-    const activeMedia = ref({});
-
-    const calcUrl = function (file) {
-      return `${process.env.VUE_APP_API_URL}/${file.url}`
-    }
-    const {mediaFiles, getMediaFiles} = useMedia()
+    const {directories, activeDirIndex, activeMedia, activeDir, calcUrl, openMedia, getMediaFiles, attachFile, deleteFileFromStorage} = useMedia()
     getMediaFiles()
-    const activeDir = computed(()=>{
-      return mediaFiles.value.length &&  activeDirIndex.value !== undefined ? mediaFiles.value[activeDirIndex.value].files : []
-    })
-    const openMedia = function (file) {
-      activeMedia.value = {name: file.name, url: calcUrl(file), type: file.type.includes('image') ? 'image' : file.type.includes('video') ? 'video' : file.type.includes('audio') ? 'audio' : '' }
-    }
 
-    return {mediaFiles, activeDirIndex, activeDir, activeMedia, calcUrl, openMedia}
+    return {directories, activeDirIndex, activeDir, activeMedia, calcUrl, openMedia, attachFile, deleteFileFromStorage}
   },
   data() {
     return {}
@@ -66,31 +64,72 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   height: calc(100% - 3.5rem);
+padding: 0.5rem 1.5rem;
   .ol-dir {
     margin-right: 1rem;
+
     .li-dir {
       width: 100px;
       cursor: pointer;
     }
   }
+
   .preview-wrapper {
     margin-right: 1rem;
-    width: 340px;
+    width: 360px;
     display: flex;
+    flex-shrink: 0;
     flex-flow: row wrap;
     overflow-y: auto;
     max-height: 100%;
+
+    .figure {
+      width: 150px;
+      margin: 0 1rem 1rem 0;
+
+      .figcaption {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        margin: 0 0 0.5rem 0;
+      }
+      .btn-bar {
+        display: flex;
+        flex-flow: row nowrap;
+        .fig-btn {
+          flex: 1;
+          border: 1px solid;
+          outline: none;
+          padding: 5px;
+          color: var(--text2-light);
+          background-color: var(--surface4);
+          cursor: pointer;
+        }
+        .fig-btn:first-of-type {
+          border-radius: 5px 0 0 5px;
+          font-weight: bold;
+        }
+        .fig-btn:last-of-type {
+          font-weight: bold;
+          color: red;
+          border-radius: 0 5px 5px 0;
+        }
+      }
+    }
+
     .preview {
       width: 150px;
       height: 100px;
       object-fit: cover;
       cursor: pointer;
-      margin: 0 0.5rem 0.5rem 0;
+      border-radius: 5px;
     }
   }
+
   .media-wrapper {
     display: flex;
     flex-flow: column;
+
     .media-full {
       max-width: 700px;
       max-height: 600px;
