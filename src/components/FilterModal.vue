@@ -70,7 +70,11 @@ export default {
   },
   methods: {
     async findBookByFilter() {
-      this.$emit('active-filter', {genre: Number.isInteger(this.filter.genre.id) ? this.filter.genre : null, rating: this.filter.rating, ad: this.filter.ad})
+      this.$emit('active-filter', {
+        genre: Number.isInteger(this.filter.genre.id) ? this.filter.genre : null,
+        rating: this.filter.rating,
+        ad: this.filter.ad
+      })
       this.closeModal()
     },
     resetFilter() {
@@ -82,7 +86,7 @@ export default {
       if (this.genre) {
         this.filter.genre = this.genre
       }
-      this.filter.ad = Number.isInteger(this.ad) ?? null
+      this.filter.ad = this.ad ?? null
     },
     closeModal() {
       this.$parent.hide('filterBookModal', this)
@@ -131,7 +135,8 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
-    input[type=checkbox]{
+
+    input[type=checkbox] {
       height: 0;
       width: 0;
       visibility: hidden;

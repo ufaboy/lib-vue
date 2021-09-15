@@ -393,7 +393,7 @@ export default {
 .edit-book {
   height: calc(100% - 3.5rem);
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0.5rem 1.5rem;
   display: flex;
   flex-flow: row;
 

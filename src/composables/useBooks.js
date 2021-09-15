@@ -1,5 +1,5 @@
 import {goPage, loadBooks} from "@/utils/loadData";
-import {inject, ref,} from 'vue'
+import {computed, inject, ref,} from 'vue'
 
 export default function useBooks() {
     const loader = inject("loader");
@@ -19,10 +19,18 @@ export default function useBooks() {
         _links: {},
         _meta: {},
     });
+
+    const filterCount = computed(()=>{
+        let count = 0
+        if (Number.isInteger(filter.value.ad)) count++
+        if (Number.isInteger(filter.value.genre?.id)) count++
+        if (Number.isInteger(filter.value.rating)) count++
+        return count
+    })
     const getBooksAndReplace = async () => {
         const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
         const formFilter = {
-            genre: filter.value.genre,
+            genre: filter.value.genre?.id,
             rating: filter.value.rating,
             ad: filter.value.ad,
             name: searchField.value
@@ -44,7 +52,7 @@ export default function useBooks() {
     const getBooksAndPush = async (method = '') => {
         const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
         const formFilter = {
-            genre: filter.value.genre,
+            genre: filter.value.genre?.id,
             rating: filter.value.rating,
             ad: filter.value.ad,
             name: searchField.value
@@ -82,19 +90,19 @@ export default function useBooks() {
         }
     };
     const resetTable = () => {
-        filter.value.genre = null
+        filter.value.genre = {}
         filter.value.rating = null
         filter.value.ad = null
         getBooksAndReplace()
     };
     const updateFilterPage = (newFilter) => {
         if (newFilter?.genre) {
-            filter.value.genre = newFilter.genre.id
+            filter.value.genre = newFilter.genre
         }
         if (newFilter?.rating) {
             filter.value.rating = newFilter.rating
         }
-        filter.value.ad = newFilter.ad ? 1 : 0
+        filter.value.ad = newFilter.ad === null ? null : newFilter.ad ? 1 : 0
         getBooksAndReplace()
     };
     const sortBy = (column) => {
@@ -118,6 +126,7 @@ export default function useBooks() {
         page,
         pagBtnArr,
         infinityState,
+        filterCount,
         getCover,
         resetTable,
         updateFilterPage,
