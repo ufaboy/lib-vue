@@ -1,6 +1,5 @@
 <template>
   <div class="basement" @click="activeBurger = false">
-    <the-sunrise/>
     <header id="header" class="header"
             :class="{'header--dark': $route.name === 'book-view', 'header-hide': hideHeader}">
       <div class="header--left">
@@ -41,12 +40,11 @@ import {computed, ref} from "vue";
 import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
-import TheSunrise from "../components/TheSunrise";
 import RefreshPopup from "../components/RefreshPopup";
 
 export default {
   name: "Main",
-  components: {RefreshPopup, TheSunrise},
+  components: {RefreshPopup,},
   setup() {
     const route = useRoute()
     const activeBurger = ref(false)
@@ -293,5 +291,18 @@ export default {
   border: 1px solid var(--primary-dark);
   border-radius: 5px;
   text-decoration: none;
+}
+@media only screen and (max-width: 892px) {
+.header {
+  padding: 0.5rem;
+}
+}
+
+@media only screen and (max-width: 892px) and (orientation: landscape) {
+
+}
+
+@media only screen and (max-width: 892px) and (orientation: portrait) {
+
 }
 </style>

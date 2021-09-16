@@ -7,14 +7,16 @@
                    :key="category.id">{{ category.name }}
       </router-link>
     </nav>
+    <button-theme-switcher />
   </main>
 </template>
 
 <script>
 
+import ButtonThemeSwitcher from "../components/ButtonThemeSwitcher";
 export default {
   name: 'Home',
-  components: {},
+  components: {ButtonThemeSwitcher},
   props: {
     categories: Array,
   },
