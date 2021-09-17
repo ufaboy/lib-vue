@@ -4,7 +4,7 @@ import {computed, inject, ref,} from 'vue'
 export default function useBooks() {
     const loader = inject("loader");
     const filter = ref({
-        genre: null,
+        genre: {},
         rating: null,
         ad: null,
     });

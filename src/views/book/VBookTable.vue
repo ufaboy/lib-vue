@@ -25,7 +25,9 @@
       <tr class="row" :class="{'picante': book.ad}" v-for="book of books.items" :key="book.id">
         <td class="td" :class="$options.columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td" :class="$options.columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
-        <td class="td" :class="$options.columnsClasses.annotation">{{ book.annotation }}</td>
+        <td class="td" :class="$options.columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
+          <p class="limited-p" >{{ book.annotation }}</p>
+        </td>
         <td class="td" :class="$options.columnsClasses.genres">
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.name : '' }}</div>
         </td>
@@ -234,6 +236,16 @@ export default {
     .cell-annotation {
       min-width: 20vw;
       max-width: 20vw;
+      .limited-p {
+        position: relative;
+        display: -webkit-box;
+        line-height: 1;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
     }
 
     .cell-genre {

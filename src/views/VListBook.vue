@@ -1,18 +1,19 @@
 <template>
-  <main class="list-book" @touchstart="touchStart" @touchend="touchEnd" @scroll.passive="onScroll">
+  <main class="list-book" @touchstart="touchStart" @touchend="touchEnd">
     <header class="header">
       <input class="search-input"
              type="search"
              v-model="searchField"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
-      <select class="select" v-model="activeGenre" @change="changeGenreLoadBook" v-if="isMobile">
+      <select class="select" v-model="filter.genre" @change="changeGenreLoadBook">
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
           </option>
         </optgroup>
+
       </select>
     </header>
     <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import {ref, toRefs} from 'vue';
+import {onUnmounted, ref, toRefs} from 'vue';
 import {useRoute} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import SortingModal from '@/components/SortingModal.vue'
@@ -62,19 +63,13 @@ export default {
     const showTopButton = ref(false);
     const genreId = ref(null);
 
-    const activeGenre = ref({})
-    if (route.params.id) {
-      genreId.value = +route.params.id
-    }
-
-    if (activeGenre.value.id) {
-      filter.value.genre = activeGenre.value.id
-    } else if (route.params.id) {
-      filter.value.genre = Number(route.params.id)
-    }
-    if (route.params.id) {
-      const category = categories.value.find(category => category.genres.some(genre => genre.id === +genreId.value))
-      activeGenre.value = category ? category.genres.find(genre => genre.id === genreId.value) : {}
+    const calcGenreById = function (id) {
+      let genreArray = []
+      for (const cat of categories.value) {
+        genreArray.push(...cat.genres)
+      }
+      const genre = genreArray.find(genre => genre.id === id)
+      return genre ? genre : {}
     }
     limit.value = 25;
     const searchByName = () => {
@@ -82,11 +77,14 @@ export default {
       getBooksAndPush()
     };
     const changeGenreLoadBook = () => {
-      filter.value.genre = activeGenre.value.id
+      // filter.value.genre = activeGenre.value.id
       page.value = 1
       getBooksAndPush()
     };
-
+    if (route.params.id) {
+      filter.value.genre = calcGenreById(+route.params.id)
+      console.log({route: route.params.id})
+    }
 
     const updateBySorting = (e) => {
       showSortingModal.value = false
@@ -96,12 +94,17 @@ export default {
       getBooksAndPush()
     };
     const onScroll = (e) => {
-      showTopButton.value = e.target.scrollTop > 50;
+      showTopButton.value = e.target.scrollingElement.scrollTop > 50;
     };
+    window.addEventListener('scroll', onScroll, {passive: true});
+    onUnmounted(()=>{
+      window.removeEventListener('scroll', onScroll, {passive: true})
+    })
 
     return {
       books,
       page,
+      filter,
       showTopButton,
       limit,
       infinityState,
@@ -109,7 +112,7 @@ export default {
       genreId,
       searchField,
       isMobile,
-      activeGenre,
+      calcGenreById,
       showSortingModal,
       touchStart, touchEnd,
       getBooksAndPush,
@@ -123,7 +126,8 @@ export default {
   },
   methods: {
     scrollToTop() {
-      this.$el.scrollTop = 0
+      // document.scrollingElement.scrollTop = 0
+      document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
     }
   }
 }
@@ -134,8 +138,7 @@ export default {
   display: flex;
   flex-flow: row wrap;
   height: calc(100% - 3.5rem);
-  overflow-y: auto;
-  padding: 1rem;
+  padding: 0.5rem 1.5rem;
   align-content: baseline;
 
   .header {
@@ -149,9 +152,11 @@ export default {
     .search-input {
       display: flex;
       flex: 1;
-      border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
+      //border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
+      border: 1px solid var(--primary-dark);
+      border-radius: 5px;
       color: var(--text1);
-      background-color: var(--surface3);
+      background-color: var(--surface5);
       padding: 5px;
     }
 
