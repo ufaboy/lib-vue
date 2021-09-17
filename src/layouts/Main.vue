@@ -266,7 +266,7 @@ export default {
 
 .header.header-hide {
   height: 0;
-  display: none;
+  padding: 0;
   animation: slide-top 0.5s linear both;
 }
 

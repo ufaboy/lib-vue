@@ -2,7 +2,7 @@
   <fieldset class="switcher">
     <legend class="switcher__legend">Схема</legend>
     <input class="switcher__radio switcher__radio--light" v-model="activeScheme" @click="setScheme('light-theme')" type="radio" name="color-scheme" value="light-theme" aria-label="Светлая">
-    <input class="switcher__radio switcher__radio--auto" v-model="activeScheme" @click="setScheme('auto-theme')" type="radio" name="color-scheme" value="auto-theme" aria-label="Системная" checked="">
+    <input class="switcher__radio switcher__radio--auto" v-model="activeScheme" @click="setScheme('auto-theme')" type="radio" name="color-scheme" value="auto-theme" aria-label="Системная">
     <input class="switcher__radio switcher__radio--dark" v-model="activeScheme" @click="setScheme('dark-theme')" type="radio" name="color-scheme" value="dark-theme" aria-label="Тёмная">
     <div class="switcher__status"></div>
   </fieldset>
