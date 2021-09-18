@@ -240,7 +240,7 @@ export default {
         position: relative;
         display: -webkit-box;
         line-height: 1;
-        -webkit-line-clamp: 4;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;

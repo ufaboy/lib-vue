@@ -5,7 +5,7 @@ import {authMiddleware} from "@/middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
 
 import Home from '@/views/VHome.vue'
-import Main from "../layouts/Main";
+import Main from "../layouts/LayoutMain";
 // const Home = () => import('@/views/VHome.vue')
 const VListBook = () => import('@/views/VListBook.vue')
 const VListGenre = () => import('@/views/VListGenre.vue')

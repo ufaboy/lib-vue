@@ -7,16 +7,16 @@
                    :key="category.id">{{ category.name }}
       </router-link>
     </nav>
-    <button-theme-switcher />
+<!--    <button-theme-switcher />-->
   </main>
 </template>
 
 <script>
 
-import ButtonThemeSwitcher from "../components/ButtonThemeSwitcher";
+// import ButtonThemeSwitcher from "../components/ButtonThemeSwitcher";
 export default {
   name: 'Home',
-  components: {ButtonThemeSwitcher},
+  // components: {ButtonThemeSwitcher},
   props: {
     categories: Array,
   },
@@ -44,8 +44,8 @@ export default {
       padding: 1rem 0.5rem;
       border: 1px solid;
       border-color: var(--primary);
-      color: var(--text1);
-      background: rgba(0, 0, 0, 0.7);
+      color: var(--text-primary);
+      background: var(--primary-dark);
       text-transform: capitalize;
       cursor: pointer;
       border-radius: 0.5rem;

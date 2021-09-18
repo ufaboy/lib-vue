@@ -29,6 +29,7 @@
       </div>
     </header>
     <router-view v-bind="$attrs" :categories="categories" @scrolling="scrolling"></router-view>
+    <component :is="userPreferTheme"></component>
     <teleport to="body">
       <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
     </teleport>
@@ -41,10 +42,13 @@ import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
 import RefreshPopup from "../components/RefreshPopup";
+import ThemeDark from "../components/ThemeDark";
+import ThemeLight from "../components/ThemeLight";
+import useTheme from "../composables/useTheme";
 
 export default {
-  name: "Main",
-  components: {RefreshPopup,},
+  name: "LayoutMain",
+  components: {ThemeLight, ThemeDark, RefreshPopup,},
   setup() {
     const route = useRoute()
     const activeBurger = ref(false)
@@ -53,6 +57,7 @@ export default {
     const registration = ref(null)
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
+    const {userPreferTheme} = useTheme()
     const btnViewEditMode = computed(() => {
       return route.name === 'book-view' ? {
         name: 'Edit',
@@ -91,6 +96,7 @@ export default {
       btnViewEditMode,
       categories,
       hideHeader,
+      userPreferTheme,
       scrolling,
       getCategories,
       swUpdate,
@@ -112,6 +118,8 @@ export default {
   padding: 0.5rem 1.5rem;
   align-items: center;
   justify-content: space-between;
+  background-color: var(--primary);
+  color: var(--text-primary);
 
   .header--left {
     display: flex;
@@ -237,26 +245,25 @@ export default {
     margin-right: 0;
   }
 
-  .breadcrumb-li:hover {
-    background-color: var(--surface2);
-  }
 
   .breadcrumb-link {
     width: 100%;
     padding: 0.5rem;
     background: transparent;
-    color: var(--text1);
+    color: var(--text-primary);
     text-decoration: none;
     outline: none;
     cursor: pointer;
     white-space: nowrap;
     text-transform: capitalize;
-    border: 1px solid var(--primary-dark);
+    border: none;
     border-radius: 5px;
   }
-
+  .breadcrumb-link:hover {
+    background-color: var(--primary-light);
+  }
   .router-link-active.breadcrumb-link {
-    background-color: var(--surface4);
+    background-color: var(--primary-dark);
   }
 
   .select {
@@ -288,7 +295,7 @@ export default {
   margin-right: 0.5rem;
   display: flex;
   color: var(--text1);
-  border: 1px solid var(--primary-dark);
+  border: none;
   border-radius: 5px;
   text-decoration: none;
 }
