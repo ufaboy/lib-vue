@@ -44,8 +44,8 @@ export default {
       padding: 1rem 0.5rem;
       border: 1px solid;
       border-color: var(--primary);
-      color: var(--text-primary);
-      background: var(--primary-dark);
+      color: var(--text);
+      background: var(--background-on);
       text-transform: capitalize;
       cursor: pointer;
       border-radius: 0.5rem;

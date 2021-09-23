@@ -1,8 +1,8 @@
 <template>
   <div class="books-table">
     <header class="header">
-      <router-link :to="{ name: 'book-create'}" class="btn create-btn">create</router-link>
-      <button class="btn filter-btn" @click="showFilterModal">filter {{filterCount ? filterCount : ''}}</button>
+      <router-link :to="{ name: 'book-create'}" class="btn btn--outline create-btn">create</router-link>
+      <button class="btn btn--outline filter-btn" @click="showFilterModal">filter {{filterCount ? filterCount : ''}}</button>
       <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search by name..."
              @input="getBooksAndReplace">
     </header>
@@ -40,19 +40,19 @@
       </tbody>
     </table>
     <div class="table-paginator">
-      <button class="btn table-pag__btn" v-if="books._links.first"
+      <button class="btn btn--outline table-pag__btn" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
-      <button class="btn table-pag__btn" v-if="books._links.prev"
+      <button class="btn btn--outline table-pag__btn" v-if="books._links.prev"
               @click="toPage(books._links.prev)">prev
       </button>
-      <button class="btn table-pag__btn" v-if="books._links.self"
+      <button class="btn btn--outline table-pag__btn" v-if="books._links.self"
               @click="toPage(books._links.self)">{{ books._meta ? books._meta.currentPage : '' }}
       </button>
-      <button class="btn table-pag__btn" v-if="books._links.next"
+      <button class="btn btn--outline table-pag__btn" v-if="books._links.next"
               @click="toPage(books._links.next)">next
       </button>
-      <button class="btn table-pag__btn" v-if="books._links.last"
+      <button class="btn btn--outline table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
       <select class="select" @change="getBooksAndReplace" v-model="page" v-if="isMobile">
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import {ref, computed,} from "vue";
+import {ref, computed} from "vue";
 import useDevice from "@/composables/useDevice";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
@@ -93,7 +93,7 @@ export default {
     const showModal = ref(false);
     const {isMobile, isDesktop} = useDevice();
     const {
-      filter, searchField, limit, orderBy, books, page, pagBtnArr, resetTable,
+      filter, limit, searchField, orderBy, books, page, pagBtnArr, resetTable,
       updateFilterPage, filterCount,
       sortBy, toPage, getBooksAndReplace
     } = useBooks();
@@ -173,8 +173,8 @@ export default {
     }
 
     .search-text {
-      color: var(--text1);
-      background-color: var(--surface3);
+      color: var(--text);
+      background-color: var(--background-on);
       border-radius: 5px;
       border: none;
       padding: 5px;

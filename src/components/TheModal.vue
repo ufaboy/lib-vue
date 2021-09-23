@@ -49,7 +49,9 @@ export default {
   top: 0;
   left: 0;
   z-index: 29;
+  background-color: hsla(0,0,66, 0.5);
   .modal {
+    background-color: var(--background-on);
     position: absolute;
     margin: auto;
     height: fit-content;

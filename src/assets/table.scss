@@ -1,26 +1,27 @@
 .table {
   width: 100%;
   border: 1px solid;
-  color: #FFFFFF;
-  background-color: hsla(240, 100%, 1%, 0.7);
+  color: var(--text);
+  background-color: var(--background-on);
   border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
+  border-collapse: collapse;
+  line-height: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   .thead {
     border-bottom: 1px solid;
     border-color: inherit;
     position: sticky;
+    z-index: 21;
     top: -1px;
   }
-
-  border-collapse: collapse;
-  line-height: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   .th {
     font-size: 1.2rem;
     line-height: normal;
     padding: 0.5rem;
-    background-color: hsla(240, 100%, 1%, 1);
+    background-color: var(--primary-dark);
+    color: var(--text-primary);
   }
 
   th, td {
@@ -37,7 +38,9 @@
     .td-action {
       position: relative;
       cursor: pointer;
-
+      .icon {
+        fill: var(--text-primary);
+      }
       .sort-up {
         top: 0;
       }
@@ -50,11 +53,11 @@
 
   .table-cell.active {
     .td-title {
-      color: var(--primary-light);
+      color: var(--secondary-light);
     }
     .td-action {
       .icon {
-        fill: var(--primary-light);
+        fill: var(--secondary-light);
       }
     }
   }
@@ -100,8 +103,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  //background-color: var(--surface2);
-  background-color: hsla(240, 100%, 1%, 0.4);
+  background-color: var(--background-on);
   padding: 1rem 0;
   border-radius: 0 0 5px 5px;
 

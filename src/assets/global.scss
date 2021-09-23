@@ -19,8 +19,8 @@ html {
   overflow-x: hidden;
   margin-right: calc(-1 * (100vw - 100%));
   height: 100%;
-  background-color: var(--surface1);
-  color: var(--text1);
+  background-color: var(--background);
+  color: var(--text);
 }
 body, #app, .basement {
   width: 100%;
@@ -37,12 +37,6 @@ input {
   outline: none;
 }
 
-select {
-  background-color: var(--surface2);
-  border-color: transparent;
-  border-radius: 5px;
-}
-
 .modal {
   color: var(--text1);
   background-color: var(--surface2);
@@ -50,8 +44,10 @@ select {
 }
 .select {
   padding: 5px;
-  background-color: var(--surface5);
-  color: var(--primary-light);
+  color: var(--text);
+  background-color: var(--background-on);
+  //border-color: transparent;
+  border-radius: 5px;
 }
 
 .icon {

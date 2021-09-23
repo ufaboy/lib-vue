@@ -95,7 +95,7 @@ export default {
     margin-right: 1rem;
     padding: 1rem;
     color: var(--text1);
-    background: var(--surface2);
+    background: hsla(181, 17%, 100%, 0.5);
     border-radius: 5px;
 
     .title {
@@ -104,7 +104,8 @@ export default {
   }
 
   .genre:hover {
-    background: var(--surface4);
+    color: var(--text-primary);
+    background: var(--primary-light);
   }
 }
 

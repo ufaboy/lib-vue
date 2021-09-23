@@ -1,20 +1,24 @@
 <template>
   <main class="list-book" @touchstart="touchStart" @touchend="touchEnd">
-    <header class="header">
-      <input class="search-input"
+    <header class="header" v-if="isDesktop">
+      <input class="header__block search-input"
              type="search"
              v-model="searchField"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
-      <select class="select" v-model="filter.genre" @change="changeGenreLoadBook">
+      <select class="header__block select select-genre" v-model="filter.genre" @change="changeGenreLoadBook">
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
                   :value="genre">{{ genre.name }}
           </option>
         </optgroup>
-
       </select>
+      <select class="header__block select select-order-by" v-model="orderBy.name" @change="changeSortOrderBy">
+        <option v-for="(option, index) of $options.orderByOptions" :value="option" :key="option + index">{{ option }}
+        </option>
+      </select>
+      <button class="header__block btn-asc" @click="changeSortAsc">{{ orderBy.asc ? 'asc' : 'desc' }}</button>
     </header>
     <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
@@ -51,10 +55,11 @@ export default {
   props: {
     categories: Array,
   },
+  orderByOptions: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
   setup(props) {
     document.title = 'Books';
     const {categories} = toRefs(props)
-    const {isMobile} = useDevice();
+    const {isMobile, isDesktop} = useDevice();
     const route = useRoute();
     const {filter, searchField, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
     const {openBook} = useBook();
@@ -83,7 +88,6 @@ export default {
     };
     if (route.params.id) {
       filter.value.genre = calcGenreById(+route.params.id)
-      console.log({route: route.params.id})
     }
 
     const updateBySorting = (e) => {
@@ -93,11 +97,20 @@ export default {
       page.value = 1
       getBooksAndPush()
     };
+    const changeSortAsc = function () {
+      orderBy.value.asc = !orderBy.value.asc
+      page.value = 1
+      getBooksAndPush()
+    }
+    const changeSortOrderBy = function () {
+      page.value = 1
+      getBooksAndPush()
+    }
     const onScroll = (e) => {
       showTopButton.value = e.target.scrollingElement.scrollTop > 50;
     };
     window.addEventListener('scroll', onScroll, {passive: true});
-    onUnmounted(()=>{
+    onUnmounted(() => {
       window.removeEventListener('scroll', onScroll, {passive: true})
     })
 
@@ -112,16 +125,25 @@ export default {
       genreId,
       searchField,
       isMobile,
+      isDesktop,
       calcGenreById,
       showSortingModal,
       touchStart, touchEnd,
       getBooksAndPush,
+      changeSortAsc,
+      changeSortOrderBy,
       searchByName,
       changeGenreLoadBook,
       openBook,
       getCover,
       updateBySorting,
       onScroll,
+    }
+  },
+  computed: {
+    readyToTeleport() {
+      const layoutRenderer = document.getElementById('header-middle')
+      return this.isMobile ? false : !!layoutRenderer
     }
   },
   methods: {
@@ -149,6 +171,15 @@ export default {
     margin-bottom: 0.5rem;
     max-height: 42px;
 
+    .header__block {
+      margin: 0 0.5rem 0 0;
+      cursor: pointer;
+    }
+
+    .header__block:last-child {
+      margin: 0;
+    }
+
     .search-input {
       display: flex;
       flex: 1;
@@ -160,11 +191,22 @@ export default {
       padding: 5px;
     }
 
-    .select {
-      display: flex;
-      flex: 1;
-      margin-left: 0.5rem;
+    .select-genre {
+      width: 200px;
     }
+
+    .select-order-by {
+      width: 120px;
+    }
+
+    .btn-asc {
+      width: 50px;
+    }
+
+    //.select {
+    //  display: flex;
+    //  flex: 1;
+    //}
   }
 
   .book {
@@ -178,7 +220,8 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    background: rgba(100, 100, 100, 0.5);
+    background: var(--background-on);
+    box-shadow: 5px 5px 20px #333;
 
 
     .book-text-wrap {
@@ -220,7 +263,8 @@ export default {
   }
 
   .book:hover {
-    background: rgba(100, 100, 100, 0.8);
+    color: var(--text-primary);
+    background: var(--primary-light);
   }
 
   .loader {
