@@ -1,30 +1,41 @@
 <template>
   <div class="selectWrapper">
-    <select class="selectNative js-selectNative" aria-labelledby="jobLabel">
+    <select class="selectNative js-selectNative" aria-labelledby="jobLabel" :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)">
       <option value="sel" disabled="" selected=""> Select role...</option>
       <template v-if="group">
-        <optgroup :label="group[label]" v-for="(group, index) of options" :key="`${trackBy}-${index}`" >
+        <optgroup :label="group[label]" v-for="(group, index) of options" :key="`${trackBy}-${index}`">
           <option v-for="(option, index) of group" :key="`option-${index}`" :value="option">
-            <slot name="option">{{option[label]}}</slot>
+            <slot name="option">{{ option[label] }}</slot>
           </option>
         </optgroup>
       </template>
       <template v-else>
         <option v-for="(option, index) of options" :key="`${trackBy}-${index}`" :value="option">
-          <slot name="option">{{option[label]}}</slot>
+          <slot name="option">{{ option[label] }}</slot>
         </option>
       </template>
     </select>
 
     <!-- Hide the custom select from AT (e.g. SR) using aria-hidden -->
-    <div class="selectCustom js-selectCustom" aria-hidden="true">
-      <div class="selectCustom-trigger">Select role...</div>
+    <div ref="selectCustom" class="selectCustom js-selectCustom" :class="{'isActive': activeCustomSelect}"
+         aria-hidden="true" @click="toggleCustomSelect">
+      <div class="selectCustom-trigger">
+        <slot name="default-option">{{selected ? selected[label] : 'Select role...'}}</slot>
+      </div>
       <div class="selectCustom-options">
-        <div class="selectCustom-option" data-value="ds">UI/UX Designer</div>
-        <div class="selectCustom-option" data-value="fe">Frontend Engineer</div>
-        <div class="selectCustom-option" data-value="be">Backend Engineer</div>
-        <div class="selectCustom-option" data-value="qa">QA Engineer</div>
-        <div class="selectCustom-option" data-value="un">Unicorn</div>
+        <div class="selectCustom-option" :class="{'isHover': optionHoveredIndex === index}" v-for="(option, index) of options"
+             :key="`option-${index}`"
+             :data-value="index"
+             @click.stop="selectCustomOption(option, index, $event.target)"
+             @mouseenter="updateCustomSelectHovered(index)">
+          <slot name="option">{{ option[label] }}</slot>
+        </div>
+        <!--        <div class="selectCustom-option" data-value="ds">UI/UX Designer</div>-->
+        <!--        <div class="selectCustom-option" data-value="fe">Frontend Engineer</div>-->
+        <!--        <div class="selectCustom-option" data-value="be">Backend Engineer</div>-->
+        <!--        <div class="selectCustom-option" data-value="qa">QA Engineer</div>-->
+        <!--        <div class="selectCustom-option" data-value="un">Unicorn</div>-->
       </div>
     </div>
   </div>
@@ -35,10 +46,14 @@
 export default {
   name: "SelectComponent",
   props: {
+    modelValue: Object,
     options: {
       type: Array,
-      default(){
-        return [{name: 'UI/UX Designer', value: 'ds'},{name: 'Frontend Engineer', value: 'fe'},{name: 'Backend Engineer', value: 'be'},{name: 'QA Engineer', value: 'qa'},{name: 'Unicorn', value: 'un'},]
+      default() {
+        return [{name: 'UI/UX Designer', value: 'ds'}, {
+          name: 'Frontend Engineer',
+          value: 'fe'
+        }, {name: 'Backend Engineer', value: 'be'}, {name: 'QA Engineer', value: 'qa'}, {name: 'Unicorn', value: 'un'},]
       }
     },
     multiple: {
@@ -49,19 +64,23 @@ export default {
     trackBy: String,
     label: String,
   },
-  data(){
+  emits: ['update:modelValue'],
+  data() {
     return {
-      selectCustomActive: false,
+      activeCustomSelect: false,
+      selected: null,
+      selectedIndex: null,
+      optionHoveredIndex: -1,
+
 
       elSelectNative: null,
       elSelectCustom: null,
       elSelectCustomBox: null,
       elSelectCustomOpts: null,
-      customOptsList: null,
       optionsCount: null,
       defaultLabel: null,
-      optionChecked: '',
-      optionHoveredIndex: -1
+      optionChecked: null,
+
     }
   },
   created() {
@@ -75,157 +94,120 @@ export default {
       this.elSelectCustom = document.getElementsByClassName("js-selectCustom")[0];
       this.elSelectCustomBox = this.elSelectCustom.children[0];
       this.elSelectCustomOpts = this.elSelectCustom.children[1];
-      this.customOptsList = Array.from(this.elSelectCustomOpts.children);
-      this.optionsCount = this.customOptsList.length;
       this.defaultLabel = this.elSelectCustomBox.getAttribute("data-value");
     },
-    openSelectCustom() {
-  elSelectCustom.classList.add("isActive");
-  // Remove aria-hidden in case this was opened by a user
-  // who uses AT (e.g. Screen Reader) and a mouse at the same time.
-  elSelectCustom.setAttribute("aria-hidden", false);
+    selectCustomOption(value, index, element) {
+      console.log('selectCustomOption', {value: value, index: index, element: element})
 
-  if (optionChecked) {
-    const optionCheckedIndex = customOptsList.findIndex(
-        (el) => el.getAttribute("data-value") === optionChecked
-    );
-    updateCustomSelectHovered(optionCheckedIndex);
-  }
+      this.selected = value;
+      this.selectedIndex = index;
+      this.activeCustomSelect = false
+      this.updateCustomSelectChecked(value, element.textContent);
 
-  // Add related event listeners
-  document.addEventListener("click", watchClickOutside);
-  document.addEventListener("keydown", supportKeyboardNavigation);
-},
+    },
+    toggleCustomSelect() {
+      if (this.activeCustomSelect) {
+        this.activeCustomSelect = false
+        this.$refs.selectCustom.setAttribute("aria-hidden", true);
+        this.updateCustomSelectHovered(-1);
 
-closeSelectCustom() {
-  elSelectCustom.classList.remove("isActive");
+        // Remove related event listeners
+        document.removeEventListener("click", this.watchClickOutside);
+        document.removeEventListener("keydown", this.supportKeyboardNavigation);
+      } else {
+        this.activeCustomSelect = true
+        this.$refs.selectCustom.setAttribute("aria-hidden", false);
 
-  elSelectCustom.setAttribute("aria-hidden", true);
+        // if (this.optionChecked) {
+        //   const optionCheckedIndex = this.options.findIndex(
+        //       (el) => el.getAttribute("data-value") === this.optionChecked
+        //   );
+        //   this.updateCustomSelectHovered(optionCheckedIndex);
+        // }
 
-  updateCustomSelectHovered(-1);
+        // Add related event listeners
+        document.addEventListener("click", this.watchClickOutside);
+        document.addEventListener("keydown", this.supportKeyboardNavigation);
+      }
+    },
 
-  // Remove related event listeners
-  document.removeEventListener("click", watchClickOutside);
-  document.removeEventListener("keydown", supportKeyboardNavigation);
-},
+    updateCustomSelectHovered(newIndex) {
+      this.optionHoveredIndex = newIndex
+    },
 
-updateCustomSelectHovered(newIndex) {
-  const prevOption = elSelectCustomOpts.children[optionHoveredIndex];
-  const option = elSelectCustomOpts.children[newIndex];
+    updateCustomSelectChecked(value, text) {
+      const prevValue = this.optionChecked;
 
-  if (prevOption) {
-    prevOption.classList.remove("isHover");
-  }
-  if (option) {
-    option.classList.add("isHover");
-  }
+      const elPrevOption = this.elSelectCustomOpts.querySelector(
+          `[data-value="${prevValue}"`
+      );
+      const elOption = this.elSelectCustomOpts.querySelector(`[data-value="${value}"`);
 
-  optionHoveredIndex = newIndex;
-},
+      if (elPrevOption) {
+        elPrevOption.classList.remove("isActive");
+      }
 
-updateCustomSelectChecked(value, text) {
-  const prevValue = optionChecked;
+      if (elOption) {
+        elOption.classList.add("isActive");
+      }
 
-  const elPrevOption = elSelectCustomOpts.querySelector(
-      `[data-value="${prevValue}"`
-  );
-  const elOption = elSelectCustomOpts.querySelector(`[data-value="${value}"`);
+      this.elSelectCustomBox.textContent = text;
+      this.optionChecked = value;
+    },
 
-  if (elPrevOption) {
-    elPrevOption.classList.remove("isActive");
-  }
+    watchClickOutside(event) {
+      const didClickedOutside = !this.$refs.selectCustom.contains(event.target);
+      console.log('watchClickOutside', {selectCustom: this.$refs.selectCustom, didClickedOutside: didClickedOutside, contains: this.$refs.selectCustom.contains(event.target)})
+      if (didClickedOutside) {
+        this.activeCustomSelect = false;
+      }
+    },
+    goPrevOption() {},
+    goNextOption() {},
 
-  if (elOption) {
-    elOption.classList.add("isActive");
-  }
 
-  elSelectCustomBox.textContent = text;
-  optionChecked = value;
-},
+    supportKeyboardNavigation(event) {
+      console.log('supportKeyboardNavigation', {event: event})
+      event.preventDefault(); // prevent page scrolling
+      if (event.keyCode === 40 && this.optionHoveredIndex < this.options.length - 1) {
+        this.updateCustomSelectHovered(this.optionHoveredIndex + 1);
+      }
+      // press up -> go previous
+      if (event.keyCode === 38 && this.optionHoveredIndex > 0) {
+        this.updateCustomSelectHovered(this.optionHoveredIndex - 1);
+      }
 
-watchClickOutside(e) {
-  const didClickedOutside = !elSelectCustom.contains(event.target);
-  if (didClickedOutside) {
-    closeSelectCustom();
-  }
-},
+      // press Enter or space -> select the option
+      if (event.keyCode === 13 || event.keyCode === 32) {
+        const option = this.elSelectCustomOpts.children[this.optionHoveredIndex];
+        const value = option && option.getAttribute("data-value");
+        if (Number(value)) {
+          this.selectedIndex = Number(value);
+          this.selected = this.options[Number(value)]
+          // updateCustomSelectChecked(value, option.textContent);
+        }
+        this.activeCustomSelect = false
+      }
 
-supportKeyboardNavigation(e) {
-  // press down -> go next
-  if (event.keyCode === 40 && optionHoveredIndex < optionsCount - 1) {
-    let index = optionHoveredIndex;
-    e.preventDefault(); // prevent page scrolling
-    updateCustomSelectHovered(optionHoveredIndex + 1);
-  }
-
-  // press up -> go previous
-  if (event.keyCode === 38 && optionHoveredIndex > 0) {
-    e.preventDefault(); // prevent page scrolling
-    updateCustomSelectHovered(optionHoveredIndex - 1);
-  }
-
-  // press Enter or space -> select the option
-  if (event.keyCode === 13 || event.keyCode === 32) {
-    e.preventDefault();
-
-    const option = elSelectCustomOpts.children[optionHoveredIndex];
-    const value = option && option.getAttribute("data-value");
-
-    if (value) {
-      elSelectNative.value = value;
-      updateCustomSelectChecked(value, option.textContent);
-    }
-    closeSelectCustom();
-  }
-
-  // press ESC -> close selectCustom
-  if (event.keyCode === 27) {
-    closeSelectCustom();
-  }
-},
+      // press ESC -> close selectCustom
+      if (event.keyCode === 27) {
+        this.activeCustomSelect = false
+      }
+    },
   },
 
-
-// Toggle custom select visibility when clicking the box
-  elSelectCustomBox.addEventListener("click", (e) => {
-    const isClosed = !elSelectCustom.classList.contains("isActive");
-
-    if (isClosed) {
-      openSelectCustom();
-    } else {
-      closeSelectCustom();
-    }
-  });
-
-
-
 // Update selectCustom value when selectNative is changed.
-elSelectNative.addEventListener("change", (e) => {
-  const value = e.target.value;
-  const elRespectiveCustomOption = elSelectCustomOpts.querySelectorAll(
-      `[data-value="${value}"]`
-  )[0];
-
-  updateCustomSelectChecked(value, elRespectiveCustomOption.textContent);
-});
+//   elSelectNative.addEventListener("change", (e) => {
+//     const value = e.target.value;
+//     const elRespectiveCustomOption = elSelectCustomOpts.querySelectorAll(
+//         `[data-value="${value}"]`
+//     )[0];
+//
+//     updateCustomSelectChecked(value, elRespectiveCustomOption.textContent);
+//   });
 
 // Update selectCustom value when an option is clicked or hovered
-customOptsList.forEach(function (elOption, index) {
-  elOption.addEventListener("click", (e) => {
-    const value = e.target.getAttribute("data-value");
 
-    // Sync native select to have the same value
-    elSelectNative.value = value;
-    updateCustomSelectChecked(value, e.target.textContent);
-    closeSelectCustom();
-  });
-
-  elOption.addEventListener("mouseenter", (e) => {
-    updateCustomSelectHovered(index);
-  });
-
-  // TODO: Toggle these event listeners based on selectCustom visibility
-});
 }
 </script>
 
@@ -236,8 +218,9 @@ customOptsList.forEach(function (elOption, index) {
   .selectNative,
   .selectCustom {
     position: relative;
-    width: 22rem;
-    height: 4rem;
+    width: 100%; //22rem;
+    height: 2rem; //4rem;
+    background-color: var(--background-on);
   }
 
   // Make sure the custom select does not mess with the layout
@@ -285,8 +268,8 @@ customOptsList.forEach(function (elOption, index) {
 
   .selectNative,
   .selectCustom-trigger {
-    font-size: 1.6rem;
-    background-color: #fff;
+    //font-size: 1.6rem;
+    //background-color: #fff;
     border: 1px solid #6f6f6f;
     border-radius: 0.4rem;
   }
@@ -305,17 +288,17 @@ customOptsList.forEach(function (elOption, index) {
     position: relative;
     width: 100%;
     height: 100%;
-    background-color: #fff;
-    padding: 0.8rem 0.8rem;
+    //background-color: #fff;
+    padding: 0.4rem;
     cursor: pointer;
   }
 
   .selectCustom-trigger::after {
     content: "▾";
     position: absolute;
-    top: 0;
-    line-height: 3.8rem;
-    right: 0.8rem;
+    top: 5px;
+    //line-height: 3.8rem;
+    right: 0.4rem;
   }
 
   .selectCustom-trigger:hover {
@@ -323,16 +306,18 @@ customOptsList.forEach(function (elOption, index) {
   }
 
   .selectCustom-options {
+    color: var(--text);
     position: absolute;
-    top: calc(3.8rem + 0.8rem);
+    //top: calc(3.8rem + 0.8rem);
+    top: calc(2rem);
     left: 0;
     width: 100%;
     border: 1px solid #6f6f6f;
     border-radius: 0.4rem;
-    background-color: #fff;
+    background-color: var(--background-on);
     box-shadow: 0 0 4px #e9e1f8;
     z-index: 1;
-    padding: 0.8rem 0;
+    //padding: 0.8rem 0;
     display: none;
   }
 
@@ -342,15 +327,14 @@ customOptsList.forEach(function (elOption, index) {
 
   .selectCustom-option {
     position: relative;
-    padding: 0.8rem;
-    padding-left: 2.5rem;
+    padding: 0.5rem 1rem;
   }
 
   .selectCustom-option.isHover,
   .selectCustom-option:hover {
     background-color: #865bd7; // contrast AA
-    color: white;
-    cursor: default;
+    color: var(--text-primary);
+    cursor: pointer;
   }
 
   .selectCustom-option:not(:last-of-type)::after {
@@ -370,51 +354,52 @@ customOptsList.forEach(function (elOption, index) {
 
   // ----- Theme styles -----
 
-  html {
-    font-size: 62.5%;
-  }
-  body {
-    background: #f8f3ef;
-    font-family: Arial, Helvetica, sans-serif;
-    box-sizing: border-box;
-    color: #343434;
-    line-height: 1.5;
-    font-size: 1.6rem;
-    min-height: 120vh; /* using arrow keys in the select, does not scroll the page */
-  }
-
-  body * {
-    box-sizing: inherit;
-  }
-
-  strong {
-    font-weight: 600;
-  }
-
-  .title {
-    font-size: 2rem;
-    font-weight: 600;
-    margin: 1.6rem;
-    line-height: 1.2;
-    text-align: center;
-  }
-
-  .link {
-    display: inline-block;
-    color: inherit;
-    text-decoration-color: #9b78de;
-    padding: 0.1rem 0.2rem;
-    transform: translateX(-0.1em);
-    margin-right: -0.1em;
-
-    &:hover {
-      color: #8c00ff;
-    }
-
-    &:focus {
-      outline: none;
-      background-color: #e9e1f8;
-    }
-  }
+  //html {
+  //  font-size: 62.5%;
+  //}
+  //
+  //body {
+  //  background: #f8f3ef;
+  //  font-family: Arial, Helvetica, sans-serif;
+  //  box-sizing: border-box;
+  //  color: #343434;
+  //  line-height: 1.5;
+  //  font-size: 1.6rem;
+  //  min-height: 120vh; /* using arrow keys in the select, does not scroll the page */
+  //}
+  //
+  //body * {
+  //  box-sizing: inherit;
+  //}
+  //
+  //strong {
+  //  font-weight: 600;
+  //}
+  //
+  //.title {
+  //  font-size: 2rem;
+  //  font-weight: 600;
+  //  margin: 1.6rem;
+  //  line-height: 1.2;
+  //  text-align: center;
+  //}
+  //
+  //.link {
+  //  display: inline-block;
+  //  color: inherit;
+  //  text-decoration-color: #9b78de;
+  //  padding: 0.1rem 0.2rem;
+  //  transform: translateX(-0.1em);
+  //  margin-right: -0.1em;
+  //
+  //  &:hover {
+  //    color: #8c00ff;
+  //  }
+  //
+  //  &:focus {
+  //    outline: none;
+  //    background-color: #e9e1f8;
+  //  }
+  //}
 }
 </style>

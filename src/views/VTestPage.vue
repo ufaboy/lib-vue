@@ -3,15 +3,16 @@
     <ul>
       <li></li>
     </ul>
-    <select name="" id="">select</select>
+    <select-component label="name"></select-component>
     <button>button</button>
   </div>
 </template>
 
 <script>
+import SelectComponent from "../components/SelectComponent";
 export default {
   name: "TestPage",
-  components: {},
+  components: {SelectComponent},
   props: {},
   data: () => ({}),
   computed: {},
