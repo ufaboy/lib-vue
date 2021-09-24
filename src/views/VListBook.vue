@@ -18,7 +18,7 @@
         <option v-for="(option, index) of $options.orderByOptions" :value="option" :key="option + index">{{ option }}
         </option>
       </select>
-      <button class="header__block btn-asc" @click="changeSortAsc">{{ orderBy.asc ? 'asc' : 'desc' }}</button>
+      <button class="btn header__block btn-asc" @click="changeSortAsc">{{ orderBy.asc ? 'asc' : 'desc' }}</button>
     </header>
     <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
@@ -196,11 +196,11 @@ export default {
     }
 
     .select-order-by {
-      width: 120px;
+      width: 125px;
     }
 
     .btn-asc {
-      width: 50px;
+      width: 75px;
     }
 
     //.select {
@@ -220,7 +220,8 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    background: var(--background-on);
+    color: var(--surface-on);
+    background: var(--surface);
     box-shadow: 5px 5px 20px #333;
 
 

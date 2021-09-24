@@ -9,18 +9,18 @@
     --text: #000;
     --text-primary: #fff;
     --text-secondary: #fff;
-    --background: hsla(0, 0%, 96%, 1);
+    --background: #fff;
     --background-second: radial-gradient(ellipse at top left, hsla(208, 46%, 60%, 1) 0%, hsla(213, 31%, 78%, 1));
-    --surface: white;
+    --surface: hsla(0, 0%, 96%, 1);
     --error: hsla(349, 100%, 35%, 1); //#b00020
     --primary-on: hsla(268, 100%, 78%, 1); // #c38fff
     --secondary-on: #000;
     --background-on: hsla(208, 46%, 90%, 1);
-    --surface-on: white;
+    --surface-on: #000;
     --error-on: hsla(349, 100%, 35%, 1); //#b00020
   }
 }
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark)   {
   :root {
     --primary: hsla(162, 100%, 26%, 1); //#00855d
     --primary-light: hsla(238, 54%, 61%, 1); //#666ad1

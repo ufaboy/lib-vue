@@ -94,8 +94,8 @@ export default {
     margin-bottom: 1rem;
     margin-right: 1rem;
     padding: 1rem;
-    color: var(--text1);
-    background: hsla(181, 17%, 100%, 0.5);
+    color: var(--surface-on);
+    background: var(--surface);
     border-radius: 5px;
 
     .title {

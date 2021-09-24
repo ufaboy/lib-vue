@@ -54,6 +54,9 @@
           </span>
         </div>
       </section>
+      <section class="section labels">
+        <span v-for="(label, index) of book.labels" :key="index">{{label}}</span>
+      </section>
       <div class="label">
         <span class="label-header">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
@@ -164,6 +167,7 @@ export default {
       name: null,
       annotation: '',
       text: '',
+      labels: '',
       source: null,
       cover: null,
       rating: null,
@@ -344,11 +348,13 @@ export default {
   methods: {
     autoResize() {
       const editor = this.$refs.editor
-      const scrollHeight = Math.max(
-          document.body.scrollHeight, editor.scrollHeight,
-          document.body.offsetHeight, editor.offsetHeight,
-          document.body.clientHeight, editor.clientHeight
-      ) + 100;
+      // const scrollHeight = Math.max(
+      //     document.body.scrollHeight, editor.scrollHeight,
+      //     document.body.offsetHeight, editor.offsetHeight,
+      //     document.body.clientHeight, editor.clientHeight
+      // ) + 100;
+      const scrollHeight = Number(editor.scrollHeight) + 50;
+      console.log(editor, {'$refs.editor': editor, scrollHeight: scrollHeight})
       editor.style.cssText = `height: ${scrollHeight}px`;
     },
     getSrc(media) {
@@ -449,8 +455,8 @@ export default {
   .value {
     padding: 0.3rem;
     width: 100%;
-    color: var(--text1);
-    background-color: var(--surface2);
+    color: var(--surface-on);
+    background-color: var(--surface);
     outline: none;
   }
 
@@ -600,7 +606,6 @@ export default {
     }
 
     .textarea {
-      resize: vertical;
       width: 100%;
       color: var(--color-2);
       background-color: var(--background-2);

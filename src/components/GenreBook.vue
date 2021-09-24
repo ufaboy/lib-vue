@@ -97,8 +97,8 @@ export default {
   padding: 1rem;
   height: 100%;
   width: 100%;
-  color: var(--text1);
-  background-color: var(--surface4);
+  color: var(--surface-on);
+  background-color: var(--surface);
   border-radius: 10px;
 
   .modal-header {

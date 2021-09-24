@@ -123,7 +123,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     background-color: var(--surface);
-    color: var(--text-primary);
+    color: var(--surface-on);
 
     .header-block {
       display: flex;
@@ -256,7 +256,7 @@ export default {
       width: 100%;
       padding: 0.5rem;
       background: transparent;
-      color: var(--text-primary);
+      color: var(--surface-on);
       text-decoration: none;
       outline: none;
       cursor: pointer;

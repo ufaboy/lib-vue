@@ -44,8 +44,8 @@ input {
 }
 .select {
   padding: 5px;
-  color: var(--text);
-  background-color: var(--background-on);
+  color: var(--surface-on);
+  background-color: var(--surface);
   //border-color: transparent;
   border-radius: 5px;
 }
@@ -70,6 +70,9 @@ input {
     color: var(--text1);
     background-color: var(--surface4);
   }
+}
+textarea {
+  resize: vertical;
 }
 
 @media only screen and (max-width: 892px) {
