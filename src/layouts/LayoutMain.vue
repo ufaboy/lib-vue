@@ -111,8 +111,6 @@ export default {
       refreshApp
     }
   },
-
-  methods: {},
 }
 </script>
 
@@ -124,7 +122,7 @@ export default {
     padding: 0.5rem 1.5rem;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--background-on);
+    background-color: var(--surface);
     color: var(--text-primary);
 
     .header-block {
@@ -271,8 +269,7 @@ export default {
       background-color: var(--primary-light);
     }
     .router-link-active.breadcrumb-link {
-      color: var(--secondary-on);
-      background-color: var(--primary-light);
+      background-color: var(--primary);
     }
 
     .select {

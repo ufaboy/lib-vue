@@ -45,7 +45,7 @@ export default {
       border: 1px solid;
       border-color: var(--primary);
       color: var(--text);
-      background: var(--background-on);
+      background: var(--surface);
       text-transform: capitalize;
       cursor: pointer;
       border-radius: 0.5rem;

@@ -1,18 +1,18 @@
 .btn {
-  border: 2px solid;
-  border-color: transparent;
+  //border: 2px solid var(--primary);
   border-radius: 5px;
-  color: var(--primary);
+  color: var(--surface-on);
   padding: 6px 15px;
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  background-color: var(--background-on);
+  background-color: var(--surface);
   height: fit-content;
 }
 .positive-btn {
   @extend .btn;
   background-color: #4CAF50;
+  border: none;
 }
 
 .negative-btn {
@@ -82,7 +82,7 @@
   @extend .btn-content;
 }
 .image-entry-btn {
-  color: var(--text1);
+  color: var(--text);
   margin-right: 5px;
   background: black;
   border: none;

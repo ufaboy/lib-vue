@@ -2,7 +2,7 @@
   width: 100%;
   border: 1px solid;
   color: var(--text);
-  background-color: var(--background-on);
+  background-color: var(--surface);
   border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
   border-collapse: collapse;
   line-height: 20px;
@@ -20,8 +20,8 @@
     font-size: 1.2rem;
     line-height: normal;
     padding: 0.5rem;
-    background-color: var(--primary-dark);
-    color: var(--text-primary);
+    background-color: var(--surface-dark);
+    color: var(--surface-on);
   }
 
   th, td {
