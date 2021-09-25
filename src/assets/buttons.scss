@@ -1,29 +1,52 @@
-.btn {
-  border: 2px solid;
-  border-color: transparent;
+.btn, .btn-outline {
   border-radius: 5px;
-  color: var(--surface-on);
   padding: 6px 15px;
   text-decoration: none;
   cursor: pointer;
   outline: none;
-  background-color: var(--surface);
-  height: fit-content;
+  color: var(--surface-on);
 }
+.btn:hover, .btn-outline:hover {
+  background-color: var(--surface-light);
+}
+.btn {
+  border: 1px solid;
+  //border-color: transparent;
+  border-color: hsla(0, 0%, 46%, 1) hsla(0, 0%, 52%, 1);
+  background-color: var(--surface);
+}
+.btn-outline {
+  border: 2px solid;
+  background-color: transparent;
+  border-color: hsla(0, 0%, 46%, 1) hsla(0, 0%, 52%, 1);
+}
+
 .positive-btn {
   @extend .btn;
   background-color: #4CAF50;
   border: none;
+}
+.positive-btn-outline {
+  @extend .btn-outline;
+  border-color: #4CAF50;
 }
 
 .negative-btn {
   @extend .btn;
   background-color: #f44336;
 }
+.negative-btn-outline {
+  @extend .btn-outline;
+  border-color: #f44336;
+}
 
 .regular-btn {
   @extend .btn;
   background-color: #457b9d;
+}
+.regular-btn-outline {
+  @extend .btn-outline;
+  border-color: #457b9d;
 }
 
 .btn--green {
@@ -91,11 +114,7 @@
   border-radius: 3px;
   cursor: pointer;
 }
-.btn--outline {
-  @extend .btn;
-  background: initial;
-  border-color: var(--primary);
-}
+
 /* =====================================================
    Some defaults across all toggle demos
    ===================================================== */

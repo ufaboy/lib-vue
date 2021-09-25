@@ -6,6 +6,10 @@ import store from './store'
 
 const app = createApp(App)
 
+//styles
+import '@/assets/main.scss'
+//styles
+
 //self plugins
 // import modal from "@/plugins/modal";
 import scroll from "@/plugins/scroll"

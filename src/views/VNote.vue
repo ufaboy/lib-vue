@@ -13,9 +13,10 @@
         <th class="th">
           <span>type</span>
           <div class="cell-dropdown">
-            <label v-for="(type, index) of allTypes" :key="index">
+            <label class="checkbox-container" v-for="(type, index) of allTypes" :key="index">
+              {{type}}
               <input type="checkbox" multiple v-model="filterTypes" :value="type">
-              {{type}}</label>
+              <span class="checkmark"></span></label>
           </div>
         </th>
         <th class="th">url</th>
@@ -134,6 +135,11 @@ export default {
     .note {
       border-bottom: 1px solid;
       border-color: inherit;
+    }
+    .cell-dropdown {
+      display: flex;
+      flex-flow: row nowrap;
+      margin-top: 0.5rem;
     }
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="genre-table">
     <header class="header">
-      <button class="btn btn--outline" @click="createGenre">create</button>
+      <button class="btn-outline" @click="createGenre">create</button>
     </header>
     <table class="table">
       <thead class="thead">

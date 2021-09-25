@@ -165,12 +165,12 @@ export default {
     .checkmark {
 
     }
-    .checkmark:after {
-      left: 6px;
-      top: 2px;
-      width: 7px;
-      height: 11px;
-    }
+    //.checkmark:after {
+    //  left: 6px;
+    //  top: 2px;
+    //  width: 7px;
+    //  height: 11px;
+    //}
   }
 
   .select-genre {

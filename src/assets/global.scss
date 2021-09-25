@@ -46,8 +46,10 @@ input {
   padding: 5px;
   color: var(--surface-on);
   background-color: var(--surface);
-  //border-color: transparent;
   border-radius: 5px;
+}
+.select:hover {
+  background-color: var(--surface-light);
 }
 
 .icon {
@@ -73,6 +75,12 @@ input {
 }
 textarea {
   resize: vertical;
+}
+
+@media (prefers-color-scheme: dark) {
+  //input {
+  //  border-color: hsla(0, 0%, 46%, 1);
+  //}
 }
 
 @media only screen and (max-width: 892px) {

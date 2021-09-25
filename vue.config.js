@@ -4,9 +4,9 @@ module.exports = {
     loaderOptions: {
       css: {
       },
-      scss : {
-        additionalData: `@import "@/assets/main.scss";`
-      }
+      // scss : {
+      //   additionalData: `@import "@/assets/variables.scss";`
+      // }
     }
   },
   pwa: {

@@ -18,7 +18,12 @@
         <option v-for="(option, index) of $options.orderByOptions" :value="option" :key="option + index">{{ option }}
         </option>
       </select>
-      <button class="btn header__block btn-asc" @click="changeSortAsc">{{ orderBy.asc ? 'asc' : 'desc' }}</button>
+      <button class="btn header__block btn-asc" @click="changeSortAsc">
+        <base-icon class="icon" icon-name="sort">
+          <icon-sort-asc v-if="orderBy.asc"/>
+          <icon-sort-desc v-else/>
+        </base-icon>
+      </button>
     </header>
     <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
@@ -45,12 +50,15 @@ import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
 import useSlideButton from "@/composables/useSlideButton";
+import IconSortAsc from '@/components/icons/IconSortAsc.vue'
+import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
 export default {
   name: "ListBook",
   components: {
     TheModal,
-    SortingModal
+    SortingModal,
+    IconSortAsc, IconSortDesc
   },
   props: {
     categories: Array,
@@ -183,11 +191,12 @@ export default {
     .search-input {
       display: flex;
       flex: 1;
+      min-width: 50px;
       //border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
-      border: 1px solid var(--primary-dark);
+      //border: 1px solid;
       border-radius: 5px;
-      color: var(--text1);
-      background-color: var(--surface5);
+      color: var(--text);
+      background-color: var(--surface);
       padding: 5px;
     }
 
@@ -200,7 +209,8 @@ export default {
     }
 
     .btn-asc {
-      width: 75px;
+      //width: 75px;
+      padding: 0;
     }
 
     //.select {

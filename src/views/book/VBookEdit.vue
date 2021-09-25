@@ -54,10 +54,17 @@
           </span>
         </div>
       </section>
-      <section class="section labels">
-        <span v-for="(label, index) of book.labels" :key="index">{{label}}</span>
+      <section class="labels">
+        <span class="labels-title">Метки</span>
+        <div class="labels-wrapper">
+          <span class="book-label" title="delete" v-for="(label, index) of labelsArray" :key="index" @click="deleteLabel(label)">{{label}}</span>
+        </div>
+        <input class="labels-input" list="labels" v-model="labelInput" @change="addLabel(labelInput)">
+        <datalist id="labels">
+          <option v-for="(label, index) of $options.commonLabels" :key="index" :value="label"></option>
+        </datalist>
       </section>
-      <div class="label">
+      <div class="editor-wrapper">
         <span class="label-header">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
@@ -156,12 +163,14 @@ export default {
   props: {
     categories: Array,
   },
+  commonLabels: ['english', 'rework', 'top'],
   setup() {
     document.title = 'Editor';
     const router = useRouter();
     const route = useRoute();
     const showGenreBookModal = ref(false);
     const files = ref([]);
+
     const book = ref({
       id: null,
       name: null,
@@ -174,6 +183,8 @@ export default {
       ad: false,
       cover_path: '',
       files: []});
+    const labelInput = ref('')
+    const labelsArray = computed(() => book.value.labels.split(', '));
     const genres = ref([]);
     const editorMode = ref('raw');
     const expandText = ref(false);
@@ -181,6 +192,14 @@ export default {
     const adAccess = computed(() => getAdAccess());
     const {isDesktop} = useDevice();
 
+    const addLabel = function (element) {
+      const item = book.value.labels ? `, ${element}` : element
+      book.value.labels += item
+      labelInput.value = ''
+    };
+    const  deleteLabel = function (element) {
+      book.value.labels = book.value.labels.replace(`, ${element}`, '')
+    }
     const resetBook = () => {
       if (book.value.id) {
         getBook()
@@ -330,6 +349,10 @@ export default {
       expandIllustration,
       adAccess,
       isDesktop,
+      labelInput,
+      labelsArray,
+      addLabel,
+      deleteLabel,
       setGenres,
       colorizeGenre,
       toggleEditor,
@@ -603,6 +626,31 @@ export default {
 
     .editor-btn:last-of-type {
       margin-right: 0;
+    }
+    .labels {
+      display: flex;
+      flex-flow: row wrap;
+      .labels-title {
+        width: 100%;
+      }
+      .labels-input {
+        color: var(--text);
+        background-color: var(--surface);
+        padding: 0 5px;
+      }
+      .labels-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        //margin-bottom: 0.5rem;
+      }
+      .book-label {
+        margin-right: 0.5rem;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: var(--text);
+        background-color: var(--surface-light);
+      }
     }
 
     .textarea {
@@ -928,6 +976,12 @@ export default {
 
 @media only screen and (max-width: 892px) and (orientation: portrait) {
   .edit-book {
+    .labels-wrapper {
+      margin-bottom: 0.75rem;
+    }
+    .labels-input {
+      width: 100%;
+    }
     .text-container {
       width: 100%;
       margin-right: 0;

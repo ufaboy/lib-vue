@@ -5,9 +5,9 @@
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
       </div>
-<!--      <div id="header-middle" class="header-block">-->
-<!--        <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search...">-->
-<!--      </div>-->
+      <!--      <div id="header-middle" class="header-block">-->
+      <!--        <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search...">-->
+      <!--      </div>-->
       <div class="header-block">
         <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}" @click.stop>
           <svg class="icon-btn" @click="activeBurger = !activeBurger" width="100%" height="100%" viewBox="0 0 26 24">
@@ -265,9 +265,11 @@ export default {
       border: none;
       border-radius: 5px;
     }
+
     .breadcrumb-link:hover {
       background-color: var(--primary-light);
     }
+
     .router-link-active.breadcrumb-link {
       background-color: var(--primary);
     }
@@ -300,10 +302,6 @@ export default {
     }
   }
 
-  .header.header--dark {
-    background-color: var(--surface2);
-  }
-
   .breadcrumb-home {
     padding: 0.5rem;
     margin-right: 0.5rem;
@@ -317,9 +315,9 @@ export default {
 
 
 @media only screen and (max-width: 892px) {
-.header {
-  padding: 0.5rem;
-}
+  .header {
+    padding: 0.5rem;
+  }
 }
 
 @media only screen and (max-width: 892px) and (orientation: landscape) {
