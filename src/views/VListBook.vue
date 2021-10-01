@@ -3,7 +3,7 @@
     <header class="header" v-if="isDesktop">
       <input class="header__block search-input"
              type="search"
-             v-model="searchField"
+             v-model="searchQuery"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
       <select class="header__block select select-genre" v-model="filter.genre" @change="changeGenreLoadBook">
@@ -69,7 +69,7 @@ export default {
     const {categories} = toRefs(props)
     const {isMobile, isDesktop} = useDevice();
     const route = useRoute();
-    const {filter, searchField, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
+    const {filter, searchQuery, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
     const {openBook} = useBook();
     const {showSortingModal, touchStart, touchEnd} = useSlideButton();
 
@@ -131,7 +131,7 @@ export default {
       infinityState,
       orderBy,
       genreId,
-      searchField,
+      searchQuery,
       isMobile,
       isDesktop,
       calcGenreById,

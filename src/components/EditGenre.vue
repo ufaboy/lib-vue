@@ -64,7 +64,7 @@ export default {
   flex-flow: wrap;
   height: 100%;
   width: 100%;
-  color: var(--text1);
+  color: var(--text);
   .header {
     margin-bottom: 1rem;
     width: 100%;
@@ -72,6 +72,13 @@ export default {
     justify-content: space-between;
   }
 
+  .btn-switch {
+    font-weight: bold;
+  }
+
+  .btn-switch.active {
+    color: red;
+  }
   .footer {
     display: flex;
     width: 100%;

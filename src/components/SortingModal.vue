@@ -79,7 +79,7 @@ export default {
     margin-bottom: 0.5rem;
     width: 100%;
     color: var(--text1);
-    background-color: var(--surface4);
+    background-color: var(--surface);
     text-transform: capitalize;
   }
 

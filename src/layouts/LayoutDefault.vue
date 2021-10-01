@@ -2,7 +2,7 @@
   <div class="basement">
 <!--    <canvas-space :count-dots="countDots"/>-->
     <the-sunrise/>
-    <header id="header" class="header" :class="{'header--dark': $route.name === 'book-view'}">
+    <header id="header" class="header">
       <div class="header--left">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
         <ul class="breadcrumb" v-if="isDesktop">
@@ -267,7 +267,7 @@ export default {
       width: 100%;
       padding: 0.5rem;
       background: transparent;
-      color: var(--text1);
+      color: var(--text);
       text-decoration: none;
       outline: none;
       cursor: pointer;
@@ -277,16 +277,12 @@ export default {
       border-radius: 5px;
     }
     .router-link-active.breadcrumb-link {
-      background-color: var(--surface4);
+      background-color: var(--surface);
     }
 
     .select {
       width: 100%;
     }
-  }
-
-  .header.header--dark {
-    background-color: var(--surface2);
   }
 
   .breadcrumb-home {

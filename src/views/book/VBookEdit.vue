@@ -54,16 +54,6 @@
           </span>
         </div>
       </section>
-      <section class="labels">
-        <span class="labels-title">Метки</span>
-        <div class="labels-wrapper">
-          <span class="book-label" title="delete" v-for="(label, index) of labelsArray" :key="index" @click="deleteLabel(label)">{{label}}</span>
-        </div>
-        <input class="labels-input" list="labels" v-model="labelInput" @change="addLabel(labelInput)">
-        <datalist id="labels">
-          <option v-for="(label, index) of $options.commonLabels" :key="index" :value="label"></option>
-        </datalist>
-      </section>
       <div class="editor-wrapper">
         <span class="label-header">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
@@ -90,7 +80,6 @@
                   v-model="book.text"
                   v-if="editorMode === 'raw'"
                   ref="editor"
-                  @input="autoResize"
         ></textarea>
         <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
@@ -137,7 +126,8 @@
       </div>
     </div>
     <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <genre-book :genres-props="genres" :categories="categories" @set-genres="setGenres" @hide-modal="showGenreBookModal = false"/>
+      <genre-book :genres-props="genres" :categories="categories" @set-genres="setGenres"
+                  @hide-modal="showGenreBookModal = false"/>
     </the-modal>
   </div>
 </template>
@@ -159,11 +149,10 @@ import StarRating from "@/components/StarRating";
 
 export default {
   name: "BookEdit",
-  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField, },
+  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField,},
   props: {
     categories: Array,
   },
-  commonLabels: ['english', 'rework', 'top'],
   setup() {
     document.title = 'Editor';
     const router = useRouter();
@@ -176,15 +165,13 @@ export default {
       name: null,
       annotation: '',
       text: '',
-      labels: '',
       source: null,
       cover: null,
       rating: null,
       ad: false,
       cover_path: '',
-      files: []});
-    const labelInput = ref('')
-    const labelsArray = computed(() => book.value.labels.split(', '));
+      files: []
+    });
     const genres = ref([]);
     const editorMode = ref('raw');
     const expandText = ref(false);
@@ -192,14 +179,6 @@ export default {
     const adAccess = computed(() => getAdAccess());
     const {isDesktop} = useDevice();
 
-    const addLabel = function (element) {
-      const item = book.value.labels ? `, ${element}` : element
-      book.value.labels += item
-      labelInput.value = ''
-    };
-    const  deleteLabel = function (element) {
-      book.value.labels = book.value.labels.replace(`, ${element}`, '')
-    }
     const resetBook = () => {
       if (book.value.id) {
         getBook()
@@ -214,7 +193,8 @@ export default {
           rating: null,
           ad: false,
           cover_path: '',
-          files: []}
+          files: []
+        }
       }
       genres.value = []
     };
@@ -268,7 +248,7 @@ export default {
         files.value.push({name: file.name, status: null, file: file})
       }
     };
-    const deleteAllFiles = async() => {
+    const deleteAllFiles = async () => {
       try {
         await deleteFiles(book.value.id)
         files.value.splice(0, files.value.length)
@@ -288,7 +268,7 @@ export default {
         return 'file'
       }
     };
-    const deleteOneFile = async(fileIndex) => {
+    const deleteOneFile = async (fileIndex) => {
       try {
         await deleteFile(files.value[fileIndex].id);
         files.value.splice(fileIndex, 1)
@@ -296,7 +276,7 @@ export default {
         console.error({deleteFile: e})
       }
     };
-    const sendFiles = async(fileToUpload) => {
+    const sendFiles = async (fileToUpload) => {
       try {
         const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
         console.log({sendFiles: fileToUpload, fileArray: fileArray})
@@ -349,10 +329,6 @@ export default {
       expandIllustration,
       adAccess,
       isDesktop,
-      labelInput,
-      labelsArray,
-      addLabel,
-      deleteLabel,
       setGenres,
       colorizeGenre,
       toggleEditor,
@@ -368,6 +344,10 @@ export default {
       loadFiles,
     }
   },
+  data() {
+    return {
+    }
+  },
   methods: {
     autoResize() {
       const editor = this.$refs.editor
@@ -377,7 +357,6 @@ export default {
       //     document.body.clientHeight, editor.clientHeight
       // ) + 100;
       const scrollHeight = Number(editor.scrollHeight) + 50;
-      console.log(editor, {'$refs.editor': editor, scrollHeight: scrollHeight})
       editor.style.cssText = `height: ${scrollHeight}px`;
     },
     getSrc(media) {
@@ -410,11 +389,12 @@ export default {
         this.$refs.editor.setRangeText(selectionText)
       }
     },
-
   },
   updated() {
-    this.autoResize()
-  }
+    if (this.$refs.editor.scrollHeight > 60) {
+      this.autoResize()
+    }
+  },
 }
 </script>
 
@@ -551,8 +531,8 @@ export default {
       cursor: pointer;
       padding: 0.3rem;
       display: block;
-      color: var(--text1);
-      background-color: var(--surface4);
+      color: var(--text);
+      background-color: var(--surface);
     }
 
     .fieldset {
@@ -626,31 +606,6 @@ export default {
 
     .editor-btn:last-of-type {
       margin-right: 0;
-    }
-    .labels {
-      display: flex;
-      flex-flow: row wrap;
-      .labels-title {
-        width: 100%;
-      }
-      .labels-input {
-        color: var(--text);
-        background-color: var(--surface);
-        padding: 0 5px;
-      }
-      .labels-wrapper {
-        display: flex;
-        flex-flow: row wrap;
-        //margin-bottom: 0.5rem;
-      }
-      .book-label {
-        margin-right: 0.5rem;
-        padding: 5px;
-        border-radius: 5px;
-        cursor: pointer;
-        color: var(--text);
-        background-color: var(--surface-light);
-      }
     }
 
     .textarea {
@@ -912,7 +867,6 @@ export default {
   }
 }
 
-
 @media only screen and (max-width: 892px) {
   .edit-book {
     padding: 0.5rem;
@@ -976,12 +930,6 @@ export default {
 
 @media only screen and (max-width: 892px) and (orientation: portrait) {
   .edit-book {
-    .labels-wrapper {
-      margin-bottom: 0.75rem;
-    }
-    .labels-input {
-      width: 100%;
-    }
     .text-container {
       width: 100%;
       margin-right: 0;

@@ -8,7 +8,7 @@ export default function useBooks() {
         rating: null,
         ad: null,
     });
-    const searchField = ref('');
+    const searchQuery = ref('');
     const limit = ref(10);
     const orderBy = ref({name: 'updated_at', asc: false});
     const page = ref(1);
@@ -33,7 +33,7 @@ export default function useBooks() {
             genre: filter.value.genre?.id,
             rating: filter.value.rating,
             ad: filter.value.ad,
-            name: searchField.value
+            searchQuery: searchQuery.value
         }
         try {
             loader.show();
@@ -55,7 +55,7 @@ export default function useBooks() {
             genre: filter.value.genre?.id,
             rating: filter.value.rating,
             ad: filter.value.ad,
-            name: searchField.value
+            searchQuery: searchQuery.value
         }
         if (!infinityState.value && method) {
             return false
@@ -119,7 +119,7 @@ export default function useBooks() {
 
     return {
         filter,
-        searchField,
+        searchQuery,
         limit,
         orderBy,
         books,

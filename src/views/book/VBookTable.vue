@@ -3,7 +3,7 @@
     <header class="header">
       <router-link :to="{ name: 'book-create'}" class="btn-outline create-btn">create</router-link>
       <button class="btn-outline filter-btn" @click="showFilterModal">filter {{filterCount ? filterCount : ''}}</button>
-      <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search by name..."
+      <input type="search" class="search-text" v-model.trim="searchQuery" placeholder="Search by name..."
              @input="getBooksAndReplace">
     </header>
     <table class="table">
@@ -93,7 +93,7 @@ export default {
     const showModal = ref(false);
     const {isMobile, isDesktop} = useDevice();
     const {
-      filter, limit, searchField, orderBy, books, page, pagBtnArr, resetTable,
+      filter, limit, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
       updateFilterPage, filterCount,
       sortBy, toPage, getBooksAndReplace
     } = useBooks();
@@ -117,7 +117,7 @@ export default {
 
     return {
       books,
-      searchField,
+      searchQuery,
       filter,
       showModal,
       page,

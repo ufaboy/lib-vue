@@ -37,11 +37,6 @@ input {
   outline: none;
 }
 
-.modal {
-  color: var(--text1);
-  background-color: var(--surface2);
-  border-radius: 1rem;
-}
 .select {
   padding: 5px;
   color: var(--surface-on);
@@ -69,8 +64,8 @@ input {
   .value {
     width: 100%;
     padding: 5px 10px;
-    color: var(--text1);
-    background-color: var(--surface4);
+    color: var(--text);
+    background-color: var(--surface);
   }
 }
 textarea {
