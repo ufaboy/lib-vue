@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, onBeforeUnmount, ref} from "vue";
 import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
@@ -57,14 +57,10 @@ export default {
     const route = useRoute()
     const searchField = ref('')
     const activeBurger = ref(false)
-
-
-
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
     const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideHeader, throttleScroll} = useScroll()
     const {userPreferTheme} = useTheme()
-    // provide('searchField', searchField)
     const btnViewEditMode = computed(() => {
       return route.name === 'book-view' ? {
         name: 'Edit',
@@ -82,11 +78,13 @@ export default {
     }
 
     getCategories();
-
+    window.addEventListener('scroll', throttleScroll, {passive: true})
+    onBeforeUnmount(()=>{
+      window.removeEventListener('scroll', throttleScroll, {passive: true})
+    })
     return {
       searchField,
       activeBurger,
-
       isMobile,
       isDesktop,
       btnViewEditMode,
@@ -102,14 +100,13 @@ export default {
       clientHeight,
       throttleScroll,
       getCategories,
-
     }
   },
   created() {
-    window.addEventListener('scroll', this.throttleScroll, {passive: true})
+
   },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.throttleScroll, {passive: true})
+
   },
   methods: {
 
