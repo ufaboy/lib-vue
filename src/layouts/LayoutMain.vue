@@ -33,7 +33,7 @@
       </div>
 
     </header>
-    <router-view v-bind="$attrs" :categories="categories"></router-view>
+    <router-view v-bind="$attrs" :categories="categories" :progress-scroll="progress" :window-heights="windowHeights"></router-view>
 <!--    <component :is="userPreferTheme"></component>-->
     <teleport to="body">
       <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
@@ -50,6 +50,7 @@ import RefreshPopup from "../components/RefreshPopup";
 // import ThemeDark from "../components/ThemeDark";
 // import ThemeLight from "../components/ThemeLight";
 import useTheme from "../composables/useTheme";
+import useScroll from "../composables/useScroll";
 
 export default {
   name: "LayoutMain",
@@ -59,10 +60,11 @@ export default {
     const searchField = ref('')
     const activeBurger = ref(false)
     const updateAvailable = ref(false)
-    const hideHeader = ref(false)
+
     const registration = ref(null)
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
+    const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideHeader, throttleScroll} = useScroll()
     const {userPreferTheme} = useTheme()
     // provide('searchField', searchField)
     const btnViewEditMode = computed(() => {
@@ -105,15 +107,16 @@ export default {
       hideHeader,
       userPreferTheme,
       headerSticky,
+      lastScrollTop,
+      scrollTop,
+      progress,
+      scrollHeight,
+      windowHeights,
+      clientHeight,
+      throttleScroll,
       getCategories,
       swUpdate,
       refreshApp
-    }
-  },
-  data() {
-    return {
-      lastScrollTop: 0,
-      isThrottledScroll: false
     }
   },
   created() {
@@ -123,24 +126,7 @@ export default {
     window.removeEventListener('scroll', this.throttleScroll, {passive: true})
   },
   methods: {
-    throttleScroll() {
-      if (this.isThrottledScroll) {
-        return
-      }
-      this.isThrottledScroll = true
-      setTimeout(() => {
-        this.isThrottledScroll = false
-        this.handleScroll()
-      }, 300)
-    },
-    handleScroll() {
-      const st = window.pageYOffset || document.documentElement.scrollTop;
-      let res = Math.floor(st - this.lastScrollTop)
-      if (this.isMobile) {
-        this.hideHeader = st > this.lastScrollTop && document.documentElement.scrollTop > 150 && res > 70;
-      }
-      this.lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
-    }
+
   }
 }
 </script>

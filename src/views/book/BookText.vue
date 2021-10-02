@@ -5,8 +5,8 @@
 <!--    </div>-->
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     <footer class="footer" v-if="book.annotation !== 'media'">
-      <progress class="progress" :value="progress" max="100" id="progressbar" @click="scrollByClick"/>
-      <div class="progress-value">{{ progress }}</div>
+      <progress class="progress" :value="progressScroll" max="100" id="progressbar" @click="scrollByClick"/>
+      <div class="progress-value">{{ progressScroll }}</div>
     </footer>
     <the-modal v-if="showEditorModal" @hide-modal="showEditorModal = false">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
@@ -27,12 +27,13 @@
 </template>
 
 <script>
-import {ref, defineAsyncComponent, computed, onBeforeUnmount, onMounted, nextTick} from "vue";
+import {ref, defineAsyncComponent, onBeforeUnmount, onMounted, nextTick, toRefs} from "vue";
 import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 
 const apiUrl = process.env.VUE_APP_API_URL
 import {updateBook, updateBookMark} from "@/utils/uploadData";
+import useScroll from "../../composables/useScroll";
 
 export default {
   name: "BookText",
@@ -41,11 +42,19 @@ export default {
     EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
   },
   props: {
-    book: Object
+    book: Object,
+    progressScroll: {
+      type: Number,
+      default: 0
+    },
+    windowHeights: {
+      type: Number,
+      default: 0
+    },
   },
-  setup(props, { emit }) {
+  setup(props) {
+    const { windowHeights } = toRefs(props)
     const showEditorModal = ref(false);
-    const progress = ref(0);
     const progressLoad = ref(0);
     const windowScroll = ref(0);
     const timer = ref(null);
@@ -55,8 +64,8 @@ export default {
     const editorNode = ref({});
     const initialText = ref('');
 
-    const windowHeights = computed(() => document.getElementById('book').scrollHeight - document.getElementById('book').clientHeight);
     const {isMobile, isDesktop} = useDevice();
+    const {currentScroll, progress, lastScrollTop, hideHeader} = useScroll;
 
     const editMode = (e) => {
       editorNode.value = e.target
@@ -101,28 +110,7 @@ export default {
         image.addEventListener("click", openImage);
       }
     };
-    const scrollTimeout = ref(null);
-    const scrollThrottler = function (e) {
-      // ignore resize events as long as an actualResizeHandler execution is in the queue
-      if ( !scrollTimeout.value ) {
-        scrollTimeout.value = setTimeout(function() {
-          scrollTimeout.value = null;
-          handleScroll(e);
 
-          // The actualResizeHandler will execute at a rate of 15fps
-        }, 200);
-      }
-    }
-    const handleScroll = (e) => {
-      if (windowScroll.value < e.target.scrollTop && windowScroll.value > e.target.clientHeight) {
-        emit('scrolling', 'down')
-      } else if (windowScroll.value - e.target.scrollTop > 100) {
-        emit('scrolling', 'up')
-      }
-      progress.value = Math.round((e.target.scrollTop * 100) / (e.target.scrollHeight - e.target.clientHeight))
-      windowScroll.value = e.target.scrollTop
-
-    };
     const scrollToBookmark = async () => {
       if (props.book.value.bookmark) {
         await this.$nextTick()
@@ -132,10 +120,11 @@ export default {
     const scrollByClick = (e) => {
       let w = document.getElementById("progressbar").clientWidth;
       let o = e.offsetX;
-      let x = (100 * o) / w;
+      let x = Math.floor((100 * o) / w);
       document.getElementById("progressbar").value = x;
-      let y = (windowHeights.value * x) / 100;
-      document.getElementById('book').scrollTo(0, y);
+      let y = Math.floor((windowHeights.value * x) / 100);
+      console.log('scrollByClick', {windowHeights: windowHeights.value, x: x, scrollTo: y})
+      window.scrollTo(0, y);
     };
     onBeforeUnmount(async () => {
       const formData = {bookId: props.book.id, bookmark: windowScroll.value}
@@ -161,11 +150,9 @@ export default {
       activeImageIndex,
       editorNode,
       initialText,
-      windowHeights,
       isMobile,
+      currentScroll, lastScrollTop, hideHeader,
       moveMedia,
-      scrollThrottler,
-      handleScroll,
       scrollToBookmark,
       scrollByClick,
       // prepareUrlForMedia,
@@ -197,7 +184,6 @@ export default {
   width: 100%;
   position: relative;
   justify-content: center;
-  content-visibility: auto;
 
   p {
     word-break: break-word;
@@ -216,6 +202,7 @@ export default {
     position: relative;
     letter-spacing: 0.3px;
     line-height: 1.5;
+    //content-visibility: auto;
 
     .media {
       border: none;
@@ -265,15 +252,15 @@ export default {
   height: 1.5rem;
   display: flex;
   padding: 0 0.5rem;
-  //position: absolute;
-  //left: 0;
-  //top: calc(100vh - 1.5rem);
+  position: fixed;
+  left: 0;
+  bottom: 0;
 
   .progress {
     width: 100%;
     height: 100%;
-    background: var(--bg-secondary);
-    position: absolute;
+    background: var(--surface);
+    position: fixed;
     left: 0;
   }
 

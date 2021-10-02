@@ -7,5 +7,6 @@ export default function useDevice() {
     const isDesktop = computed(()=>{
         return screen.width > 900;
     });
+
     return {isMobile, isDesktop}
 }
