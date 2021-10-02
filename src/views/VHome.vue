@@ -7,16 +7,12 @@
                    :key="category.id">{{ category.name }}
       </router-link>
     </nav>
-<!--    <button-theme-switcher />-->
   </main>
 </template>
 
 <script>
-
-// import ButtonThemeSwitcher from "../components/ButtonThemeSwitcher";
 export default {
   name: 'Home',
-  // components: {ButtonThemeSwitcher},
   props: {
     categories: Array,
   },
@@ -28,7 +24,6 @@ export default {
 
 <style scoped lang="scss">
 .home {
-  //height: calc(100% - 4.5rem);
   display: flex;
   padding: 1rem 1.5rem;
 

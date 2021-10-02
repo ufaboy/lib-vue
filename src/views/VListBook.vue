@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import {onUnmounted, ref, toRefs} from 'vue';
+import {onBeforeUnmount, ref, toRefs} from 'vue';
 import {useRoute} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import SortingModal from '@/components/SortingModal.vue'
@@ -67,8 +67,8 @@ export default {
   setup(props) {
     document.title = 'Books';
     const {categories} = toRefs(props)
-    const {isMobile, isDesktop} = useDevice();
     const route = useRoute();
+    const {isMobile, isDesktop} = useDevice();
     const {filter, searchQuery, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
     const {openBook} = useBook();
     const {showSortingModal, touchStart, touchEnd} = useSlideButton();
@@ -90,7 +90,6 @@ export default {
       getBooksAndPush()
     };
     const changeGenreLoadBook = () => {
-      // filter.value.genre = activeGenre.value.id
       page.value = 1
       getBooksAndPush()
     };
@@ -117,8 +116,11 @@ export default {
     const onScroll = (e) => {
       showTopButton.value = e.target.scrollingElement.scrollTop > 50;
     };
+    const scrollToTop = () => {
+      document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
+    }
     window.addEventListener('scroll', onScroll, {passive: true});
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       window.removeEventListener('scroll', onScroll, {passive: true})
     })
 
@@ -144,22 +146,11 @@ export default {
       changeGenreLoadBook,
       openBook,
       getCover,
+      scrollToTop,
       updateBySorting,
       onScroll,
     }
   },
-  computed: {
-    readyToTeleport() {
-      const layoutRenderer = document.getElementById('header-middle')
-      return this.isMobile ? false : !!layoutRenderer
-    }
-  },
-  methods: {
-    scrollToTop() {
-      // document.scrollingElement.scrollTop = 0
-      document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
-    }
-  }
 }
 </script>
 

@@ -28,4 +28,5 @@ function throttle(func, ms) {
   return wrapper;
 }
 
+function toast() {}
 export {throttle}

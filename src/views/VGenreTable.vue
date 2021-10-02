@@ -56,7 +56,6 @@ export default {
 
     return {getGenres, genres, ascending, orderBy, activeGenre, showModal, sortBy, openRow, createGenre}
   },
-  data: () => ({}),
   columns: ['id', 'name', 'description', 'category'],
   columnsClasses: {
     id: 'cell-id',
