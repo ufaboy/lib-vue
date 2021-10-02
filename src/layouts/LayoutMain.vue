@@ -1,7 +1,7 @@
 <template>
   <div class="basement" @click="activeBurger = false">
     <header id="header" class="header"
-            :class="{'header-hide': hideHeader}">
+            :class="{'header-hide': hideHeader, 'header-sticky': headerSticky}">
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
       </div>
@@ -33,8 +33,8 @@
       </div>
 
     </header>
-    <router-view v-bind="$attrs" :categories="categories" @scrolling="scrolling"></router-view>
-    <component :is="userPreferTheme"></component>
+    <router-view v-bind="$attrs" :categories="categories"></router-view>
+<!--    <component :is="userPreferTheme"></component>-->
     <teleport to="body">
       <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
     </teleport>
@@ -47,13 +47,13 @@ import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
 import RefreshPopup from "../components/RefreshPopup";
-import ThemeDark from "../components/ThemeDark";
-import ThemeLight from "../components/ThemeLight";
+// import ThemeDark from "../components/ThemeDark";
+// import ThemeLight from "../components/ThemeLight";
 import useTheme from "../composables/useTheme";
 
 export default {
   name: "LayoutMain",
-  components: {ThemeLight, ThemeDark, RefreshPopup,},
+  components: {RefreshPopup,},
   setup() {
     const route = useRoute()
     const searchField = ref('')
@@ -71,10 +71,9 @@ export default {
         path: `/book/update/${route.params.id}`
       } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
     });
-
-    const scrolling = function (e) {
-      hideHeader.value = e === 'down' && isMobile.value
-    }
+    const headerSticky = computed(() => {
+      return route.name === 'book-view' && !hideHeader.value
+    })
 
     const getCategories = async function () {
       if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
@@ -105,12 +104,44 @@ export default {
       categories,
       hideHeader,
       userPreferTheme,
-      scrolling,
+      headerSticky,
       getCategories,
       swUpdate,
       refreshApp
     }
   },
+  data() {
+    return {
+      lastScrollTop: 0,
+      isThrottledScroll: false
+    }
+  },
+  created() {
+    window.addEventListener('scroll', this.throttleScroll, {passive: true})
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.throttleScroll, {passive: true})
+  },
+  methods: {
+    throttleScroll() {
+      if (this.isThrottledScroll) {
+        return
+      }
+      this.isThrottledScroll = true
+      setTimeout(() => {
+        this.isThrottledScroll = false
+        this.handleScroll()
+      }, 300)
+    },
+    handleScroll() {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      let res = Math.floor(st - this.lastScrollTop)
+      if (this.isMobile) {
+        this.hideHeader = st > this.lastScrollTop && document.documentElement.scrollTop > 150 && res > 70;
+      }
+      this.lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    }
+  }
 }
 </script>
 
@@ -167,9 +198,8 @@ export default {
         z-index: 55;
         padding: 0;
         color: var(--text);
-        background-color: var(--background-on);
-        border-bottom: 1px solid;
-        box-shadow: #3c4145;
+        background-color: var(--surface);
+        box-shadow: 3px 3px 10px 0px rgba(60, 65, 69, 0.5);
 
         .breadcrumb-li {
           width: 100%;
@@ -291,6 +321,12 @@ export default {
     height: 0;
     padding: 0;
     animation: slide-top 0.5s linear both;
+  }
+
+  .header-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   @keyframes slide-top {

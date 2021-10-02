@@ -10,9 +10,9 @@ import useBook from "@/composables/useBook";
 export default {
   name: "BookView",
   components: {
-    BookText: defineAsyncComponent(() => import('@/components/BookText.vue')),
-    BookMedia: defineAsyncComponent(() => import('@/components/BookMedia.vue')),
-    BookEmpty: defineAsyncComponent(() => import('@/components/BookEmpty.vue'))
+    BookText: defineAsyncComponent(() => import('@/views/book/BookText.vue')),
+    BookMedia: defineAsyncComponent(() => import('@/views/book/BookMedia.vue')),
+    BookEmpty: defineAsyncComponent(() => import('@/views/book/BookEmpty.vue'))
   },
   props: {
     categories: Array,
@@ -41,96 +41,96 @@ export default {
 </script>
 
 <style lang="scss">
-.book {
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-  overflow-y: auto;
-  height: 100%;
-  padding: 1rem;
-  justify-content: center;
-  content-visibility: auto;
-
-  p {
-    word-break: break-word;
-    padding: initial;
-    text-indent: 1rem;
-    margin: 0 0 0.3rem;
-    position: relative;
-
-    span[data-tooltip]:hover {
-      color: crimson;
-    }
-  }
-
-  .text {
-    max-width: 700px;
-    position: relative;
-
-    .media {
-      border: none;
-      //display: none;
-      cursor: pointer;
-      width: 480px;
-      height: 320px;
-    }
-
-    .media--right {
-      position: absolute;
-      right: -500px;
-    }
-
-    .media--left {
-      position: absolute;
-      left: -500px;
-    }
-
-    h1, h2, h3 {
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  .picture {
-    width: inherit;
-    height: inherit;
-    object-fit: cover;
-  }
-
-  .illustrations {
-    display: flex;
-    flex: 1;
-
-  }
-
-}
-
-.footer {
-  width: 100%;
-  height: 1.5rem;
-  display: flex;
-  padding: 0 0.5rem;
-  position: relative;
-
-  .progress {
-    width: 100%;
-    height: 100%;
-    background: var(--bg-secondary);
-    position: absolute;
-    left: 0;
-  }
-
-  .progress-value {
-    position: absolute;
-    left: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .progress::-webkit-progress-value {
-  }
-}
+//.book {
+//  display: flex;
+//  flex-flow: row wrap;
+//  width: 100%;
+//  overflow-y: auto;
+//  height: 100%;
+//  padding: 1rem;
+//  justify-content: center;
+//  content-visibility: auto;
+//
+//  p {
+//    word-break: break-word;
+//    padding: initial;
+//    text-indent: 1rem;
+//    margin: 0 0 0.3rem;
+//    position: relative;
+//
+//    span[data-tooltip]:hover {
+//      color: crimson;
+//    }
+//  }
+//
+//  .text {
+//    max-width: 700px;
+//    position: relative;
+//
+//    .media {
+//      border: none;
+//      //display: none;
+//      cursor: pointer;
+//      width: 480px;
+//      height: 320px;
+//    }
+//
+//    .media--right {
+//      position: absolute;
+//      right: -500px;
+//    }
+//
+//    .media--left {
+//      position: absolute;
+//      left: -500px;
+//    }
+//
+//    h1, h2, h3 {
+//      text-align: center;
+//      margin-bottom: 0.5rem;
+//    }
+//  }
+//
+//  .picture {
+//    width: inherit;
+//    height: inherit;
+//    object-fit: cover;
+//  }
+//
+//  .illustrations {
+//    display: flex;
+//    flex: 1;
+//
+//  }
+//
+//}
+//
+//.footer {
+//  width: 100%;
+//  height: 1.5rem;
+//  display: flex;
+//  padding: 0 0.5rem;
+//  position: relative;
+//
+//  .progress {
+//    width: 100%;
+//    height: 100%;
+//    background: var(--bg-secondary);
+//    position: absolute;
+//    left: 0;
+//  }
+//
+//  .progress-value {
+//    position: absolute;
+//    left: 50%;
+//    height: 100%;
+//    display: flex;
+//    align-items: center;
+//  }
+//
+//  .progress::-webkit-progress-value {
+//  }
+//}
 
 //.image-modal {
 //  //display: none; /* Hidden by default */

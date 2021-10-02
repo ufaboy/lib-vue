@@ -28,6 +28,9 @@ async function loadBooks(page = 1, limit = 10, sort = '-id', filter = {}) {
     if (Number.isInteger(filter.ad)) {
         url += `&ad=${filter.ad}`
     }
+    if (filter.searchQuery) {
+        url += `&searchQuery=${filter.searchQuery}`
+    }
     return await $get(url);
 }
 
