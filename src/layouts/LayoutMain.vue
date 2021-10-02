@@ -35,9 +35,7 @@
     </header>
     <router-view v-bind="$attrs" :categories="categories" :progress-scroll="progress" :window-heights="windowHeights"></router-view>
 <!--    <component :is="userPreferTheme"></component>-->
-    <teleport to="body">
-      <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
-    </teleport>
+
   </div>
 </template>
 
@@ -46,7 +44,7 @@ import {computed, ref} from "vue";
 import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
-import RefreshPopup from "../components/RefreshPopup";
+
 // import ThemeDark from "../components/ThemeDark";
 // import ThemeLight from "../components/ThemeLight";
 import useTheme from "../composables/useTheme";
@@ -54,14 +52,14 @@ import useScroll from "../composables/useScroll";
 
 export default {
   name: "LayoutMain",
-  components: {RefreshPopup,},
+  components: {},
   setup() {
     const route = useRoute()
     const searchField = ref('')
     const activeBurger = ref(false)
-    const updateAvailable = ref(false)
 
-    const registration = ref(null)
+
+
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
     const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideHeader, throttleScroll} = useScroll()
@@ -82,26 +80,15 @@ export default {
         categories.value = await loadCategories()
       }
     }
-    const swUpdate = function (event) {
-      updateAvailable.value = true
-      registration.value = event.detail
-    }
-    const refreshApp = function () {
-      updateAvailable.value = false;
-      if (!registration.value || !registration.value.waiting) return null;
-      registration.value.waiting.postMessage({type: 'SKIP_WAITING'});
-    }
 
-    document.addEventListener('swUpdated', swUpdate, {once: true})
     getCategories();
 
     return {
       searchField,
       activeBurger,
-      updateAvailable,
+
       isMobile,
       isDesktop,
-      registration,
       btnViewEditMode,
       categories,
       hideHeader,
@@ -115,8 +102,7 @@ export default {
       clientHeight,
       throttleScroll,
       getCategories,
-      swUpdate,
-      refreshApp
+
     }
   },
   created() {
