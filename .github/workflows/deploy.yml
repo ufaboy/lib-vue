@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - master
 
 env:
   DEPLOY_PATH: ${{ secrets.PROJECT_PATH }}
