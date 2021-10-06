@@ -11,7 +11,7 @@ module.exports = {
   },
   pwa: {
     name: 'Library',
-    themeColor: '#4285f4',
+    themeColor: '#080C2A',
     msTileColor: '#000000',
     background_color: "#000000",
     workboxPluginMode: 'GenerateSW',
@@ -27,31 +27,31 @@ module.exports = {
           'src': './img/icons/maskable_icon_x72.png',
           'sizes': '72x72',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
         },
         {
           'src': './img/icons/maskable_icon_x144.png',
           'sizes': '144x144',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
         },
         {
           'src': './img/icons/maskable_icon_x192.png',
           'sizes': '192x192',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
         },
         {
           'src': './img/icons/maskable_icon_x384.png',
           'sizes': '384x384',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
         },
         {
           'src': './img/icons/maskable_icon_x512.png',
           'sizes': '512x512',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
         }
       ],
     }
