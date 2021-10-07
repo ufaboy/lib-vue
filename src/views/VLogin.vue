@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {ref, computed} from 'vue';
+import {ref, computed, inject} from 'vue';
 import {useRouter} from 'vue-router'
 import {setUser} from '@/utils/userData';
 import useDevice from "@/composables/useDevice";
@@ -45,6 +45,7 @@ export default {
   setup() {
     document.title = 'Login';
     const router = useRouter()
+    const printToast = inject('printToast')
     const username = ref('')
     const password = ref('')
     const signIn = ref(false)
@@ -63,8 +64,8 @@ export default {
           'Content-Type': 'application/json;charset=utf-8',
         }
       })
+      const result = await response.json();
       if (response.ok) {
-        const result = await response.json();
         if (result.token) {
           setUser(result)
           await router.push('/')
@@ -74,8 +75,8 @@ export default {
         }
       } else {
         console.log({'response.notOk': response})
+        printToast(result.message, 'error')
         // const result = await response.json();
-        // this.$toast.error(result.message)
       }
     }
 

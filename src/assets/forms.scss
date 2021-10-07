@@ -1,0 +1,40 @@
+.form-row {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  > .form-field {
+    margin: 0 0.5rem 0 0;
+  }
+  :last-child {
+    margin: 0;
+  }
+
+}
+.form-field {
+  display: flex;
+  flex-flow: row wrap;
+  flex: 1;
+  .form-field__label, .form-field__input, .form-field__textarea {
+    width: 100%;
+
+  }
+  .form-field__label {
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .form-field__input, .form-field__textarea {
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: var(--text);
+    background-color: var(--surface-light);
+  }
+  .form-field__input {
+
+  }
+  .form-field__textarea {
+  }
+}

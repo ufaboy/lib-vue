@@ -17,45 +17,35 @@
         </div>
       </div>
 
-      <section class="section row">
-        <form-field :placeholder="'name'">
-          <input type="text" class="ml-value" v-model.trim="book.name" placeholder="name"
-                 @focus="$event.target.placeholder = ''" @blur="$event.target.placeholder = 'name'">
-        </form-field>
-        <form-field :placeholder="'source'">
+      <section class="form-row">
+        <div class="form-field">
+          <label class="form-field__label">name</label>
+          <input type="text" class="form-field__input" v-model.trim="book.name">
+        </div>
+        <div class="form-field">
+          <label class="form-field__label">source</label>
           <input type="url"
-                 class="ml-value"
-                 placeholder="source"
-                 v-model.trim="book.source"
-                 @focus="$event.target.placeholder = ''"
-                 @blur="$event.target.placeholder = 'source'">
-        </form-field>
-      </section>
-      <form-field :placeholder="'annotation'">
-        <template #header>
-          <span class="ml-head">
-          annotation
-        <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280"
-               optimum="150"/>
-        </span>
-        </template>
-        <textarea class="ml-value textarea" rows="4" maxlength="300" v-model.trim="book.annotation"
-                  placeholder="annotation" @focus="$event.target.placeholder = ''"
-                  @blur="$event.target.placeholder = 'annotation'"/>
-      </form-field>
-      <section class="section genre" @click="openGenreModal">
-        <div class="value row">
-          <span v-if="genres.length === 0">Не выбраны жанры</span>
-          <span class="value genre-span"
-                :style="{color: colorizeGenre(index)}"
-                v-for="(genre, index) of genres"
-                :key="genre.id">
-            {{ genre.name }}
-          </span>
+                 class="form-field__input"
+                 v-model.trim="book.source">
         </div>
       </section>
-      <div class="editor-wrapper">
-        <span class="label-header">
+      <div class="form-field mb-1">
+        <label class="form-field__label">
+          annotation
+          <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280" optimum="150"/>
+        </label>
+        <textarea class="form-field__textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
+      </div>
+      <section class="form-row genre" @click="openGenreModal">
+        <span v-if="genres.length === 0">Не выбраны жанры</span>
+        <span :style="{color: colorizeGenre(index)}"
+              v-for="(genre, index) of genres"
+              :key="genre.id">
+            {{ genre.name }}
+          </span>
+      </section>
+      <div class="form-field">
+        <span class="form-field__label">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
@@ -135,21 +125,20 @@
 <script>
 import {ref, computed} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import {loadBook} from "@/utils/loadData";
+import {getAdAccess} from "@/utils/userData";
+import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
 import useDevice from "@/composables/useDevice";
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
-import FormField from '@/components/FormField.vue'
-import {loadBook} from "@/utils/loadData";
-import {getAdAccess} from "@/utils/userData";
-import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
 import TheModal from "@/components/TheModal";
 import StarRating from "@/components/StarRating";
 
 export default {
   name: "BookEdit",
-  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook, FormField,},
+  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook},
   props: {
     categories: Array,
   },
@@ -398,7 +387,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .edit-book {
   height: calc(100% - 3.5rem);
   overflow-y: auto;
@@ -432,8 +421,12 @@ export default {
     flex-flow: row nowrap;
   }
 
-  .section, .label {
-    //margin-bottom: 1rem;
+  .form-row.genre {
+    justify-content: initial;
+    cursor: pointer;
+    > span {
+      margin: 0 5px 0 0;
+    }
   }
 
   .label-header {
@@ -447,56 +440,30 @@ export default {
     margin-bottom: 1rem;
   }
 
-  .title {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  .value {
-    padding: 0.3rem;
-    width: 100%;
-    color: var(--surface-on);
-    background-color: var(--surface);
-    outline: none;
-  }
+  //.title {
+  //  width: 100%;
+  //  display: flex;
+  //  justify-content: space-between;
+  //  align-items: center;
+  //  margin-bottom: 0.5rem;
+  //}
+  //
+  //.value {
+  //  padding: 0.3rem;
+  //  width: 100%;
+  //  color: var(--surface-on);
+  //  background-color: var(--surface);
+  //  outline: none;
+  //}
 
   .action-bar {
-    width: 100%;
-    margin-bottom: 0.5rem;
+
   }
 
   .text-container {
     width: 800px;
-    margin-right: 1rem;
-
-    .ml {
-      background-color: var(--surface2);
-      margin-bottom: 1rem;
-    }
-
-    .ml-head {
-      position: absolute;
-      top: -13px;
-      left: 13px;
-      padding: 0 3px;
-      background-color: var(--surface2);
-      border-radius: 5px;
-    }
-
-    .ml-value {
-      width: 100%;
-      outline: none;
-      border: none;
-      background: inherit;
-      padding: 5px;
-      color: var(--color);
-    }
-
-    .description {
-      flex-grow: 1;
+    .form-row {
+      margin: 0 0 1rem 0;
     }
 
     .btn-tab {
@@ -543,17 +510,6 @@ export default {
         flex: 1;
         margin-right: 1rem;
       }
-    }
-
-
-    .annotation {
-      width: 100%;
-      flex-grow: 1;
-      //margin-right: 1rem;
-    }
-
-    .name {
-      flex: 1;
     }
 
     .rating {
@@ -632,11 +588,6 @@ export default {
     }
   }
 
-  .genre-span {
-    margin-right: 0.3rem;
-    cursor: pointer;
-  }
-
   .switch-label {
     display: flex;
     align-items: center;
@@ -711,6 +662,7 @@ export default {
     height: 100%;
     flex-flow: column;
     flex: 1;
+    margin-left: 1rem;
 
     .header-media {
       margin-bottom: 1rem;

@@ -16,10 +16,6 @@ export default {
 		// app.provide('loader', {loader})
 
 		app.component('LoaderModule', require('./LoaderModule.vue').default)
-		app.config.globalProperties.$loader = {
-			show: function () {loader.show()},
-			hide: function () {loader.hide()}
-		}
 		const mountNode = document.createElement('div')
 		mountNode.id = 'loaderNode'
 		mountNode.ref = 'loaderRef'

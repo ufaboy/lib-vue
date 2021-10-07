@@ -1,9 +1,9 @@
 import {createApp} from 'vue'
-import ToasterModule from "./ToasterModule";
+import ToasterModule from "../../components/TheToaster";
 
 export default {
   install(app, option) {
-    app.component('ToasterModule', require('./ToasterModule.vue').default)
+    app.component('ToasterModule', require('../../components/TheToaster.vue').default)
     app.config.globalProperties.$toast = {
 
       success: function (message, opt) {
