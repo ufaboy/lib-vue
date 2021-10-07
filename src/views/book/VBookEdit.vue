@@ -128,6 +128,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
+import useBook from "../../composables/useBook";
 import useDevice from "@/composables/useDevice";
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
@@ -135,6 +136,7 @@ import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
 import TheModal from "@/components/TheModal";
 import StarRating from "@/components/StarRating";
+
 
 export default {
   name: "BookEdit",
@@ -149,18 +151,7 @@ export default {
     const showGenreBookModal = ref(false);
     const files = ref([]);
 
-    const book = ref({
-      id: null,
-      name: null,
-      annotation: '',
-      text: '',
-      source: null,
-      cover: null,
-      rating: null,
-      ad: false,
-      cover_path: '',
-      files: []
-    });
+    const {book} = useBook()
     const genres = ref([]);
     const editorMode = ref('raw');
     const expandText = ref(false);
@@ -400,27 +391,6 @@ export default {
     margin-bottom: 2rem;
   }
 
-  .section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    flex-flow: column nowrap;
-
-    .label, .ml {
-      margin-right: 1rem;
-      flex: 1;
-    }
-
-    .label:last-of-type, .ml:last-of-type {
-      margin-right: 0;
-    }
-  }
-
-  .section.row {
-    flex-flow: row nowrap;
-  }
-
   .form-row.genre {
     justify-content: initial;
     cursor: pointer;
@@ -429,35 +399,10 @@ export default {
     }
   }
 
-  .label-header {
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-  }
 
   .section.genre {
     cursor: pointer;
     margin-bottom: 1rem;
-  }
-
-  //.title {
-  //  width: 100%;
-  //  display: flex;
-  //  justify-content: space-between;
-  //  align-items: center;
-  //  margin-bottom: 0.5rem;
-  //}
-  //
-  //.value {
-  //  padding: 0.3rem;
-  //  width: 100%;
-  //  color: var(--surface-on);
-  //  background-color: var(--surface);
-  //  outline: none;
-  //}
-
-  .action-bar {
-
   }
 
   .text-container {
@@ -849,13 +794,6 @@ export default {
         }
       }
 
-      .zone {
-        .search-text {
-          padding: 0.3rem;
-          margin-right: 0.5rem;
-        }
-      }
-
       .text:last-of-type {
         margin-bottom: 0;
       }
@@ -892,18 +830,6 @@ export default {
 
       .selected {
         overflow: hidden;
-      }
-
-      .zone {
-        max-width: 265px;
-
-        .search-text {
-          margin-right: 0;
-        }
-
-        .zone-selected {
-          display: none;
-        }
       }
 
       .btn-tab--left, .btn-tab--right {

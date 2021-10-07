@@ -4,7 +4,18 @@ import router from "@/router";
 
 export default function useBook() {
     const loader = inject("loader");
-    const book = ref({});
+    const book = ref({
+        id: null,
+        name: null,
+        annotation: '',
+        text: '',
+        source: null,
+        cover: null,
+        rating: null,
+        ad: false,
+        cover_path: '',
+        files: []
+    });
     const typeBook = ref('book-empty')
 
     const openBook = (book, type) => {
