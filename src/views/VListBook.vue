@@ -168,7 +168,7 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
-    max-height: 42px;
+    //max-height: 42px;
 
     .header__block {
       margin: 0 0.5rem 0 0;
@@ -187,7 +187,7 @@ export default {
       //border: 1px solid;
       border-radius: 5px;
       color: var(--text);
-      background-color: var(--surface);
+      background-color: var(--surface-light);
       padding: 5px;
     }
 
@@ -316,8 +316,24 @@ export default {
 @media only screen and (max-width: 892px) and (orientation: portrait) {
   .list-book {
     .header {
+      background-color: var(--surface);
+      display: grid;
+      grid-template-areas: "select-genre select-order-by btn-asc"
+                            "search-input search-input search-input";
+      position: sticky;
+      top: 0;
       .search-input {
-        width: inherit;
+        grid-area: search-input;
+        margin: 0.5rem 0 0 0;
+      }
+      .select-genre {
+        grid-area: select-genre;
+      }
+      .select-order-by {
+        grid-area: select-order-by;
+      }
+      .btn-asc {
+        grid-area: btn-asc;
       }
 
       .select {
