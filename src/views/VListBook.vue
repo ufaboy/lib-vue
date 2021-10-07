@@ -1,6 +1,6 @@
 <template>
   <main class="list-book" @touchstart="touchStart" @touchend="touchEnd">
-    <header class="header" v-if="isDesktop">
+    <header class="header">
       <input class="header__block search-input"
              type="search"
              v-model="searchQuery"
