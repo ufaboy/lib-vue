@@ -2,30 +2,42 @@
   <form class="edit-genre" @submit.prevent="updateGenre">
     <header class="header">
       <h1>Genre</h1>
-        <button v-if="adAccess"
-                type="button"
-                class="btn-switch btn"
-                :class="{'active': localGenre.ad}"
-                @click="localGenre.ad = !localGenre.ad">ad
-        </button>
+<!--        <button v-if="adAccess"-->
+<!--                type="button"-->
+<!--                class="btn-switch btn"-->
+<!--                :class="{'active': localGenre.ad}"-->
+<!--                @click="localGenre.ad = !localGenre.ad">ad-->
+<!--        </button>-->
       <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
       </button>
     </header>
-    <label class="label">
-      <span class="title">name</span>
-      <input type="text" class="value" v-model.trim="localGenre.name" v-focus>
-    </label>
-    <label class="label">
-      <span class="title">description</span>
-      <textarea class="value textarea" v-model.trim="localGenre.description" rows="5"></textarea>
-    </label>
-    <label class="label">
-      <span class="title">category</span>
-      <select class="select value" v-model="localGenre.category">
-        <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{category.name}}</option>
-      </select>
-    </label>
+    <div class="form-field mb-1">
+      <label class="form-field__label">name</label>
+      <input type="text" class="form-field__input" v-model.trim="localGenre.name">
+    </div>
+    <div class="form-field mb-1">
+      <label class="form-field__label">description</label>
+      <textarea class="form-field__textarea" v-model.trim="localGenre.description" rows="3"></textarea>
+    </div>
+    <section class="form-row mb-1">
+      <div class="form-field">
+        <label class="form-field__label">category</label>
+        <select class="select form-field__select" v-model="localGenre.category">
+          <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{category.name}}</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label class="form-field__label">ad</label>
+        <div class="toggle toggle--knob" v-if="$options.adAccess">
+          <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="localGenre.ad">
+          <label class="toggle--btn" for="toggle--knob">
+            <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
     <footer class="footer">
       <button class="negative-btn" type="reset" @click="deleteGenre">Удалить</button>
       <button class="positive-btn">Сохранить</button>
@@ -38,6 +50,7 @@
 import IconClose from "@/components/icons/IconClose"
 import useGenre from "@/composables/useGenre";
 import {toRefs} from "vue";
+import {getAdAccess} from "../utils/userData";
 export default {
   name: "EditGenre",
   components: {IconClose},
@@ -46,13 +59,14 @@ export default {
     genre: Object,
     categories: Array,
   },
+  adAccess: getAdAccess(),
   setup(props, {emit}) {
     const {categories} = toRefs(props)
-    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, adAccess} = useGenre(props, emit)
+    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre} = useGenre(props, emit)
     const categoriesSimple = categories.value.map(category=>{
       return {id: category.id, name: category.name}
     })
-    return {categoriesSimple, localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre, adAccess};
+    return {categoriesSimple, localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre};
   },
 }
 </script>
@@ -61,7 +75,7 @@ export default {
 .edit-genre {
   padding: 1rem;
   display: flex;
-  flex-flow: wrap;
+  flex-flow: column nowrap;
   height: 100%;
   width: 100%;
   color: var(--text);
@@ -78,6 +92,9 @@ export default {
 
   .btn-switch.active {
     color: red;
+  }
+  .form-field {
+
   }
   .footer {
     display: flex;

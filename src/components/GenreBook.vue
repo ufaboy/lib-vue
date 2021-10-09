@@ -1,5 +1,5 @@
 <template>
-  <form class="genre-book" @submit.prevent="sendGenre">
+  <div class="genre-book" @submit.prevent="sendGenre">
     <header class="modal-header">
       <h1>Genre</h1>
       <span>{{ genres.length }}</span>
@@ -9,12 +9,12 @@
         </base-icon>
       </button>
     </header>
-    <fieldset class="genre-titles">
-      <legend>selected: {{ selectedGenre.length }}</legend>
+    <div class="form-field">
+      <label class="form-field__label">selected: {{ selectedGenre.length }}</label>
       <span v-if="selectedGenre.length === 0">Не выбраны жанры</span>
       <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
-    </fieldset>
+    </div>
     <fieldset class="genres" v-if="isDesktop">
       <legend>all genres</legend>
       <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
@@ -38,7 +38,7 @@
       <button class="negative-btn" type="button" @click="reset">сброс</button>
       <button class="positive-btn">Сохранить</button>
     </footer>
-  </form>
+  </div>
 </template>
 
 <script>

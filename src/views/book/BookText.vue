@@ -239,40 +239,33 @@ export default {
     flex: 1;
 
   }
-
-}
-//.header.header-hide + .book {
-//  height: calc(100vh - 1.5rem);
-//}
-
-
-
-.footer {
-  width: 100%;
-  height: 1.5rem;
-  display: flex;
-  padding: 0 0.5rem;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-
-  .progress {
+  .footer {
     width: 100%;
-    height: 100%;
-    background: var(--surface);
+    height: 1.5rem;
+    display: flex;
+    padding: 0 0.5rem;
     position: fixed;
     left: 0;
-  }
+    bottom: 0;
 
-  .progress-value {
-    position: absolute;
-    left: 50%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
+    .progress {
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      position: fixed;
+      left: 0;
+    }
 
-  .progress::-webkit-progress-value {
+    .progress-value {
+      position: absolute;
+      left: 50%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .progress::-webkit-progress-value {
+    }
   }
 }
 

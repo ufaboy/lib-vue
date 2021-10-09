@@ -149,10 +149,10 @@
 /* =====================================================
    Toggle - knob button style
    ===================================================== */
-$toggleHeight: 36px;
+$toggleHeight: 33px;
 $toggleWidth: 100px;
 
-$toggleBtnRadius: 40px;
+$toggleBtnRadius: 36px;
 $toggleBtnColor: #f1f1f1;
 
 $toggle-bgColor--inactive: #a2a2a2;
@@ -187,7 +187,7 @@ $toggle-textColor: #fff;
       height: $toggleBtnRadius;
       border-radius: 50%;
       background: $toggleBtnColor;
-      box-shadow: 0 4px 10px 0 #999,
+      box-shadow: 0 0 10px 0 #999,
       inset 0 10px 10px 8px rgba($toggleBtnColor, 0.6),
       inset 0 0 8px 0px #333,
       inset 0 0 0 13px #ccc,
@@ -226,7 +226,7 @@ $toggle-textColor: #fff;
         background: $toggle-bgColor--active;
         box-shadow: inset 0 20px 40px -10px #7b9d25;
 
-        &:before { left: 60%; }
+        &:before { left: 65%; }
 
         & .toggle--feature {
           &:before	{ left: 20%; }

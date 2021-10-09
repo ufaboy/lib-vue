@@ -15,9 +15,8 @@
   display: flex;
   flex-flow: row wrap;
   flex: 1;
-  .form-field__label, .form-field__input, .form-field__textarea {
+  .form-field__label, .form-field__input, .form-field__textarea, .form-field__select {
     width: 100%;
-
   }
   .form-field__label {
     margin: 0 0 0.5rem 0;
@@ -26,7 +25,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .form-field__input, .form-field__textarea {
+  .form-field__input, .form-field__textarea, .form-field__select {
     border-radius: 5px;
     padding: 5px 10px;
     color: var(--text);

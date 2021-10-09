@@ -59,8 +59,9 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <the-modal v-if="showModal" @hide-modal="showModal = false">
+    <the-modal v-if="showModal" width="400">
       <filter-modal @active-filter="updateFilterPage"
+                    @hide-modal="showModal = false"
                     @reset-filter="resetTable"
                     :categories="categories"
                     :rating="filter.rating"

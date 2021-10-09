@@ -27,8 +27,9 @@
         </tr>
       </transition-group>
     </table>
-    <the-modal v-if="showModal" @hide-modal="showModal = false">
-      <edit-genre :genre="activeGenre" :categories="categories" @update-genres="getGenres" @hide-modal="showModal = false" />
+    <the-modal v-if="showModal" width="400">
+      <edit-genre :genre="activeGenre" :categories="categories" @update-genres="getGenres"
+                  @hide-modal="showModal = false"/>
     </the-modal>
   </div>
 </template>

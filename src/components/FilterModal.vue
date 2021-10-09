@@ -1,16 +1,16 @@
 <template>
   <form class="filter rad-shadow" method="dialog" @submit.prevent="findBookByFilter">
     <header class="header">
-      <span class="filter-title">filter</span>
+      <h2 class="filter-title">filter</h2>
       <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close">
           <icon-close/>
         </base-icon>
       </button>
     </header>
-    <label class="label">
-      <span class="title">genre</span>
-      <select class="select" v-model="filter.genre">
+    <div class="form-field mb-1">
+      <label class="form-field__label">Genre</label>
+      <select class="form-field__select" v-model="filter.genre">
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
@@ -18,21 +18,24 @@
           </option>
         </optgroup>
       </select>
-    </label>
-    <label class="label">
-      <span class="title">rating</span>
-      <select class="select" v-model="filter.rating" name="selectRating">
-        <option class="value" :value="num" v-for="num of 5" :key="'rating-' + num">{{ num }}</option>
-      </select>
-    </label>
-
-    <div class="switch" v-if="adAccess">
-      <span>ad off</span>
-      <input type="checkbox" id="switch" class="switch-input" v-model="filter.ad"/>
-      <label for="switch" class="switch-label"></label>
-      <span>ad on</span>
     </div>
-
+    <div class="form-field mb-1">
+      <label class="form-field__label">Ad</label>
+      <div class="toggle toggle--knob" v-if="$options.adAccess">
+        <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="filter.ad">
+        <label class="toggle--btn" for="toggle--knob">
+          <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
+        </label>
+      </div>
+    </div>
+    <div class="form-field mb-1">
+      <label class="form-field__label">Rating</label>
+      <select class="form-field__select" v-model="filter.rating" name="selectRating">
+        <option class="value" :value="rating.value" v-for="(rating, index) of $options.ratingOptions"
+                :key="'rating-' + index">{{ rating.value }} {{ rating.name }}
+        </option>
+      </select>
+    </div>
     <footer class="footer">
       <button class="negative-btn" type="button" @click="resetFilter">reset</button>
       <button class="positive-btn">find</button>
@@ -43,58 +46,63 @@
 <script>
 import IconClose from "@/components/icons/IconClose"
 import {getAdAccess} from "@/utils/userData";
+import {ref} from "vue";
 
 export default {
   name: "FilterModal",
   components: {
     IconClose,
   },
-  emits: ['active-filter', 'reset-filter'],
+  emits: ['active-filter', 'hide-modal', 'reset-filter'],
   props: {
     categories: Array,
     rating: Number,
     ad: Number,
     genre: Object,
   },
-  data: () => ({
-    filter: {
+  ratingOptions: [
+    {name: 'Terrible', value: 1},
+    {name: 'Bad', value: 2},
+    {name: 'Middle', value: 3},
+    {name: 'Good', value: 4},
+    {name: 'Fine', value: 5},
+  ],
+  adAccess: getAdAccess(),
+
+  setup(props, {emit}) {
+    const filter = ref({
       rating: null,
       ad: null,
       genre: {},
-    },
-  }),
-  computed: {
-    adAccess() {
-      return getAdAccess()
-    },
-  },
-  methods: {
-    async findBookByFilter() {
-      this.$emit('active-filter', {
-        genre: Number.isInteger(this.filter.genre.id) ? this.filter.genre : null,
-        rating: this.filter.rating,
-        ad: this.filter.ad
-      })
-      this.closeModal()
-    },
-    resetFilter() {
-      this.$emit('reset-filter')
-      this.closeModal()
-    },
-    loadFilter() {
-      this.filter.rating = this.rating ?? null
-      if (this.genre) {
-        this.filter.genre = this.genre
+    })
+    const loadFilter = function () {
+      filter.value.rating = props.rating ?? null
+      if (props.genre) {
+        filter.value.genre = props.genre
       }
-      this.filter.ad = this.ad ?? null
-    },
-    closeModal() {
-      this.$parent.hide('filterBookModal', this)
-    },
+      filter.value.ad = props.ad ?? null
+    }
+    const closeModal = function () {
+      emit('hide-modal')
+    }
+    const resetFilter = function () {
+      emit('reset-filter')
+      closeModal()
+    }
+    const findBookByFilter = function () {
+      emit('active-filter', {
+        genre: Number.isInteger(filter.value.genre.id) ? filter.value.genre : null,
+        rating: filter.value.rating,
+        ad: filter.value.ad
+      })
+      closeModal()
+    }
+
+    loadFilter()
+
+    return {filter, resetFilter, closeModal, findBookByFilter}
   },
-  created() {
-    this.loadFilter()
-  }
+
 }
 </script>
 
@@ -128,57 +136,6 @@ export default {
     }
   }
 
-  //.switch-label {
-  //  margin-bottom: 1rem;
-  //}
-  .switch {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-
-    input[type=checkbox] {
-      height: 0;
-      width: 0;
-      visibility: hidden;
-    }
-
-    .switch-label {
-      cursor: pointer;
-      width: 80px;
-      height: 40px;
-      background: grey;
-      display: block;
-      border-radius: 1rem;
-      position: relative;
-      margin: 0 0.5rem;
-    }
-
-    .switch-label:after {
-      content: '';
-      position: absolute;
-      top: 4px;
-      left: 5px;
-      width: 1.8rem;
-      height: 1.8rem;
-      background: #fff;
-      border-radius: 20px;
-      transition: 0.3s;
-    }
-
-    input:checked + label {
-      background: #bada55;
-    }
-
-    input:checked + label:after {
-      left: calc(100% - 5px);
-      transform: translateX(-100%);
-    }
-
-    label:active:after {
-      width: 60px;
-    }
-  }
-
   .fieldset {
     padding: 0 7px;
     margin-bottom: 1rem;
@@ -195,15 +152,7 @@ export default {
   .footer {
     display: flex;
     flex-flow: row;
-    justify-content: space-between;
-
-    button {
-      text-transform: capitalize;
-    }
-
-    button:last-of-type {
-      margin-right: 0;
-    }
+    justify-content: space-around;
   }
 }
 
