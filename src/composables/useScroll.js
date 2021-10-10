@@ -31,7 +31,7 @@ export default function useScroll() {
     const res = scrollTop.value - lastScrollTop.value
     if (scrollTop.value > lastScrollTop.value) {
       hideByScroll.value = scrollTop.value > 150 && res > 70
-    } else if (res < -70) {
+    } else if (res < -100) {
       hideByScroll.value = false
     }
     lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value; // For Mobile or negative scrolling
@@ -39,6 +39,9 @@ export default function useScroll() {
     windowHeights.value = scrollHeight.value - clientHeight.value;
     console.log('handleScroll', {
       hideByScroll: hideByScroll.value,
+      scrollTop: scrollTop.value,
+      lastScrollTop: lastScrollTop.value,
+      res: res
     })
   }
 
