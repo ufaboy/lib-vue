@@ -18,7 +18,7 @@ export default function useScroll() {
     setTimeout(() => {
       isThrottledScroll.value = false
       handleScroll()
-    }, 100)
+    }, 500)
   };
   const initHeights = function () {
     scrollHeight.value = Math.floor(document.documentElement.scrollHeight)
