@@ -10,7 +10,7 @@ export default function useMedia() {
         return `${process.env.VUE_APP_API_URL}/${file.url}`
     }
     const activeDir = computed(() => {
-        return directories.value.length && activeDirIndex.value !== undefined ? directories.value[activeDirIndex.value].files : []
+        return directories.value.length && Number.isInteger(activeDirIndex.value) ? directories.value[activeDirIndex.value].files : []
     })
     const openMedia = function (file) {
         activeMedia.value = {
