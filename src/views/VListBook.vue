@@ -6,7 +6,8 @@
              v-model="searchQuery"
              @input.prevent.stop="searchByName"
              placeholder="Search by name...">
-      <select class="header__block select select-genre" v-model="filter.genre" @change="changeGenreLoadBook">
+      <select class="header__block select-genre form-field__select" v-model="filter.genre"
+              @change="changeGenreLoadBook">
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"
@@ -14,8 +15,9 @@
           </option>
         </optgroup>
       </select>
-      <select class="header__block select select-order-by" v-model="orderBy.name" @change="changeSortOrderBy">
-        <option v-for="(option, index) of $options.orderByOptions" :value="option" :key="option + index">{{ option }}
+      <select class="header__block form-field__select select-order-by" v-model="orderBy.name"
+              @change="changeSortOrderBy">
+        <option v-for="(option, index) of orderByOptions" :value="option" :key="option + index">{{ option }}
         </option>
       </select>
       <button class="btn header__block btn-asc" @click="changeSortAsc">
@@ -41,10 +43,9 @@
   </main>
 </template>
 
-<script>
+<script setup>
 import {onBeforeUnmount, ref, toRefs} from 'vue';
 import {useRoute} from 'vue-router'
-import useDevice from "@/composables/useDevice";
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
@@ -53,105 +54,68 @@ import useSlideButton from "@/composables/useSlideButton";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
-export default {
-  name: "ListBook",
-  components: {
-    TheModal,
-    SortingModal,
-    IconSortAsc, IconSortDesc
-  },
-  props: {
-    categories: Array,
-  },
-  orderByOptions: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
-  setup(props) {
-    document.title = 'Books';
-    const {categories} = toRefs(props)
-    const route = useRoute();
-    const {isMobile, isDesktop} = useDevice();
-    const {filter, searchQuery, limit, orderBy, books, page, infinityState, getCover, getBooksAndPush} = useBooks();
-    const {openBook} = useBook();
-    const {showSortingModal, touchStart, touchEnd} = useSlideButton();
+document.title = 'Books';
+const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  categories: Array,
+})
+const {categories} = toRefs(props)
+const route = useRoute();
+const {filter, searchQuery, limit, orderBy, books, page, getCover, getBooksAndPush} = useBooks();
+const {openBook} = useBook();
+const {showSortingModal, touchStart, touchEnd} = useSlideButton();
+const showTopButton = ref(false);
 
-    const showTopButton = ref(false);
-    const genreId = ref(null);
-
-    const calcGenreById = function (id) {
-      let genreArray = []
-      for (const cat of categories.value) {
-        genreArray.push(...cat.genres)
-      }
-      const genre = genreArray.find(genre => genre.id === id)
-      return genre ? genre : {}
-    }
-    limit.value = 25;
-    const searchByName = () => {
-      page.value = 1
-      getBooksAndPush()
-    };
-    const changeGenreLoadBook = () => {
-      page.value = 1
-      getBooksAndPush()
-    };
-    if (route.params.id) {
-      filter.value.genre = calcGenreById(+route.params.id)
-    }
-
-    const updateBySorting = (e) => {
-      showSortingModal.value = false
-      orderBy.value.name = e.orderBy
-      orderBy.value.asc = e.ascending
-      page.value = 1
-      getBooksAndPush()
-    };
-    const changeSortAsc = function () {
-      orderBy.value.asc = !orderBy.value.asc
-      page.value = 1
-      getBooksAndPush()
-    }
-    const changeSortOrderBy = function () {
-      page.value = 1
-      getBooksAndPush()
-    }
-    const onScroll = (e) => {
-      showTopButton.value = e.target.scrollingElement.scrollTop > 50;
-    };
-    const scrollToTop = () => {
-      document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
-    }
-    window.addEventListener('scroll', onScroll, {passive: true});
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', onScroll, {passive: true})
-    })
-
-    return {
-      books,
-      page,
-      filter,
-      showTopButton,
-      limit,
-      infinityState,
-      orderBy,
-      genreId,
-      searchQuery,
-      isMobile,
-      isDesktop,
-      calcGenreById,
-      showSortingModal,
-      touchStart, touchEnd,
-      getBooksAndPush,
-      changeSortAsc,
-      changeSortOrderBy,
-      searchByName,
-      changeGenreLoadBook,
-      openBook,
-      getCover,
-      scrollToTop,
-      updateBySorting,
-      onScroll,
-    }
-  },
+function calcGenreById(id) {
+  let genreArray = []
+  for (const cat of categories.value) {
+    genreArray.push(...cat.genres)
+  }
+  const genre = genreArray.find(genre => genre.id === id)
+  return genre ? genre : {}
 }
+
+limit.value = 25;
+
+function searchByName() {
+  page.value = 1
+  getBooksAndPush()
+}
+function changeGenreLoadBook() {
+  page.value = 1
+  getBooksAndPush()
+}
+if (route.params.id) {
+  filter.value.genre = calcGenreById(+route.params.id)
+}
+function updateBySorting(e) {
+  showSortingModal.value = false
+  orderBy.value.name = e.orderBy
+  orderBy.value.asc = e.ascending
+  page.value = 1
+  getBooksAndPush()
+}
+function changeSortAsc() {
+  orderBy.value.asc = !orderBy.value.asc
+  page.value = 1
+  getBooksAndPush()
+}
+function changeSortOrderBy() {
+  page.value = 1
+  getBooksAndPush()
+}
+function onScroll(e) {
+  showTopButton.value = e.target.scrollingElement.scrollTop > 50;
+}
+function scrollToTop() {
+  document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
+}
+
+window.addEventListener('scroll', onScroll, {passive: true});
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll, {passive: true})
+})
 </script>
 
 <style scoped lang="scss">
@@ -183,8 +147,6 @@ export default {
       display: flex;
       flex: 1;
       min-width: 50px;
-      //border: 1px solid hsl(var(--brand-hue) 10% 50% / 15%);
-      //border: 1px solid;
       border-radius: 5px;
       color: var(--text);
       background-color: var(--surface-light);
@@ -196,18 +158,13 @@ export default {
     }
 
     .select-order-by {
-      width: 125px;
+      width: 135px;
     }
 
     .btn-asc {
       //width: 75px;
       padding: 0;
     }
-
-    //.select {
-    //  display: flex;
-    //  flex: 1;
-    //}
   }
 
   .book {
@@ -268,29 +225,6 @@ export default {
     color: var(--text-primary);
     background: var(--primary-light);
   }
-
-  .loader {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    border: 0.5rem solid var(--color-p); /* Light grey */
-    border-top: 0.5rem solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-
 }
 
 @media only screen and (max-width: 892px) {
@@ -322,16 +256,20 @@ export default {
                             "search-input search-input search-input";
       position: sticky;
       top: 0;
+
       .search-input {
         grid-area: search-input;
         margin: 0.5rem 0 0 0;
       }
+
       .select-genre {
         grid-area: select-genre;
       }
+
       .select-order-by {
         grid-area: select-order-by;
       }
+
       .btn-asc {
         grid-area: btn-asc;
       }

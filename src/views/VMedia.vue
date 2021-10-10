@@ -10,8 +10,12 @@
         <img class="preview" :src="calcUrl(file)" alt="">
         <figcaption class="figcaption">{{ file.full_name }}</figcaption>
         <div class="btn-bar" v-if="!file.id">
-          <button class="fig-btn" @click.stop="attachFile(directories[activeDirIndex].bookId, file.full_name, index)">Attach</button>
-          <button class="fig-btn" @click.stop="deleteFileFromStorage(directories[activeDirIndex].name, file.full_name, index)">Delete</button>
+          <button class="fig-btn" @click.stop="attachFile(directories[activeDirIndex].bookId, file.full_name, index)">
+            Attach
+          </button>
+          <button class="fig-btn"
+                  @click.stop="deleteFileFromStorage(directories[activeDirIndex].name, file.full_name, index)">Delete
+          </button>
         </div>
 
       </figure>
@@ -30,33 +34,26 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import useMedia from "../composables/useMedia";
 
-export default {
-  name: "VMedia",
-  components: {},
-  props: {
-    categories: Array,
-  },
-  emits: [],
-  setup() {
-    const {directories, activeDirIndex, activeMedia, activeDir, calcUrl, openMedia, getMediaFiles, attachFile, deleteFileFromStorage} = useMedia()
-    getMediaFiles()
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+})
+const {
+  directories,
+  activeDirIndex,
+  activeMedia,
+  activeDir,
+  calcUrl,
+  openMedia,
+  getMediaFiles,
+  attachFile,
+  deleteFileFromStorage
+} = useMedia()
+getMediaFiles()
 
-    return {directories, activeDirIndex, activeDir, activeMedia, calcUrl, openMedia, attachFile, deleteFileFromStorage}
-  },
-  data() {
-    return {}
-  },
-  computed: {},
-  watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  methods: {},
-}
 </script>
 
 <style scoped lang="scss">
@@ -64,7 +61,8 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   height: calc(100% - 3.5rem);
-padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.5rem;
+
   .ol-dir {
     margin-right: 1rem;
 
@@ -93,9 +91,11 @@ padding: 0.5rem 1.5rem;
         white-space: nowrap;
         margin: 0 0 0.5rem 0;
       }
+
       .btn-bar {
         display: flex;
         flex-flow: row nowrap;
+
         .fig-btn {
           flex: 1;
           border: 1px solid;
@@ -105,10 +105,12 @@ padding: 0.5rem 1.5rem;
           background-color: var(--surface);
           cursor: pointer;
         }
+
         .fig-btn:first-of-type {
           border-radius: 5px 0 0 5px;
           font-weight: bold;
         }
+
         .fig-btn:last-of-type {
           font-weight: bold;
           color: red;

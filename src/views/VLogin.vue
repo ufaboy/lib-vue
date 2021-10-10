@@ -32,57 +32,48 @@
 
 </template>
 
-<script>
+<script setup>
 import {ref, computed, inject} from 'vue';
 import {useRouter} from 'vue-router'
 import {setUser} from '@/utils/userData';
 import useDevice from "@/composables/useDevice";
 import CanvasSpace from "@/components/CanvasSpace";
 
-export default {
-  name: "login",
-  components: {CanvasSpace},
-  setup() {
-    document.title = 'Login';
-    const router = useRouter()
-    const printToast = inject('printToast')
-    const username = ref('')
-    const password = ref('')
-    const signIn = ref(false)
-    const {isMobile} = useDevice();
-    const countDots = computed(()=>{
-      return isMobile.value ? 100 : 500
-    });
+document.title = 'Login';
+const router = useRouter()
+const printToast = inject('printToast')
+const username = ref('')
+const password = ref('')
+const signIn = ref(false)
+const {isMobile} = useDevice();
+const countDots = computed(() => {
+  return isMobile.value ? 100 : 500
+});
 
-    const login = async () => {
-      const formData = {username: username.value, password: password.value};
-      const url = `${process.env.VUE_APP_API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
-      const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        }
-      })
-      const result = await response.json();
-      if (response.ok) {
-        if (result.token) {
-          setUser(result)
-          await router.push('/')
-        } else {
-          console.log({'response.not token': response})
-          // this.$toast.error('Empty Token')
-        }
-      } else {
-        console.log({'response.notOk': response})
-        printToast(result.message, 'error')
-        // const result = await response.json();
-      }
+async function login() {
+  const formData = {username: username.value, password: password.value};
+  const url = `${process.env.VUE_APP_API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
+  const response = await fetch(url, {
+    method: 'POST',
+    body: JSON.stringify(formData),
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
     }
-
-    return {username, password, signIn, isMobile, countDots, login}
-  },
+  })
+  const result = await response.json();
+  if (response.ok) {
+    if (result.token) {
+      setUser(result)
+      await router.push('/')
+    } else {
+      console.log({'response.not token': response})
+    }
+  } else {
+    console.log({'response.notOk': response})
+    printToast(result.message, 'error')
+  }
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -95,6 +86,7 @@ export default {
   position: absolute;
   z-index: 0;
 }
+
 .login-box {
   position: absolute;
   z-index: 10;
@@ -103,9 +95,9 @@ export default {
   width: 22rem;
   padding: 2rem;
   transform: translate(-50%, -50%);
-  background: rgba(0,0,0,.5);
+  background: rgba(0, 0, 0, .5);
   box-sizing: border-box;
-  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
   border-radius: 10px;
 
   //.header-title {
@@ -116,6 +108,7 @@ export default {
   //}
   .login-header {
     text-align: center;
+
     .login-type {
       width: 100px;
       padding: 10px 20px;
@@ -124,6 +117,7 @@ export default {
       border: none;
       cursor: pointer;
     }
+
     .fade-enter-active, .fade-leave-active {
       transition: opacity .5s ease
     }
@@ -140,6 +134,7 @@ export default {
 
   .user-box {
     position: relative;
+
     .input {
       width: 100%;
       padding: 10px 0;
@@ -151,9 +146,10 @@ export default {
       outline: none;
       background: transparent;
     }
+
     .label {
       position: absolute;
-      top:0;
+      top: 0;
       left: 0;
       padding: 10px 0;
       font-size: 16px;
@@ -161,6 +157,7 @@ export default {
       pointer-events: none;
       transition: .5s;
     }
+
     .input:focus ~ .label, .input:valid ~ .label {
       top: -20px;
       left: 0;
@@ -187,7 +184,7 @@ export default {
     letter-spacing: 4px
   }
 
-   .login-btn:hover {
+  .login-btn:hover {
     background: #03e9f4;
     color: #fff;
     border-radius: 5px;
@@ -210,6 +207,7 @@ export default {
     background: linear-gradient(90deg, transparent, #03e9f4);
     animation: btn-anim1 1s linear infinite;
   }
+
   .login-btn span:nth-child(2) {
     top: -100%;
     right: 0;
@@ -219,6 +217,7 @@ export default {
     animation: btn-anim2 1s linear infinite;
     animation-delay: .25s
   }
+
   .login-btn span:nth-child(3) {
     bottom: 0;
     right: -100%;
@@ -228,6 +227,7 @@ export default {
     animation: btn-anim3 1s linear infinite;
     animation-delay: .5s
   }
+
   .login-btn span:nth-child(4) {
     bottom: -100%;
     left: 0;
@@ -243,41 +243,46 @@ export default {
   0% {
     left: -100%;
   }
-  50%,100% {
+  50%, 100% {
     left: 100%;
   }
 }
+
 @keyframes btn-anim2 {
   0% {
     top: -100%;
   }
-  50%,100% {
+  50%, 100% {
     top: 100%;
   }
 }
+
 @keyframes btn-anim3 {
   0% {
     right: -100%;
   }
-  50%,100% {
+  50%, 100% {
     right: 100%;
   }
 }
+
 @keyframes btn-anim4 {
   0% {
     bottom: -100%;
   }
-  50%,100% {
+  50%, 100% {
     bottom: 100%;
   }
 }
 
 @media only screen and (max-width: 892px) {
-  .login-box {}
+  .login-box {
+  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .login-box {}
+  .login-box {
+  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {

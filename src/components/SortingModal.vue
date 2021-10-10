@@ -3,20 +3,20 @@
     <fieldset class="fieldset">
       <legend class="fieldset__legend">sorting
         <base-icon class="icon">
-          <icon-sort-asc v-if="ascending"/>
-          <icon-sort-desc v-else/>
+          <IconSortAsc v-if="ascending"/>
+          <IconSortDesc v-else/>
         </base-icon>
       </legend>
-      <button class="srt-btn" :class="{active: this.orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'view_count'}" @click="changeOrderBy('view_count')">
+      <button class="srt-btn" :class="{active: orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
+      <button class="srt-btn" :class="{active: orderBy === 'view_count'}" @click="changeOrderBy('view_count')">
         view_count
       </button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'rating'}" @click="changeOrderBy('rating')">rating
+      <button class="srt-btn" :class="{active: orderBy === 'rating'}" @click="changeOrderBy('rating')">rating
       </button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'updated_at'}" @click="changeOrderBy('updated_at')">
+      <button class="srt-btn" :class="{active: orderBy === 'updated_at'}" @click="changeOrderBy('updated_at')">
         updated
       </button>
-      <button class="srt-btn" :class="{active: this.orderBy === 'last_read'}" @click="changeOrderBy('last_read')">last
+      <button class="srt-btn" :class="{active: orderBy === 'last_read'}" @click="changeOrderBy('last_read')">last
         read
       </button>
       <button class="close-find" @click="sorting">close&filter</button>
@@ -24,41 +24,35 @@
   </main>
 </template>
 
-<script>
-import {ref} from "vue";
+<script setup>
 import IconSortAsc from "@/components/icons/IconSortAsc"
 import IconSortDesc from "@/components/icons/IconSortDesc"
+import {ref} from "vue";
 
-export default {
-  name: "SortingModal",
-  components: {IconSortAsc, IconSortDesc},
-  emits: ['sorting'],
-  setup(props, {emit}) {
-    const ascending = ref(0);
-    const orderBy = ref('');
-    const orderRandom = ref(false);
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['sorting', 'hide-modal'])
+const ascending = ref(0);
+const orderBy = ref('');
 
-    const sorting = () => {
-      emit('sorting', {orderBy: orderBy.value, ascending: ascending.value})
-      closeModal()
-    };
-    const changeOrderBy = (e) => {
-      orderBy.value = e
-      ascending.value = Number(!ascending.value)
-    };
-    const closeModal = () => {
-      emit('hide-modal')
-    };
+function sorting() {
+  emit('sorting', {orderBy: orderBy.value, ascending: ascending.value})
+  closeModal()
+}
 
-    return {ascending, orderBy, orderRandom, sorting, changeOrderBy, closeModal}
-  },
+function changeOrderBy(e) {
+  orderBy.value = e
+  ascending.value = Number(!ascending.value)
+}
+
+function closeModal() {
+  emit('hide-modal')
 }
 </script>
 
 <style scoped lang="scss">
 .sorting {
   padding: 1rem;
-  color: var(--text1);
+  color: var(--text);
 
   .fieldset__legend {
     padding: 5px;
@@ -66,7 +60,7 @@ export default {
   }
 
   .close-find {
-    color: var(--color-2);
+    color: var(--text);
     background-color: #35495e;
     width: 100%;
     padding: 1rem;
@@ -78,7 +72,7 @@ export default {
     display: flex;
     margin-bottom: 0.5rem;
     width: 100%;
-    color: var(--text1);
+    color: var(--text);
     background-color: var(--surface);
     text-transform: capitalize;
   }
@@ -88,7 +82,7 @@ export default {
   }
 
   .srt-btn.active {
-    color: var(--color-p);
+    color: var(--primary);
   }
 
   .random-btn {

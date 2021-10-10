@@ -16,7 +16,7 @@ export default function useBook() {
         cover_path: '',
         files: []
     });
-    const typeBook = ref('book-empty')
+    const typeBook = ref('BookEmpty')
 
     const openBook = (book, type) => {
         router.push({
@@ -38,7 +38,7 @@ export default function useBook() {
         let result = await loadBook(id)
         loader.hide();
         const comicsBook = result.genres.findIndex(genre => genre.category.name === 'comics') > -1
-        typeBook.value = comicsBook ? 'book-media' : 'book-text'
+        typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = prepareUrlForMedia(result)
         } else {

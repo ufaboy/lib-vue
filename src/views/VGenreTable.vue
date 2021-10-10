@@ -5,7 +5,7 @@
     </header>
     <table class="table">
       <thead class="thead">
-      <th class="th" :class="$options.columnsClasses[column]" v-for="(column, index) of $options.columns" :key="index">
+      <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
           <div class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
@@ -20,50 +20,44 @@
       <transition-group name="flip-list" tag="tbody">
         <tr class="row" :class="{picante: genre.ad}" v-for="genre of genres" :key="genre.id"
             @click="openRow(genre)">
-          <td class="td" :class="$options.columnsClasses.id">{{ genre.id }}</td>
-          <td class="td" :class="$options.columnsClasses.title">{{ genre.name }}</td>
-          <td class="td" :class="$options.columnsClasses.description">{{ genre.description }}</td>
-          <td class="td" :class="$options.columnsClasses.category">{{ genre.category ? genre.category.name : '' }}</td>
+          <td class="td" :class="columnsClasses.id">{{ genre.id }}</td>
+          <td class="td" :class="columnsClasses.title">{{ genre.name }}</td>
+          <td class="td" :class="columnsClasses.description">{{ genre.description }}</td>
+          <td class="td" :class="columnsClasses.category">{{ genre.category ? genre.category.name : '' }}</td>
         </tr>
       </transition-group>
     </table>
-    <the-modal v-if="showModal" width="400">
+    <the-modal v-if="showModal" :width="400">
       <edit-genre :genre="activeGenre" :categories="categories" @update-genres="getGenres"
                   @hide-modal="showModal = false"/>
     </the-modal>
   </div>
 </template>
 
-<script>
+<script setup>
 import useGenres from "@/composables/useGenres";
 import EditGenre from '@/components/EditGenre.vue'
 import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
-export default {
-  name: "GenreTable",
-  components: {TheModal, EditGenre, IconSortAsc, IconSortDesc},
-  props: {
-    categories: Array,
-  },
-  setup() {
-    document.title = 'Table Genres';
-    const {genres, ascending, orderBy, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
+document.title = 'Table Genres';
+const columns = ['id', 'name', 'description', 'category']
+const columnsClasses = {
+  id: 'cell-id',
+  name: 'cell-name',
+  description: 'cell-description',
+  category: 'cell-category'
+}
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+})
 
-    if (genres.value.length === 0) {
-      getGenres();
-    }
+const {genres, ascending, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
 
-    return {getGenres, genres, ascending, orderBy, activeGenre, showModal, sortBy, openRow, createGenre}
-  },
-  columns: ['id', 'name', 'description', 'category'],
-  columnsClasses: {
-    id: 'cell-id',
-    name: 'cell-name',
-    description: 'cell-description',
-    category: 'cell-category'
-  },
+if (genres.value.length === 0) {
+  getGenres();
 }
 </script>
 

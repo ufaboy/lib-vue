@@ -1,44 +1,34 @@
 <template>
-  <component :is="typeBook" :book="book" :progress-scroll="progressScroll" :window-heights="windowHeights" @scrolling="scrolling"></component>
+  <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book" :progress-scroll="progressScroll" :window-heights="windowHeights"
+             @scrolling="scrolling"></component>
 </template>
 
-<script>
-import {defineAsyncComponent, } from "vue";
+<script setup>
+// import {defineAsyncComponent,} from "vue";
 import {useRoute} from 'vue-router';
 import useBook from "@/composables/useBook";
+import BookText from "@/views/book/BookText.vue";
+import BookMedia from "@/views/book/BookMedia.vue";
+import BookEmpty from "@/views/book/BookEmpty.vue";
 
-export default {
-  name: "BookView",
-  components: {
-    BookText: defineAsyncComponent(() => import('@/views/book/BookText.vue')),
-    BookMedia: defineAsyncComponent(() => import('@/views/book/BookMedia.vue')),
-    BookEmpty: defineAsyncComponent(() => import('@/views/book/BookEmpty.vue'))
-  },
-  props: {
-    categories: Array,
-    progressScroll: Number,
-    windowHeights: Number,
-  },
-  setup() {
-    const route = useRoute();
-    const {book, typeBook, downloadBook} = useBook();
-    downloadBook(route.params.id)
-    return {
-      typeBook,
-      book,
-    }
-  },
-  methods: {
-    scrolling(e) {
-      // let header = document.getElementById('header')
-      // if (e === 'down') {
-      //   header.classList.add('hide')
-      // } else {
-      //   header.classList.remove('hide')
-      // }
-      this.$emit('scrolling', e)
-    }
-  },
+// let BookText = defineAsyncComponent(() => import('@/views/book/BookText.vue'))
+// let BookMedia = defineAsyncComponent(() => import('@/views/book/BookMedia.vue'))
+// let BookEmpty = defineAsyncComponent(() => import('@/views/book/BookEmpty.vue'))
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+  progressScroll: Number,
+  windowHeights: Number,
+})
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['scrolling'])
+const route = useRoute();
+
+const {book, typeBook, downloadBook} = useBook();
+downloadBook(route.params.id)
+
+function scrolling(e) {
+  emit('scrolling', e)
 }
 </script>
 

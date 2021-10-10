@@ -10,16 +10,12 @@
   </main>
 </template>
 
-<script>
-export default {
-  name: 'Home',
-  props: {
-    categories: Array,
-  },
-  setup() {
-    document.title = 'Home';
-  },
-}
+<script setup>
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+})
+document.title = 'Home';
 </script>
 
 <style scoped lang="scss">

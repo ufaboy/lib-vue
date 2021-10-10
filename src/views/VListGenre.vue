@@ -17,63 +17,57 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {computed, ref, toRefs} from 'vue';
 import {useRoute, useRouter} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 
-export default {
-  name: "ListGenre",
-  components: {},
-  props: {
-    categories: Array,
-  },
-  setup(props) {
-    document.title = 'Genres';
-    const route = useRoute();
-    const router = useRouter();
-    const activeCategory = ref({
-      genres: []
-    })
-    const {isMobile} = useDevice();
-    const {categories} = toRefs(props)
-    const genres = computed(() => {
-      let selectedCategory = {}
-      if (activeCategory.value.name) {
-        selectedCategory = categories.value.find(item => item.id === activeCategory.value.id || item.name === activeCategory.value.name)
-      } else if (route.params.id) {
-        selectedCategory = categories.value.find(item => item.id === +route.params.id)
-      } else if (route.params.name) {
-        selectedCategory = categories.value.find(item => item.name === route.params.name)
-      } else {
-        return []
-      }
-      return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
-    })
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  categories: Array,
+})
+document.title = 'Genres';
+const route = useRoute();
+const router = useRouter();
+const activeCategory = ref({
+  genres: []
+})
+const {isMobile} = useDevice();
+const {categories} = toRefs(props)
+const genres = computed(() => {
+  let selectedCategory = {}
+  if (activeCategory.value.name) {
+    selectedCategory = categories.value.find(item => item.id === activeCategory.value.id || item.name === activeCategory.value.name)
+  } else if (route.params.id) {
+    selectedCategory = categories.value.find(item => item.id === +route.params.id)
+  } else if (route.params.name) {
+    selectedCategory = categories.value.find(item => item.name === route.params.name)
+  } else {
+    return []
+  }
+  return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
+})
 
-    const openGenre = (genre) => {
-      router.push({
-        name: 'list-book',
-        params: {
-          'id': genre.id,
-          'name': genre.name,
-        }
-      })
-    };
-    const prepareCategory = async () => {
-      if (route.params.id) {
-        activeCategory.value = categories.value.find(item => item.id === +route.params.id)
-      } else if (route.params.name) {
-        activeCategory.value = categories.value.find(item => item.name === route.params.name)
-      }
-    };
-
-    if (route.params.id || route.params.name) {
-      prepareCategory()
+function openGenre(genre) {
+  router.push({
+    name: 'list-book',
+    params: {
+      'id': genre.id,
+      'name': genre.name,
     }
+  })
+}
 
-    return {activeCategory, genres, isMobile, openGenre}
-  },
+async function prepareCategory() {
+  if (route.params.id) {
+    activeCategory.value = categories.value.find(item => item.id === +route.params.id)
+  } else if (route.params.name) {
+    activeCategory.value = categories.value.find(item => item.name === route.params.name)
+  }
+}
+
+if (route.params.id || route.params.name) {
+  prepareCategory()
 }
 </script>
 

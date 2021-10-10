@@ -4,7 +4,7 @@ import {attachFileToBook, deleteFileByName} from "../utils/uploadData";
 
 export default function useMedia() {
     const directories = ref([])
-    const activeDirIndex = ref();
+    const activeDirIndex = ref(null);
     const activeMedia = ref({});
     const calcUrl = function (file) {
         return `${process.env.VUE_APP_API_URL}/${file.url}`

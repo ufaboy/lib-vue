@@ -8,7 +8,7 @@
     </header>
     <table class="table">
       <thead class="thead">
-      <th class="th" :class="$options.columnsClasses[column]" v-for="(column, index) of $options.columns" :key="index">
+      <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
         <div class="table-cell" :class="{'active' : orderBy.name === column}">
           <div class="td-title">{{ column }}</div>
           <div class="td-action" @click="sortBy(column)">
@@ -23,18 +23,18 @@
       <tbody>
       <!--      <transition-group name="flip-list" tag="tbody">-->
       <tr class="row" :class="{'picante': book.ad}" v-for="book of books.items" :key="book.id">
-        <td class="td" :class="$options.columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
-        <td class="td" :class="$options.columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
-        <td class="td" :class="$options.columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
+        <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
+        <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
+        <td class="td" :class="columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
           <p class="limited-p" >{{ book.annotation }}</p>
         </td>
-        <td class="td" :class="$options.columnsClasses.genres">
+        <td class="td" :class="columnsClasses.genres">
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.name : '' }}</div>
         </td>
-        <td class="td" :class="$options.columnsClasses.rating">{{ book.rating }}</td>
-        <td class="td" :class="$options.columnsClasses.view_count">{{ book.view_count }}</td>
-        <td class="td" :class="$options.columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
-        <td class="td" :class="$options.columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
+        <td class="td" :class="columnsClasses.rating">{{ book.rating }}</td>
+        <td class="td" :class="columnsClasses.view_count">{{ book.view_count }}</td>
+        <td class="td" :class="columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
+        <td class="td" :class="columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
       </tr>
       <!--</transition-group>-->
       </tbody>
@@ -59,7 +59,7 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <the-modal v-if="showModal" width="400">
+    <the-modal v-if="showModal" :width="400">
       <filter-modal @active-filter="updateFilterPage"
                     @hide-modal="showModal = false"
                     @reset-filter="resetTable"
@@ -71,8 +71,8 @@
   </div>
 </template>
 
-<script>
-import {ref, computed} from "vue";
+<script setup>
+import {ref,} from "vue";
 import useDevice from "@/composables/useDevice";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
@@ -82,76 +82,37 @@ import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import FilterModal from '@/components/FilterModal.vue'
 import TheModal from "@/components/TheModal";
 
-export default {
-  name: "BooksTable",
-  components: {TheModal, FilterModal, IconSortAsc, IconSortDesc},
-  props: {
-    categories: Array,
-  },
-  setup() {
-    document.title = 'Table Books';
+document.title = 'Table Books';
+const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
+const columnsClasses = {
+  id: 'cell-id',
+      name: 'cell-name',
+      annotation: 'cell-annotation',
+      genres: 'cell-genre',
+      rating: 'cell-rating',
+      view_count: 'cell-view_count',
+      last_read: 'cell-last_read',
+      updated_at: 'cell-updated_at'
+}
 
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+})
     const showModal = ref(false);
-    const {isMobile, isDesktop} = useDevice();
+    const {isMobile} = useDevice();
     const {
-      filter, limit, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
+      filter, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
       updateFilterPage, filterCount,
       sortBy, toPage, getBooksAndReplace
     } = useBooks();
     const {openBook} = useBook();
     const {getDate} = useDate();
-    const modalSize = computed(() => {
-      return isDesktop.value ? 600 : '100%'
-    });
-
-
-    const getThumbs = (book) => {
-      return book.cover_url ? `${process.env.VUE_APP_API_URL}/${book.cover_url}` : '/img/book-cover.jpg'
-    };
-
-
-    const showFilterModal = () => {
+    function showFilterModal() {
       showModal.value = true
-    };
+    }
 
     getBooksAndReplace();
-
-    return {
-      books,
-      searchQuery,
-      filter,
-      showModal,
-      page,
-      pagBtnArr,
-      limit,
-      orderBy,
-      isMobile,
-      isDesktop,
-      modalSize,
-      getBooksAndReplace,
-      getDate,
-      openBook,
-      resetTable,
-      filterCount,
-      updateFilterPage,
-      sortBy,
-      getThumbs,
-      toPage,
-      showFilterModal
-    }
-  },
-  columns: ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at'],
-  columnsClasses: {
-    id: 'cell-id',
-    name: 'cell-name',
-    annotation: 'cell-annotation',
-    genres: 'cell-genre',
-    rating: 'cell-rating',
-    view_count: 'cell-view_count',
-    last_read: 'cell-last_read',
-    updated_at: 'cell-updated_at'
-  },
-}
 </script>
 
 <style lang="scss" scoped>
