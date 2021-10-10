@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref, toRefs} from 'vue';
+import {onBeforeUnmount, ref, toRefs, watch} from 'vue';
 import {useRoute} from 'vue-router'
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
@@ -68,6 +68,7 @@ const {showSortingModal, touchStart, touchEnd} = useSlideButton();
 const showTopButton = ref(false);
 
 function calcGenreById(id) {
+
   let genreArray = []
   for (const cat of categories.value) {
     genreArray.push(...cat.genres)
@@ -86,9 +87,9 @@ function changeGenreLoadBook() {
   page.value = 1
   getBooksAndPush()
 }
-if (route.params.id) {
+watch(categories, () => {
   filter.value.genre = calcGenreById(+route.params.id)
-}
+})
 function updateBySorting(e) {
   showSortingModal.value = false
   orderBy.value.name = e.orderBy
