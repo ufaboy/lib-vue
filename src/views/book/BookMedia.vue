@@ -25,53 +25,36 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import useDevice from "@/composables/useDevice";
+import {computed, ref} from "vue";
 
 const apiUrl = process.env.VUE_APP_API_URL
 
-export default {
-  name: "BookMedia",
-  components: {},
-  props: {
-    book: Object
-  },
-  setup() {
-    const {isMobile, isDesktop} = useDevice();
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  book: Object,
+})
+const {isMobile, isDesktop} = useDevice();
+const activeImage = ref(null);
+const activeMedia = {type: null, url: null}
+const getTypeBook = computed(() => {
+  if (props.book.value.genres.findIndex(item => item.name === 'picture') !== -1) {
+    return 'picture'
+  } else if (props.book.value.genres.findIndex(item => item.name === 'audio') !== -1) {
+    return 'audio'
+  } else if (props.book.value.genres.findIndex(item => item.name === 'video') !== -1) {
+    return 'video'
+  } else return ''
+})
+const getSrcUrl = computed(() => {
+  return activeMedia.value.url ? `${apiUrl}/${activeMedia.value.url}` : ''
+})
 
-    return {isMobile, isDesktop}
-  },
-  emits: [],
-  data: () => ({
-    activeImage: null,
-    activeImageIndex: 0,
-    activeMedia: {type: null, url: null},
-  }),
-  computed: {
-    getTypeBook() {
-      if (this.book.genres.findIndex(item => item.name === 'picture') !== -1) {
-        return 'picture'
-      } else if (this.book.genres.findIndex(item => item.name === 'audio') !== -1) {
-        return 'audio'
-      } else if (this.book.genres.findIndex(item => item.name === 'video') !== -1) {
-        return 'video'
-      } else return ''
-    },
-    getSrcUrl() {
-      return this.activeMedia.url ? `${apiUrl}/${this.activeMedia.url}` : ''
-    },
-  },
-  watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  methods: {
-    getSrcImgUrl(e) {
-      return e.url ? `${apiUrl}/${e.url}` : ''
-    },
-  },
+function getSrcImgUrl(e) {
+  return e.url ? `${apiUrl}/${e.url}` : ''
 }
+
 </script>
 
 <style lang="scss">
