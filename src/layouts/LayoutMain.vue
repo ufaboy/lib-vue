@@ -1,7 +1,7 @@
 <template>
   <div class="basement" @click="activeBurger = false">
     <header id="header" class="header"
-            :class="{'header-hide': hideHeader, 'header-sticky': headerSticky}">
+            :class="{'header-hide': hideHeader, 'header-sticky': !hideHeader}">
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
       </div>
@@ -68,12 +68,14 @@ export default {
       } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
     });
     const hideHeader = computed(()=>{
-      return isMobile.value && hideByScroll.value
+      return route.name === 'book-view' && isMobile.value && hideByScroll.value
     })
-    const headerSticky = computed(() => {
-      return false
-      // return route.name === 'book-view' && !hideHeader.value
-    })
+    // const hideHeader = computed(()=>{
+    //   return isMobile.value && hideByScroll.value
+    // })
+    // const headerSticky = computed(() => {
+    //   return route.name === 'book-view' && !hideHeader.value
+    // })
 
     const getCategories = async function () {
       if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
@@ -95,7 +97,6 @@ export default {
       categories,
       hideHeader,
       userPreferTheme,
-      headerSticky,
       lastScrollTop,
       scrollTop,
       progress,
