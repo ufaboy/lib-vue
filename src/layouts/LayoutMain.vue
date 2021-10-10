@@ -71,7 +71,8 @@ export default {
       return isMobile.value && hideByScroll.value
     })
     const headerSticky = computed(() => {
-      return route.name === 'book-view' && !hideHeader.value
+      return false
+      // return route.name === 'book-view' && !hideHeader.value
     })
 
     const getCategories = async function () {
