@@ -41,53 +41,50 @@
   </form>
 </template>
 
-<script>
+<script setup>
 import {ref} from 'vue';
 import useDevice from "@/composables/useDevice";
 import IconClose from "@/components/icons/IconClose"
 
-export default {
-  name: "GenreBook",
-  components: {IconClose},
-  emits: ['set-genres', 'hide-modal'],
-  props: {
-    genresProps: Array,
-    categories: Array,
-  },
-  setup(props, {emit}) {
-    const activeCategory = ref('');
-    const searchField = ref('');
-    const selectedGenre = ref([]);
-    const genres = ref([]);
-    const {isMobile, isDesktop} = useDevice();
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['set-genres', 'hide-modal'])
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  genresProps: Array,
+  categories: Array,
+})
 
-    if (props.genresProps && props.genresProps.length) {
-      selectedGenre.value.push(...props.genresProps)
-    }
-    const sendGenre = () => {
-      emit('set-genres', selectedGenre)
-    };
+const activeCategory = ref('');
+const selectedGenre = ref([]);
+const genres = ref([]);
+const {isMobile, isDesktop} = useDevice();
 
-    const calcCheckedChildes = (e) => {
-      return e.genres.find(item => genres.value.map(genre => genre.id).includes(item.id))
-    };
-
-    const colorizeGenre = (i) => {
-      const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
-      return color[i]
-    };
-    const reset = () => {
-      selectedGenre.value = props.genresProps.map(a => ({...a}))
-    };
-    const closeModal = () => {
-      emit('hide-modal')
-    };
-
-    reset()
-
-    return {activeCategory, searchField, selectedGenre, genres, isMobile, isDesktop, sendGenre, calcCheckedChildes, colorizeGenre, reset, closeModal}
-  },
+if (props.genresProps && props.genresProps.length) {
+  selectedGenre.value.push(...props.genresProps)
 }
+
+function sendGenre() {
+  emit('set-genres', selectedGenre)
+}
+
+function calcCheckedChildes(e) {
+  return e.genres.find(item => genres.value.map(genre => genre.id).includes(item.id))
+}
+
+function colorizeGenre(i) {
+  const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
+  return color[i]
+}
+
+function reset() {
+  selectedGenre.value = props.genresProps.map(a => ({...a}))
+}
+
+function closeModal() {
+  emit('hide-modal')
+}
+
+reset()
 </script>
 
 <style lang="scss" scoped>
@@ -162,9 +159,11 @@ export default {
     width: 100%;
     overflow: hidden;
     white-space: nowrap;
+
     .checkmark {
 
     }
+
     //.checkmark:after {
     //  left: 6px;
     //  top: 2px;

@@ -21,7 +21,7 @@
     </div>
     <div class="form-field mb-1">
       <label class="form-field__label">Ad</label>
-      <div class="toggle toggle--knob" v-if="$options.adAccess">
+      <div class="toggle toggle--knob" v-if="adAccess">
         <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="filter.ad">
         <label class="toggle--btn" for="toggle--knob">
           <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
@@ -31,7 +31,7 @@
     <div class="form-field mb-1">
       <label class="form-field__label">Rating</label>
       <select class="form-field__select" v-model="filter.rating" name="selectRating">
-        <option class="value" :value="rating.value" v-for="(rating, index) of $options.ratingOptions"
+        <option class="value" :value="rating.value" v-for="(rating, index) of ratingOptions"
                 :key="'rating-' + index">{{ rating.value }} {{ rating.name }}
         </option>
       </select>
@@ -43,79 +43,76 @@
   </form>
 </template>
 
-<script>
+<script setup>
 import IconClose from "@/components/icons/IconClose"
 import {getAdAccess} from "@/utils/userData";
 import {ref} from "vue";
 
-export default {
-  name: "FilterModal",
-  components: {
-    IconClose,
-  },
-  emits: ['active-filter', 'hide-modal', 'reset-filter'],
-  props: {
-    categories: Array,
-    rating: Number,
-    ad: Number,
-    genre: Object,
-  },
-  ratingOptions: [
-    {name: 'Terrible', value: 1},
-    {name: 'Bad', value: 2},
-    {name: 'Middle', value: 3},
-    {name: 'Good', value: 4},
-    {name: 'Fine', value: 5},
-  ],
-  adAccess: getAdAccess(),
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['active-filter', 'hide-modal', 'reset-filter'])
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+  rating: Number,
+  ad: Number,
+  genre: Object,
+})
 
-  setup(props, {emit}) {
-    const filter = ref({
-      rating: null,
-      ad: null,
-      genre: {},
-    })
-    const loadFilter = function () {
-      filter.value.rating = props.rating ?? null
-      if (props.genre) {
-        filter.value.genre = props.genre
-      }
-      filter.value.ad = props.ad ?? null
-    }
-    const closeModal = function () {
-      emit('hide-modal')
-    }
-    const resetFilter = function () {
-      emit('reset-filter')
-      closeModal()
-    }
-    const findBookByFilter = function () {
-      emit('active-filter', {
-        genre: Number.isInteger(filter.value.genre.id) ? filter.value.genre : null,
-        rating: filter.value.rating,
-        ad: filter.value.ad
-      })
-      closeModal()
-    }
+const ratingOptions = [
+  {name: 'Terrible', value: 1},
+  {name: 'Bad', value: 2},
+  {name: 'Middle', value: 3},
+  {name: 'Good', value: 4},
+  {name: 'Fine', value: 5},
+]
+const adAccess = getAdAccess()
 
-    loadFilter()
+const filter = ref({
+  rating: null,
+  ad: null,
+  genre: {},
+})
 
-    return {filter, resetFilter, closeModal, findBookByFilter}
-  },
-
+function loadFilter() {
+  filter.value.rating = props.rating ?? null
+  if (props.genre) {
+    filter.value.genre = props.genre
+  }
+  filter.value.ad = props.ad ?? null
 }
+
+function closeModal() {
+  emit('hide-modal')
+}
+
+function resetFilter() {
+  emit('reset-filter')
+  closeModal()
+}
+
+function findBookByFilter() {
+  emit('active-filter', {
+    genre: Number.isInteger(filter.value.genre.id) ? filter.value.genre : null,
+    rating: filter.value.rating,
+    ad: filter.value.ad
+  })
+  closeModal()
+}
+
+loadFilter()
+
 </script>
 
 <style lang="scss" scoped>
 .filter {
   padding: 1rem;
-  color: var(--text1);
+  color: var(--text);
 
   .header {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.5rem;
   }
 
   .filter-title {

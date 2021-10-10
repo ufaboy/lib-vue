@@ -2,14 +2,16 @@
   <form class="edit-genre" @submit.prevent="updateGenre">
     <header class="header">
       <h1>Genre</h1>
-<!--        <button v-if="adAccess"-->
-<!--                type="button"-->
-<!--                class="btn-switch btn"-->
-<!--                :class="{'active': localGenre.ad}"-->
-<!--                @click="localGenre.ad = !localGenre.ad">ad-->
-<!--        </button>-->
+      <!--        <button v-if="adAccess"-->
+      <!--                type="button"-->
+      <!--                class="btn-switch btn"-->
+      <!--                :class="{'active': localGenre.ad}"-->
+      <!--                @click="localGenre.ad = !localGenre.ad">ad-->
+      <!--        </button>-->
       <button class="close-btn" type="reset" @click="closeModal">
-        <base-icon class="icon" icon-name="close"><icon-close/></base-icon>
+        <base-icon class="icon" icon-name="close">
+          <icon-close/>
+        </base-icon>
       </button>
     </header>
     <div class="form-field mb-1">
@@ -24,12 +26,12 @@
       <div class="form-field">
         <label class="form-field__label">category</label>
         <select class="select form-field__select" v-model="localGenre.category">
-          <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{category.name}}</option>
+          <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
       <div class="form-field">
         <label class="form-field__label">ad</label>
-        <div class="toggle toggle--knob" v-if="$options.adAccess">
+        <div class="toggle toggle--knob" v-if="adAccess">
           <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="localGenre.ad">
           <label class="toggle--btn" for="toggle--knob">
             <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
@@ -45,30 +47,23 @@
   </form>
 </template>
 
-<script>
-
+<script setup>
 import IconClose from "@/components/icons/IconClose"
 import useGenre from "@/composables/useGenre";
-import {toRefs} from "vue";
 import {getAdAccess} from "../utils/userData";
-export default {
-  name: "EditGenre",
-  components: {IconClose},
-  emits: ['update-genres', 'hide-modal'],
-  props: {
-    genre: Object,
-    categories: Array,
-  },
-  adAccess: getAdAccess(),
-  setup(props, {emit}) {
-    const {categories} = toRefs(props)
-    const {localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre} = useGenre(props, emit)
-    const categoriesSimple = categories.value.map(category=>{
-      return {id: category.id, name: category.name}
-    })
-    return {categoriesSimple, localGenre, closeModal, checkGenreToHaveErrors, updateGenre, deleteGenre};
-  },
-}
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+  genre: Object,
+})
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['update-genres', 'hide-modal'])
+
+const adAccess = getAdAccess()
+const {localGenre, closeModal, updateGenre, deleteGenre} = useGenre(props, emit)
+const categoriesSimple = props.categories.value.map(category => {
+  return {id: category.id, name: category.name}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -79,6 +74,7 @@ export default {
   height: 100%;
   width: 100%;
   color: var(--text);
+
   .header {
     margin-bottom: 1rem;
     width: 100%;
@@ -93,13 +89,16 @@ export default {
   .btn-switch.active {
     color: red;
   }
+
   .form-field {
 
   }
+
   .footer {
     display: flex;
     width: 100%;
     justify-content: space-between;
+
     button:last-of-type {
       margin-right: 0;
     }
