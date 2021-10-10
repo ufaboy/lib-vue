@@ -146,23 +146,13 @@ onBeforeUnmount(() => {
     .search-input {
       display: flex;
       flex: 1;
-      min-width: 50px;
+      min-width: 30vw;
       border-radius: 5px;
       color: var(--text);
       background-color: var(--surface-light);
       padding: 5px;
     }
-
-    .select-genre {
-      width: 200px;
-    }
-
-    .select-order-by {
-      width: 135px;
-    }
-
     .btn-asc {
-      //width: 75px;
       padding: 0;
     }
   }
@@ -264,10 +254,12 @@ onBeforeUnmount(() => {
 
       .select-genre {
         grid-area: select-genre;
+        width: 47vw;
       }
 
       .select-order-by {
         grid-area: select-order-by;
+        width: 37vw;
       }
 
       .btn-asc {

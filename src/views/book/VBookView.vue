@@ -1,5 +1,7 @@
 <template>
-  <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book" :progress-scroll="progressScroll" :window-heights="windowHeights"
+  <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book"
+             :progress-scroll="progressScroll"
+             :window-heights="windowHeights"
              @scrolling="scrolling"></component>
 </template>
 

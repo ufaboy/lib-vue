@@ -1,5 +1,5 @@
 <template>
-  <div class="genre-book" @submit.prevent="sendGenre">
+  <form class="genre-book" @submit.prevent="sendGenre">
     <header class="modal-header">
       <h1>Genre</h1>
       <span>{{ genres.length }}</span>
@@ -38,7 +38,7 @@
       <button class="negative-btn" type="button" @click="reset">сброс</button>
       <button class="positive-btn">Сохранить</button>
     </footer>
-  </div>
+  </form>
 </template>
 
 <script>

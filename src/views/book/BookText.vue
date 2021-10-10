@@ -6,7 +6,7 @@
       <div class="progress-value">{{ progressScroll }}</div>
     </footer>
     <the-modal v-if="showEditorModal">
-      <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false" />
+      <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false"/>
     </the-modal>
     <div id="image-modal" class="image-modal" v-if="activeImage">
       <span class="close" @click="activeImage = null">&times;</span>
@@ -23,155 +23,117 @@
   </div>
 </template>
 
-<script>
-import {ref, defineAsyncComponent, onBeforeUnmount, onMounted, nextTick, toRefs, inject} from "vue";
+<script setup>
+import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject} from "vue";
 import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 import {updateBook, updateBookMark} from "@/utils/uploadData";
-import useScroll from "../../composables/useScroll";
+import EditorModal from "@/components/EditorModal.vue";
+const printToast = inject('printToast')
+
 const apiUrl = process.env.VUE_APP_API_URL
 
-export default {
-  name: "BookText",
-  components: {
-    TheModal,
-    EditorModal: defineAsyncComponent(() => import('@/components/EditorModal.vue')),
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+  book: Object,
+  progressScroll: {
+    type: Number,
+    default: 0
   },
-  props: {
-    book: Object,
-    progressScroll: {
-      type: Number,
-      default: 0
-    },
-    windowHeights: {
-      type: Number,
-      default: 0
-    },
+  windowHeights: {
+    type: Number,
+    default: 0
   },
-  setup(props) {
-    const printToast = inject('printToast')
-    const { windowHeights } = toRefs(props)
-    const showEditorModal = ref(false);
-    const progressLoad = ref(0);
-    const windowScroll = ref(0);
-    const timer = ref(null);
-    const activeImage = ref(null);
-    const activeImageIndex = ref(0);
-    const activeMedia = ref({type: null, url: null});
-    const editorNode = ref({});
-    const initialText = ref('');
+})
 
-    const {isMobile, isDesktop} = useDevice();
-    const {currentScroll, progress, lastScrollTop, hideHeader} = useScroll;
+const {windowHeights} = toRefs(props)
+const showEditorModal = ref(false);
+const windowScroll = ref(0);
+const activeImage = ref(null);
+const activeImageIndex = ref(0);
+const editorNode = ref({});
 
-    const editMode = (e) => {
-      editorNode.value = e.target
-      showEditorModal.value = true
-    };
-    const openImage = (img) => {
-      if (document.documentElement.clientWidth > 800) {
-        activeImage.value = img.target.src
-      }
-    };
-    const showSlide = (type) => {
-      let index = 0
-      if (type === 'prev') {
-        index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.files.length - 1
-      } else if (type === 'next') {
-        index = activeImageIndex.value < props.book.files.length - 1 ? activeImageIndex.value + 1 : 0
-      } else if (type === 'last') {
-        index = props.book.files.length - 1
-      } else if (type === 'first') {
-        index = 0
-      }
-      if (props.book.files[index].type.includes('image/')) {
-        activeImageIndex.value = index
-        activeImage.value = getSrcImgUrl(props.book.files[index])
-      }
+const {isMobile, isDesktop} = useDevice();
 
-    };
-    const getSrcImgUrl = (e) => {
-      return e.url ? `${apiUrl}/${e.url}` : ''
-    };
-    const moveMedia = () => {
-      let toggleSide = true
-      let media = document.querySelectorAll('.media')
-      for (const elem of media) {
-        elem.classList.add(toggleSide ? 'media--right' : 'media--left')
-        toggleSide = !toggleSide
-      }
-    };
-    const listenClickByImg = () => {
-      let images = document.getElementsByClassName('picture')
-      for (let image of images) {
-        image.addEventListener("click", openImage);
-      }
-    };
-    const saveEditor = async function() {
-      try {
-        await updateBook({id: props.book.id, text: props.book.text})
-        printToast('Success', 'success')
-      } catch (e) {
-        printToast(`Ошибка: ${e}`, 'error')
-        console.log({'saveEditor error': e})
-      }
-    };
-    const scrollToBookmark = async () => {
-      if (props.book.value.bookmark) {
-        await this.$nextTick()
-        this.$refs.bookRef.scrollTo(0, this.book.bookmark)
-      }
-    };
-    const scrollByClick = (e) => {
-      let w = document.getElementById("progressbar").clientWidth;
-      let o = e.offsetX;
-      let x = Math.floor((100 * o) / w);
-      document.getElementById("progressbar").value = x;
-      let y = Math.floor((windowHeights.value * x) / 100);
-      console.log('scrollByClick', {windowHeights: windowHeights.value, x: x, scrollTo: y})
-      window.scrollTo(0, y);
-    };
-    onBeforeUnmount(async () => {
-      const formData = {bookId: props.book.id, bookmark: windowScroll.value}
-      const result = await updateBookMark(formData)
-      if (!result) {
-        console.log({'result': result})
-      }
-    });
-    onMounted(async () => {
-      await nextTick()
-      if (isDesktop.value) moveMedia()
-      listenClickByImg()
-    });
-
-    return {
-      progress,
-      progressLoad,
-      windowScroll,
-      showEditorModal,
-      timer,
-      activeMedia,
-      activeImage,
-      activeImageIndex,
-      editorNode,
-      initialText,
-      isMobile,
-      currentScroll, lastScrollTop, hideHeader,
-      moveMedia,
-      scrollToBookmark,
-      scrollByClick,
-      saveEditor,
-      listenClickByImg,
-      openImage,
-      editMode,
-      showSlide,
-      getSrcImgUrl,
-    }
-  },
-  methods: {
-
-  },
+function editMode (e) {
+  editorNode.value = e.target
+  showEditorModal.value = true
 }
+function openImage (img) {
+  if (document.documentElement.clientWidth > 800) {
+    activeImage.value = img.target.src
+  }
+}
+function showSlide (type) {
+  let index = 0
+  if (type === 'prev') {
+    index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.files.length - 1
+  } else if (type === 'next') {
+    index = activeImageIndex.value < props.book.files.length - 1 ? activeImageIndex.value + 1 : 0
+  } else if (type === 'last') {
+    index = props.book.files.length - 1
+  } else if (type === 'first') {
+    index = 0
+  }
+  if (props.book.files[index].type.includes('image/')) {
+    activeImageIndex.value = index
+    activeImage.value = getSrcImgUrl(props.book.files[index])
+  }
+}
+function getSrcImgUrl (e) {
+  return e.url ? `${apiUrl}/${e.url}` : ''
+}
+function moveMedia () {
+  let toggleSide = true
+  let media = document.querySelectorAll('.media')
+  for (const elem of media) {
+    elem.classList.add(toggleSide ? 'media--right' : 'media--left')
+    toggleSide = !toggleSide
+  }
+}
+function listenClickByImg () {
+  let images = document.getElementsByClassName('picture')
+  for (let image of images) {
+    image.addEventListener("click", openImage);
+  }
+}
+async function saveEditor () {
+  try {
+    await updateBook({id: props.book.id, text: props.book.text})
+    printToast('Success', 'success')
+  } catch (e) {
+    printToast(`Ошибка: ${e}`, 'error')
+    console.log({'saveEditor error': e})
+  }
+}
+// async function scrollToBookmark () {
+//   if (props.book.value.bookmark) {
+//     await this.$nextTick()
+//     this.$refs.bookRef.scrollTo(0, this.book.bookmark)
+//   }
+// }
+function scrollByClick (e) {
+  let w = document.getElementById("progressbar").clientWidth;
+  let o = e.offsetX;
+  let x = Math.floor((100 * o) / w);
+  document.getElementById("progressbar").value = x;
+  let y = Math.floor((windowHeights.value * x) / 100);
+  console.log('scrollByClick', {windowHeights: windowHeights.value, x: x, scrollTo: y})
+  window.scrollTo(0, y);
+}
+onBeforeUnmount(async () => {
+  const formData = {bookId: props.book.id, bookmark: windowScroll.value}
+  const result = await updateBookMark(formData)
+  if (!result) {
+    console.log({'result': result})
+  }
+});
+onMounted(async () => {
+  await nextTick()
+  if (isDesktop.value) moveMedia()
+  listenClickByImg()
+});
 </script>
 
 <style lang="scss">
@@ -199,6 +161,7 @@ export default {
     position: relative;
     letter-spacing: 0.3px;
     line-height: 1.5;
+    padding: 0 0.5rem;
     //content-visibility: auto;
 
     .media {
@@ -236,6 +199,7 @@ export default {
     flex: 1;
 
   }
+
   .footer {
     width: 100%;
     height: 1.5rem;
@@ -286,6 +250,7 @@ export default {
     max-width: 90vw;
     max-height: 95vh;
   }
+
   .picture-action-panel {
     height: 100%;
     display: flex;
@@ -364,7 +329,6 @@ export default {
       .close {
         top: 0;
       }
-
 
 
       .picture-arrow-btn {
