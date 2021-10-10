@@ -81,9 +81,9 @@ export default {
     }
 
     getCategories();
-    window.addEventListener('scroll', throttleScroll, {passive: true})
+    window.addEventListener('scroll', throttleScroll)
     onBeforeUnmount(()=>{
-      window.removeEventListener('scroll', throttleScroll, {passive: true})
+      window.removeEventListener('scroll', throttleScroll)
     })
     return {
       searchField,

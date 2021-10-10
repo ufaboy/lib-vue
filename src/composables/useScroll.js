@@ -18,7 +18,7 @@ export default function useScroll() {
     setTimeout(() => {
       isThrottledScroll.value = false
       handleScroll()
-    }, 300)
+    }, 100)
   };
   const initHeights = function () {
     scrollHeight.value = Math.floor(document.documentElement.scrollHeight)
@@ -29,17 +29,6 @@ export default function useScroll() {
     // const st = Math.floor(window.pageYOffset || document.documentElement.scrollTop);
     scrollTop.value = Math.floor(document.documentElement.scrollTop)
     const res = scrollTop.value - lastScrollTop.value
-
-
-    // console.log('handleScroll', {
-    //   st: st,
-    //   res: res,
-    //   lastScrollTop: lastScrollTop.value,
-    //   scrollTop: scrollTop,
-    //   scrollHeight: scrollHeight,
-    //   clientHeight: clientHeight,
-    //   progress: progress.value
-    // })
     if (scrollTop.value > lastScrollTop.value) {
       hideByScroll.value = scrollTop.value > 150 && res > 70
     } else if (res < -70) {
@@ -48,6 +37,9 @@ export default function useScroll() {
     lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value; // For Mobile or negative scrolling
     progress.value = Math.round((scrollTop.value * 100) / initHeights())
     windowHeights.value = scrollHeight.value - clientHeight.value;
+    console.log('handleScroll', {
+      hideByScroll: hideByScroll.value,
+    })
   }
 
   return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, progress, initHeights, throttleScroll}

@@ -1,7 +1,7 @@
 <template>
   <div class="list-genre">
     <header class="header" v-if="isMobile">
-      <select class="select" v-model="activeCategory">
+      <select class="form-field__select" v-model="activeCategory">
         <option class="option" :value="category" v-for="category of categories" :key="category.id">
           {{ category.name }}
         </option>
