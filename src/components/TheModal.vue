@@ -59,6 +59,7 @@ export default {
     right: 0;
     left: 0;
     top: 0;
+    border-radius: 1rem;
     animation-name: zoomIn;
     animation-duration: 0.5s;
     animation-fill-mode: both;

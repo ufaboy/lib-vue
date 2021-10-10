@@ -13,47 +13,39 @@
 </template>
 
 <script>
+import {ref} from "vue";
+
 export default {
   name: "EditorModal",
-  components: {},
-  emits: ['save-editor'],
+  emits: ['save-editor', 'hide-modal'],
   props: {
     editorNode: {},
   },
-  data: () => ({
-    rawEditor: false
-  }),
-  computed: {},
-  watch: {},
-  created() {
+  setup(props, {emit}) {
+    const rawEditor = ref(false);
+    const closeModal = function () {
+      emit('hide-modal')
+    };
+    const saveEditor = function () {
+      emit('save-editor')
+      closeModal()
+    };
+    return {rawEditor, closeModal, saveEditor}
   },
-  mounted() {
-  },
-  methods: {
-    saveEditor() {
-      this.$emit('save-editor')
-      this.closeModal()
-    },
-    closeModal() {
-      this.$parent.hide('editor', this)
-    },
-  },
-  unmounted() {
-    this.initialText = ''
-  }
 }
 </script>
 
 <style lang="scss">
 .editor-modal {
   padding: 1rem;
+  border-radius: 1rem;
   .textarea {
     width: 100%;
     resize: vertical;
     padding: 0.5rem;
     margin-bottom: 1rem;
-    color: var(--text1);
-    background-color: var(--surface2);
+    color: var(--text);
+    background-color: var(--surface);
   }
 
   .btn-bar {

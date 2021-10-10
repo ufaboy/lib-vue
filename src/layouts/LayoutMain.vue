@@ -59,7 +59,7 @@ export default {
     const activeBurger = ref(false)
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
-    const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideHeader, throttleScroll} = useScroll()
+    const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, throttleScroll} = useScroll()
     const {userPreferTheme} = useTheme()
     const btnViewEditMode = computed(() => {
       return route.name === 'book-view' ? {
@@ -67,6 +67,9 @@ export default {
         path: `/book/update/${route.params.id}`
       } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
     });
+    const hideHeader = computed(()=>{
+      return isMobile.value && hideByScroll.value
+    })
     const headerSticky = computed(() => {
       return route.name === 'book-view' && !hideHeader.value
     })

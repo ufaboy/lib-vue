@@ -3,7 +3,7 @@ import {ref} from "vue";
 export default function useScroll() {
   const isThrottledScroll = ref(false);
   const lastScrollTop = ref(0);
-  const hideHeader = ref(false);
+  const hideByScroll = ref(false);
   const currentScroll = ref(0);
   const scrollTop = ref(0);
   const scrollHeight = ref(0);
@@ -41,14 +41,14 @@ export default function useScroll() {
     //   progress: progress.value
     // })
     if (scrollTop.value > lastScrollTop.value) {
-      hideHeader.value = scrollTop.value > 150 && res > 70
+      hideByScroll.value = scrollTop.value > 150 && res > 70
     } else if (res < -70) {
-      hideHeader.value = false
+      hideByScroll.value = false
     }
     lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value; // For Mobile or negative scrolling
     progress.value = Math.round((scrollTop.value * 100) / initHeights())
     windowHeights.value = scrollHeight.value - clientHeight.value;
   }
 
-  return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideHeader, progress, initHeights, throttleScroll}
+  return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, progress, initHeights, throttleScroll}
 }

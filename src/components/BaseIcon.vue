@@ -4,11 +4,9 @@
        :height="height"
        :viewBox="viewBox"
   >
-<!--    <title :id="iconName" lang="en">{{iconName}} icon</title>-->
-    <g><slot/></g>
-<!--    <g :fill="iconColor">-->
-<!--      <slot />-->
-<!--    </g>-->
+    <g>
+      <slot/>
+    </g>
   </svg>
 </template>
 

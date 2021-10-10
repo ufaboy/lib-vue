@@ -1,15 +1,12 @@
 <template>
   <div class="book" :class="{mobile: isMobile}">
-<!--    <div class="book" ref="bookRef" @scroll.passive="scrollThrottler" id="book">-->
-<!--      <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>-->
-<!--    </div>-->
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     <footer class="footer" v-if="book.annotation !== 'media'">
       <progress class="progress" :value="progressScroll" max="100" id="progressbar" @click="scrollByClick"/>
       <div class="progress-value">{{ progressScroll }}</div>
     </footer>
-    <the-modal v-if="showEditorModal" @hide-modal="showEditorModal = false">
-      <editor-modal :editor-node="editorNode" @save-editor="saveEditor"/>
+    <the-modal v-if="showEditorModal">
+      <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false" />
     </the-modal>
     <div id="image-modal" class="image-modal" v-if="activeImage">
       <span class="close" @click="activeImage = null">&times;</span>
@@ -27,13 +24,12 @@
 </template>
 
 <script>
-import {ref, defineAsyncComponent, onBeforeUnmount, onMounted, nextTick, toRefs} from "vue";
+import {ref, defineAsyncComponent, onBeforeUnmount, onMounted, nextTick, toRefs, inject} from "vue";
 import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
-
-const apiUrl = process.env.VUE_APP_API_URL
 import {updateBook, updateBookMark} from "@/utils/uploadData";
 import useScroll from "../../composables/useScroll";
+const apiUrl = process.env.VUE_APP_API_URL
 
 export default {
   name: "BookText",
@@ -53,6 +49,7 @@ export default {
     },
   },
   setup(props) {
+    const printToast = inject('printToast')
     const { windowHeights } = toRefs(props)
     const showEditorModal = ref(false);
     const progressLoad = ref(0);
@@ -110,7 +107,15 @@ export default {
         image.addEventListener("click", openImage);
       }
     };
-
+    const saveEditor = async function() {
+      try {
+        await updateBook({id: props.book.id, text: props.book.text})
+        printToast('Success', 'success')
+      } catch (e) {
+        printToast(`Ошибка: ${e}`, 'error')
+        console.log({'saveEditor error': e})
+      }
+    };
     const scrollToBookmark = async () => {
       if (props.book.value.bookmark) {
         await this.$nextTick()
@@ -155,7 +160,7 @@ export default {
       moveMedia,
       scrollToBookmark,
       scrollByClick,
-      // prepareUrlForMedia,
+      saveEditor,
       listenClickByImg,
       openImage,
       editMode,
@@ -164,15 +169,7 @@ export default {
     }
   },
   methods: {
-    async saveEditor() {
-      try {
-        await updateBook({text: this.book.text})
-        // this.$toast.success('Успешно сохранено')
-      } catch (e) {
-        // this.$toast.error(`Ошибка: ${e}`)
-        console.log({saveEditor: e})
-      }
-    },
+
   },
 }
 </script>
