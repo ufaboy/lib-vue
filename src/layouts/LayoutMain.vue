@@ -1,7 +1,6 @@
 <template>
   <div class="basement" @click="activeBurger = false">
-    <header id="header" class="header"
-            :class="{'header-hide': hideHeader, 'header-sticky': !hideHeader}">
+    <header id="header" class="header">
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
       </div>
