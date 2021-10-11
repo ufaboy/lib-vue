@@ -32,14 +32,15 @@
       </div>
 
     </header>
-    <router-view v-bind="$attrs" :categories="categories" :progress-scroll="progress" :window-heights="windowHeights"></router-view>
-<!--    <component :is="userPreferTheme"></component>-->
+    <router-view v-bind="$attrs" :categories="categories" :progress-scroll="progress"
+                 :window-heights="windowHeights"></router-view>
+    <!--    <component :is="userPreferTheme"></component>-->
 
   </div>
 </template>
 
 <script>
-import {computed, onBeforeUnmount, ref} from "vue";
+import {computed, onBeforeUnmount, provide, ref} from "vue";
 import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
@@ -48,6 +49,7 @@ import {loadCategories} from "@/utils/loadData";
 // import ThemeLight from "../components/ThemeLight";
 import useTheme from "../composables/useTheme";
 import useScroll from "../composables/useScroll";
+import {updateBookMark} from "../utils/uploadData";
 
 export default {
   name: "LayoutMain",
@@ -58,7 +60,16 @@ export default {
     const activeBurger = ref(false)
     const categories = ref([])
     const {isMobile, isDesktop} = useDevice();
-    const {lastScrollTop, progress, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, throttleScroll} = useScroll()
+    const {
+      lastScrollTop,
+      progress,
+      scrollTop,
+      scrollHeight,
+      clientHeight,
+      windowHeights,
+      hideByScroll,
+      throttleScroll
+    } = useScroll()
     const {userPreferTheme} = useTheme()
     const btnViewEditMode = computed(() => {
       return route.name === 'book-view' ? {
@@ -66,7 +77,7 @@ export default {
         path: `/book/update/${route.params.id}`
       } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
     });
-    const hideHeader = computed(()=>{
+    const hideHeader = computed(() => {
       return route.name === 'book-view' && isMobile.value && hideByScroll.value
     })
     // const hideHeader = computed(()=>{
@@ -75,6 +86,13 @@ export default {
     // const headerSticky = computed(() => {
     //   return route.name === 'book-view' && !hideHeader.value
     // })
+    const saveScrollingBook = async function(id) {
+      const formData = {bookId: id, bookmark: scrollTop.value}
+      const result = await updateBookMark(formData)
+      if (!result) {
+        console.log({'saveScrollingBook': result})
+      }
+    }
 
     const getCategories = async function () {
       if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
@@ -84,9 +102,12 @@ export default {
 
     getCategories();
     window.addEventListener('scroll', throttleScroll, {passive: true})
-    onBeforeUnmount(()=>{
+    onBeforeUnmount(() => {
       window.removeEventListener('scroll', throttleScroll, {passive: true})
     })
+
+    provide('saveScrollingBook', saveScrollingBook)
+
     return {
       searchField,
       activeBurger,
@@ -102,6 +123,7 @@ export default {
       scrollHeight,
       windowHeights,
       clientHeight,
+      saveScrollingBook,
       throttleScroll,
       getCategories,
     }
@@ -112,9 +134,7 @@ export default {
   beforeUnmount() {
 
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 

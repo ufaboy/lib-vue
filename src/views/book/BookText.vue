@@ -27,9 +27,10 @@
 import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject} from "vue";
 import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
-import {updateBook, updateBookMark} from "@/utils/uploadData";
+import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
 const printToast = inject('printToast')
+const saveScrollingBook = inject('saveScrollingBook')
 
 const apiUrl = process.env.VUE_APP_API_URL
 
@@ -49,7 +50,6 @@ const props = defineProps({
 
 const {windowHeights} = toRefs(props)
 const showEditorModal = ref(false);
-const windowScroll = ref(0);
 const activeImage = ref(null);
 const activeImageIndex = ref(0);
 const editorNode = ref({});
@@ -107,12 +107,11 @@ async function saveEditor () {
     console.log({'saveEditor error': e})
   }
 }
-// async function scrollToBookmark () {
-//   if (props.book.value.bookmark) {
-//     await this.$nextTick()
-//     this.$refs.bookRef.scrollTo(0, this.book.bookmark)
-//   }
-// }
+async function scrollToBookmark () {
+  if (props.book.bookmark) {
+   window.scrollTo(0, props.book.bookmark)
+  }
+}
 function scrollByClick (e) {
   let w = document.getElementById("progressbar").clientWidth;
   let o = e.offsetX;
@@ -122,15 +121,12 @@ function scrollByClick (e) {
   console.log('scrollByClick', {windowHeights: windowHeights.value, x: x, scrollTo: y})
   window.scrollTo(0, y);
 }
-onBeforeUnmount(async () => {
-  const formData = {bookId: props.book.id, bookmark: windowScroll.value}
-  const result = await updateBookMark(formData)
-  if (!result) {
-    console.log({'result': result})
-  }
+onBeforeUnmount(() => {
+  saveScrollingBook(props.book.id)
 });
 onMounted(async () => {
   await nextTick()
+  await scrollToBookmark()
   if (isDesktop.value) moveMedia()
   listenClickByImg()
 });
