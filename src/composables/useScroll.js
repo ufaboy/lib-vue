@@ -37,12 +37,12 @@ export default function useScroll() {
     lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value; // For Mobile or negative scrolling
     progress.value = Math.round((scrollTop.value * 100) / initHeights())
     windowHeights.value = scrollHeight.value - clientHeight.value;
-    console.log('handleScroll', {
-      hideByScroll: hideByScroll.value,
-      scrollTop: scrollTop.value,
-      lastScrollTop: lastScrollTop.value,
-      res: res
-    })
+    // console.log('handleScroll', {
+    //   hideByScroll: hideByScroll.value,
+    //   scrollTop: scrollTop.value,
+    //   lastScrollTop: lastScrollTop.value,
+    //   res: res
+    // })
   }
 
   return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, progress, initHeights, throttleScroll}
