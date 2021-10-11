@@ -122,14 +122,13 @@
   </div>
 </template>
 
-<script>
-import {ref, computed} from 'vue'
+<script setup>
+import {ref, computed, onUpdated} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
-import useBook from "../../composables/useBook";
-import useDevice from "@/composables/useDevice";
+import useBook from "@/composables/useBook";
 import IconParagraph from '@/components/icons/IconParagraph.vue'
 import IconCarriage from '@/components/icons/IconCarriage.vue'
 import IconSlash from '@/components/icons/IconSlash.vue'
@@ -137,245 +136,223 @@ import GenreBook from '@/components/GenreBook.vue'
 import TheModal from "@/components/TheModal";
 import StarRating from "@/components/StarRating";
 
+document.title = 'Editor';
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  categories: Array,
+})
 
-export default {
-  name: "BookEdit",
-  components: {StarRating, TheModal, IconParagraph, IconCarriage, IconSlash, GenreBook},
-  props: {
-    categories: Array,
-  },
-  setup() {
-    document.title = 'Editor';
-    const router = useRouter();
-    const route = useRoute();
-    const showGenreBookModal = ref(false);
-    const files = ref([]);
+const router = useRouter();
+const route = useRoute();
+const {book} = useBook();
+const editor = ref(null)
+const showGenreBookModal = ref(false);
+const files = ref([]);
 
-    const {book} = useBook()
-    const genres = ref([]);
-    const editorMode = ref('raw');
-    const expandText = ref(false);
-    const expandIllustration = ref(false);
-    const adAccess = computed(() => getAdAccess());
-    const {isDesktop} = useDevice();
+const genres = ref([]);
+const editorMode = ref('raw');
+const adAccess = computed(() => getAdAccess());
 
-    const resetBook = () => {
-      if (book.value.id) {
-        getBook()
-      } else {
-        book.value = {
-          id: null,
-          name: null,
-          annotation: '',
-          text: '',
-          source: null,
-          cover: null,
-          rating: null,
-          ad: false,
-          cover_path: '',
-          files: []
-        }
-      }
-      genres.value = []
-    };
-    const openGenreModal = () => {
-      showGenreBookModal.value = true
-    };
-    const checkBook = async () => {
-      let validation = true
-      let messages = []
-      if (!book.value.name) {
-        messages.push('empty name')
-        validation = false
-      }
-      if (genres.value.length < 1) {
-        messages.push('choose at least one genre')
-        validation = false
-      }
-      if (!validation) {
-        // this.$toast.error(messages);
-      }
-      return validation
-    };
-    const toggleEditor = () => {
-      editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
-    };
-    const setGenres = (e) => {
-      book.value.ad = e.value.findIndex(item => item.ad) > -1
-      genres.value = e.value;
-      showGenreBookModal.value = false;
-    };
-    const colorizeGenre = (i) => {
-      const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
-      return color[i]
-    };
-    const sendBook = async () => {
-      const check = await checkBook()
-      if (!check) {
-        return false
-      }
-      try {
-        let genresIdArray = genres.value.map(genre => genre.id)
-        const bookData = {...book.value, genres: genresIdArray}
-        await updateBook(bookData)
-        await router.replace('/book')
-      } catch (e) {
-        console.log({sendBook: e, genres: genres.value})
-      }
-    };
-    const loadFiles = (e) => {
-      for (const file of e) {
-        files.value.push({name: file.name, status: null, file: file})
-      }
-    };
-    const deleteAllFiles = async () => {
-      try {
-        await deleteFiles(book.value.id)
-        files.value.splice(0, files.value.length)
-      } catch (e) {
-        console.log({deleteAllFiles: e})
-      }
-    };
-    const checkType = (media) => {
-      const type = media.file ? media.file.type : media.type
-      if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
-        return 'image'
-      } else if (type === 'video/webm' || type === 'video/mp4') {
-        return 'video'
-      } else if (type === 'audio/mpeg') {
-        return 'audio'
-      } else if (type === '') {
-        return 'file'
-      }
-    };
-    const deleteOneFile = async (fileIndex) => {
-      try {
-        await deleteFile(files.value[fileIndex].id);
-        files.value.splice(fileIndex, 1)
-      } catch (e) {
-        console.error({deleteFile: e})
-      }
-    };
-    const sendFiles = async (fileToUpload) => {
-      try {
-        const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
-        console.log({sendFiles: fileToUpload, fileArray: fileArray})
-        const results = await uploadFiles(fileArray, book.value.id)
-        for (const item of results) {
-          if (item.status === 'fulfilled') {
-            const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
-            if (fileIndex > -1) {
-              files.value.splice(fileIndex, 1)
-            }
-            files.value.push({...item.value, name: item.value.full_name, status: item.status})
-          } else if (item.status === 'rejected') {
-            const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
-            files.value[fileIndex].status = 'rejected'
-            files.value[fileIndex].error = item.value
-          }
-        }
-      } catch (e) {
-        console.log({sendFiles: e})
-      }
-    };
-    const errorImage = (e) => {
-      e.onerror = null
-      e.target.src = '/icons/book-dead-solid.svg'
-    };
-    const getBook = async () => {
-      if (!route.params.id) {
-        return null;
-      }
-      try {
-        const result = await loadBook(+route.params.id)
-        book.value = {...result, ad: !!result.ad}
-        files.value.push(...result.files.map(file => {
-          return {...file, status: null}
-        }))
-        genres.value = [...result.genres]
-      } catch (e) {
-        console.log({getBook: e})
-      }
-    };
-    getBook();
-
-    return {
-      showGenreBookModal,
-      files,
-      book,
-      genres,
-      editorMode,
-      expandText,
-      expandIllustration,
-      adAccess,
-      isDesktop,
-      setGenres,
-      colorizeGenre,
-      toggleEditor,
-      resetBook,
-      errorImage,
-      openGenreModal,
-      checkType,
-      sendBook,
-      deleteAllFiles,
-      deleteOneFile,
-      sendFiles,
-      getBook,
-      loadFiles,
+function resetBook() {
+  if (book.value.id) {
+    getBook()
+  } else {
+    book.value = {
+      id: null,
+      name: null,
+      annotation: '',
+      text: '',
+      source: null,
+      cover: null,
+      rating: null,
+      ad: false,
+      cover_path: '',
+      files: []
     }
-  },
-  data() {
-    return {
-    }
-  },
-  methods: {
-    autoResize() {
-      const editor = this.$refs.editor
-      // const scrollHeight = Math.max(
-      //     document.body.scrollHeight, editor.scrollHeight,
-      //     document.body.offsetHeight, editor.offsetHeight,
-      //     document.body.clientHeight, editor.clientHeight
-      // ) + 100;
-      const scrollHeight = Number(editor.scrollHeight) + 50;
-      editor.style.cssText = `height: ${scrollHeight}px`;
-    },
-    getSrc(media) {
-      const loaded = !!media.id
-      return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
-    },
-    async copyFileName(file) {
-      if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
-        await navigator.clipboard.writeText(`<img class="media picture" src="APIURL/${file.url}">`)
-      } else if (['video/webm', 'video/mp4'].includes(file.type)) {
-        await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
-      } else if (file.type === 'audio/mp4') {
-        await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="APIURL/${file.url}"/></audio>`)
-      }
-    },
-    async formatText(type) {
-      if (type === 'caret') {
-        this.book.text = this.book.text.replace(/\n/g, '<p>')
-      } else if (type === 'double-p') {
-        this.book.text = this.book.text.replace(/<p><p>/g, '<p>')
-      } else if (type === 'comment') {
-        let selectionText = this.$refs.editor.value.substring(this.$refs.editor.selectionStart, this.$refs.editor.selectionEnd);
-        if (selectionText.includes('<!-- ') && selectionText.includes(' -->')) {
-          selectionText = selectionText.replace('<!-- ', '');
-          selectionText = selectionText.replace(' -->', '');
-        } else {
-          selectionText = '<!-- ' + selectionText + ' -->'
-        }
-
-        this.$refs.editor.setRangeText(selectionText)
-      }
-    },
-  },
-  updated() {
-    if (this.$refs.editor.scrollHeight > 60) {
-      this.autoResize()
-    }
-  },
+  }
+  genres.value = []
 }
+
+function openGenreModal() {
+  showGenreBookModal.value = true
+}
+
+async function checkBook() {
+  let validation = true
+  let messages = []
+  if (!book.value.name) {
+    messages.push('empty name')
+    validation = false
+  }
+  if (genres.value.length < 1) {
+    messages.push('choose at least one genre')
+    validation = false
+  }
+  if (!validation) {
+    // this.$toast.error(messages);
+  }
+  return validation
+}
+
+function toggleEditor() {
+  editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
+}
+
+function setGenres(e) {
+  book.value.ad = e.value.findIndex(item => item.ad) > -1
+  genres.value = e.value;
+  showGenreBookModal.value = false;
+}
+
+function colorizeGenre(i) {
+  const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
+  return color[i]
+}
+
+async function sendBook() {
+  const check = await checkBook()
+  if (!check) {
+    return false
+  }
+  try {
+    let genresIdArray = genres.value.map(genre => genre.id)
+    const bookData = {...book.value, genres: genresIdArray}
+    await updateBook(bookData)
+    await router.replace('/book')
+  } catch (e) {
+    console.log({sendBook: e, genres: genres.value})
+  }
+}
+
+function loadFiles(e) {
+  for (const file of e) {
+    files.value.push({name: file.name, status: null, file: file})
+  }
+}
+
+async function deleteAllFiles() {
+  try {
+    await deleteFiles(book.value.id)
+    files.value.splice(0, files.value.length)
+  } catch (e) {
+    console.log({deleteAllFiles: e})
+  }
+}
+
+function checkType(media) {
+  const type = media.file ? media.file.type : media.type
+  if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
+    return 'image'
+  } else if (type === 'video/webm' || type === 'video/mp4') {
+    return 'video'
+  } else if (type === 'audio/mpeg') {
+    return 'audio'
+  } else if (type === '') {
+    return 'file'
+  }
+}
+
+async function deleteOneFile(fileIndex) {
+  try {
+    await deleteFile(files.value[fileIndex].id);
+    files.value.splice(fileIndex, 1)
+  } catch (e) {
+    console.error({deleteFile: e})
+  }
+}
+
+async function sendFiles(fileToUpload) {
+  try {
+    const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
+    console.log({sendFiles: fileToUpload, fileArray: fileArray})
+    const results = await uploadFiles(fileArray, book.value.id)
+    for (const item of results) {
+      if (item.status === 'fulfilled') {
+        const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
+        if (fileIndex > -1) {
+          files.value.splice(fileIndex, 1)
+        }
+        files.value.push({...item.value, name: item.value.full_name, status: item.status})
+      } else if (item.status === 'rejected') {
+        const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
+        files.value[fileIndex].status = 'rejected'
+        files.value[fileIndex].error = item.value
+      }
+    }
+  } catch (e) {
+    console.log({sendFiles: e})
+  }
+}
+
+// function errorImage(e) {
+//   e.onerror = null
+//   e.target.src = '/icons/book-dead-solid.svg'
+// }
+function autoResize() {
+  // const scrollHeight = Math.max(
+  //     document.body.scrollHeight, editor.scrollHeight,
+  //     document.body.offsetHeight, editor.offsetHeight,
+  //     document.body.clientHeight, editor.clientHeight
+  // ) + 100;
+  const scrollHeight = Number(editor.value.scrollHeight) + 50;
+  editor.value.style.cssText = `height: ${scrollHeight}px`;
+}
+
+function getSrc(media) {
+  const loaded = !!media.id
+  return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
+}
+
+async function copyFileName(file) {
+  if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
+    await navigator.clipboard.writeText(`<img class="media picture" src="APIURL/${file.url}">`)
+  } else if (['video/webm', 'video/mp4'].includes(file.type)) {
+    await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
+  } else if (file.type === 'audio/mp4') {
+    await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="APIURL/${file.url}"/></audio>`)
+  }
+}
+
+async function formatText(type) {
+  if (type === 'caret') {
+    book.value.text = book.value.text.replace(/\n/g, '<p>')
+  } else if (type === 'double-p') {
+    book.value.text = book.value.text.replace(/<p><p>/g, '<p>')
+  } else if (type === 'comment') {
+    let selectionText = editor.value.substring(editor.value.selectionStart, editor.value.selectionEnd);
+    if (selectionText.includes('<!-- ') && selectionText.includes(' -->')) {
+      selectionText = selectionText.replace('<!-- ', '');
+      selectionText = selectionText.replace(' -->', '');
+    } else {
+      selectionText = '<!-- ' + selectionText + ' -->'
+    }
+
+    editor.value.setRangeText(selectionText)
+  }
+}
+
+async function getBook() {
+  if (!route.params.id) {
+    return null;
+  }
+  try {
+    const result = await loadBook(+route.params.id)
+    book.value = {...result, ad: !!result.ad}
+    files.value.push(...result.files.map(file => {
+      return {...file, status: null}
+    }))
+    genres.value = [...result.genres]
+  } catch (e) {
+    console.log({getBook: e})
+  }
+}
+
+onUpdated(() => {
+  if (editor.value.scrollHeight > 60) {
+    autoResize()
+  }
+})
+getBook();
 </script>
 
 <style lang="scss">
@@ -394,6 +371,7 @@ export default {
   .form-row.genre {
     justify-content: initial;
     cursor: pointer;
+
     > span {
       margin: 0 5px 0 0;
     }
@@ -407,6 +385,7 @@ export default {
 
   .text-container {
     width: 800px;
+
     .form-row {
       margin: 0 0 1rem 0;
     }

@@ -7,38 +7,24 @@
 
 </template>
 
-<script>
-export default {
-  name: "TheModal",
-  components: {},
-  props: {
-    showModal: {
-      type: Boolean,
-      default: false
-    },
-    width: {
-      type: Number,
-      default: 600
-    }
+<script setup>
+import {computed} from "vue";
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  showModal: {
+    type: Boolean,
+    default: false
   },
-  data: () => ({}),
-  computed: {
-    styleObject() {
-      return {width: `${this.width ? this.width : 600}px`}
-    }
-  },
-  watch: {},
-  created() {
-  },
-  mounted() {
+  width: {
+    type: Number,
+    default: 600
+  }
+})
 
-  },
-  methods: {
-    hide() {
-      this.$emit('hide-modal')
-    }
-  },
-}
+const styleObject = computed(()=>{
+  return {width: `${this.width ? this.width : 600}px`}
+})
+
 </script>
 
 <style lang="scss">

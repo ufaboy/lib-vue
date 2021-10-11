@@ -7,44 +7,36 @@
 
 </template>
 
-<script>
-import {defineAsyncComponent, provide, ref} from "vue";
+<script setup>
+import {provide, ref} from "vue";
 import RefreshPopup from "./components/RefreshPopup";
+import TheToaster from "./components/TheToaster";
 
-export default {
-  components: {
-    RefreshPopup,
-    TheToaster: defineAsyncComponent(() => import('./components/TheToaster.vue'))
-  },
-  setup() {
-    const toastMessage = ref('')
-    const toastType = ref('')
-    const registration = ref(null);
-    const updateAvailable = ref(false);
-    const swUpdate = function (event) {
-      updateAvailable.value = true
-      registration.value = event.detail
-    }
-    const refreshApp = function () {
-      updateAvailable.value = false;
-      if (!registration.value || !registration.value.waiting) return null;
-      registration.value.waiting.postMessage({type: 'SKIP_WAITING'});
-    }
-    const printToast = function (message, type) {
-      toastMessage.value = message
-      toastType.value = type
-      setTimeout(() => {
-        toastMessage.value = ''
-        toastType.value = ''
-      }, 5000)
-    }
-
-    document.addEventListener('swUpdated', swUpdate, {once: true})
-
-    provide('printToast', printToast)
-    return {toastMessage, toastType, registration, updateAvailable, swUpdate, refreshApp, printToast}
-  },
+const toastMessage = ref('')
+const toastType = ref('')
+const registration = ref(null);
+const updateAvailable = ref(false);
+function swUpdate(event) {
+  updateAvailable.value = true
+  registration.value = event.detail
 }
+function refreshApp() {
+  updateAvailable.value = false;
+  if (!registration.value || !registration.value.waiting) return null;
+  registration.value.waiting.postMessage({type: 'SKIP_WAITING'});
+}
+function printToast(message, type) {
+  toastMessage.value = message
+  toastType.value = type
+  setTimeout(() => {
+    toastMessage.value = ''
+    toastType.value = ''
+  }, 5000)
+}
+
+document.addEventListener('swUpdated', swUpdate, {once: true})
+
+provide('printToast', printToast)
 </script>
 <style>
 .component-fade-enter-active,

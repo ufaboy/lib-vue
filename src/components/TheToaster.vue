@@ -7,31 +7,25 @@
 
 </template>
 
-<script>
+<script setup>
 import {computed} from "vue";
 
-export default {
-  name: "TheToaster",
-  props: {
-    message: String,
-    type: {
-      type: String,
-      default: 'info'
-    }
-  },
-  setup(props) {
-    const messageTypeClass = computed(()=>{
-      return {
-        info: props.type === 'info',
-        error: props.type === 'error',
-        success: props.type === 'success',
-        warning: props.type === 'warning',
-      }
-    })
-
-    return {messageTypeClass}
-  },
-}
+// eslint-disable-next-line no-undef,no-unused-vars
+const props = defineProps({
+  message: String,
+  type: {
+    type: String,
+    default: 'info'
+  }
+})
+const messageTypeClass = computed(()=>{
+  return {
+    info: props.type === 'info',
+    error: props.type === 'error',
+    success: props.type === 'success',
+    warning: props.type === 'warning',
+  }
+})
 </script>
 
 <style lang="scss">
