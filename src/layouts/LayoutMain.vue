@@ -39,103 +39,66 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {computed, onBeforeUnmount, provide, ref} from "vue";
 import {useRoute,} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
-
-// import ThemeDark from "../components/ThemeDark";
-// import ThemeLight from "../components/ThemeLight";
-import useTheme from "../composables/useTheme";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
+// import useTheme from "../composables/useTheme";
+// import ThemeDark from "../components/ThemeDark";
+// import ThemeLight from "../components/ThemeLight";
 
-export default {
-  name: "LayoutMain",
-  components: {},
-  setup() {
-    const route = useRoute()
-    const searchField = ref('')
-    const activeBurger = ref(false)
-    const categories = ref([])
-    const {isMobile, isDesktop} = useDevice();
-    const {
-      lastScrollTop,
-      progress,
-      scrollTop,
-      scrollHeight,
-      clientHeight,
-      windowHeights,
-      hideByScroll,
-      throttleScroll
-    } = useScroll()
-    const {userPreferTheme} = useTheme()
-    const btnViewEditMode = computed(() => {
-      return route.name === 'book-view' ? {
-        name: 'Edit',
-        path: `/book/update/${route.params.id}`
-      } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
-    });
-    const hideHeader = computed(() => {
-      return route.name === 'book-view' && isMobile.value && hideByScroll.value
-    })
-    // const hideHeader = computed(()=>{
-    //   return isMobile.value && hideByScroll.value
-    // })
-    // const headerSticky = computed(() => {
-    //   return route.name === 'book-view' && !hideHeader.value
-    // })
-    const saveScrollingBook = async function(id) {
-      const formData = {bookId: id, bookmark: scrollTop.value}
-      const result = await updateBookMark(formData)
-      if (!result) {
-        console.log({'saveScrollingBook': result})
-      }
-    }
-
-    const getCategories = async function () {
-      if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
-        categories.value = await loadCategories()
-      }
-    }
-
-    getCategories();
-    window.addEventListener('scroll', throttleScroll, {passive: true})
-    onBeforeUnmount(() => {
-      window.removeEventListener('scroll', throttleScroll, {passive: true})
-    })
-
-    provide('saveScrollingBook', saveScrollingBook)
-
-    return {
-      searchField,
-      activeBurger,
-      isMobile,
-      isDesktop,
-      btnViewEditMode,
-      categories,
-      hideHeader,
-      userPreferTheme,
-      lastScrollTop,
-      scrollTop,
-      progress,
-      scrollHeight,
-      windowHeights,
-      clientHeight,
-      saveScrollingBook,
-      throttleScroll,
-      getCategories,
-    }
-  },
-  created() {
-
-  },
-  beforeUnmount() {
-
-  },
-  methods: {}
+const route = useRoute()
+// const searchField = ref('')
+const activeBurger = ref(false)
+const categories = ref([])
+const {isMobile} = useDevice();
+const {
+  progress,
+  scrollTop,
+  windowHeights,
+  // hideByScroll,
+  throttleScroll
+} = useScroll()
+// const {userPreferTheme} = useTheme()
+const btnViewEditMode = computed(() => {
+  return route.name === 'book-view' ? {
+    name: 'Edit',
+    path: `/book/update/${route.params.id}`
+  } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
+});
+// const hideHeader = computed(() => {
+//   return route.name === 'book-view' && isMobile.value && hideByScroll.value
+// })
+// const hideHeader = computed(()=>{
+//   return isMobile.value && hideByScroll.value
+// })
+// const headerSticky = computed(() => {
+//   return route.name === 'book-view' && !hideHeader.value
+// })
+async function saveScrollingBook(id) {
+  const formData = {bookId: id, bookmark: scrollTop.value}
+  const result = await updateBookMark(formData)
+  if (!result) {
+    console.log({'saveScrollingBook': result})
+  }
 }
+
+async function getCategories() {
+  if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
+    categories.value = await loadCategories()
+  }
+}
+
+getCategories();
+window.addEventListener('scroll', throttleScroll, {passive: true})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', throttleScroll, {passive: true})
+})
+
+provide('saveScrollingBook', saveScrollingBook)
 </script>
 
 <style scoped lang="scss">
@@ -164,6 +127,7 @@ export default {
         display: none;
         fill: var(--secondary);
       }
+
       .breadcrumb {
         display: flex;
         flex-flow: row nowrap;
@@ -342,14 +306,17 @@ export default {
 @media only screen and (max-width: 892px) and (orientation: portrait) {
 
 }
+
 @media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
   .basement {
     .header {
       background-color: var(--primary);
       color: var(--text-primary);
+
       .burger .breadcrumb {
         color: var(--text-primary);
         background-color: var(--primary);
+
         .breadcrumb-link {
           background: inherit;
           color: inherit;
@@ -366,14 +333,17 @@ export default {
     }
   }
 }
+
 @media (prefers-color-scheme: dark) {
   .basement {
     .header {
       background-color: var(--surface);
       color: var(--surface-on);
+
       .burger .breadcrumb {
         background-color: var(--surface);
         color: var(--surface-on);
+
         .breadcrumb-link {
           background: transparent;
           color: var(--surface-on);
