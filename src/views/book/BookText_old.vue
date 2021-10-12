@@ -198,19 +198,19 @@ onMounted(async () => {
 
   .footer {
     width: 100%;
-    height: 2rem;
+    height: 1.5rem;
     display: flex;
     padding: 0 0.5rem;
     position: fixed;
     left: 0;
-    bottom: 1rem;
+    bottom: 0;
 
     .progress {
       width: 100%;
       height: inherit;
       max-height: 100%;
       background: var(--surface);
-      //position: fixed;
+      position: fixed;
       left: 0;
     }
 
