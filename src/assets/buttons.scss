@@ -23,30 +23,50 @@
 
 .positive-btn {
   @extend .btn;
+  color: var(--text-primary);
   background-color: #4CAF50;
   border: none;
+  &:hover {
+    background-color: #71c774;
+  }
 }
 .positive-btn-outline {
   @extend .btn-outline;
   border-color: #4CAF50;
+  &:hover {
+    background-color: #d0ead1;
+  }
 }
 
 .negative-btn {
   @extend .btn;
+  color: var(--text-primary);
   background-color: #f44336;
+  &:hover {
+    background-color: #dc7068;
+  }
 }
 .negative-btn-outline {
   @extend .btn-outline;
   border-color: #f44336;
+  &:hover {
+    background-color: #efb3af;
+  }
 }
 
 .regular-btn {
   @extend .btn;
   background-color: #457b9d;
+  &:hover {
+    background-color: #5a8cab;
+  }
 }
 .regular-btn-outline {
   @extend .btn-outline;
   border-color: #457b9d;
+  &:hover {
+    background-color: #cce1ee;
+  }
 }
 
 .btn--green {
@@ -61,8 +81,6 @@
     color: red;
   }
 }
-
-
 
 .scroll-btn {
   display: block;

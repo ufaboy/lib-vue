@@ -146,8 +146,6 @@ export default {
     padding: 0.5rem 1.5rem;
     align-items: center;
     justify-content: space-between;
-    background-color: var(--surface);
-    color: var(--surface-on);
 
     .header-block {
       display: flex;
@@ -166,12 +164,16 @@ export default {
         display: none;
         fill: var(--secondary);
       }
+      .breadcrumb {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
     }
 
     .burger.mobile {
       width: 26px;
       height: 24px;
-      background-color: var(red);
 
       .icon-btn {
         display: block;
@@ -259,12 +261,6 @@ export default {
       }
     }
 
-    .breadcrumb {
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
-    }
-
     .breadcrumb-li {
       margin-right: 0.5rem;
       display: flex;
@@ -278,8 +274,6 @@ export default {
     .breadcrumb-link {
       width: 100%;
       padding: 0.5rem;
-      background: transparent;
-      color: var(--surface-on);
       text-decoration: none;
       outline: none;
       cursor: pointer;
@@ -287,14 +281,6 @@ export default {
       text-transform: capitalize;
       border: none;
       border-radius: 5px;
-    }
-
-    .breadcrumb-link:hover {
-      background-color: var(--primary-light);
-    }
-
-    .router-link-active.breadcrumb-link {
-      background-color: var(--primary);
     }
 
     .select {
@@ -355,5 +341,53 @@ export default {
 
 @media only screen and (max-width: 892px) and (orientation: portrait) {
 
+}
+@media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
+  .basement {
+    .header {
+      background-color: var(--primary);
+      color: var(--text-primary);
+      .burger .breadcrumb {
+        color: var(--text-primary);
+        background-color: var(--primary);
+        .breadcrumb-link {
+          background: inherit;
+          color: inherit;
+        }
+
+        .breadcrumb-link:hover {
+          background-color: var(--primary-dark);
+        }
+
+        .router-link-active.breadcrumb-link {
+          background-color: var(--primary-light);
+        }
+      }
+    }
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .basement {
+    .header {
+      background-color: var(--surface);
+      color: var(--surface-on);
+      .burger .breadcrumb {
+        background-color: var(--surface);
+        color: var(--surface-on);
+        .breadcrumb-link {
+          background: transparent;
+          color: var(--surface-on);
+        }
+
+        .breadcrumb-link:hover {
+          background-color: var(--primary-light);
+        }
+
+        .router-link-active.breadcrumb-link {
+          background-color: var(--primary);
+        }
+      }
+    }
+  }
 }
 </style>

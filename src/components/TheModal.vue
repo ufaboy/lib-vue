@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 const styleObject = computed(()=>{
-  return {width: `${this.width ? this.width : 600}px`}
+  return {width: `${props.width ? props.width : 600}px`}
 })
 
 </script>

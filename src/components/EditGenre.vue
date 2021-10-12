@@ -61,7 +61,7 @@ const emit = defineEmits(['update-genres', 'hide-modal'])
 
 const adAccess = getAdAccess()
 const {localGenre, closeModal, updateGenre, deleteGenre} = useGenre(props, emit)
-const categoriesSimple = props.categories.value.map(category => {
+const categoriesSimple = props.categories.map(category => {
   return {id: category.id, name: category.name}
 })
 </script>

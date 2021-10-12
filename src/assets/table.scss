@@ -21,7 +21,7 @@
     line-height: normal;
     padding: 0.5rem;
     background-color: var(--surface-dark);
-    color: var(--surface-on);
+    color: var(--text-primary);
   }
 
   th, td {
@@ -103,7 +103,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--surface);
   padding: 1rem 0;
   border-radius: 0 0 5px 5px;
 
