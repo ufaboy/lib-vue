@@ -203,15 +203,13 @@ onMounted(async () => {
     padding: 0 0.5rem;
     position: fixed;
     left: 0;
-    bottom: 1rem;
+    bottom: 0;
 
     .progress {
       width: 100%;
       height: inherit;
       max-height: 100%;
       background: var(--surface);
-      //position: fixed;
-      left: 0;
     }
 
     .progress-value {
