@@ -36,8 +36,8 @@
     </section>
     <observer @intersect="getBooksAndPush('push')"/>
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
-    <the-modal v-if="showSortingModal" @hide-modal="showSortingModal = false">
-      <sorting-modal @sorting="updateBySorting"/>
+    <the-modal v-if="slideLeftRight">
+      <sorting-modal @sorting="updateBySorting" @hide-modal="slideLeftRight = false"/>
     </the-modal>
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
   </main>
@@ -64,7 +64,7 @@ const {categories} = toRefs(props)
 const route = useRoute();
 const {filter, searchQuery, limit, orderBy, books, page, getCover, getBooksAndPush} = useBooks();
 const {openBook} = useBook();
-const {showSortingModal, touchStart, touchEnd} = useSlideButton();
+const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const showTopButton = ref(false);
 
 function calcGenreById(id) {
@@ -91,7 +91,7 @@ watch(categories, () => {
   filter.value.genre = calcGenreById(+route.params.id)
 })
 function updateBySorting(e) {
-  showSortingModal.value = false
+  slideLeftRight.value = false
   orderBy.value.name = e.orderBy
   orderBy.value.asc = e.ascending
   page.value = 1
@@ -112,7 +112,7 @@ function onScroll(e) {
 function scrollToTop() {
   document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
 }
-
+filter.value.genre = calcGenreById(+route.params.id)
 window.addEventListener('scroll', onScroll, {passive: true});
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll, {passive: true})

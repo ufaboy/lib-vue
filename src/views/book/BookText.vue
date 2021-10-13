@@ -1,13 +1,15 @@
 <template>
-  <div class="book" :class="{mobile: isMobile}">
+  <div class="book" :class="{mobile: isMobile}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
-    <footer class="footer" v-if="book.annotation !== 'media'">
-      <progress class="progress" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>
-      <div class="progress-value">
-        <span class="mr-2">{{ scrollingProgress.progress }}%</span>
-<!--        <span>Страницы: {{scrollingProgress.currentPage}}/{{scrollingProgress.countPages}}</span>-->
-      </div>
-    </footer>
+<!--    <footer class="footer" v-if="book.annotation !== 'media'">-->
+<!--      <progress class="progress" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>-->
+<!--      <div class="progress-value">-->
+<!--        <span class="mr-2">{{ scrollingProgress.progress }}%</span>-->
+<!--&lt;!&ndash;        <span>Страницы: {{scrollingProgress.currentPage}}/{{scrollingProgress.countPages}}</span>&ndash;&gt;-->
+<!--      </div>-->
+<!--    </footer>-->
+    <div class="progress-line" :style="widthProgressLine"></div>
+    <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress" @hide-modal="slideLeftRight = false"/>
     <the-modal v-if="showEditorModal">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false"/>
     </the-modal>
@@ -27,11 +29,13 @@
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject} from "vue";
+import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject, computed} from "vue";
 import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
+import useSlideButton from "../../composables/useSlideButton";
+import TextSettings from "../../components/TextSettings";
 const printToast = inject('printToast')
 const saveScrollingBook = inject('saveScrollingBook')
 
@@ -62,12 +66,16 @@ function setTitle(){
 }
 setTitle()
 
+const widthProgressLine = computed(()=>{
+  return {width: `${props.scrollingProgress.progress}vw`}
+})
+
 const {windowHeights} = toRefs(props)
 const showEditorModal = ref(false);
 const activeImage = ref(null);
 const activeImageIndex = ref(0);
 const editorNode = ref({});
-
+const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const {isMobile, isDesktop} = useDevice();
 
 function editMode (e) {
@@ -212,31 +220,45 @@ onMounted(async () => {
 
   }
 
-  .footer {
-    width: 100%;
-    height: 2rem;
-    display: flex;
+  //.footer {
+  //  width: 100%;
+  //  height: 2rem;
+  //  display: flex;
+  //  position: fixed;
+  //  left: 0;
+  //  bottom: 0;
+  //
+  //  .progress {
+  //    width: 100%;
+  //    height: inherit;
+  //    max-height: 100%;
+  //    background: var(--surface);
+  //  }
+  //
+  //  .progress-value {
+  //    position: absolute;
+  //    left: 50%;
+  //    height: 100%;
+  //    display: flex;
+  //    align-items: center;
+  //  }
+  //
+  //  .progress::-webkit-progress-value {
+  //  }
+  //}
+  .text-settings {
     position: fixed;
     left: 0;
     bottom: 0;
-
-    .progress {
-      width: 100%;
-      height: inherit;
-      max-height: 100%;
-      background: var(--surface);
-    }
-
-    .progress-value {
-      position: absolute;
-      left: 50%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .progress::-webkit-progress-value {
-    }
+    background-color: var(--surface-light);
+    width: 100%;
+  }
+  .progress-line {
+    position: fixed;
+    height: 5px;
+    left: 0;
+    top: 0;
+    background-color: var(--primary);
   }
 }
 
