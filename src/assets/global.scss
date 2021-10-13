@@ -41,15 +41,15 @@ img {
 input {
 }
 
-//.select {
-//  padding: 5px;
-//  color: var(--surface-on);
-//  background-color: var(--surface);
-//  border-radius: 5px;
-//}
-//.select:hover {
-//  background-color: var(--surface-light);
-//}
+.select {
+  padding: 5px;
+  color: var(--text);
+  background-color: var(--surface-light);
+  border-radius: 5px;
+}
+.select:hover {
+  background-color: var(--surface-light);
+}
 
 .icon {
   fill: var(--primary);
@@ -81,6 +81,13 @@ textarea {
 }
 .mb-1 {
   margin-bottom: 1rem;
+}
+
+.mr-1 {
+  margin-right: 1rem;
+}
+.mr-2 {
+  margin-right: 2rem;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -32,7 +32,7 @@
       </div>
 
     </header>
-    <router-view v-bind="$attrs" :categories="categories" :progress-scroll="progress"
+    <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
                  :window-heights="windowHeights"></router-view>
     <!--    <component :is="userPreferTheme"></component>-->
 
@@ -56,7 +56,7 @@ const activeBurger = ref(false)
 const categories = ref([])
 const {isMobile} = useDevice();
 const {
-  progress,
+  scrollingProgress,
   scrollTop,
   windowHeights,
   // hideByScroll,

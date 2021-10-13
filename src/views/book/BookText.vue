@@ -2,8 +2,11 @@
   <div class="book" :class="{mobile: isMobile}">
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     <footer class="footer" v-if="book.annotation !== 'media'">
-      <progress class="progress" :value="progressScroll" max="100" id="progressbar" @click="scrollByClick"/>
-      <div class="progress-value">{{ progressScroll }}</div>
+      <progress class="progress" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>
+      <div class="progress-value">
+        <span class="mr-2">{{ scrollingProgress.progress }}%</span>
+<!--        <span>Страницы: {{scrollingProgress.currentPage}}/{{scrollingProgress.countPages}}</span>-->
+      </div>
     </footer>
     <the-modal v-if="showEditorModal">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false"/>
@@ -38,15 +41,26 @@ const apiUrl = process.env.VUE_APP_API_URL
 const props = defineProps({
   categories: Array,
   book: Object,
-  progressScroll: {
-    type: Number,
-    default: 0
+  scrollingProgress: {
+    type: Object,
+    default() {
+      return {
+        progress: 0,
+        countPages: 0,
+        clientHeight: 0,
+        currentPage: 0,
+      }
+    }
   },
   windowHeights: {
     type: Number,
     default: 0
   },
 })
+function setTitle(){
+  document.title = props.book.name;
+}
+setTitle()
 
 const {windowHeights} = toRefs(props)
 const showEditorModal = ref(false);
@@ -130,6 +144,7 @@ onMounted(async () => {
   if (isDesktop.value) moveMedia()
   listenClickByImg()
 });
+
 </script>
 
 <style lang="scss">
@@ -139,6 +154,7 @@ onMounted(async () => {
   width: 100%;
   position: relative;
   justify-content: center;
+  background-color: var(--background-book);
 
   p {
     word-break: break-word;
@@ -200,7 +216,6 @@ onMounted(async () => {
     width: 100%;
     height: 2rem;
     display: flex;
-    padding: 0 0.5rem;
     position: fixed;
     left: 0;
     bottom: 0;

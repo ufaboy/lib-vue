@@ -362,6 +362,7 @@ getBook();
   padding: 0.5rem 1.5rem;
   display: flex;
   flex-flow: row;
+  background-color: var(--background-book);
 
   .header {
     width: 100%;

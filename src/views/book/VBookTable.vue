@@ -254,7 +254,7 @@ const props = defineProps({
     }
 
     .table-paginator {
-      justify-content: space-around;
+      justify-content: space-between;
 
       .table-pag__btn {
         padding: 5px;

@@ -9,7 +9,12 @@ export default function useScroll() {
   const scrollHeight = ref(0);
   const clientHeight = ref(0);
   const windowHeights = ref(0);
-  const progress = ref(0);
+  const scrollingProgress = ref({
+    progress: 0,
+    countPages: 0,
+    clientHeight: 0,
+    currentPage: 0,
+  })
   const throttleScroll = function () {
     if (isThrottledScroll.value) {
       return
@@ -25,6 +30,15 @@ export default function useScroll() {
     clientHeight.value = Math.floor(document.documentElement.clientHeight)
     return scrollHeight.value - clientHeight.value
   }
+  const calcScrollingProgress = function () {
+    const clientHeight = document.documentElement.clientHeight
+    const initHeightsNumber = initHeights()
+    scrollingProgress.value = {
+      progress: initHeightsNumber ? Math.round((scrollTop.value * 100) / initHeightsNumber) : 0,
+      countPages: Math.ceil(windowHeights.value / clientHeight),
+      clientHeight: clientHeight,
+      currentPage: Math.ceil(scrollTop.value / clientHeight),}
+  }
   const handleScroll = function () {
     // const st = Math.floor(window.pageYOffset || document.documentElement.scrollTop);
     scrollTop.value = Math.floor(document.documentElement.scrollTop)
@@ -35,9 +49,9 @@ export default function useScroll() {
       hideByScroll.value = false
     }
     lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value; // For Mobile or negative scrolling
-    const initHeightsNumber = initHeights()
-    progress.value = initHeightsNumber ? Math.round((scrollTop.value * 100) / initHeightsNumber) : 0
+
     windowHeights.value = scrollHeight.value - clientHeight.value;
+    calcScrollingProgress()
     // console.log('handleScroll', {
     //   progress: progress.value,
     //   initHeightsNumber: initHeightsNumber,
@@ -48,5 +62,5 @@ export default function useScroll() {
     // })
   }
 
-  return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, progress, initHeights, throttleScroll}
+  return {currentScroll, lastScrollTop, scrollTop, scrollHeight, clientHeight, windowHeights, hideByScroll, scrollingProgress, initHeights, throttleScroll}
 }

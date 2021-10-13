@@ -1,6 +1,6 @@
 <template>
   <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book"
-             :progress-scroll="progressScroll"
+             :scrolling-progress="scrollingProgress"
              :window-heights="windowHeights"
              @scrolling="scrolling"></component>
 </template>
@@ -19,15 +19,17 @@ import BookEmpty from "@/views/book/BookEmpty.vue";
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   categories: Array,
-  progressScroll: Number,
+  scrollingProgress: Object,
   windowHeights: Number,
 })
+
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['scrolling'])
 const route = useRoute();
 
 const {book, typeBook, downloadBook} = useBook();
 downloadBook(route.params.id)
+document.title = 'Book';
 
 function scrolling(e) {
   emit('scrolling', e)
