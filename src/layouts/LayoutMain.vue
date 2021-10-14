@@ -103,6 +103,7 @@ provide('saveScrollingBook', saveScrollingBook)
 
 <style scoped lang="scss">
 .basement {
+
   .header {
     display: flex;
     height: 3.5rem;

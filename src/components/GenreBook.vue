@@ -63,6 +63,7 @@ if (props.genresProps && props.genresProps.length) {
   selectedGenre.value.push(...props.genresProps)
 }
 
+
 function sendGenre() {
   emit('set-genres', selectedGenre)
 }
@@ -77,14 +78,13 @@ function colorizeGenre(i) {
 }
 
 function reset() {
-  selectedGenre.value = props.genresProps.map(a => ({...a}))
+  // selectedGenre.value = props.genresProps.map(a => ({...a}))
+  selectedGenre.value.splice(0, selectedGenre.value.length)
 }
 
 function closeModal() {
   emit('hide-modal')
 }
-
-reset()
 </script>
 
 <style lang="scss" scoped>

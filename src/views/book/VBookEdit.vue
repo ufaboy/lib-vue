@@ -362,7 +362,6 @@ getBook();
   padding: 0.5rem 1.5rem;
   display: flex;
   flex-flow: row;
-  background-color: var(--background-book);
 
   .header {
     width: 100%;
@@ -372,6 +371,12 @@ getBook();
   .form-row.genre {
     justify-content: initial;
     cursor: pointer;
+    border: 2px solid;
+    border-color: rgb(118, 118, 118);
+    border-radius: 5px;
+    padding: 5px 10px;
+    color: var(--text);
+    background-color: var(--surface-light);
 
     > span {
       margin: 0 5px 0 0;
@@ -450,8 +455,8 @@ getBook();
 
     .editor {
       width: 100%;
-      color: var(--text1);
-      background-color: var(--surface2);
+      color: var(--text);
+      background-color: var(--surface-light);
       text-transform: initial;
       padding: 0.3rem;
 

@@ -1,13 +1,6 @@
 <template>
   <div class="book" :class="{mobile: isMobile}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
-<!--    <footer class="footer" v-if="book.annotation !== 'media'">-->
-<!--      <progress class="progress" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>-->
-<!--      <div class="progress-value">-->
-<!--        <span class="mr-2">{{ scrollingProgress.progress }}%</span>-->
-<!--&lt;!&ndash;        <span>Страницы: {{scrollingProgress.currentPage}}/{{scrollingProgress.countPages}}</span>&ndash;&gt;-->
-<!--      </div>-->
-<!--    </footer>-->
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress" @hide-modal="slideLeftRight = false"/>
     <the-modal v-if="showEditorModal">
@@ -67,7 +60,7 @@ function setTitle(){
 setTitle()
 
 const widthProgressLine = computed(()=>{
-  return {width: `${props.scrollingProgress.progress}vw`}
+  return {height: `${props.scrollingProgress.progress}vh`}
 })
 
 const {windowHeights} = toRefs(props)
@@ -162,7 +155,7 @@ onMounted(async () => {
   width: 100%;
   position: relative;
   justify-content: center;
-  background-color: var(--background-book);
+
 
   p {
     word-break: break-word;
@@ -219,33 +212,6 @@ onMounted(async () => {
     flex: 1;
 
   }
-
-  //.footer {
-  //  width: 100%;
-  //  height: 2rem;
-  //  display: flex;
-  //  position: fixed;
-  //  left: 0;
-  //  bottom: 0;
-  //
-  //  .progress {
-  //    width: 100%;
-  //    height: inherit;
-  //    max-height: 100%;
-  //    background: var(--surface);
-  //  }
-  //
-  //  .progress-value {
-  //    position: absolute;
-  //    left: 50%;
-  //    height: 100%;
-  //    display: flex;
-  //    align-items: center;
-  //  }
-  //
-  //  .progress::-webkit-progress-value {
-  //  }
-  //}
   .text-settings {
     position: fixed;
     left: 0;
@@ -255,7 +221,7 @@ onMounted(async () => {
   }
   .progress-line {
     position: fixed;
-    height: 5px;
+    width: 3px;
     left: 0;
     top: 0;
     background-color: var(--primary);
