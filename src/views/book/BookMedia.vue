@@ -39,11 +39,11 @@ const {isMobile, isDesktop} = useDevice();
 const activeImage = ref(null);
 const activeMedia = {type: null, url: null}
 const getTypeBook = computed(() => {
-  if (props.book.value.genres.findIndex(item => item.name === 'picture') !== -1) {
+  if (props.book.genres.findIndex(item => item.name === 'picture') !== -1) {
     return 'picture'
-  } else if (props.book.value.genres.findIndex(item => item.name === 'audio') !== -1) {
+  } else if (props.book.genres.findIndex(item => item.name === 'audio') !== -1) {
     return 'audio'
-  } else if (props.book.value.genres.findIndex(item => item.name === 'video') !== -1) {
+  } else if (props.book.genres.findIndex(item => item.name === 'video') !== -1) {
     return 'video'
   } else return ''
 })

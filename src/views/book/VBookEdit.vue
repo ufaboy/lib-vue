@@ -123,8 +123,9 @@
 </template>
 
 <script setup>
-import {ref, computed, onUpdated} from 'vue'
+import {ref, computed, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
@@ -141,7 +142,7 @@ document.title = 'Editor';
 const props = defineProps({
   categories: Array,
 })
-
+const printToast = inject('printToast')
 const router = useRouter();
 const route = useRoute();
 const {book} = useBook();
@@ -266,6 +267,7 @@ async function sendFiles(fileToUpload) {
     const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
     console.log({sendFiles: fileToUpload, fileArray: fileArray})
     const results = await uploadFiles(fileArray, book.value.id)
+    printToast('Upload success', 'success')
     for (const item of results) {
       if (item.status === 'fulfilled') {
         const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
@@ -280,6 +282,7 @@ async function sendFiles(fileToUpload) {
       }
     }
   } catch (e) {
+    printToast(e.message, 'error')
     console.log({sendFiles: e})
   }
 }
