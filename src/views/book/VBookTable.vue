@@ -11,12 +11,12 @@
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
         <div class="table-cell" :class="{'active' : orderBy.name === column}">
           <div class="td-title">{{ column }}</div>
-          <div class="td-action" @click="sortBy(column)">
+          <button class="td-action" @click="sortBy(column)">
             <base-icon class="icon" icon-name="sort">
               <icon-sort-asc v-if="orderBy.name === column && orderBy.asc"/>
               <icon-sort-desc v-else/>
             </base-icon>
-          </div>
+          </button>
         </div>
       </th>
       </thead>

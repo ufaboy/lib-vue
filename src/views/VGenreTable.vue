@@ -8,12 +8,12 @@
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
-          <div class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
+          <button class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
             <base-icon class="icon" icon-name="sort">
               <icon-sort-asc v-if="ascending"/>
               <icon-sort-desc v-else/>
             </base-icon>
-          </div>
+          </button>
         </div>
       </th>
       </thead>

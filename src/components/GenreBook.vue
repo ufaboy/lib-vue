@@ -2,15 +2,14 @@
   <form class="genre-book" @submit.prevent="sendGenre">
     <header class="modal-header">
       <h1>Genre</h1>
-      <span>{{ genres.length }}</span>
+      <span>selected: {{ selectedGenre.length }}</span>
       <button class="close-btn" type="reset" @click="closeModal">
         <base-icon class="icon" icon-name="close">
           <icon-close/>
         </base-icon>
       </button>
     </header>
-    <div class="form-field">
-      <label class="form-field__label">selected: {{ selectedGenre.length }}</label>
+    <div class="form-field mb-1">
       <span v-if="selectedGenre.length === 0">Не выбраны жанры</span>
       <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
@@ -133,7 +132,7 @@ function closeModal() {
 
   .parent {
     cursor: pointer;
-    margin: 0 0.5rem 0.5rem 0;
+    margin: 0 0.5rem 0 0;
     width: 25%;
 
     .parent-title {
@@ -150,7 +149,7 @@ function closeModal() {
   }
 
   .parent:last-of-type {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0 0;
   }
 
   .checkbox-container {
