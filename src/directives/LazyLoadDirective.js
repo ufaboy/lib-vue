@@ -49,7 +49,6 @@ export default {
         if (!window["IntersectionObserver"]) {
             loadImage();
         } else {
-            console.log({IntersectionObserver: el})
             createObserver();
         }
     }
