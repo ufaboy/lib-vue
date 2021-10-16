@@ -7,11 +7,11 @@
         </option>
       </select>
     </header>
-    <section class="genre"
-             v-for="genre of genres"
-             :key="'genre'+genre.id"
-             @click="openGenre(genre)">{{ genre.name }}
-    </section>
+    <router-link :to="{ name: 'list-book', params: {
+      'id': genre.id,
+      'name': genre.name,
+    }}" class="genre" v-for="genre of genres" :key="'genre'+genre.id">{{ genre.name }}
+    </router-link>
     <!--    <observer @intersect="loadGenres('push')"/>-->
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
   </div>
@@ -19,7 +19,7 @@
 
 <script setup>
 import {computed, ref, toRefs} from 'vue';
-import {useRoute, useRouter} from 'vue-router'
+import {useRoute} from 'vue-router'
 import useDevice from "@/composables/useDevice";
 
 // eslint-disable-next-line no-undef
@@ -28,14 +28,12 @@ const props = defineProps({
 })
 document.title = 'Genres';
 const route = useRoute();
-const router = useRouter();
-const activeCategory = ref({
-  genres: []
-})
+const activeCategory = ref({})
 const {isMobile} = useDevice();
 const {categories} = toRefs(props)
 const genres = computed(() => {
   let selectedCategory = {}
+
   if (activeCategory.value.name) {
     selectedCategory = categories.value.find(item => item.id === activeCategory.value.id || item.name === activeCategory.value.name)
   } else if (route.params.id) {
@@ -48,21 +46,13 @@ const genres = computed(() => {
   return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
 })
 
-function openGenre(genre) {
-  router.push({
-    name: 'list-book',
-    params: {
-      'id': genre.id,
-      'name': genre.name,
-    }
-  })
-}
-
 async function prepareCategory() {
-  if (route.params.id) {
-    activeCategory.value = categories.value.find(item => item.id === +route.params.id)
-  } else if (route.params.name) {
-    activeCategory.value = categories.value.find(item => item.name === route.params.name)
+  if (categories.value.length)  {
+    if (route.params.id) {
+      activeCategory.value = categories.value.find(item => item.id === +route.params.id)
+    } else if (route.params.name) {
+      activeCategory.value = categories.value.find(item => item.name === route.params.name)
+    }
   }
 }
 
@@ -82,6 +72,7 @@ if (route.params.id || route.params.name) {
     flex-flow: row nowrap;
     justify-content: space-around;
     text-transform: capitalize;
+    text-decoration: none;
     cursor: pointer;
     width: 300px;
     overflow: hidden;

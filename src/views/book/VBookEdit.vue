@@ -702,7 +702,6 @@ getBook();
     height: 180px;
     border-radius: 0.5rem;
     border: none;
-    outline: none;
 
     .thumbnail {
       width: inherit;
@@ -734,7 +733,6 @@ getBook();
     display: flex;
     align-items: center;
     justify-content: center;
-    outline: none;
     color: var(--color);
     background-color: var(--background-2);
     cursor: pointer;

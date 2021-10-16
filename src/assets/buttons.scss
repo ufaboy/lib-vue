@@ -3,7 +3,6 @@
   padding: 6px 15px;
   text-decoration: none;
   cursor: pointer;
-  outline: none;
   color: var(--surface-on);
 }
 .btn:hover, .btn-outline:hover {
@@ -89,7 +88,6 @@
   right: 30px;
   z-index: 99;
   border: none;
-  outline: none;
   background-color: #555;
   color: white;
   cursor: pointer;
@@ -106,7 +104,6 @@
 
 .btn-content {
   height: fit-content;
-  outline: none;
   background: none;
   cursor: pointer;
   border: none;

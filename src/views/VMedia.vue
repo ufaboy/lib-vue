@@ -99,7 +99,6 @@ getMediaFiles()
         .fig-btn {
           flex: 1;
           border: 1px solid;
-          outline: none;
           padding: 5px;
           color: var(--text-secondary);
           background-color: var(--surface);

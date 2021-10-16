@@ -120,7 +120,6 @@ provide('saveScrollingBook', saveScrollingBook)
       cursor: pointer;
       //убрать фон при клике, тапе
       -webkit-tap-highlight-color: transparent;
-      outline: none;
       -ms-touch-action: manipulation;
       touch-action: manipulation;
 
@@ -240,7 +239,6 @@ provide('saveScrollingBook', saveScrollingBook)
       width: 100%;
       padding: 0.5rem;
       text-decoration: none;
-      outline: none;
       cursor: pointer;
       white-space: nowrap;
       text-transform: capitalize;

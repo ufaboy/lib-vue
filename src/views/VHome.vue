@@ -45,7 +45,6 @@ document.title = 'Home';
       justify-content: space-around;
 
       box-shadow: inset 0 0 20px rgba(255, 255, 255, 0);
-      outline: none;
       text-shadow: none;
       transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
     }

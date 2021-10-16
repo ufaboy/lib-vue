@@ -27,13 +27,14 @@
         </base-icon>
       </button>
     </header>
-    <section class="book" v-for="book of books.items" @click="openBook(book)" :key="'book'+book.id">
+    <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
+                 :key="'book'+book.id">
       <img :src="getCover(book)" alt="" class="book-cover">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
       </div>
-    </section>
+    </router-link>
     <observer @intersect="getBooksAndPush('push')"/>
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
     <the-modal v-if="slideLeftRight">
@@ -49,7 +50,6 @@ import {useRoute} from 'vue-router'
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
-import useBook from "@/composables/useBook";
 import useSlideButton from "@/composables/useSlideButton";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
@@ -63,7 +63,6 @@ const props = defineProps({
 const {categories} = toRefs(props)
 const route = useRoute();
 const {filter, searchQuery, limit, orderBy, books, page, getCover, getBooksAndPush} = useBooks();
-const {openBook} = useBook();
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const showTopButton = ref(false);
 
@@ -83,13 +82,16 @@ function searchByName() {
   page.value = 1
   getBooksAndPush()
 }
+
 function changeGenreLoadBook() {
   page.value = 1
   getBooksAndPush()
 }
+
 watch(categories, () => {
   filter.value.genre = calcGenreById(+route.params.id)
 })
+
 function updateBySorting(e) {
   slideLeftRight.value = false
   orderBy.value.name = e.orderBy
@@ -97,21 +99,26 @@ function updateBySorting(e) {
   page.value = 1
   getBooksAndPush()
 }
+
 function changeSortAsc() {
   orderBy.value.asc = !orderBy.value.asc
   page.value = 1
   getBooksAndPush()
 }
+
 function changeSortOrderBy() {
   page.value = 1
   getBooksAndPush()
 }
+
 function onScroll(e) {
   showTopButton.value = e.target.scrollingElement.scrollTop > 50;
 }
+
 function scrollToTop() {
   document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
 }
+
 filter.value.genre = calcGenreById(+route.params.id)
 window.addEventListener('scroll', onScroll, {passive: true});
 onBeforeUnmount(() => {
@@ -153,6 +160,7 @@ onBeforeUnmount(() => {
       background-color: var(--surface-light);
       padding: 5px;
     }
+
     .btn-asc {
       padding: 0;
     }
@@ -172,7 +180,7 @@ onBeforeUnmount(() => {
     color: var(--surface-on);
     background: var(--surface);
     box-shadow: 5px 5px 20px #333;
-
+    text-decoration: none;
 
     .book-text-wrap {
       max-height: 100px;
