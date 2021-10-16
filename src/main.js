@@ -12,9 +12,10 @@ import '@/assets/main.scss'
 
 //self plugins
 // import modal from "@/plugins/modal";
-import scroll from "@/plugins/scroll"
+import scroll from "@/plugins/scroll";
 import observer from "@/plugins/IntersectionObserver";
-import loader from "@/plugins/loader"
+import loader from "@/plugins/loader";
+// import LazyLoadDirective from "./directives/LazyLoadDirective";
 //self plugins
 
 const requireComponent = require.context(
@@ -49,4 +50,6 @@ app.use(store)
     .use(observer)
     .use(scroll)
     .use(loader, loader)
+
+// app.directive('lazyload', LazyLoadDirective)
 app.mount('#app')

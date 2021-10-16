@@ -19,15 +19,18 @@
     </div>
 
     <div class="book-picture" v-else-if="getTypeBook === 'picture'">
-      <img class="book-picture_img" :src="getSrcImgUrl(media)" alt="" v-for="media of book.files" :key="media.id"
-           @click="activeImage = getSrcImgUrl(media)">
+<!--            <img class="book-picture_img" loading="lazy" :src="getSrcImgUrl(media)" alt="" v-for="media of book.files" :key="media.id"-->
+<!--                 @click="activeImage = getSrcImgUrl(media)">-->
+      <image-item class="book-picture_img cap" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
+                  @click="activeImage = getSrcImgUrl(media)"></image-item>
     </div>
   </div>
 </template>
 
 <script setup>
-import useDevice from "@/composables/useDevice";
 import {computed, ref} from "vue";
+import useDevice from "@/composables/useDevice";
+import ImageItem from "@/components/ImageItem";
 
 const apiUrl = process.env.VUE_APP_API_URL
 
@@ -69,6 +72,10 @@ function getSrcImgUrl(e) {
 
   .book-picture_img {
     object-fit: cover;
+  }
+  .book-picture_img.cap {
+    width: 100%;
+    min-height: 300px;
   }
 
   .book-video {
