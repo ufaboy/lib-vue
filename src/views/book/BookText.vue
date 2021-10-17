@@ -168,7 +168,6 @@ onMounted(async () => {
     //content-visibility: auto;
 
     .media {
-      border: none;
     }
 
     .media--right {
@@ -188,8 +187,6 @@ onMounted(async () => {
   }
 
   .picture {
-    width: inherit;
-    height: inherit;
     object-fit: cover;
   }
 
@@ -216,116 +213,11 @@ onMounted(async () => {
   }
 }
 
-.image-modal {
-  display: flex;
-  flex-flow: row nowrap;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  //padding-top: 100px; /* Location of the box */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
-  .modal-content {
-    margin: auto;
-    display: block;
-    //width: 80%;
-    max-width: 90vw;
-    max-height: 95vh;
-  }
-
-  .picture-action-panel {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-
-  /* Caption of Modal Image (Image Text) - Same Width as the Image */
-  #caption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
-    text-align: center;
-    color: #ccc;
-    padding: 10px 0;
-    height: 150px;
-  }
-
-  /* Add Animation - Zoom in the Modal */
-  .modal-content, #caption {
-    animation-name: zoom;
-    animation-duration: 0.6s;
-  }
-}
-
-@keyframes zoom {
-  from {
-    transform: scale(0)
-  }
-  to {
-    transform: scale(1)
-  }
-}
-
-/* The Close Button */
-.close {
-  position: absolute;
-  top: 15px;
-  right: 35px;
-  color: #f1f1f1;
-  font-size: 40px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.close:hover,
-.close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 @media only screen and (max-width: 892px) {
   .book {
     .text {
       max-width: initial;
       width: 100%;
-
-      .media {
-        //position: static;
-        //max-height: calc(100vw / 1.5);
-      }
-    }
-
-    .image-modal {
-      padding: 0.3rem;
-      height: 100%;
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-      align-items: center;
-
-      .close {
-        top: 0;
-      }
-
-
-      .picture-arrow-btn {
-        height: 5rem;
-        width: 5rem;
-        color: var(--primary);
-        background-color: var(--surface2);
-      }
-
-      .modal-content {
-        height: 100%;
-        object-fit: cover;
-      }
     }
   }
 }
@@ -344,11 +236,9 @@ onMounted(async () => {
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .book {
-    .book {
-      .text {
-        .media {
-          width: 100%;
-        }
+    .text {
+      .media {
+        width: 100%;
       }
     }
   }
