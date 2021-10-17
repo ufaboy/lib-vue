@@ -6,21 +6,19 @@
             v-for="media of book.files"
             :key="media.id"
             @click="activeMedia = media">
-          <span class="media-name">{{ media.file_name }}</span>
+          <button class="btn media-name">{{ media.file_name }}</button>
         </li>
       </ol>
       <select class="select" v-else-if="isMobile" v-model="activeMedia">
         <option :value="media" v-for="media of book.files" :key="media.id">{{ media.file_name }}</option>
       </select>
       <figure class="media-video">
-        <video :src="getSrcUrl" controls v-if="activeMedia.type === 'video/webm'"></video>
-        <audio :src="getSrcUrl" controls v-else-if="activeMedia.type === 'audio/mpeg'"></audio>
+        <video class="video" :src="getSrcUrl" controls v-if="activeMedia.type.includes('video/')"></video>
+        <audio class="audio" :src="getSrcUrl" controls v-else-if="activeMedia.type.includes('audio/')"></audio>
       </figure>
     </div>
 
     <div class="book-picture" v-else-if="getTypeBook === 'picture'">
-<!--            <img class="book-picture_img" loading="lazy" :src="getSrcImgUrl(media)" alt="" v-for="media of book.files" :key="media.id"-->
-<!--                 @click="activeImage = getSrcImgUrl(media)">-->
       <image-item class="book-picture_img cap" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
                   @click="activeImage = getSrcImgUrl(media)"></image-item>
     </div>
@@ -40,7 +38,7 @@ const props = defineProps({
 })
 const {isMobile, isDesktop} = useDevice();
 const activeImage = ref(null);
-const activeMedia = {type: null, url: null}
+const activeMedia = ref({type: '', url: null});
 const getTypeBook = computed(() => {
   if (props.book.genres.findIndex(item => item.name === 'picture') !== -1) {
     return 'picture'
@@ -118,7 +116,7 @@ function getSrcImgUrl(e) {
 }
 
 .book-container.mobile {
-  height: calc(100vh - 1.5rem);
+  height: calc(100vh - 3.5rem);
 }
 
 @media only screen and (max-width: 892px) {
@@ -137,6 +135,14 @@ function getSrcImgUrl(e) {
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .book-container {
+    .book-video {
+      .media-video {
+        //height: 288px;
+        .video {
+          height: 288px;
+        }
+      }
+    }
   }
 }
 
