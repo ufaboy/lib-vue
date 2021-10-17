@@ -7,130 +7,115 @@
     </button>
     <img class="image" :src="activeImage.url" alt="image">
     <footer id="sliderFooter" class="footer" ref="sliderFooter">
-      <img class="footer-image" :class="{active: activeImageIndex === index}" :src="image.url" alt="image" v-for="(image, index) of images" :key="index"
+      <img class="footer-image" :class="{active: activeImageIndex === index}" :src="image.url" alt="image"
+           v-for="(image, index) of images" :key="index"
            :ref="setImageRef"
            @click="openImage(image.id, index)">
-<!--      <img class="footer-image" :src="image.url" alt="image" v-for="(image, index) of leftImages" :key="index"-->
-<!--           @click="openImage(image.id)">-->
-<!--      <img class="footer-image active-image" :src="activeImage.url" alt="image">-->
-<!--      <img class="footer-image" :src="image.url" alt="image" v-for="(image, index) of rightImages" :key="index"-->
-<!--           @click="openImage(image.id)">-->
     </footer>
   </div>
 </template>
 
-<script>
+<script setup>
 import BaseIcon from "./BaseIcon";
 import IconClose from "./icons/IconClose";
+import {computed, onBeforeUnmount, onBeforeUpdate} from "vue";
 
-export default {
-  name: "ImageSlider",
-  components: {IconClose, BaseIcon},
-  props: {
-    activeImageIndex: Number,
-    rawImages: Array
-  },
-  apiUrl: process.env.VUE_APP_API_URL,
-  data() {
-    return {
-      images: [],
-      imagesRefs: [],
-      maxCountImagesFooter: null,
-    }
-  },
-  computed: {
-    activeImage() {
-      return Number.isInteger(this.activeImageIndex) ? this.images[this.activeImageIndex] : this.images[0]
-    },
-  },
-  methods: {
-    openImage(id) {
-      const index = this.images.findIndex(file=>file.id === id)
-      this.$emit('select-image', index)
-      this.scrollFooter(index)
-    },
-    calcImages() {
-      this.images = this.rawImages.map(image => {
-        return {...image, url: this.getSrcImgUrl(image)}
-      })
-    },
-    getSrcImgUrl(e) {
-      return e.url ? `${this.$options.apiUrl}/${e.url}` : ''
-    },
-    closeSlider() {
-      this.$emit('select-image', null)
-    },
-    keyPressHandler(e) {
-      switch (e.key) {
-        case 'Escape':
-          this.closeSlider();
-          break;
-        case 'ArrowUp': this.moveFirst()
-          break;
-        case 'ArrowRight': this.moveNext();
-          break;
-        case 'ArrowDown': this.moveLast()
-          break;
-        case 'ArrowLeft': this.movePrev()
-          break;
-      }
-    },
-    moveFirst() {
-      this.$emit('select-image', 0)
-      document.getElementById('sliderFooter').scrollTo(0,0)
-    },
-    moveNext() {
-      const index = this.activeImageIndex < this.images.length ? this.activeImageIndex + 1 : 0
-      this.$emit('select-image', index)
-      this.scrollFooter(index)
-    },
-    moveLast() {
-      const index = this.images.length - 1
-      const footerElement = document.getElementById('sliderFooter')
-      this.$emit('select-image', index)
-      const lastPoint = footerElement.offsetWidth
-      footerElement.scrollTo(lastPoint, 0)
-    },
-    movePrev() {
-      const index = this.activeImageIndex > 0 ? this.activeImageIndex - 1 : this.images.length - 1
-      this.$emit('select-image', index)
-      this.scrollFooter(index)
-    },
-    scrollHandler(e) {
-      console.log({scrollHandler: e})
-    },
-    calcMaxCountImages() {
-      const clientWidth = this.$refs.sliderFooter.clientWidth
-      this.maxCountImagesFooter = Math.floor( clientWidth / 150)
-    },
-    setImageRef(el) {
-      if (el) {
-        this.imagesRefs.push(el)
-      }
-    },
-    scrollFooter(index) {
-      console.log({scrollFooter: index})
-      this.imagesRefs[index].scrollIntoView({inline: "center", behavior: "smooth"})
-    }
-  },
-  created() {
-    this.calcImages();
-    document.getElementById('app').classList.add('no-scroll')
-    window.addEventListener('keydown', this.keyPressHandler, {passive: true})
-    window.addEventListener('scroll', this.scrollHandler, {passive: true})
-  },
-  mounted() {
-    this.calcMaxCountImages();
-  },
-  beforeUpdate() {
-    this.imagesRefs = []
-  },
-  beforeUnmount() {
-    document.getElementById('app').classList.remove('no-scroll')
-    window.removeEventListener('keypress', this.keyPressHandler, {passive: true})
-    window.removeEventListener('scroll', this.scrollHandler, {passive: true})
-  }
+// eslint-disable-next-line no-undef
+const props = defineProps({
+  activeImageIndex: Number,
+  rawImages: Array
+});
+
+// eslint-disable-next-line no-undef
+const emit = defineEmits(['select-image']);
+const apiUrl = process.env.VUE_APP_API_URL;
+
+let images = [];
+let imagesRefs = [];
+const activeImage = computed(() => {
+  return Number.isInteger(props.activeImageIndex) ? images[props.activeImageIndex] : images[0]
+});
+function openImage(id) {
+  const index = images.findIndex(file => file.id === id)
+  emit('select-image', index)
+  scrollFooter(index)
 }
+function calcImages() {
+    images = props.rawImages.map(image => {
+      return {...image, url: getSrcImgUrl(image)}
+    })
+  }
+function getSrcImgUrl(e) {
+    return e.url ? `${apiUrl}/${e.url}` : ''
+  }
+function closeSlider() {
+    emit('select-image', null)
+  }
+function keyPressHandler(e) {
+    switch (e.key) {
+      case 'Escape':
+        closeSlider();
+        break;
+      case 'ArrowUp':
+        moveFirst()
+        break;
+      case 'ArrowRight':
+        moveNext();
+        break;
+      case 'ArrowDown':
+        moveLast()
+        break;
+      case 'ArrowLeft':
+        movePrev()
+        break;
+    }
+  }
+function moveFirst() {
+    emit('select-image', 0)
+    document.getElementById('sliderFooter').scrollTo(0, 0)
+  }
+function moveNext() {
+    const index = props.activeImageIndex < images.length ? props.activeImageIndex + 1 : 0
+    emit('select-image', index)
+    scrollFooter(index)
+  }
+function moveLast() {
+    const index = images.length - 1
+    const footerElement = document.getElementById('sliderFooter')
+    emit('select-image', index)
+    const lastPoint = footerElement.offsetWidth
+    footerElement.scrollTo(lastPoint, 0)
+  }
+function movePrev() {
+    const index = props.activeImageIndex > 0 ? props.activeImageIndex - 1 : images.length - 1
+    emit('select-image', index)
+    scrollFooter(index)
+  }
+function scrollHandler(e) {
+    console.log({scrollHandler: e})
+  }
+
+function setImageRef(el) {
+    if (el) {
+      imagesRefs.push(el)
+    }
+  }
+function scrollFooter(index) {
+    imagesRefs[index].scrollIntoView({inline: "center", behavior: "smooth"})
+  }
+calcImages();
+document.getElementById('app').classList.add('no-scroll')
+window.addEventListener('keydown', keyPressHandler, {passive: true})
+window.addEventListener('scroll', scrollHandler, {passive: true})
+
+onBeforeUpdate(()=>{
+  imagesRefs = []
+})
+onBeforeUnmount(()=>{
+  document.getElementById('app').classList.remove('no-scroll')
+  window.removeEventListener('keypress', keyPressHandler, {passive: true})
+  window.removeEventListener('scroll', scrollHandler, {passive: true})
+})
 </script>
 
 <style lang="scss">
@@ -180,9 +165,11 @@ export default {
       border: 5px solid;
       border-color: transparent;
     }
+
     .footer-image.active {
       border-color: var(--primary)
     }
+
     &::-webkit-scrollbar {
       width: 0.5rem;
     }
