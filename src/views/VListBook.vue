@@ -62,7 +62,7 @@ const props = defineProps({
 })
 const {categories} = toRefs(props)
 const route = useRoute();
-const {filter, searchQuery, limit, orderBy, books, page, getCover, getBooksAndPush} = useBooks();
+const {filter, searchQuery, limit, orderBy,  books, page, getCover, loadOrderBy, saveOrderBy, getBooksAndPush} = useBooks();
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const showTopButton = ref(false);
 
@@ -97,6 +97,7 @@ function updateBySorting(e) {
   orderBy.value.name = e.orderBy
   orderBy.value.asc = e.ascending
   page.value = 1
+  saveOrderBy()
   getBooksAndPush()
 }
 
@@ -108,6 +109,7 @@ function changeSortAsc() {
 
 function changeSortOrderBy() {
   page.value = 1
+  saveOrderBy()
   getBooksAndPush()
 }
 
@@ -118,7 +120,7 @@ function onScroll(e) {
 function scrollToTop() {
   document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
 }
-
+loadOrderBy();
 filter.value.genre = calcGenreById(+route.params.id)
 window.addEventListener('scroll', onScroll, {passive: true});
 onBeforeUnmount(() => {

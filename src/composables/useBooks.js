@@ -19,6 +19,15 @@ export default function useBooks() {
         _links: {},
         _meta: {},
     });
+    const saveOrderBy = function () {
+        localStorage.setItem('orderby-books', JSON.stringify(orderBy.value));
+    }
+    const loadOrderBy = function () {
+        const data = localStorage.getItem('orderby-books')
+        if (data) {
+            orderBy.value = JSON.parse(data)
+        }
+    }
 
     const filterCount = computed(()=>{
         let count = 0
@@ -108,6 +117,7 @@ export default function useBooks() {
     const sortBy = (column) => {
         orderBy.value.asc = !orderBy.value.asc
         orderBy.value.name = column
+        saveOrderBy()
         getBooksAndReplace();
     };
     const getCover = (book) => {
@@ -127,6 +137,8 @@ export default function useBooks() {
         pagBtnArr,
         infinityState,
         filterCount,
+        saveOrderBy,
+        loadOrderBy,
         getCover,
         resetTable,
         updateFilterPage,

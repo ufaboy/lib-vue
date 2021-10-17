@@ -2,7 +2,8 @@
   <div class="books-table">
     <header class="header">
       <router-link :to="{ name: 'book-create'}" class="btn-outline create-btn">create</router-link>
-      <button class="btn-outline filter-btn" @click="showFilterModal">filter {{filterCount ? filterCount : ''}}</button>
+      <button class="btn-outline filter-btn" @click="showFilterModal">filter {{ filterCount ? filterCount : '' }}
+      </button>
       <input type="search" class="search-text" v-model.trim="searchQuery" placeholder="Search by name..."
              @input="getBooksAndReplace">
     </header>
@@ -26,7 +27,7 @@
         <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
         <td class="td" :class="columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
-          <p class="limited-p" >{{ book.annotation }}</p>
+          <p class="limited-p">{{ book.annotation }}</p>
         </td>
         <td class="td" :class="columnsClasses.genres">
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.name : '' }}</div>
@@ -86,33 +87,35 @@ document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 const columnsClasses = {
   id: 'cell-id',
-      name: 'cell-name',
-      annotation: 'cell-annotation',
-      genres: 'cell-genre',
-      rating: 'cell-rating',
-      view_count: 'cell-view_count',
-      last_read: 'cell-last_read',
-      updated_at: 'cell-updated_at'
+  name: 'cell-name',
+  annotation: 'cell-annotation',
+  genres: 'cell-genre',
+  rating: 'cell-rating',
+  view_count: 'cell-view_count',
+  last_read: 'cell-last_read',
+  updated_at: 'cell-updated_at'
 }
 
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   categories: Array,
 })
-    const showModal = ref(false);
-    const {isMobile} = useDevice();
-    const {
-      filter, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
-      updateFilterPage, filterCount,
-      sortBy, toPage, getBooksAndReplace
-    } = useBooks();
-    const {openBook} = useBook();
-    const {getDate} = useDate();
-    function showFilterModal() {
-      showModal.value = true
-    }
+const showModal = ref(false);
+const {isMobile} = useDevice();
+const {
+  filter, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
+  updateFilterPage, filterCount, loadOrderBy,
+  sortBy, toPage, getBooksAndReplace
+} = useBooks();
+const {openBook} = useBook();
+const {getDate} = useDate();
 
-    getBooksAndReplace();
+function showFilterModal() {
+  showModal.value = true
+}
+
+loadOrderBy();
+getBooksAndReplace();
 </script>
 
 <style lang="scss" scoped>
@@ -198,6 +201,7 @@ const props = defineProps({
     .cell-annotation {
       min-width: 20vw;
       max-width: 20vw;
+
       .limited-p {
         position: relative;
         display: -webkit-box;
@@ -246,6 +250,7 @@ const props = defineProps({
         flex: 1;
       }
     }
+
     .table {
       .cell-genre, .cell-rating {
         max-width: initial;
@@ -274,6 +279,7 @@ const props = defineProps({
       .cell-annotation, .cell-view_count, .cell-updated_at {
         display: none;
       }
+
       .cell-rating {
         max-width: initial;
         min-width: initial;
