@@ -35,87 +35,92 @@ let imagesRefs = [];
 const activeImage = computed(() => {
   return Number.isInteger(props.activeImageIndex) ? images[props.activeImageIndex] : images[0]
 });
+
 function openImage(id) {
   const index = images.findIndex(file => file.id === id)
   emit('select-image', index)
   scrollFooter(index)
 }
+
 function calcImages() {
-    images = props.rawImages.map(image => {
-      return {...image, url: getSrcImgUrl(image)}
-    })
-  }
+  images = props.rawImages.map(image => {
+    return {...image, url: getSrcImgUrl(image)}
+  })
+}
+
 function getSrcImgUrl(e) {
-    return e.url ? `${apiUrl}/${e.url}` : ''
-  }
+  return e.url ? `${apiUrl}/${e.url}` : ''
+}
+
 function closeSlider() {
-    emit('select-image', null)
-  }
+  emit('select-image', null)
+}
+
 function keyPressHandler(e) {
-    switch (e.key) {
-      case 'Escape':
-        closeSlider();
-        break;
-      case 'ArrowUp':
-        moveFirst()
-        break;
-      case 'ArrowRight':
-        moveNext();
-        break;
-      case 'ArrowDown':
-        moveLast()
-        break;
-      case 'ArrowLeft':
-        movePrev()
-        break;
-    }
+  switch (e.key) {
+    case 'Escape':
+      closeSlider();
+      break;
+    case 'ArrowUp':
+      moveFirst()
+      break;
+    case 'ArrowRight':
+      moveNext();
+      break;
+    case 'ArrowDown':
+      moveLast()
+      break;
+    case 'ArrowLeft':
+      movePrev()
+      break;
   }
+}
+
 function moveFirst() {
-    emit('select-image', 0)
-    document.getElementById('sliderFooter').scrollTo(0, 0)
-  }
+  emit('select-image', 0)
+  document.getElementById('sliderFooter').scrollTo(0, 0)
+}
+
 function moveNext() {
-    const index = props.activeImageIndex < images.length - 1 ? props.activeImageIndex + 1 : 0
-    emit('select-image', index)
-    scrollFooter(index)
-  }
+  const index = props.activeImageIndex < images.length - 1 ? props.activeImageIndex + 1 : 0
+  emit('select-image', index)
+  scrollFooter(index)
+}
+
 function moveLast() {
-    const index = images.length - 1
-    const footerElement = document.getElementById('sliderFooter')
-    emit('select-image', index)
-    const lastPoint = footerElement.offsetWidth
-    footerElement.scrollTo(lastPoint, 0)
-  }
+  const index = images.length - 1
+  const footerElement = document.getElementById('sliderFooter')
+  emit('select-image', index)
+  const lastPoint = footerElement.offsetWidth
+  footerElement.scrollTo(lastPoint, 0)
+}
+
 function movePrev() {
-    const index = props.activeImageIndex > 0 ? props.activeImageIndex - 1 : images.length - 1
-    emit('select-image', index)
-    scrollFooter(index)
-  }
-function scrollHandler(e) {
-    console.log({scrollHandler: e})
-  }
+  const index = props.activeImageIndex > 0 ? props.activeImageIndex - 1 : images.length - 1
+  emit('select-image', index)
+  scrollFooter(index)
+}
 
 function setImageRef(el) {
-    if (el) {
-      imagesRefs.push(el)
-    }
+  if (el) {
+    imagesRefs.push(el)
   }
+}
+
 function scrollFooter(index) {
-  console.log('scrollFooter', {index: index, imagesRefs: imagesRefs})
-    imagesRefs[index].scrollIntoView({inline: "center", behavior: "smooth"})
-  }
+  imagesRefs[index].scrollIntoView({inline: "center", behavior: "smooth"})
+}
+
 calcImages();
 document.getElementById('app').classList.add('no-scroll')
 window.addEventListener('keydown', keyPressHandler, {passive: true})
-window.addEventListener('scroll', scrollHandler, {passive: true})
 
-onBeforeUpdate(()=>{
+onBeforeUpdate(() => {
   imagesRefs = []
 })
-onBeforeUnmount(()=>{
+onBeforeUnmount(() => {
   document.getElementById('app').classList.remove('no-scroll')
   window.removeEventListener('keypress', keyPressHandler, {passive: true})
-  window.removeEventListener('scroll', scrollHandler, {passive: true})
 })
 </script>
 
