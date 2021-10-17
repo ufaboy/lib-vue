@@ -169,10 +169,6 @@ onMounted(async () => {
 
     .media {
       border: none;
-      //display: none;
-      cursor: pointer;
-      width: 480px;
-      min-height: 320px;
     }
 
     .media--right {
@@ -296,15 +292,13 @@ onMounted(async () => {
 
 @media only screen and (max-width: 892px) {
   .book {
-    .book {
-      .text {
-        max-width: initial;
-        width: 100%;
+    .text {
+      max-width: initial;
+      width: 100%;
 
-        .media {
-          position: static;
-          max-height: calc(100vw / 1.5);
-        }
+      .media {
+        //position: static;
+        //max-height: calc(100vw / 1.5);
       }
     }
 
@@ -338,12 +332,11 @@ onMounted(async () => {
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .book {
-    .book {
-      .text {
-        .media {
-          float: left;
-          margin: 0 0.5rem 0.5rem 0;
-        }
+    .text {
+      .media {
+        float: left;
+        margin: 0 0.5rem 0.5rem 0;
+        max-width: 394px;
       }
     }
   }
@@ -361,16 +354,14 @@ onMounted(async () => {
   }
 }
 
-@media only screen and (max-width: 1600px) {
+@media only screen and (min-width: 893px) and (max-width: 1600px) {
   .book {
     .text {
-      max-width: 650px;
-
       .media {
+        cursor: pointer;
         width: 375px;
-        min-height: 250px;
+        min-height: 320px;
       }
-
       .media--right {
         right: -385px;
       }
@@ -380,6 +371,8 @@ onMounted(async () => {
       }
     }
   }
+}
+@media only screen and (max-width: 1600px) {
 
 }
 </style>
