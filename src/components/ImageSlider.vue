@@ -75,7 +75,7 @@ function moveFirst() {
     document.getElementById('sliderFooter').scrollTo(0, 0)
   }
 function moveNext() {
-    const index = props.activeImageIndex < images.length ? props.activeImageIndex + 1 : 0
+    const index = props.activeImageIndex < images.length - 1 ? props.activeImageIndex + 1 : 0
     emit('select-image', index)
     scrollFooter(index)
   }
@@ -101,6 +101,7 @@ function setImageRef(el) {
     }
   }
 function scrollFooter(index) {
+  console.log('scrollFooter', {index: index, imagesRefs: imagesRefs})
     imagesRefs[index].scrollIntoView({inline: "center", behavior: "smooth"})
   }
 calcImages();
