@@ -2,22 +2,15 @@
   <div class="book" :class="{mobile: isMobile}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     <div class="progress-line" :style="widthProgressLine"></div>
-    <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress" @hide-modal="slideLeftRight = false"/>
+    <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
+                   @hide-modal="slideLeftRight = false"/>
     <the-modal v-if="showEditorModal">
       <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false"/>
     </the-modal>
-    <div id="image-modal" class="image-modal" v-if="activeImage">
-      <span class="close" @click="activeImage = null">&times;</span>
-      <aside class="picture-action-panel">
-        <button class="picture-arrow-btn" @click="showSlide('first')">1</button>
-        <button class="picture-arrow-btn" @click="showSlide('prev')">Back</button>
-      </aside>
-      <img class="modal-content" :src="activeImage" alt="image">
-      <aside class="picture-action-panel">
-        <button class="picture-arrow-btn" @click="showSlide('last')">e</button>
-        <button class="picture-arrow-btn" @click="showSlide('next')">Forward</button>
-      </aside>
-    </div>
+    <image-slider v-if="Number.isInteger(activeImageIndex)"
+                  :raw-images="book.files"
+                  :active-image-index="activeImageIndex"
+                  @select-image="selectImageByIndex"></image-slider>
   </div>
 </template>
 
@@ -27,13 +20,14 @@ import useDevice from "@/composables/useDevice";
 import TheModal from "@/components/TheModal";
 import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
-import useSlideButton from "../../composables/useSlideButton";
-import TextSettings from "../../components/TextSettings";
+import useSlideButton from "@/composables/useSlideButton";
+import TextSettings from "@/components/TextSettings";
+import ImageSlider from "@/components/ImageSlider";
+
 const printToast = inject('printToast')
 const saveScrollingBook = inject('saveScrollingBook')
 
 const apiUrl = process.env.VUE_APP_API_URL
-
 // eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   categories: Array,
@@ -54,52 +48,44 @@ const props = defineProps({
     default: 0
   },
 })
-function setTitle(){
+
+function setTitle() {
   document.title = props.book.name;
 }
+
 setTitle()
 
-const widthProgressLine = computed(()=>{
+const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
 })
 
 const {windowHeights} = toRefs(props)
 const showEditorModal = ref(false);
-const activeImage = ref(null);
-const activeImageIndex = ref(0);
+const activeImageIndex = ref();
 const editorNode = ref({});
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const {isMobile, isDesktop} = useDevice();
 
-function editMode (e) {
+function editMode(e) {
   editorNode.value = e.target
   showEditorModal.value = true
 }
-function openImage (img) {
+
+function openImage(img) {
   if (document.documentElement.clientWidth > 800) {
-    activeImage.value = img.target.src
+    const src = img.target.src
+    const replaceValue = `${apiUrl}/media/book_${props.book.id}/`
+    const fileName = src.replace(replaceValue, '')
+    const fileIndex = props.book.files.findIndex(file => file.full_name === fileName)
+    activeImageIndex.value = fileIndex > -1 ? fileIndex : 0
   }
 }
-function showSlide (type) {
-  let index = 0
-  if (type === 'prev') {
-    index = activeImageIndex.value > 1 ? activeImageIndex.value - 1 : props.book.files.length - 1
-  } else if (type === 'next') {
-    index = activeImageIndex.value < props.book.files.length - 1 ? activeImageIndex.value + 1 : 0
-  } else if (type === 'last') {
-    index = props.book.files.length - 1
-  } else if (type === 'first') {
-    index = 0
-  }
-  if (props.book.files[index].type.includes('image/')) {
-    activeImageIndex.value = index
-    activeImage.value = getSrcImgUrl(props.book.files[index])
-  }
+
+function selectImageByIndex(index) {
+  activeImageIndex.value = index
 }
-function getSrcImgUrl (e) {
-  return e.url ? `${apiUrl}/${e.url}` : ''
-}
-function moveMedia () {
+
+function moveMedia() {
   let toggleSide = true
   let media = document.querySelectorAll('.media')
   for (const elem of media) {
@@ -107,13 +93,15 @@ function moveMedia () {
     toggleSide = !toggleSide
   }
 }
-function listenClickByImg () {
+
+function listenClickByImg() {
   let images = document.getElementsByClassName('picture')
   for (let image of images) {
     image.addEventListener("click", openImage);
   }
 }
-async function saveEditor () {
+
+async function saveEditor() {
   try {
     await updateBook({id: props.book.id, text: props.book.text})
     printToast('Success', 'success')
@@ -122,20 +110,22 @@ async function saveEditor () {
     console.log({'saveEditor error': e})
   }
 }
-async function scrollToBookmark () {
+
+async function scrollToBookmark() {
   if (props.book.bookmark) {
-   window.scrollTo(0, props.book.bookmark)
+    window.scrollTo(0, props.book.bookmark)
   }
 }
-function scrollByClick (e) {
+
+function scrollByClick(e) {
   let w = document.getElementById("progressbar").clientWidth;
   let o = e.offsetX;
   let x = Math.floor((100 * o) / w);
   document.getElementById("progressbar").value = x;
   let y = Math.floor((windowHeights.value * x) / 100);
-  // console.log('scrollByClick', {windowHeights: windowHeights.value, x: x, scrollTo: y})
   window.scrollTo(0, y);
 }
+
 onBeforeUnmount(() => {
   saveScrollingBook(props.book.id)
 });
@@ -182,7 +172,7 @@ onMounted(async () => {
       //display: none;
       cursor: pointer;
       width: 480px;
-      height: 320px;
+      min-height: 320px;
     }
 
     .media--right {
@@ -212,6 +202,7 @@ onMounted(async () => {
     flex: 1;
 
   }
+
   .text-settings {
     position: fixed;
     left: 0;
@@ -219,6 +210,7 @@ onMounted(async () => {
     background-color: var(--surface-light);
     width: 100%;
   }
+
   .progress-line {
     position: fixed;
     width: 3px;
@@ -376,7 +368,7 @@ onMounted(async () => {
 
       .media {
         width: 375px;
-        height: 250px;
+        min-height: 250px;
       }
 
       .media--right {

@@ -30,6 +30,9 @@ body, #app {
 #app {
   background-color: var(--background-book);
 }
+#app.no-scroll {
+  overflow: hidden;
+}
 .basement {
   width: 100%;
   //height: 100%;
