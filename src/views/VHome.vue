@@ -1,5 +1,5 @@
 <template>
-  <main class="home">
+  <div class="home">
     <nav class="nav">
       <router-link class="content-link"
                    :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
@@ -7,7 +7,7 @@
                    :key="category.id">{{ category.name }}
       </router-link>
     </nav>
-  </main>
+  </div>
 </template>
 
 <script setup>
@@ -30,6 +30,7 @@ document.title = 'Home';
     .content-link {
       display: flex;
       flex: 1;
+      height: fit-content;
       text-decoration: none;
       margin-right: 1rem;
       padding: 1rem 0.5rem;

@@ -1,5 +1,5 @@
 <template>
-  <div class="basement" @click="activeBurger = false">
+  <main class="basement" @click="activeBurger = false">
     <header id="header" class="header">
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
@@ -32,11 +32,12 @@
       </div>
 
     </header>
-    <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
+    <the-sidebar v-if="isDesktop" :categories="categories" />
+    <router-view class="main-view" v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
                  :window-heights="windowHeights"></router-view>
     <!--    <component :is="userPreferTheme"></component>-->
 
-  </div>
+  </main>
 </template>
 
 <script setup>
@@ -46,6 +47,7 @@ import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
+import TheSidebar from "../components/TheSidebar";
 // import useTheme from "../composables/useTheme";
 // import ThemeDark from "../components/ThemeDark";
 // import ThemeLight from "../components/ThemeLight";
@@ -54,7 +56,7 @@ const route = useRoute()
 // const searchField = ref('')
 const activeBurger = ref(false)
 const categories = ref([])
-const {isMobile} = useDevice();
+const {isMobile, isDesktop} = useDevice();
 const {
   scrollingProgress,
   scrollTop,
@@ -104,9 +106,17 @@ provide('saveScrollingBook', saveScrollingBook)
 <style scoped lang="scss">
 .basement {
 
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 3.5rem calc(100% - 3.5rem);
+  grid-template-areas: "head head"
+                       "sidebar main-view";
+  justify-content: start;
+  align-content: baseline;
+
   .header {
+    grid-area: head;
     display: flex;
-    height: 3.5rem;
     padding: 0.5rem 1.5rem;
     align-items: center;
     justify-content: space-between;
@@ -288,6 +298,14 @@ provide('saveScrollingBook', saveScrollingBook)
     border: none;
     border-radius: 5px;
     text-decoration: none;
+  }
+
+  .sidebar {
+    grid-area: sidebar;
+  }
+
+  .main-view {
+    grid-area: main-view;
   }
 }
 

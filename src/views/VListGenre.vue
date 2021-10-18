@@ -74,6 +74,7 @@ if (route.params.id || route.params.name) {
     text-transform: capitalize;
     text-decoration: none;
     cursor: pointer;
+    height: fit-content;
     width: 300px;
     overflow: hidden;
     margin-bottom: 1rem;
