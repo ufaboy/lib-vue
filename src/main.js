@@ -16,6 +16,10 @@ import observer from "@/plugins/IntersectionObserver";
 import loader from "@/plugins/loader";
 //self plugins
 
+//config app
+app.config.performance = true;
+//config app
+
 app.use(store)
     .use(router)
     .use(observer)
