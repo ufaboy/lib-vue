@@ -2,10 +2,8 @@
   <main class="sorting">
     <fieldset class="fieldset">
       <legend class="fieldset__legend">sorting
-        <base-icon class="icon">
-          <IconSortAsc v-if="ascending"/>
-          <IconSortDesc v-else/>
-        </base-icon>
+        <IconSortAsc class="icon" v-if="ascending"/>
+        <IconSortDesc class="icon" v-else/>
       </legend>
       <button class="srt-btn" :class="{active: orderBy === 'name'}" @click="changeOrderBy('name')">name</button>
       <button class="srt-btn" :class="{active: orderBy === 'view_count'}" @click="changeOrderBy('view_count')">

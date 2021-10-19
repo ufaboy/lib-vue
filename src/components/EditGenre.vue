@@ -9,9 +9,7 @@
       <!--                @click="localGenre.ad = !localGenre.ad">ad-->
       <!--        </button>-->
       <button class="close-btn" type="reset" @click="closeModal">
-        <base-icon class="icon" icon-name="close">
-          <icon-close/>
-        </base-icon>
+        <IconClose class="icon" />
       </button>
     </header>
     <div class="form-field mb-1">

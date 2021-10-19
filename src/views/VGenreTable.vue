@@ -9,10 +9,8 @@
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
           <button class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
-            <base-icon class="icon" icon-name="sort">
-              <icon-sort-asc v-if="ascending"/>
-              <icon-sort-desc v-else/>
-            </base-icon>
+            <IconSortAsc class="icon" v-if="ascending"/>
+            <IconSortDesc class="icon" v-else/>
           </button>
         </div>
       </th>
@@ -27,10 +25,10 @@
         </tr>
       </transition-group>
     </table>
-    <the-modal v-if="showModal" :width="400">
-      <edit-genre :genre="activeGenre" :categories="categories" @update-genres="getGenres"
+    <TheModal v-if="showModal" :width="400">
+      <EditGenre :genre="activeGenre" :categories="categories" @update-genres="getGenres"
                   @hide-modal="showModal = false"/>
-    </the-modal>
+    </TheModal>
   </div>
 </template>
 

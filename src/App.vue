@@ -1,8 +1,8 @@
 <template>
   <router-view></router-view>
   <teleport to="body">
-    <refresh-popup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
-    <the-toaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
+    <RefreshPopup v-if="updateAvailable" :sw-reg="registration" @refresh-sw="refreshApp"/>
+    <TheToaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
   </teleport>
 
 </template>

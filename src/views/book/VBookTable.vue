@@ -13,10 +13,8 @@
         <div class="table-cell" :class="{'active' : orderBy.name === column}">
           <div class="td-title">{{ column }}</div>
           <button class="td-action" @click="sortBy(column)">
-            <base-icon class="icon" icon-name="sort">
-              <icon-sort-asc v-if="orderBy.name === column && orderBy.asc"/>
-              <icon-sort-desc v-else/>
-            </base-icon>
+            <IconSortAsc class="icon" v-if="orderBy.name === column && orderBy.asc"/>
+            <IconSortDesc class="icon" v-else/>
           </button>
         </div>
       </th>
@@ -60,15 +58,15 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <the-modal v-if="showModal" :width="400">
-      <filter-modal @active-filter="updateFilterPage"
+    <TheModal v-if="showModal" :width="400">
+      <FilterModal @active-filter="updateFilterPage"
                     @hide-modal="showModal = false"
                     @reset-filter="resetTable"
                     :categories="categories"
                     :rating="filter.rating"
                     :genre="filter.genre"
                     :ad="filter.ad"/>
-    </the-modal>
+    </TheModal>
   </div>
 </template>
 

@@ -21,10 +21,8 @@
         </option>
       </select>
       <button class="btn header__block btn-asc" @click="changeSortAsc">
-        <base-icon class="icon" icon-name="sort">
-          <icon-sort-asc v-if="orderBy.asc"/>
-          <icon-sort-desc v-else/>
-        </base-icon>
+        <IconSortAsc class="icon" v-if="orderBy.asc"/>
+        <IconSortDesc class="icon" v-else/>
       </button>
     </header>
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
@@ -37,9 +35,9 @@
     </router-link>
     <observer @intersect="getBooksAndPush('push')"/>
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
-    <the-modal v-if="slideLeftRight">
-      <sorting-modal @sorting="updateBySorting" @hide-modal="slideLeftRight = false"/>
-    </the-modal>
+    <TheModal v-if="slideLeftRight">
+      <SortingModal @sorting="updateBySorting" @hide-modal="slideLeftRight = false"/>
+    </TheModal>
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
   </main>
 </template>

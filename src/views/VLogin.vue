@@ -27,7 +27,7 @@
         </button>
       </form>
     </div>
-    <canvas-space :count-dots="countDots"/>
+    <CanvasSpace :count-dots="countDots"/>
   </div>
 
 </template>

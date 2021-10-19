@@ -4,7 +4,7 @@
       <ul>
         <li></li>
       </ul>
-      <select-component label="name"></select-component>
+      <SelectComponent label="name"></SelectComponent>
       <button>button</button>
     </div>
     <div class="stars" id="stars"></div>

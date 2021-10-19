@@ -7,8 +7,8 @@
           <button class="positive-btn" @click="sendBook">save</button>
         </div>
         <div class="btn-tab--right">
-          <star-rating v-model="book.rating"></star-rating>
-          <div class="toggle toggle--knob" v-if="adAccess">
+          <StarRating v-model="book.rating"></StarRating>
+          <div class="toggle toggle--knob" v-if="getAdAccess()">
             <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
             <label class="toggle--btn" for="toggle--knob">
               <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
@@ -50,19 +50,13 @@
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
           <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
-            <base-icon class="icon">
-              <icon-carriage/>
-            </base-icon>
+            <IconCarriage class="icon" />
           </button>
           <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
-            <base-icon class="icon">
-              <icon-paragraph/>
-            </base-icon>
+            <IconParagraph class="icon" />
           </button>
           <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
-            <base-icon class="icon">
-              <icon-slash/>
-            </base-icon>
+            <IconSlash class="icon" />
           </button>
         </span>
         </span>
@@ -115,15 +109,15 @@
         </figure>
       </div>
     </div>
-    <the-modal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <genre-book :genres-props="genres" :categories="categories" @set-genres="setGenres"
+    <TheModal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
+      <GenreBook :genres-props="genres" :categories="categories" @set-genres="setGenres"
                   @hide-modal="showGenreBookModal = false"/>
-    </the-modal>
+    </TheModal>
   </div>
 </template>
 
 <script setup>
-import {ref, computed, onUpdated, inject} from 'vue'
+import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 
 import {loadBook} from "@/utils/loadData";
@@ -152,7 +146,6 @@ const files = ref([]);
 
 const genres = ref([]);
 const editorMode = ref('raw');
-const adAccess = computed(() => getAdAccess());
 
 function resetBook() {
   if (book.value.id) {
@@ -242,15 +235,13 @@ async function deleteAllFiles() {
 
 function checkType(media) {
   const type = media.file ? media.file.type : media.type
-  if (type === 'image/png' || type === 'image/jpeg' || type === 'image/gif' || type === 'image/webp') {
+  if (type.includes('image')) {
     return 'image'
-  } else if (type === 'video/webm' || type === 'video/mp4') {
+  } else if (type.includes('video')) {
     return 'video'
-  } else if (type === 'audio/mpeg') {
+  } else if (type.includes('audio')) {
     return 'audio'
-  } else if (type === '') {
-    return 'file'
-  }
+  } else return 'file'
 }
 
 async function deleteOneFile(fileIndex) {

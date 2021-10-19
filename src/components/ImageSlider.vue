@@ -1,9 +1,7 @@
 <template>
   <div class="image-slider">
     <button class="close-btn" type="reset" @click="closeSlider">
-      <base-icon width="36" height="36">
-        <icon-close class="icon"/>
-      </base-icon>
+      <icon-close class="icon" width="36" height="36" />
     </button>
     <img class="image" :src="activeImage.url" alt="image">
     <footer id="sliderFooter" class="footer" ref="sliderFooter">
@@ -16,7 +14,6 @@
 </template>
 
 <script setup>
-import BaseIcon from "./BaseIcon";
 import IconClose from "./icons/IconClose";
 import {computed, onBeforeUnmount, onBeforeUpdate} from "vue";
 

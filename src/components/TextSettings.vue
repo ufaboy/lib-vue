@@ -3,9 +3,7 @@
   <header class="header">
     <h2>Text Settings</h2>
     <button class="close-btn" type="reset" @click="closeModal">
-      <base-icon class="icon" icon-name="close">
-        <icon-close/>
-      </base-icon>
+      <IconClose class="icon" />
     </button>
   </header>
   <p>Current Progress: {{scrollingProgress.progress}}</p>
