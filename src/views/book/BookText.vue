@@ -261,7 +261,7 @@ onMounted(async () => {
     }
   }
 }
-@media only screen and (max-width: 1600px) {
+@media only screen and (min-width: 1600px) {
   .book {
     .text {
       .media {
