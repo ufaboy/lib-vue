@@ -262,6 +262,21 @@ onMounted(async () => {
   }
 }
 @media only screen and (max-width: 1600px) {
+  .book {
+    .text {
+      .media {
+        cursor: pointer;
+        max-width: 700px;
+        min-height: 320px;
+      }
+      .media--right {
+        right: -764px;
+      }
 
+      .media--left {
+        left: -385px;
+      }
+    }
+  }
 }
 </style>
