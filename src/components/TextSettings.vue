@@ -1,6 +1,6 @@
 <template>
 <div class="text-settings">
-  <header class="header">
+  <header class="text-settings-header">
     <h2>Text Settings</h2>
     <button class="close-btn" type="reset" @click="closeModal">
       <IconClose class="icon" />
@@ -42,10 +42,11 @@ function scrollByClick(e) {
 <style scoped lang="scss">
 .text-settings {
   padding: 1rem;
-  .header {
+  .text-settings-header {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
+    margin-bottom: 0.5rem;
   }
   .progress {
     width: 100%;

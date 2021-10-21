@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import {onBeforeUnmount, ref, toRefs, watch} from 'vue';
+import {onBeforeUnmount, ref, watch} from 'vue';
 import {useRoute} from 'vue-router'
 import SortingModal from '@/components/SortingModal.vue'
 import TheModal from "@/components/TheModal";
@@ -62,7 +62,6 @@ const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_co
 const props = defineProps({
   categories: Array,
 })
-const {categories} = toRefs(props)
 const route = useRoute();
 const {isMobile} = useDevice();
 const {filter, searchQuery, limit, orderBy,  books, page, getCover, loadOrderBy, saveOrderBy, getBooksAndPush} = useBooks();
@@ -72,7 +71,7 @@ const showTopButton = ref(false);
 function calcGenreById(id) {
 
   let genreArray = []
-  for (const cat of categories.value) {
+  for (const cat of props.categories) {
     genreArray.push(...cat.genres)
   }
   const genre = genreArray.find(genre => genre.id === id)
@@ -91,7 +90,7 @@ function changeGenreLoadBook() {
   getBooksAndPush()
 }
 
-watch(categories, () => {
+watch(props, () => {
   filter.value.genre = calcGenreById(+route.params.id)
 })
 
