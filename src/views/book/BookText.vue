@@ -17,12 +17,12 @@
 <script setup>
 import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject, computed} from "vue";
 import useDevice from "@/composables/useDevice";
-import TheModal from "@/components/TheModal";
+import TheModal from "@/components/TheModal.vue";
 import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
 import useSlideButton from "@/composables/useSlideButton";
-import TextSettings from "@/components/TextSettings";
-import ImageSlider from "@/components/ImageSlider";
+import TextSettings from "@/components/TextSettings.vue";
+import ImageSlider from "@/components/ImageSlider.vue";
 
 const printToast = inject('printToast')
 const saveScrollingBook = inject('saveScrollingBook')
@@ -86,11 +86,12 @@ function selectImageByIndex(index) {
 }
 
 function moveMedia() {
-  let toggleSide = true
+  // let toggleSide = true
   let media = document.querySelectorAll('.media')
   for (const elem of media) {
-    elem.classList.add(toggleSide ? 'media--right' : 'media--left')
-    toggleSide = !toggleSide
+    elem.classList.add('media--right')
+    // elem.classList.add(toggleSide ? 'media--right' : 'media--left')
+    // toggleSide = !toggleSide
   }
 }
 
@@ -144,8 +145,6 @@ onMounted(async () => {
   flex-flow: row wrap;
   width: 100%;
   position: relative;
-  justify-content: center;
-
 
   p {
     word-break: break-word;
@@ -164,7 +163,7 @@ onMounted(async () => {
     position: relative;
     letter-spacing: 0.3px;
     line-height: 1.5;
-    padding: 0 0.5rem;
+    padding: 0 1rem;
     //content-visibility: auto;
 
     .media {

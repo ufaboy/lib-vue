@@ -2,12 +2,12 @@
   <div class="books-table">
     <teleport to="#aside" :disabled="isMobile">
       <section class="sidebar">
-        <input type="search" class="sidebar-input search-text mb-half" v-model.trim="searchQuery" placeholder="Search by name..."
+        <input type="search" class="sidebar-input search-text mb-half" v-model.trim="searchQuery" placeholder="Search ..."
                @input="getBooksAndReplace">
         <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn mb-half">create</router-link>
         <button class="sidebar-btn btn-outline mb-half" @click="showFilterModal">filter {{ filterCount ? filterCount : '' }}
         </button>
-        
+
       </section>
     </teleport>
 
