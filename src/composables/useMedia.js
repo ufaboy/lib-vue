@@ -1,8 +1,9 @@
-import {computed, ref} from "vue";
+import {computed, inject, ref} from "vue";
 import {loadMediaFiles} from "../utils/loadData";
 import {attachFileToBook, deleteFileByName} from "../utils/uploadData";
 
 export default function useMedia() {
+    const loader = inject("loader");
     const directories = ref([])
     const activeDirIndex = ref(null);
     const activeMedia = ref({});
@@ -20,7 +21,9 @@ export default function useMedia() {
         }
     }
     const getMediaFiles = async function () {
+        loader.show();
         directories.value = await loadMediaFiles()
+        loader.hide();
     }
     const attachFile = async function (bookId, name, index) {
         const result = await attachFileToBook(bookId, name)

@@ -32,13 +32,17 @@
     display: inline-flex;
 
     .td-title {
-      margin-right: 0.75rem;
+      margin-right: 0.5rem;
+      display: flex;
+      align-items: center;
     }
 
     .td-action {
       position: relative;
       cursor: pointer;
       background-color: transparent;
+      border: 1px solid var(--primary);
+      padding: 3px;
       .icon {
         fill: var(--primary);
       }

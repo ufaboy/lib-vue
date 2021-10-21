@@ -13,15 +13,18 @@
 
     <table class="table">
       <thead class="thead">
-      <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
-        <div class="table-cell" :class="{'active' : orderBy.name === column}">
-          <div class="td-title">{{ column }}</div>
-          <button class="td-action" @click="sortBy(column)">
-            <IconSortAsc class="icon" v-if="orderBy.name === column && orderBy.asc"/>
-            <IconSortDesc class="icon" v-else/>
-          </button>
-        </div>
-      </th>
+      <tr>
+        <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
+          <div class="table-cell" :class="{'active' : orderBy.name === column}">
+            <div class="td-title">{{ column }}</div>
+            <button class="td-action" @click="sortBy(column)">
+              <IconSortAsc class="icon" v-if="orderBy.name === column && orderBy.asc"/>
+              <IconSortDesc class="icon" v-else/>
+            </button>
+          </div>
+        </th>
+      </tr>
+
       </thead>
       <tbody>
       <!--      <transition-group name="flip-list" tag="tbody">-->

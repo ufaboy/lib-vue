@@ -1,9 +1,11 @@
 <template>
   <div class="notes">
-    <header class="header">
-      <button class="positive-btn" @click="sendNotes">save</button>
-      <button class="notes__btn btn" @click="addNote">add</button>
-    </header>
+    <teleport to="#aside" :disabled="isMobile">
+      <section class="sidebar">
+        <button class="sidebar-btn btn mb-half" @click="sendNotes">save</button>
+        <button class="sidebar-btn btn" @click="addNote">add</button>
+      </section>
+    </teleport>
     <table class="notes-table">
       <caption class="caption">Fast Notes Links</caption>
       <thead class="thead">
@@ -14,7 +16,7 @@
           <span>type</span>
           <div class="cell-dropdown">
             <label class="checkbox-container" v-for="(type, index) of allTypes" :key="index">
-              {{type}}
+              {{ type }}
               <input type="checkbox" multiple v-model="filterTypes" :value="type">
               <span class="checkmark"></span></label>
           </div>
@@ -45,62 +47,56 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {computed, inject, ref} from 'vue';
 import {loadNotes} from "@/utils/loadData";
 import {$patch} from "@/utils/superFetch";
+import useDevice from "../composables/useDevice";
 
-export default {
-  name: "TheNote",
-  components: {},
-  setup() {
-    document.title = 'Notes';
-    const loader = inject("loader");
-    const notes = ref([]);
-    const filterTypes = ref([])
-    const allTypes = ref([])
-    const filteredNotes = computed(()=>{
-      return filterTypes.value.length ? notes.value.filter(note=>filterTypes.value.includes(note.type)) : notes.value;
-    })
+const {isMobile} = useDevice();
+document.title = 'Notes';
+const loader = inject("loader");
+const notes = ref([]);
+const filterTypes = ref([])
+const allTypes = ref([])
+const filteredNotes = computed(() => {
+  return filterTypes.value.length ? notes.value.filter(note => filterTypes.value.includes(note.type)) : notes.value;
+})
 
-    const getNotes = async () => {
-      const result = await loadNotes()
-      if (result) {
-        notes.value.push(...JSON.parse(result.text))
-        prepareNotes(notes.value)
-      }
-    };
-    const prepareNotes = rawNotes => {
-      for (const note of rawNotes) {
-        if (!allTypes.value.includes(note.type) && note.type) {
-          allTypes.value.push(note.type)
-        }
-      }
+const getNotes = async () => {
+  const result = await loadNotes()
+  if (result) {
+    notes.value.push(...JSON.parse(result.text))
+    prepareNotes(notes.value)
+  }
+};
+const prepareNotes = rawNotes => {
+  for (const note of rawNotes) {
+    if (!allTypes.value.includes(note.type) && note.type) {
+      allTypes.value.push(note.type)
     }
-    const addNote = () => {
-      notes.value.unshift({url: '', name: '', type: ''})
-    };
-    const deleteNote = (index) => {
-      notes.value.splice(index, 1)
-      sendNotes()
-    }
-    const sendNotes = async () => {
-      const formData = {text: JSON.stringify(notes.value)}
-      loader.show()
-      const result = await $patch('/book/update?id=1', formData)
-      loader.hide()
-      if (result) {
-        notes.value.splice(0, notes.value.length)
-        notes.value.push(...JSON.parse(result.text))
-        prepareNotes(notes.value)
-      }
-    }
-
-    getNotes()
-
-    return {notes, filterTypes, allTypes, filteredNotes, getNotes, addNote, deleteNote, sendNotes}
-  },
+  }
 }
+const addNote = () => {
+  notes.value.unshift({url: '', name: '', type: ''})
+};
+const deleteNote = (index) => {
+  notes.value.splice(index, 1)
+  sendNotes()
+}
+const sendNotes = async () => {
+  const formData = {text: JSON.stringify(notes.value)}
+  loader.show()
+  const result = await $patch('/book/update?id=1', formData)
+  loader.hide()
+  if (result) {
+    notes.value.splice(0, notes.value.length)
+    notes.value.push(...JSON.parse(result.text))
+    prepareNotes(notes.value)
+  }
+}
+
+getNotes()
 </script>
 
 <style lang="scss" scoped>
@@ -136,6 +132,7 @@ export default {
       border-bottom: 1px solid;
       border-color: inherit;
     }
+
     .cell-dropdown {
       display: flex;
       flex-flow: row nowrap;
