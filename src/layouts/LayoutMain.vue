@@ -32,6 +32,9 @@
       </div>
 
     </header>
+    <teleport to="#aside">
+      <SideBarNavigator />
+    </teleport>
     <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
                  :window-heights="windowHeights"></router-view>
     <!--    <component :is="userPreferTheme"></component>-->
@@ -46,6 +49,7 @@ import useDevice from "@/composables/useDevice";
 import {loadCategories} from "@/utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
+import SideBarNavigator from "../components/SideBarNavigator";
 // import useTheme from "../composables/useTheme";
 // import ThemeDark from "../components/ThemeDark";
 // import ThemeLight from "../components/ThemeLight";
@@ -94,14 +98,16 @@ async function getCategories() {
 
 getCategories();
 window.addEventListener('scroll', throttleScroll, {passive: true})
+document.getElementById('aside').classList.add('show')
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', throttleScroll, {passive: true})
+  document.getElementById('aside').classList.remove('show')
 })
 
 provide('saveScrollingBook', saveScrollingBook)
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .basement {
 
   .header {
@@ -291,7 +297,11 @@ provide('saveScrollingBook', saveScrollingBook)
   }
 }
 
-
+@media only screen and (min-width: 893px) {
+  #header {
+    display: none;
+  }
+}
 @media only screen and (max-width: 892px) {
   .header {
     padding: 0.5rem;

@@ -1,8 +1,10 @@
 <template>
   <div class="genre-table">
-    <header class="header">
-      <button class="btn-outline" @click="createGenre">create</button>
-    </header>
+    <teleport to="#aside" :disabled="isMobile">
+    <section class="sidebar">
+      <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
+    </section>
+    </teleport>
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
@@ -38,6 +40,7 @@ import EditGenre from '@/components/EditGenre.vue'
 import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import useDevice from "../composables/useDevice";
 
 document.title = 'Table Genres';
 const columns = ['id', 'name', 'description', 'category']
@@ -53,7 +56,7 @@ const props = defineProps({
 })
 
 const {genres, ascending, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
-
+const {isMobile} = useDevice();
 if (genres.value.length === 0) {
   getGenres();
 }
@@ -62,25 +65,7 @@ if (genres.value.length === 0) {
 <style scoped lang="scss">
 .genre-table {
   width: 100%;
-  height: calc(100% - 3.5rem);
-  padding: 0.5rem 1.5rem;
-
-  .header {
-    margin-bottom: 0.5rem;
-    display: flex;
-    flex-flow: row nowrap;
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-transform: capitalize;
-    }
-
-    .btn:last-of-type {
-      margin-right: 0;
-    }
-  }
+  padding: 0 1.5rem;
 
   .flip-list-move {
     transition: transform 1s;
@@ -90,7 +75,7 @@ if (genres.value.length === 0) {
 @media only screen and (max-width: 892px) {
   .genre-table {
     padding: 0.5rem;
-
+    height: calc(100% - 3.5rem);
     .dialog {
       margin: auto;
     }

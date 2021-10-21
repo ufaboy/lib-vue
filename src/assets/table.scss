@@ -1,9 +1,9 @@
 .table {
   width: 100%;
-  border: 1px solid;
+  //border: 1px solid;
   color: var(--text);
   background-color: var(--surface);
-  border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
+  //border-color: hsl(var(--brand-hue), 85%, 75%, 50%);
   border-collapse: collapse;
   line-height: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
@@ -13,7 +13,7 @@
     border-color: inherit;
     position: sticky;
     z-index: 21;
-    top: -1px;
+    top: 0;
   }
 
   .th {

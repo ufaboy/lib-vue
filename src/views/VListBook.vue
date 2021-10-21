@@ -1,30 +1,33 @@
 <template>
   <main class="list-book" @touchstart="touchStart" @touchend="touchEnd">
-    <header class="header">
-      <input class="header__block search-input"
-             type="search"
-             v-model="searchQuery"
-             @input.prevent.stop="searchByName"
-             placeholder="Search by name...">
-      <select class="header__block select-genre form-field__select" v-model="filter.genre"
-              @change="changeGenreLoadBook">
-        <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-          <option v-for="genre of category.genres"
-                  :key="'select-genre'+genre.id"
-                  :value="genre">{{ genre.name }}
+    <teleport to="#aside" :disabled="isMobile">
+      <section class="sidebar">
+        <input class="sidebar-input mb-half"
+               type="search"
+               v-model="searchQuery"
+               @input.prevent.stop="searchByName"
+               placeholder="Search ...">
+        <select class="sidebar-btn form-field__select mb-half" v-model="filter.genre"
+                @change="changeGenreLoadBook">
+          <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+            <option v-for="genre of category.genres"
+                    :key="'select-genre'+genre.id"
+                    :value="genre">{{ genre.name }}
+            </option>
+          </optgroup>
+        </select>
+        <select class="sidebar-btn form-field__select mb-half" v-model="orderBy.name"
+                @change="changeSortOrderBy">
+          <option v-for="(option, index) of orderByOptions" :value="option" :key="option + index">{{ option }}
           </option>
-        </optgroup>
-      </select>
-      <select class="header__block form-field__select select-order-by" v-model="orderBy.name"
-              @change="changeSortOrderBy">
-        <option v-for="(option, index) of orderByOptions" :value="option" :key="option + index">{{ option }}
-        </option>
-      </select>
-      <button class="btn header__block btn-asc" @click="changeSortAsc">
-        <IconSortAsc class="icon" v-if="orderBy.asc"/>
-        <IconSortDesc class="icon" v-else/>
-      </button>
-    </header>
+        </select>
+        <button class="btn btn-icon sidebar-btn" @click="changeSortAsc">
+          <IconSortAsc class="icon" v-if="orderBy.asc"/>
+          <IconSortDesc class="icon" v-else/>
+        </button>
+      </section>
+    </teleport>
+
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
                  :key="'book'+book.id">
       <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/img/book-dead-solid.svg'">
@@ -51,6 +54,7 @@ import useBooks from "@/composables/useBooks";
 import useSlideButton from "@/composables/useSlideButton";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import useDevice from "../composables/useDevice";
 
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
@@ -60,6 +64,7 @@ const props = defineProps({
 })
 const {categories} = toRefs(props)
 const route = useRoute();
+const {isMobile} = useDevice();
 const {filter, searchQuery, limit, orderBy,  books, page, getCover, loadOrderBy, saveOrderBy, getBooksAndPush} = useBooks();
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 const showTopButton = ref(false);
@@ -126,45 +131,13 @@ onBeforeUnmount(() => {
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .list-book {
   display: flex;
   flex-flow: row wrap;
   height: calc(100% - 3.5rem);
   padding: 0.5rem 1.5rem;
   align-content: baseline;
-
-  .header {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    //max-height: 42px;
-
-    .header__block {
-      margin: 0 0.5rem 0 0;
-      cursor: pointer;
-    }
-
-    .header__block:last-child {
-      margin: 0;
-    }
-
-    .search-input {
-      display: flex;
-      flex: 1;
-      min-width: 30vw;
-      border-radius: 5px;
-      color: var(--text);
-      background-color: var(--surface-light);
-      padding: 5px;
-    }
-
-    .btn-asc {
-      padding: 0;
-    }
-  }
 
   .book {
     display: flex;
@@ -227,6 +200,21 @@ onBeforeUnmount(() => {
 }
 
 @media only screen and (max-width: 892px) {
+  .sidebar {
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    .sidebar-input {
+      width: 100%;
+    }
+    .sidebar-btn {
+      width: 40%;
+      margin: 0;
+    }
+    .btn-icon {
+      width: auto;
+      padding: 5px;
+    }
+  }
   .list-book {
     padding: 0.5rem;
     columns: 400px;
@@ -251,7 +239,7 @@ onBeforeUnmount(() => {
     .header {
       background-color: var(--surface);
       display: grid;
-      grid-template-areas: "select-genre select-order-by btn-asc"
+      grid-template-areas: "select-genre select-order-by btn-icon"
                             "search-input search-input search-input";
       position: sticky;
       top: 0;
@@ -271,8 +259,8 @@ onBeforeUnmount(() => {
         width: 37vw;
       }
 
-      .btn-asc {
-        grid-area: btn-asc;
+      .btn-icon {
+        grid-area: btn-icon;
       }
 
       .select {

@@ -1,12 +1,16 @@
 <template>
   <div class="books-table">
-    <header class="header">
-      <router-link :to="{ name: 'book-create'}" class="btn-outline create-btn">create</router-link>
-      <button class="btn-outline filter-btn" @click="showFilterModal">filter {{ filterCount ? filterCount : '' }}
-      </button>
-      <input type="search" class="search-text" v-model.trim="searchQuery" placeholder="Search by name..."
-             @input="getBooksAndReplace">
-    </header>
+    <teleport to="#aside" :disabled="isMobile">
+      <section class="sidebar">
+        <input type="search" class="sidebar-input search-text mb-half" v-model.trim="searchQuery" placeholder="Search by name..."
+               @input="getBooksAndReplace">
+        <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn mb-half">create</router-link>
+        <button class="sidebar-btn btn-outline mb-half" @click="showFilterModal">filter {{ filterCount ? filterCount : '' }}
+        </button>
+        
+      </section>
+    </teleport>
+
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
@@ -116,51 +120,13 @@ loadOrderBy();
 getBooksAndReplace();
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
 .books-table {
-  height: calc(100% - 3.5rem);
-  padding: 0.5rem 1.5rem;
+  padding: 0 1.5rem;
 
   .btn {
     text-transform: capitalize;
-  }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    flex-flow: row nowrap;
-    margin-bottom: 0.5rem;
-
-    .filter-btn, .create-btn {
-      margin: 0 0.5rem 0 0;
-    }
-
-    .search-text {
-      color: var(--text);
-      background-color: var(--background-on);
-      border-radius: 5px;
-      border: none;
-      padding: 5px;
-      display: flex;
-    }
-
-    .btn {
-      display: flex;
-
-      align-items: center;
-      justify-content: center;
-      text-transform: capitalize;
-      white-space: nowrap;
-    }
-
-    .button:hover {
-      background: var(--hovered);
-    }
-
-
-    //.button:last-of-type {
-    //  margin-right: 0;
-    //}
   }
 
   .table-paginator {
@@ -242,10 +208,13 @@ getBooksAndReplace();
 @media only screen and (max-width: 892px) {
   .books-table {
     padding: 0.5rem;
-
-    .header {
-      .btn {
-        flex: 1;
+    height: calc(100% - 3.5rem);
+    .sidebar {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      .sidebar-btn {
+        width: 49%;
       }
     }
 
