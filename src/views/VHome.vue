@@ -33,8 +33,6 @@ document.title = 'Home';
       text-decoration: none;
       margin-right: 1rem;
       padding: 1rem 0.5rem;
-      border: 1px solid;
-      border-color: var(--primary);
       color: var(--text);
       background: var(--surface);
       text-transform: capitalize;

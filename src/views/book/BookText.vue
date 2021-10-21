@@ -145,7 +145,6 @@ onMounted(async () => {
   flex-flow: row wrap;
   width: 100%;
   position: relative;
-
   p {
     word-break: break-word;
     padding: initial;

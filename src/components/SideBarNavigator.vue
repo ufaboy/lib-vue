@@ -35,7 +35,7 @@ export default {
 
     .navigator-link {
       text-decoration: none;
-      color: var(--primary);
+      color: var(--text);
       width: 100%;
       padding: 0.5rem 0.75rem;
     }
