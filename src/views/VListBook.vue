@@ -142,7 +142,7 @@ onBeforeUnmount(() => {
     display: flex;
     flex-flow: row nowrap;
     cursor: pointer;
-    width: 450px;
+    width: 425px;
     border-radius: 5px;
     height: fit-content;
     overflow: hidden;
