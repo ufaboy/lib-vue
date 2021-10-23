@@ -70,7 +70,7 @@
     </div>
     <div class="media-container" v-if="book.id">
       <header class="header-media">
-        <label class="upload-dropbox">Choose files
+        <label class="upload-dropbox btn-outline">Choose files
           <input type="file"
                  class="upload-input desktop"
                  multiple
@@ -81,20 +81,20 @@
       </header>
 
       <div class="media-wrapper">
-        <figure class="figure" v-for="(media, index) of files" :key="'origy' + index">
+        <figure class="figure" v-for="(media, index) of files" :key="index">
           <div class="action-panel">
-            <button class="image-entry-btn btn--green" @click="sendFiles(media)" v-if="media.id === undefined">
+            <button class="btn" @click="sendFiles(media)" v-if="!media.id">
               load
             </button>
-            <button class="image-entry-btn"
+            <button class="btn"
                     @click="book.cover_path = media.url"
-                    v-if="checkType(media) === 'image' && media.id !== undefined">
+                    v-if="checkType(media) === 'image' && media.id">
               {{ book.cover_path === media.url ? 'current' : 'set' }}cover
             </button>
-            <button class="image-entry-btn btn--green" @click="copyFileName(media)"
-                    v-if="media.id !== undefined">tag
+            <button class="btn " @click="copyFileName(media)"
+                    v-if="media.id">tag
             </button>
-            <button class="image-entry-btn btn--red" @click="deleteOneFile(index)" v-if="media.id !== undefined">
+            <button class="btn btn--red" @click="deleteOneFile(index)" v-if="media.id">
               delete
             </button>
           </div>
