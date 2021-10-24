@@ -41,10 +41,11 @@
       position: relative;
       cursor: pointer;
       background-color: transparent;
-      border: 1px solid var(--primary);
+      border: 1px solid var(--secondary-light);
+      border-radius: 5px;
       padding: 3px;
       .icon {
-        fill: var(--primary);
+        fill: var(--secondary-light);
       }
       .sort-up {
         top: 0;
@@ -58,11 +59,12 @@
 
   .table-cell.active {
     .td-title {
-      color: var(--secondary-light);
+      color: var(--primary);
     }
     .td-action {
+      border: 1px solid var(--primary);
       .icon {
-        fill: var(--secondary-light);
+        fill: var(--primary);
       }
     }
   }

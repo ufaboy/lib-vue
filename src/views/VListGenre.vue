@@ -92,7 +92,7 @@ watch(props, () => {
 
   .genre:hover {
     color: var(--text-primary);
-    background: var(--primary-light);
+    background: var(--primary-dark);
   }
 }
 

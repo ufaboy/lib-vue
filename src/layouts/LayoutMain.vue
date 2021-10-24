@@ -1,6 +1,6 @@
 <template>
   <div class="basement" @click="activeBurger = false">
-    <header id="header" class="header">
+    <header id="header" class="basement-header">
       <div class="header-block">
         <router-link class="breadcrumb-home" to="/">Home</router-link>
       </div>
@@ -101,7 +101,7 @@ provide('saveScrollingBook', saveScrollingBook)
 <style lang="scss">
 .basement {
 
-  .header {
+  .basement-header {
     display: flex;
     height: 3.5rem;
     padding: 0.5rem 1.5rem;
@@ -122,7 +122,7 @@ provide('saveScrollingBook', saveScrollingBook)
 
       .icon-btn {
         display: none;
-        fill: var(--secondary);
+        fill: var(--primary);
       }
 
       .breadcrumb {
@@ -186,14 +186,14 @@ provide('saveScrollingBook', saveScrollingBook)
         .breadcrumb-li {
           height: auto;
           margin-bottom: 1rem;
-          border: 1px solid var(--primary-light);
+          border: 1px solid var(--primary);
           border-radius: 5px;
+          background-color: var(--secondary-on);
           transition: all linear 0.3s;
         }
 
         .breadcrumb-li:last-of-type {
           margin-bottom: 0;
-          border: none;
         }
 
         .breadcrumb-link {
@@ -256,7 +256,7 @@ provide('saveScrollingBook', saveScrollingBook)
     }
   }
 
-  .header.header-hide {
+  .basement-header.header-hide {
     height: 0;
     padding: 0;
     animation: slide-top 0.5s linear both;
@@ -294,7 +294,7 @@ provide('saveScrollingBook', saveScrollingBook)
   }
 }
 @media only screen and (max-width: 892px) {
-  .header {
+  .basement-header {
     padding: 0.5rem;
   }
 }
@@ -309,8 +309,8 @@ provide('saveScrollingBook', saveScrollingBook)
 
 @media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
   .basement {
-    .header {
-      background-color: var(--primary);
+    .basement-header {
+      background-color: var(--primary-dark);
       color: var(--text-primary);
 
       .burger .breadcrumb {
@@ -336,7 +336,7 @@ provide('saveScrollingBook', saveScrollingBook)
 
 @media (prefers-color-scheme: dark) {
   .basement {
-    .header {
+    .basement-header {
       background-color: var(--surface);
       color: var(--surface-on);
 

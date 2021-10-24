@@ -271,7 +271,7 @@ getBooksAndReplace();
       }
 
       .cell-name {
-        max-width: 11rem;
+        max-width: 8rem;
         overflow: hidden;
         text-overflow: ellipsis;
       }
