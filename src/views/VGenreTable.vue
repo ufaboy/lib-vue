@@ -1,6 +1,6 @@
 <template>
   <div class="genre-table">
-    <teleport to="#aside" :disabled="isMobile">
+    <teleport to="#aside" :disabled="isMobile()">
     <section class="sidebar">
       <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
     </section>
@@ -40,7 +40,7 @@ import EditGenre from '@/components/EditGenre.vue'
 import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import useDevice from "../composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 
 document.title = 'Table Genres';
 const columns = ['id', 'name', 'description', 'category']
@@ -56,7 +56,6 @@ const props = defineProps({
 })
 
 const {genres, ascending, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
-const {isMobile} = useDevice();
 if (genres.value.length === 0) {
   getGenres();
 }

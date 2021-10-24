@@ -33,6 +33,10 @@ function checkDevice() {
   let regexp = /android|iphone|kindle|ipad/i;
   let isMobileDevice = regexp.test(details);
   return isMobileDevice ? 'mobile': 'desktop'
-
 }
-export {throttle, checkDevice}
+function isMobile() {
+  let details = navigator.userAgent;
+  let regexp = /android|iphone|kindle|ipad/i;
+  return regexp.test(details);
+}
+export {throttle, checkDevice, isMobile}

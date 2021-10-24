@@ -1,7 +1,7 @@
 import {inject, ref} from "vue";
 import {loadBook} from "@/utils/loadData";
 import router from "@/router";
-import {checkDevice} from "../utils/helpers";
+import {isMobile} from "@/utils/helpers";
 
 export default function useBook() {
     const loader = inject("loader");
@@ -49,8 +49,7 @@ export default function useBook() {
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = await prepareUrlForMedia(result)
-            console.log({checkDevice: checkDevice()})
-            if (checkDevice() === 'desktop') {
+            if (!isMobile()) {
                 book.value = moveMedia(book.value)
             }
         } else {

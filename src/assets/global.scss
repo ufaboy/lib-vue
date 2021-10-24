@@ -131,10 +131,13 @@ textarea {
   flex-flow: row wrap;
   justify-content: center;
   .sidebar-btn, .sidebar-input {
-    width: 95%;
+    width: 100%;
   }
   .sidebar-btn {
     text-align: center;
+    color: var(--text);
+    background-color: var(--surface-light);
+    padding: 5px 10px;
   }
   .sidebar-input {
     color: var(--text);
@@ -145,6 +148,7 @@ textarea {
     display: flex;
   }
 }
+
 @media (prefers-color-scheme: dark) {
   //input {
   //  border-color: hsla(0, 0%, 46%, 1);
@@ -159,6 +163,9 @@ textarea {
     width: calc(100vw - 150px);
     left: 150px;
   }
+  .sidebar {
+    padding: 5px;
+  }
 }
 @media only screen and (max-width: 892px) {
   #app {
@@ -168,7 +175,6 @@ textarea {
     display: none;
   }
   .sidebar {
-
   }
 }
 

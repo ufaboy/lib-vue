@@ -1,6 +1,6 @@
 <template>
   <div class="notes">
-    <teleport to="#aside" :disabled="isMobile">
+    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <button class="sidebar-btn btn mb-half" @click="sendNotes">save</button>
         <button class="sidebar-btn btn" @click="addNote">add</button>
@@ -51,9 +51,8 @@
 import {computed, inject, ref} from 'vue';
 import {loadNotes} from "@/utils/loadData";
 import {$patch} from "@/utils/superFetch";
-import useDevice from "../composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 
-const {isMobile} = useDevice();
 document.title = 'Notes';
 const loader = inject("loader");
 const notes = ref([]);

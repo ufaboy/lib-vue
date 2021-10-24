@@ -1,7 +1,7 @@
 <template>
-  <div class="book-container" :class="{mobile: isMobile}">
+  <div class="book-container">
     <div class="book-video" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
-      <ol class="media-list" v-if="isDesktop">
+      <ol class="media-list" v-if="!isMobile()">
         <li :class="{active: media.id === activeMedia.id}"
             v-for="media of book.files"
             :key="media.id"
@@ -9,7 +9,7 @@
           <button class="btn media-name">{{ media.file_name }}</button>
         </li>
       </ol>
-      <select class="select" v-else-if="isMobile" v-model="activeMedia">
+      <select class="select" v-else-if="isMobile()" v-model="activeMedia">
         <option :value="media" v-for="media of book.files" :key="media.id">{{ media.file_name }}</option>
       </select>
       <figure class="media-video">
@@ -27,7 +27,7 @@
 
 <script setup>
 import {computed, ref} from "vue";
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 import ImageItem from "@/components/ImageItem";
 
 const apiUrl = process.env.VUE_APP_API_URL
@@ -36,7 +36,6 @@ const apiUrl = process.env.VUE_APP_API_URL
 const props = defineProps({
   book: Object,
 })
-const {isMobile, isDesktop} = useDevice();
 const activeImage = ref(null);
 const activeMedia = ref({type: '', url: null});
 const getTypeBook = computed(() => {
@@ -115,7 +114,7 @@ function getSrcImgUrl(e) {
   }
 }
 
-.book-container.mobile {
+.mobile .book-container {
   height: calc(100vh - 3.5rem);
 }
 

@@ -12,7 +12,7 @@
       <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
     </div>
-    <fieldset class="genres" v-if="isDesktop">
+    <fieldset class="genres" v-if="!isMobile()">
       <legend>all genres</legend>
       <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
            :key="category.id" @click="activeCategory = Number(category.id)">
@@ -23,7 +23,7 @@
         </label>
       </div>
     </fieldset>
-    <select class="select" v-model="selectedGenre" v-if="isMobile" multiple>
+    <select class="select" v-model="selectedGenre" v-if="isMobile()" multiple>
       <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
         <option v-for="genre of category.genres"
                 :key="'select-genre'+genre.id"
@@ -40,7 +40,7 @@
 
 <script setup>
 import {ref} from 'vue';
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 import IconClose from "@/components/icons/IconClose"
 
 // eslint-disable-next-line no-undef
@@ -54,7 +54,6 @@ const props = defineProps({
 const activeCategory = ref('');
 const selectedGenre = ref([]);
 const genres = ref([]);
-const {isMobile, isDesktop} = useDevice();
 
 if (props.genresProps && props.genresProps.length) {
   selectedGenre.value.push(...props.genresProps)

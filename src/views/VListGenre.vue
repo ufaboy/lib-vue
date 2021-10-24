@@ -1,12 +1,12 @@
 <template>
   <div class="list-genre">
-    <header class="header" v-if="isMobile">
+    <section class="sidebar" v-if="isMobile()">
       <select class="form-field__select" v-model="activeCategory">
         <option class="option" :value="category" v-for="category of categories" :key="category.id">
           {{ category.name }}
         </option>
       </select>
-    </header>
+    </section>
     <router-link :to="{ name: 'list-book', params: {
       'id': genre.id,
       'name': genre.name,
@@ -18,9 +18,9 @@
 </template>
 
 <script setup>
-import {computed, ref, toRefs} from 'vue';
+import {computed, ref, toRefs, watch} from 'vue';
 import {useRoute} from 'vue-router'
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -29,7 +29,6 @@ const props = defineProps({
 document.title = 'Genres';
 const route = useRoute();
 const activeCategory = ref({})
-const {isMobile} = useDevice();
 const {categories} = toRefs(props)
 const genres = computed(() => {
   let selectedCategory = {}
@@ -59,6 +58,9 @@ async function prepareCategory() {
 if (route.params.id || route.params.name) {
   prepareCategory()
 }
+watch(props, () => {
+  prepareCategory()
+})
 </script>
 
 <style scoped lang="scss">
@@ -99,7 +101,7 @@ if (route.params.id || route.params.name) {
     padding: 0.5rem;
     columns: 400px;
 
-    .header {
+    .sidebar {
       width: 100%;
       max-width: 100%;
       display: flex;

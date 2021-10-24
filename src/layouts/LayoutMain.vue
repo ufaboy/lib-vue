@@ -8,7 +8,7 @@
       <!--        <input type="search" class="search-text" v-model.trim="searchField" placeholder="Search...">-->
       <!--      </div>-->
       <div class="header-block">
-        <div class="burger" :class="{'mobile': isMobile, 'active': activeBurger}" @click.stop>
+        <div class="burger" :class="{'mobile': isMobile(), 'active': activeBurger}" @click.stop>
           <svg class="icon-btn" @click="activeBurger = !activeBurger" width="100%" height="100%" viewBox="0 0 26 24">
             <rect y="0" width="26" height="4"/>
             <rect y="10" width="26" height="4"/>
@@ -45,7 +45,7 @@
 <script setup>
 import {computed, onBeforeUnmount, provide, ref} from "vue";
 import {useRoute,} from 'vue-router'
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "../utils/helpers";
 import {loadCategories} from "@/utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
@@ -58,7 +58,6 @@ const route = useRoute()
 // const searchField = ref('')
 const activeBurger = ref(false)
 const categories = ref([])
-const {isMobile} = useDevice();
 const {
   scrollingProgress,
   scrollTop,
@@ -73,15 +72,7 @@ const btnViewEditMode = computed(() => {
     path: `/book/update/${route.params.id}`
   } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
 });
-// const hideHeader = computed(() => {
-//   return route.name === 'book-view' && isMobile.value && hideByScroll.value
-// })
-// const hideHeader = computed(()=>{
-//   return isMobile.value && hideByScroll.value
-// })
-// const headerSticky = computed(() => {
-//   return route.name === 'book-view' && !hideHeader.value
-// })
+
 async function saveScrollingBook(id) {
   const formData = {bookId: id, bookmark: scrollTop.value}
   const result = await updateBookMark(formData)

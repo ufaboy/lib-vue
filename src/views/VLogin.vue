@@ -36,7 +36,7 @@
 import {ref, computed, inject} from 'vue';
 import {useRouter} from 'vue-router'
 import {setUser} from '@/utils/userData';
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 import CanvasSpace from "@/components/CanvasSpace";
 
 document.title = 'Login';
@@ -45,9 +45,8 @@ const printToast = inject('printToast')
 const username = ref('')
 const password = ref('')
 const signIn = ref(false)
-const {isMobile} = useDevice();
 const countDots = computed(() => {
-  return isMobile.value ? 100 : 500
+  return isMobile() ? 100 : 500
 });
 
 async function login() {

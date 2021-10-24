@@ -1,6 +1,6 @@
 <template>
-  <main class="list-book" @touchstart="touchStart" @touchend="touchEnd">
-    <teleport to="#aside" :disabled="isMobile">
+  <main class="list-book">
+    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input class="sidebar-input mb-half"
                type="search"
@@ -21,7 +21,7 @@
           <option v-for="(option, index) of orderByOptions" :value="option" :key="option + index">{{ option }}
           </option>
         </select>
-        <button class="btn btn-icon sidebar-btn" @click="changeSortAsc">
+        <button class="btn-icon sidebar-btn" @click="changeSortAsc">
           <IconSortAsc class="icon" v-if="orderBy.asc"/>
           <IconSortDesc class="icon" v-else/>
         </button>
@@ -37,10 +37,6 @@
       </div>
     </router-link>
     <observer @intersect="getBooksAndPush('push')"/>
-    <!--    <div class="loader" v-if="infinityLoading"></div>-->
-    <TheModal v-if="slideLeftRight">
-      <SortingModal @sorting="updateBySorting" @hide-modal="slideLeftRight = false"/>
-    </TheModal>
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
   </main>
 </template>
@@ -48,14 +44,10 @@
 <script setup>
 import {onBeforeUnmount, ref, watch} from 'vue';
 import {useRoute} from 'vue-router'
-import SortingModal from '@/components/SortingModal.vue'
-import TheModal from "@/components/TheModal";
 import useBooks from "@/composables/useBooks";
-import useSlideButton from "@/composables/useSlideButton";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import useDevice from "../composables/useDevice";
-
+import {isMobile} from "@/utils/helpers";
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 // eslint-disable-next-line no-undef
@@ -63,13 +55,21 @@ const props = defineProps({
   categories: Array,
 })
 const route = useRoute();
-const {isMobile} = useDevice();
-const {filter, searchQuery, limit, orderBy,  books, page, getCover, loadOrderBy, saveOrderBy, getBooksAndPush} = useBooks();
-const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
+const {
+  filter,
+  searchQuery,
+  limit,
+  orderBy,
+  books,
+  page,
+  getCover,
+  loadOrderBy,
+  saveOrderBy,
+  getBooksAndPush
+} = useBooks();
 const showTopButton = ref(false);
 
 function calcGenreById(id) {
-
   let genreArray = []
   for (const cat of props.categories) {
     genreArray.push(...cat.genres)
@@ -94,15 +94,6 @@ watch(props, () => {
   filter.value.genre = calcGenreById(+route.params.id)
 })
 
-function updateBySorting(e) {
-  slideLeftRight.value = false
-  orderBy.value.name = e.orderBy
-  orderBy.value.asc = e.ascending
-  page.value = 1
-  saveOrderBy()
-  getBooksAndPush()
-}
-
 function changeSortAsc() {
   orderBy.value.asc = !orderBy.value.asc
   page.value = 1
@@ -122,6 +113,7 @@ function onScroll(e) {
 function scrollToTop() {
   document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
 }
+
 loadOrderBy();
 filter.value.genre = calcGenreById(+route.params.id)
 window.addEventListener('scroll', onScroll, {passive: true});
@@ -196,19 +188,23 @@ onBeforeUnmount(() => {
     color: var(--text-primary);
     background: var(--primary-light);
   }
+
 }
 
 @media only screen and (max-width: 892px) {
   .sidebar {
     justify-content: space-between;
     margin-bottom: 0.5rem;
+
     .sidebar-input {
       width: 100%;
     }
+
     .sidebar-btn {
       width: 40%;
       margin: 0;
     }
+
     .btn-icon {
       width: auto;
       padding: 5px;

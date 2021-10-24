@@ -1,6 +1,6 @@
 <template>
   <div class="books-table">
-    <teleport to="#aside" :disabled="isMobile">
+    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input type="search" class="sidebar-input search-text mb-half" v-model.trim="searchQuery" placeholder="Search ..."
                @input="getBooksAndReplace">
@@ -61,7 +61,7 @@
       <button class="btn-outline table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="isMobile">
+      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="isMobile()">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
@@ -79,7 +79,7 @@
 
 <script setup>
 import {ref,} from "vue";
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
 import useDate from "@/composables/useDate";
@@ -106,7 +106,6 @@ const props = defineProps({
   categories: Array,
 })
 const showModal = ref(false);
-const {isMobile} = useDevice();
 const {
   filter, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
   updateFilterPage, filterCount, loadOrderBy,

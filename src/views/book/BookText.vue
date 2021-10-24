@@ -1,5 +1,5 @@
 <template>
-  <div class="book" :class="{mobile: isMobile}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
@@ -16,7 +16,7 @@
 
 <script setup>
 import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject, computed} from "vue";
-import useDevice from "@/composables/useDevice";
+import {isMobile} from "@/utils/helpers";
 import TheModal from "@/components/TheModal.vue";
 import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
@@ -64,7 +64,6 @@ const showEditorModal = ref(false);
 const activeImageIndex = ref();
 const editorNode = ref({});
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
-const {isMobile} = useDevice();
 
 function editMode(e) {
   editorNode.value = e.target
