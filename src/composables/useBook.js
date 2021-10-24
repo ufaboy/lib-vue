@@ -1,6 +1,7 @@
 import {inject, ref} from "vue";
 import {loadBook} from "@/utils/loadData";
 import router from "@/router";
+import {checkDevice} from "../utils/helpers";
 
 export default function useBook() {
     const loader = inject("loader");
@@ -25,7 +26,7 @@ export default function useBook() {
         })
     };
 
-    const prepareUrlForMedia = (result) => {
+    const prepareUrlForMedia = async (result) => {
         if (result.text) {
             const regexp = new RegExp("APIURL", "g");
             result.text = result.text.replace(regexp, process.env.VUE_APP_API_URL)
@@ -33,6 +34,13 @@ export default function useBook() {
         }
         return book
     };
+    const moveMedia = function(book) {
+        ['picture', 'video', 'audio'].map(media => {
+            const regexp = new RegExp(`class="${media}"`, "g");
+            book.text = book.text.replace(regexp, `class="${media} media--right"`)
+        })
+        return book;
+    }
     const downloadBook = async(id) => {
         loader.show();
         let result = await loadBook(id)
@@ -40,7 +48,11 @@ export default function useBook() {
         const comicsBook = result.genres.findIndex(genre => genre.category.name === 'comics') > -1
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
-            book.value = prepareUrlForMedia(result)
+            book.value = await prepareUrlForMedia(result)
+            console.log({checkDevice: checkDevice()})
+            if (checkDevice() === 'desktop') {
+                book.value = moveMedia(book.value)
+            }
         } else {
             book.value = result
         }

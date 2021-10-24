@@ -38,7 +38,6 @@ async function uploadFiles(files, bookId) {
             return result.json()
         })
     )
-    console.log({resultPromise: resultPromise})
     return resultPromise
 }
 function deleteFile(fileId) {

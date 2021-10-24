@@ -64,7 +64,7 @@ const showEditorModal = ref(false);
 const activeImageIndex = ref();
 const editorNode = ref({});
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
-const {isMobile, isDesktop} = useDevice();
+const {isMobile} = useDevice();
 
 function editMode(e) {
   editorNode.value = e.target
@@ -83,16 +83,6 @@ function openImage(img) {
 
 function selectImageByIndex(index) {
   activeImageIndex.value = index
-}
-
-function moveMedia() {
-  // let toggleSide = true
-  let media = document.querySelectorAll('.media')
-  for (const elem of media) {
-    elem.classList.add('media--right')
-    // elem.classList.add(toggleSide ? 'media--right' : 'media--left')
-    // toggleSide = !toggleSide
-  }
 }
 
 function listenClickByImg() {
@@ -133,7 +123,6 @@ onBeforeUnmount(() => {
 onMounted(async () => {
   await nextTick()
   await scrollToBookmark()
-  if (isDesktop.value) moveMedia()
   listenClickByImg()
 });
 
@@ -165,8 +154,6 @@ onMounted(async () => {
     padding: 0 1rem;
     //content-visibility: auto;
 
-    .media {
-    }
 
     .media--right {
       position: absolute;
@@ -223,7 +210,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .book {
     .text {
-      .media {
+      .picture, .video {
         float: left;
         margin: 0 0.5rem 0.5rem 0;
         max-width: 394px;
@@ -235,7 +222,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .book {
     .text {
-      .media {
+      .picture, .video {
         width: 100%;
       }
     }
@@ -245,7 +232,7 @@ onMounted(async () => {
 @media only screen and (min-width: 893px) and (max-width: 1600px) {
   .book {
     .text {
-      .media {
+      .picture, .video {
         cursor: pointer;
         width: 375px;
         min-height: 320px;
@@ -263,7 +250,7 @@ onMounted(async () => {
 @media only screen and (min-width: 1600px) {
   .book {
     .text {
-      .media {
+      .picture, .video {
         cursor: pointer;
         max-width: 700px;
         min-height: 320px;

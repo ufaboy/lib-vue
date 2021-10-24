@@ -28,5 +28,11 @@ function throttle(func, ms) {
   return wrapper;
 }
 
-function toast() {}
-export {throttle}
+function checkDevice() {
+  let details = navigator.userAgent;
+  let regexp = /android|iphone|kindle|ipad/i;
+  let isMobileDevice = regexp.test(details);
+  return isMobileDevice ? 'mobile': 'desktop'
+
+}
+export {throttle, checkDevice}

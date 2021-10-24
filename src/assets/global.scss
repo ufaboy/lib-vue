@@ -24,8 +24,9 @@ ul {
 html {
   //overflow-x: hidden;
   //margin-right: calc(-1 * (100vw - 100%));
-  margin-left: calc(100vw - 100%);
-  margin-right: 0;
+  //worked scrollbar fix
+  //margin-left: calc(100vw - 100%);
+  //margin-right: 0;
   height: 100%;
   background-color: var(--background);
   color: var(--text);

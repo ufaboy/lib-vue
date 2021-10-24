@@ -137,6 +137,7 @@ const props = defineProps({
   categories: Array,
 })
 const printToast = inject('printToast')
+const loader = inject("loader");
 const router = useRouter();
 const route = useRoute();
 const {book} = useBook();
@@ -256,9 +257,15 @@ async function deleteOneFile(fileIndex) {
 async function sendFiles(fileToUpload) {
   try {
     const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
-    console.log({sendFiles: fileToUpload, fileArray: fileArray})
+    loader.show();
     const results = await uploadFiles(fileArray, book.value.id)
-    printToast('Upload success', 'success')
+    loader.hide();
+    const errors = results
+        .filter(p => p.status === 'rejected')
+        .map(p => p.reason);
+    console.log('sendFiles', {resultPromise: results, errors: errors})
+    const toastText = errors.length ? `upload errors: ${errors.length}` : 'Upload success'
+    printToast(toastText, 'success')
     for (const item of results) {
       if (item.status === 'fulfilled') {
         const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
@@ -278,16 +285,7 @@ async function sendFiles(fileToUpload) {
   }
 }
 
-// function errorImage(e) {
-//   e.onerror = null
-//   e.target.src = '/icons/book-dead-solid.svg'
-// }
 function autoResize() {
-  // const scrollHeight = Math.max(
-  //     document.body.scrollHeight, editor.scrollHeight,
-  //     document.body.offsetHeight, editor.offsetHeight,
-  //     document.body.clientHeight, editor.clientHeight
-  // ) + 100;
   const scrollHeight = Number(editor.value.scrollHeight) + 50;
   editor.value.style.cssText = `height: ${scrollHeight}px`;
 }
@@ -298,12 +296,12 @@ function getSrc(media) {
 }
 
 async function copyFileName(file) {
-  if (['image/webp', 'image/png', 'image/jpeg'].includes(file.type)) {
-    await navigator.clipboard.writeText(`<img class="media picture" src="APIURL/${file.url}">`)
-  } else if (['video/webm', 'video/mp4'].includes(file.type)) {
-    await navigator.clipboard.writeText(`<video class="media video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
-  } else if (file.type === 'audio/mp4') {
-    await navigator.clipboard.writeText(`<audio class="media audio" controls><source src="APIURL/${file.url}"/></audio>`)
+  if (file.type.includes('image')) {
+    await navigator.clipboard.writeText(`<img class="picture" src="APIURL/${file.url}">`)
+  } else if (file.type.includes('video')) {
+    await navigator.clipboard.writeText(`<video class="video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
+  } else if (file.type.includes('audio/mp4')) {
+    await navigator.clipboard.writeText(`<audio class="audio" controls><source src="APIURL/${file.url}"/></audio>`)
   }
 }
 
