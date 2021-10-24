@@ -209,7 +209,7 @@ getBooksAndReplace();
 
 @media only screen and (max-width: 892px) {
   .books-table {
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     height: calc(100% - 3.5rem);
     .sidebar {
       display: flex;

@@ -11,6 +11,7 @@
 import {provide, ref} from "vue";
 import RefreshPopup from "./components/RefreshPopup";
 import TheToaster from "./components/TheToaster";
+import {isMobile} from "./utils/helpers";
 
 const toastMessage = ref('')
 const toastType = ref('')
@@ -35,7 +36,9 @@ function printToast(message, type) {
 }
 
 document.addEventListener('swUpdated', swUpdate, {once: true})
-
+if (isMobile()) {
+  document.documentElement.classList.add('mobile')
+}
 provide('printToast', printToast)
 </script>
 <style>

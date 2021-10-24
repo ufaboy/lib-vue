@@ -61,7 +61,7 @@ if (genres.value.length === 0) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .genre-table {
   width: 100%;
   padding: 0 1.5rem;
@@ -73,7 +73,7 @@ if (genres.value.length === 0) {
 
 @media only screen and (max-width: 892px) {
   .genre-table {
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     height: calc(100% - 3.5rem);
     .dialog {
       margin: auto;

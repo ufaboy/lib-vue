@@ -1,5 +1,5 @@
 <template>
-  <ul class="navigator">
+  <ul class="navigator-desktop">
     <li class="navigator-element">
       <router-link class="navigator-link" to="/">Home</router-link>
     </li>
@@ -15,18 +15,27 @@
     <li class="navigator-element">
       <router-link class="navigator-link" to="/media">Media</router-link>
     </li>
+    <li class="navigator-element" v-if="btnViewEditMode.name">
+      <router-link class="navigator-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
+    </li>
 
   </ul>
 </template>
 
-<script>
-export default {
-  name: "SideBarNavigator"
-}
+<script setup>
+import {computed} from "vue";
+import {useRoute} from "vue-router";
+const route = useRoute()
+const btnViewEditMode = computed(() => {
+  return route.name === 'book-view' ? {
+    name: 'Edit',
+    path: `/book/update/${route.params.id}`
+  } : route.name === 'book-edit' ? {name: 'View', path: `/book/${route.params.id}`} : {}
+});
 </script>
 
 <style lang="scss">
-.navigator {
+.navigator-desktop {
   margin-bottom: 1rem;
 
   .navigator-element {
