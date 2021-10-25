@@ -372,14 +372,12 @@ getBook();
   .form-field.genre {
     justify-content: initial;
     cursor: pointer;
-    border: 2px solid;
-    border-color: rgb(118, 118, 118);
     border-radius: 5px;
     padding: 5px 10px;
     color: var(--text);
-    background-color: var(--surface-light);
 
     .select {
+      margin: 0.5rem 0 0 0;
       width: 100%;
     }
     > span {
