@@ -129,6 +129,9 @@ textarea {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+  > * {
+    margin: 0 0 0.5rem 0;
+  }
   .sidebar-btn, .sidebar-input {
     width: 100%;
   }
@@ -152,10 +155,10 @@ textarea {
 
 }
 @media only screen and (min-width: 893px) {
-  #aside {
+  #aside.show {
     width: 150px;
   }
-  #aside + #app {
+  #aside.show + #app {
     position: absolute;
     width: calc(100vw - 150px);
     left: 150px;

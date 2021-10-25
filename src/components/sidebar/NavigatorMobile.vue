@@ -52,22 +52,24 @@ const btnViewEditMode = computed(() => {
     left: 0;
     top: 3rem;
     width: 100%;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: var(--background);
     color: var(--text);
     box-shadow: 3px 3px 10px 0px rgba(60, 65, 69, 0.5);
 
     .breadcrumb-li {
       display: flex;
-      margin: 0 0 1rem 0;
       border-radius: 5px;
       transition: all linear 0.3s;
+      margin: 0;
     }
 
     .breadcrumb-li:last-of-type {
       margin: 0;
     }
-
+    .router-link-active {
+      color: var(--primary);
+    }
   }
 
   .breadcrumb-link {
@@ -109,10 +111,10 @@ const btnViewEditMode = computed(() => {
 .navigator-mobile.active {
   .breadcrumb-li {
     width: auto;
-    margin-bottom: 1rem;
-    border: 1px solid var(--primary);
+    margin: 0 0 0.5rem 0;
+    //border: 1px solid var(--primary);
     border-radius: 5px;
-    background-color: var(--secondary-on);
+    background-color: var(--surface-light);
     transition: all linear 0.3s;
   }
 

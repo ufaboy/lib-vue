@@ -43,9 +43,12 @@ async function getCategories() {
 
 getCategories();
 window.addEventListener('scroll', throttleScroll, {passive: true})
-
+document.getElementById('aside').classList.replace('hide', 'show')
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', throttleScroll, {passive: true})
+  document.getElementById('aside').classList.replace('show', 'hide')
+
+
 })
 
 provide('saveScrollingBook', saveScrollingBook)

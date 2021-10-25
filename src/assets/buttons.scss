@@ -100,7 +100,12 @@
   background-color: darkgreen;
 }
 
-
+.btn-icon {
+  fill: var(--text);
+  background-color: var(--surface-light);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
 
 .btn-content {
   height: fit-content;

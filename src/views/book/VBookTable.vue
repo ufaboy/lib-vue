@@ -2,12 +2,27 @@
   <div class="books-table">
     <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
-        <input type="search" class="sidebar-input search-text mb-half" v-model.trim="searchQuery" placeholder="Search ..."
+        <input type="search" class="sidebar-input search-text" v-model.trim="searchQuery" placeholder="Search ..."
                @input="getBooksAndReplace">
-        <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn mb-half">create</router-link>
-        <button class="sidebar-btn btn-outline mb-half" @click="showFilterModal">filter {{ filterCount ? filterCount : '' }}
+        <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn">create</router-link>
+        <select class="sidebar-btn form-field__select" v-model="filter.genre"
+                @change="getBooksAndReplace">
+          <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+            <option v-for="genre of category.genres"
+                    :key="'select-genre'+genre.id"
+                    :value="genre">{{ genre.name }}
+            </option>
+          </optgroup>
+        </select>
+        <select class="sidebar-btn form-field__select" v-model="orderBy.name"
+                @change="getBooksAndReplace">
+          <option v-for="(option, index) of columns" :value="option" :key="option + index">{{ option }}
+          </option>
+        </select>
+        <button class="btn-icon sidebar-btn" @click="changeSortAsc">
+          <IconSortAsc class="icon" v-if="orderBy.asc"/>
+          <IconSortDesc class="icon" v-else/>
         </button>
-
       </section>
     </teleport>
 
@@ -65,28 +80,16 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <TheModal v-if="showModal" :width="400">
-      <FilterModal @active-filter="updateFilterPage"
-                    @hide-modal="showModal = false"
-                    @reset-filter="resetTable"
-                    :categories="categories"
-                    :rating="filter.rating"
-                    :genre="filter.genre"
-                    :ad="filter.ad"/>
-    </TheModal>
   </div>
 </template>
 
 <script setup>
-import {ref,} from "vue";
 import {isMobile} from "@/utils/helpers";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
 import useDate from "@/composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import FilterModal from '@/components/FilterModal.vue'
-import TheModal from "@/components/TheModal";
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
@@ -105,17 +108,17 @@ const columnsClasses = {
 const props = defineProps({
   categories: Array,
 })
-const showModal = ref(false);
 const {
-  filter, searchQuery, orderBy, books, page, pagBtnArr, resetTable,
-  updateFilterPage, filterCount, loadOrderBy,
+  filter, searchQuery, orderBy, books, page, pagBtnArr, loadOrderBy,
   sortBy, toPage, getBooksAndReplace
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
 
-function showFilterModal() {
-  showModal.value = true
+function changeSortAsc() {
+  orderBy.value.asc = !orderBy.value.asc
+  page.value = 1
+  getBooksAndReplace()
 }
 
 loadOrderBy();
@@ -126,7 +129,6 @@ getBooksAndReplace();
 
 .books-table {
   padding: 0 1.5rem;
-
   .btn {
     text-transform: capitalize;
   }
@@ -211,10 +213,12 @@ getBooksAndReplace();
   .books-table {
     padding: 0 0.5rem;
     height: calc(100% - 3.5rem);
+
     .sidebar {
       display: flex;
       flex-flow: row wrap;
       justify-content: space-between;
+
       .sidebar-btn {
         width: 49%;
       }
