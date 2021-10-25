@@ -16,7 +16,6 @@
           </div>
         </div>
       </div>
-
       <section class="form-row">
         <div class="form-field">
           <label class="form-field__label">name</label>
@@ -36,14 +35,23 @@
         </label>
         <textarea class="form-field__textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
       </div>
-      <section class="form-row genre" @click="openGenreModal">
+      <section class="form-field genre" @click="openGenreModal">
         <span v-if="genres.length === 0">Не выбраны жанры</span>
         <span :style="{color: colorizeGenre(index)}"
               v-for="(genre, index) of genres"
               :key="genre.id">
             {{ genre.name }}
           </span>
+        <select class="select" v-model="genres" v-if="isMobile()" multiple>
+          <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+            <option v-for="genre of category.genres"
+                    :key="'select-genre'+genre.id"
+                    :value="genre">{{ genre.name }}
+            </option>
+          </optgroup>
+        </select>
       </section>
+
       <div class="form-field">
         <span class="form-field__label">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
@@ -119,6 +127,7 @@
 <script setup>
 import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import {isMobile} from "@/utils/helpers";
 
 import {loadBook} from "@/utils/loadData";
 import {getAdAccess} from "@/utils/userData";
@@ -169,7 +178,7 @@ function resetBook() {
 }
 
 function openGenreModal() {
-  showGenreBookModal.value = true
+  showGenreBookModal.value = !isMobile()
 }
 
 async function checkBook() {
@@ -360,7 +369,7 @@ getBook();
     margin-bottom: 2rem;
   }
 
-  .form-row.genre {
+  .form-field.genre {
     justify-content: initial;
     cursor: pointer;
     border: 2px solid;
@@ -370,6 +379,9 @@ getBook();
     color: var(--text);
     background-color: var(--surface-light);
 
+    .select {
+      width: 100%;
+    }
     > span {
       margin: 0 5px 0 0;
     }
@@ -424,25 +436,9 @@ getBook();
       background-color: var(--surface);
     }
 
-    .fieldset {
-      width: 100%;
-      margin-bottom: 1rem;
-
-      .select {
-        flex: 1;
-        margin-right: 1rem;
-      }
-    }
-
     .rating {
       width: 150px;
       flex-direction: column;
-    }
-
-    .select {
-      width: initial;
-      cursor: pointer;
-      padding: 0.3rem;
     }
 
     .editor {
@@ -759,16 +755,6 @@ getBook();
     }
 
     .text-container {
-      .fieldset {
-        .select {
-          margin-right: 0.5rem;
-        }
-
-        .select:last-of-type {
-          margin-right: 0;
-        }
-      }
-
       .text:last-of-type {
         margin-bottom: 0;
       }

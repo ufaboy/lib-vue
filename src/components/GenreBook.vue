@@ -23,14 +23,14 @@
         </label>
       </div>
     </fieldset>
-    <select class="select" v-model="selectedGenre" v-if="isMobile()" multiple>
-      <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-        <option v-for="genre of category.genres"
-                :key="'select-genre'+genre.id"
-                :value="genre">{{ genre.name }}
-        </option>
-      </optgroup>
-    </select>
+<!--    <select class="select" v-model="selectedGenre" v-if="isMobile()" multiple>-->
+<!--      <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">-->
+<!--        <option v-for="genre of category.genres"-->
+<!--                :key="'select-genre'+genre.id"-->
+<!--                :value="genre">{{ genre.name }}-->
+<!--        </option>-->
+<!--      </optgroup>-->
+<!--    </select>-->
     <footer class="footer">
       <button class="negative-btn" type="button" @click="reset">сброс</button>
       <button class="positive-btn">Сохранить</button>

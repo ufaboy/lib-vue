@@ -1,11 +1,13 @@
 <template>
   <div class="navigator-mobile" :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
     <router-link class="breadcrumb-home" to="/">Home</router-link>
-    <svg class="icon-btn" @click.stop="activeBurger = !activeBurger" width="24" height="100%" viewBox="0 0 26 24">
-      <rect y="0" width="26" height="4"/>
-      <rect y="10" width="26" height="4"/>
-      <rect y="20" width="26" height="4"/>
-    </svg>
+    <button class="btn-icon" @click.stop="activeBurger = !activeBurger">
+      <svg class="icon" width="24" height="100%" viewBox="0 0 26 24">
+        <rect y="0" width="26" height="4"/>
+        <rect y="10" width="26" height="4"/>
+        <rect y="20" width="26" height="4"/>
+      </svg>
+    </button>
     <ul class="breadcrumb">
       <li class="breadcrumb-li">
         <router-link class="breadcrumb-link" to="/book">Books</router-link>
@@ -60,7 +62,6 @@ const btnViewEditMode = computed(() => {
     .breadcrumb-li {
       display: flex;
       border-radius: 5px;
-      transition: all linear 0.3s;
       margin: 0;
     }
 
@@ -93,10 +94,15 @@ const btnViewEditMode = computed(() => {
     border-radius: 5px;
     text-decoration: none;
   }
-
-  .icon-btn {
+.btn-icon {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+  .icon {
     fill: var(--primary);
   }
+}
+
 
   @keyframes slide-top {
     0% {
@@ -109,22 +115,25 @@ const btnViewEditMode = computed(() => {
 }
 
 .navigator-mobile.active {
+  .breadcrumb {
+    display: block;
+  }
   .breadcrumb-li {
     width: auto;
     margin: 0 0 0.5rem 0;
     //border: 1px solid var(--primary);
     border-radius: 5px;
     background-color: var(--surface-light);
-    transition: all linear 0.3s;
+    //transition: all linear 0.3s;
   }
 
   .breadcrumb-link {
     padding: 0.5rem;
     visibility: visible;
-    transition: all linear 0.3s;
+    //transition: all linear 0.3s;
   }
 
-  .icon-btn {
+  .icon {
     rect {
       transition: transform 0.3s;
     }
@@ -145,9 +154,10 @@ const btnViewEditMode = computed(() => {
 
 .navigator-mobile.hide {
   .breadcrumb {
+    display: none;
     height: 0;
     padding: 0;
-    animation: slide-top 0.5s linear both;
+    //animation: slide-top 0.5s linear both;
 
     .breadcrumb-li {
       height: 0;
