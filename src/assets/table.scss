@@ -126,9 +126,8 @@
     margin-right: 0.5rem;
     min-width: 50px;
   }
-
-  .active-page {
-    background-color: var(--background-3);
+  .table-pag__btn.active {
+    background-color: var(--primary);
   }
 
   .not-allowed {

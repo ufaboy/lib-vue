@@ -60,7 +60,7 @@
       <!--</transition-group>-->
       </tbody>
     </table>
-    <div class="table-paginator">
+    <div class="table-paginator" v-if="isMobile()">
       <button class="btn-outline table-pag__btn" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
@@ -76,9 +76,19 @@
       <button class="btn-outline table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksAndReplace" v-model="page" v-if="isMobile()">
+      <select class="select" @change="getBooksAndReplace" v-model="page">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
+    </div>
+    <div class="table-paginator" v-else>
+      <button class="btn-outline table-pag__btn" v-if="books._links.first"
+              @click="toPage(books._links.first)">first
+      </button>
+      <button class="btn-outline table-pag__btn" :class="{active: page === item}" v-for="(item, index) in paginator" :key="index"
+      @click="setPageNumber(item)">{{item}}</button>
+      <button class="btn-outline table-pag__btn" v-if="books._links.last"
+              @click="toPage(books._links.last)">last
+      </button>
     </div>
   </div>
 </template>
@@ -109,8 +119,8 @@ const props = defineProps({
   categories: Array,
 })
 const {
-  filter, searchQuery, orderBy, books, page, pagBtnArr, loadOrderBy,
-  sortBy, toPage, getBooksAndReplace
+  filter, searchQuery, orderBy, books, page, paginator, pagBtnArr, loadOrderBy,
+  sortBy, toPage, getBooksAndReplace, setPageNumber
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
@@ -120,6 +130,7 @@ function changeSortAsc() {
   page.value = 1
   getBooksAndReplace()
 }
+
 
 loadOrderBy();
 getBooksAndReplace();

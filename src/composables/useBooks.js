@@ -19,6 +19,24 @@ export default function useBooks() {
         _links: {},
         _meta: {},
     });
+    const paginator = ref([])
+    function calcPaginator() {
+        let arr = [];
+        for (let i = page.value; i > 0 && i > page.value - 5 ; i--) {
+            arr.unshift(i)
+        }
+        for (let i = page.value + 1; i <= books.value._meta.pageCount && arr.length < 9; i++) {
+            arr.push(i)
+        }
+        const decimalPages =Math.floor(books.value._meta.pageCount / 10)
+        for (let i = 1; i <= decimalPages; i++) {
+            const decimal = Number(i + '0')
+            if (decimal > page.value + 4) {
+                arr.push(decimal)
+            }
+        }
+        paginator.value = arr
+    }
     const saveOrderBy = function () {
         localStorage.setItem('orderby-books', JSON.stringify(orderBy.value));
     }
@@ -54,6 +72,7 @@ export default function useBooks() {
             books.value.items.push(...result.items)
             page.value = result._meta.currentPage
             pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
+            calcPaginator();
         } catch (e) {
             console.log({'getBooksAndReplace': e})
         }
@@ -93,11 +112,17 @@ export default function useBooks() {
         try {
             loader.show();
             books.value = await goPage(url.href);
+            page.value = books.value._meta.currentPage
             loader.hide();
+            calcPaginator();
         } catch (e) {
             console.log({'goPage': e})
         }
     };
+    const setPageNumber = function (item) {
+        page.value = item
+        getBooksAndReplace();
+    }
     const resetTable = () => {
         filter.value.genre = {}
         filter.value.rating = null
@@ -137,6 +162,8 @@ export default function useBooks() {
         pagBtnArr,
         infinityState,
         filterCount,
+        paginator,
+        setPageNumber,
         saveOrderBy,
         loadOrderBy,
         getCover,
