@@ -28,7 +28,7 @@
 
     <table class="table">
       <thead class="thead">
-      <tr>
+      <tr tabindex="0">
         <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
           <div class="table-cell" :class="{'active' : orderBy.name === column}">
             <div class="td-title">{{ column }}</div>
@@ -41,9 +41,8 @@
       </tr>
 
       </thead>
-      <tbody>
-      <!--      <transition-group name="flip-list" tag="tbody">-->
-      <tr class="row" :class="{'picante': book.ad}" v-for="book of books.items" :key="book.id">
+      <tbody tabindex="0" @keydown="arrowNavigate">
+      <tr class="row" :class="{'picante': book.ad, 'active-row': index === activeRow}" v-for="(book, index) of books.items" :key="book.id" tabindex="-1">
         <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
         <td class="td" :class="columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
@@ -57,7 +56,6 @@
         <td class="td" :class="columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
         <td class="td" :class="columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
       </tr>
-      <!--</transition-group>-->
       </tbody>
     </table>
     <div class="table-paginator" v-if="isMobile()">
@@ -100,6 +98,7 @@ import useBook from "@/composables/useBook";
 import useDate from "@/composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import {ref} from "vue";
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
@@ -119,25 +118,31 @@ const props = defineProps({
   categories: Array,
 })
 const {
-  filter, searchQuery, orderBy, books, page, paginator, pagBtnArr, loadOrderBy,
+  filter, searchQuery, orderBy, limit, books, page, paginator, pagBtnArr, loadOrderBy,
   sortBy, toPage, getBooksAndReplace, setPageNumber
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
-
+const activeRow = ref(null)
 function changeSortAsc() {
   orderBy.value.asc = !orderBy.value.asc
   page.value = 1
   getBooksAndReplace()
 }
-
+function arrowNavigate(event) {
+  if (event.key === 'ArrowUp' && activeRow.value >= 1) {
+    activeRow.value--
+  } else if (event.key === 'ArrowDown' && activeRow.value < limit.value - 1) {
+    activeRow.value++
+  }
+  console.log({arrowNavigate: event})
+}
 
 loadOrderBy();
 getBooksAndReplace();
 </script>
 
 <style lang="scss">
-
 .books-table {
   padding: 0 1.5rem;
   .btn {
@@ -152,20 +157,9 @@ getBooksAndReplace();
     }
   }
 
-  .flip-list-enter-active, .flip-list-leave-active {
-    transition: all 1s;
-  }
 
-  .flip-list-enter, .flip-list-leave-to /* .list-leave-active до версии 2.1.8 */
-  {
-    //opacity: 0;
-    //transform: translateY(30px);
-  }
-
-  .flip-list-move {
-    transition: transform 1s;
-  }
-
+}
+@media only screen and (min-width: 893px) {
   .table {
     .cell-id {
       min-width: 75px;
@@ -219,7 +213,6 @@ getBooksAndReplace();
     }
   }
 }
-
 @media only screen and (max-width: 892px) {
   .books-table {
     padding: 0 0.5rem;
@@ -286,19 +279,9 @@ getBooksAndReplace();
       }
 
       .cell-name {
-        max-width: 8rem;
+        max-width: 7rem;
         overflow: hidden;
         text-overflow: ellipsis;
-      }
-
-      .cell-rating {
-
-        .td-title {
-          max-width: 2rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          margin-right: 0;
-        }
       }
     }
   }

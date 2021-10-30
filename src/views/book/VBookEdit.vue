@@ -35,7 +35,7 @@
         </label>
         <textarea class="form-field__textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
       </div>
-      <section class="form-field genre" @click="openGenreModal">
+      <section class="form-field genre mb-1" @click="openGenreModal">
         <span v-if="genres.length === 0">Не выбраны жанры</span>
         <span :style="{color: colorizeGenre(index)}"
               v-for="(genre, index) of genres"
@@ -51,23 +51,22 @@
           </optgroup>
         </select>
       </section>
-
       <div class="form-field">
-        <span class="form-field__label">
+        <div class="form-field__label">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
           <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
-            <IconCarriage class="icon" />
+            <IconCarriage class="icon"/>
           </button>
           <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
-            <IconParagraph class="icon" />
+            <IconParagraph class="icon"/>
           </button>
           <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
-            <IconSlash class="icon" />
+            <IconSlash class="icon"/>
           </button>
         </span>
-        </span>
+        </div>
         <textarea class="editor clarity"
                   v-model="book.text"
                   v-if="editorMode === 'raw'"
@@ -119,7 +118,7 @@
     </div>
     <TheModal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
       <GenreBook :genres-props="genres" :categories="categories" @set-genres="setGenres"
-                  @hide-modal="showGenreBookModal = false"/>
+                 @hide-modal="showGenreBookModal = false"/>
     </TheModal>
   </div>
 </template>
@@ -373,13 +372,13 @@ getBook();
     justify-content: initial;
     cursor: pointer;
     border-radius: 5px;
-    padding: 5px 10px;
     color: var(--text);
 
     .select {
       margin: 0.5rem 0 0 0;
       width: 100%;
     }
+
     > span {
       margin: 0 5px 0 0;
     }
@@ -735,7 +734,7 @@ getBook();
 
 @media only screen and (max-width: 892px) {
   .edit-book {
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     overflow: initial;
     flex-flow: row wrap;
 

@@ -88,7 +88,7 @@
     }
   }
 
-  .row:hover {
+  .row:hover, .active-row {
     background: var(--surface-light);
   }
 
