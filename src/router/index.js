@@ -49,8 +49,8 @@ const routes = [
         component: VGenreTable
       },
       {
-        path: '/book',
-        name: 'book',
+        path: '/books',
+        name: 'books',
         component: VBookTable
       },
       {

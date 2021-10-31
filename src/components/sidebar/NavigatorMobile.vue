@@ -10,7 +10,7 @@
     </button>
     <ul class="breadcrumb">
       <li class="breadcrumb-li">
-        <router-link class="breadcrumb-link" to="/book">Books</router-link>
+        <router-link class="breadcrumb-link" to="/books">Books</router-link>
       </li>
       <li class="breadcrumb-li">
         <router-link class="breadcrumb-link" to="/genre">Genre</router-link>

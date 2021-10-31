@@ -1,6 +1,6 @@
 <template>
   <div class="book" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
-    <div class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></div>
+    <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
@@ -48,12 +48,6 @@ const props = defineProps({
     default: 0
   },
 })
-
-function setTitle() {
-  document.title = props.book.name;
-}
-
-setTitle()
 
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}

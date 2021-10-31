@@ -4,7 +4,7 @@
       <router-link class="navigator-link" to="/">Home</router-link>
     </li>
     <li class="navigator-element">
-      <router-link class="navigator-link" to="/book">Books</router-link>
+      <router-link class="navigator-link" to="/books">Books</router-link>
     </li>
     <li class="navigator-element">
       <router-link class="navigator-link" to="/genre">Genre</router-link>

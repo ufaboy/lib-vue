@@ -41,9 +41,9 @@ export default function useBook() {
         })
         return book;
     }
-    const downloadBook = async(id) => {
+    const downloadBook = async function(id) {
         loader.show();
-        let result = await loadBook(id)
+        const result = await loadBook(id)
         loader.hide();
         const comicsBook = result.genres.findIndex(genre => genre.category.name === 'comics') > -1
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
@@ -55,7 +55,7 @@ export default function useBook() {
         } else {
             book.value = result
         }
-    };
-
+        return book.value
+    }
     return {book, typeBook, downloadBook, openBook}
 }
