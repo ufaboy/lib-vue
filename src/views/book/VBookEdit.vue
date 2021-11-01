@@ -221,7 +221,7 @@ async function sendBook() {
     let genresIdArray = genres.value.map(genre => genre.id)
     const bookData = {...book.value, genres: genresIdArray}
     await updateBook(bookData)
-    await router.replace('/book')
+    await router.replace('/books')
   } catch (e) {
     console.log({sendBook: e, genres: genres.value})
   }
