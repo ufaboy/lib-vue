@@ -7,6 +7,7 @@
         <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn">create</router-link>
         <select class="sidebar-btn form-field__select" v-model="filter.genre"
                 @change="getBooksAndReplace">
+          <option :value="{}" v-if="!filter.genre.id">genre</option>
           <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
             <option v-for="genre of category.genres"
                     :key="'select-genre'+genre.id"
