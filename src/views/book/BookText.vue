@@ -32,6 +32,7 @@ const apiUrl = process.env.VUE_APP_API_URL
 const props = defineProps({
   categories: Array,
   book: Object,
+  rawText: Object,
   scrollingProgress: {
     type: Object,
     default() {
@@ -48,7 +49,7 @@ const props = defineProps({
     default: 0
   },
 })
-
+let editingText = ''
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
 })
@@ -61,6 +62,7 @@ const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 
 function editMode(e) {
   editorNode.value = e.target
+  editingText = e.target.innerHTML
   showEditorModal.value = true
 }
 
@@ -85,9 +87,10 @@ function listenClickByImg() {
   }
 }
 
-async function saveEditor() {
+async function saveEditor(newText) {
   try {
-    await updateBook({id: props.book.id, text: props.book.text})
+    let text = props.book.text.replace(editingText, newText)
+    await updateBook({id: props.book.id, text: text})
     printToast('Success', 'success')
   } catch (e) {
     printToast(`Ошибка: ${e}`, 'error')

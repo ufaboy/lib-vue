@@ -16,6 +16,7 @@ export default function useBook() {
         cover_path: '',
         files: []
     });
+    const rawText = ref({})
     const typeBook = ref('BookEmpty')
 
     const openBook = (book, type) => {
@@ -41,10 +42,11 @@ export default function useBook() {
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = await prepareUrlForMedia(result)
+            rawText.value = book.value.text
         } else {
             book.value = result
         }
         return book.value
     }
-    return {book, typeBook, downloadBook, openBook}
+    return {rawText, book, typeBook, downloadBook, openBook}
 }

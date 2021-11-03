@@ -1,5 +1,6 @@
 <template>
   <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book"
+             :raw-text="rawText"
              :scrolling-progress="scrollingProgress"
              :window-heights="windowHeights"
              @scrolling="scrolling"></component>
@@ -23,7 +24,7 @@ const props = defineProps({
 const emit = defineEmits(['scrolling'])
 const route = useRoute();
 
-const {book, typeBook, downloadBook} = useBook();
+const {rawText, book, typeBook, downloadBook} = useBook();
 function scrolling(e) {
   emit('scrolling', e)
 }

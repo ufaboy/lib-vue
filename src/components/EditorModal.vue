@@ -29,7 +29,7 @@ function closeModal() {
 }
 
 function saveEditor() {
-  emit('save-editor')
+  emit('save-editor', props.editorNode.innerHTML)
   closeModal()
 }
 </script>
