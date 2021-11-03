@@ -147,17 +147,6 @@ onMounted(async () => {
     padding: 0 1rem;
     //content-visibility: auto;
 
-
-    .media--right {
-      position: absolute;
-      right: -500px;
-    }
-
-    .media--left {
-      position: absolute;
-      left: -500px;
-    }
-
     h1, h2, h3 {
       text-align: center;
       margin-bottom: 0.5rem;
@@ -222,19 +211,32 @@ onMounted(async () => {
   }
 }
 
-@media only screen and (min-width: 893px) and (max-width: 1600px) {
+@media only screen and (min-width: 893px) and (max-width: 1368px) {
+.book {
+  .text {
+    .picture, .video {
+      float: left;
+      width: 375px;
+      margin: 0.5rem 1rem 0.5rem 0;
+    }
+  }
+}
+}
+@media only screen and (min-width: 1369px) and (max-width: 1600px) {
   .book {
     .text {
       .picture, .video {
         cursor: pointer;
         width: 375px;
-        min-height: 320px;
+        //min-height: 320px;
       }
       .media--right {
+        position: absolute;
         right: -385px;
       }
 
       .media--left {
+        position: absolute;
         left: -385px;
       }
     }
@@ -249,10 +251,12 @@ onMounted(async () => {
         min-height: 320px;
       }
       .media--right {
+        position: absolute;
         right: -764px;
       }
 
       .media--left {
+        position: absolute;
         left: -385px;
       }
     }

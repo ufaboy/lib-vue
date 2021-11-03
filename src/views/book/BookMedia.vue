@@ -59,7 +59,6 @@ function getSrcImgUrl(e) {
 
 <style lang="scss">
 .book-container {
-  height: calc(100vh - 5rem);
   background-color: var(--background);
 
   .book-picture {

@@ -49,7 +49,7 @@ export default function useBook() {
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = await prepareUrlForMedia(result)
-            if (!isMobile()) {
+            if (!isMobile() && window.innerWidth > 1368) {
                 book.value = moveMedia(book.value)
             }
         } else {
