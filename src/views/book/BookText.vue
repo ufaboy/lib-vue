@@ -125,6 +125,7 @@ onMounted(async () => {
 .book {
   display: flex;
   flex-flow: row wrap;
+  justify-content: center;
   width: 100%;
   position: relative;
   p {
@@ -140,7 +141,7 @@ onMounted(async () => {
   }
 
   .text {
-    max-width: 800px;
+    max-width: 900px;
     position: relative;
     letter-spacing: 0.3px;
     line-height: 1.5;
@@ -222,44 +223,9 @@ onMounted(async () => {
   }
 }
 }
-@media only screen and (min-width: 1369px) and (max-width: 1600px) {
+@media only screen and (min-width: 1368px) {
   .book {
-    .text {
-      .picture, .video {
-        cursor: pointer;
-        width: 375px;
-        //min-height: 320px;
-      }
-      .media--right {
-        position: absolute;
-        right: -385px;
-      }
 
-      .media--left {
-        position: absolute;
-        left: -385px;
-      }
-    }
-  }
-}
-@media only screen and (min-width: 1600px) {
-  .book {
-    .text {
-      .picture, .video {
-        cursor: pointer;
-        max-width: 700px;
-        min-height: 320px;
-      }
-      .media--right {
-        position: absolute;
-        right: -764px;
-      }
-
-      .media--left {
-        position: absolute;
-        left: -385px;
-      }
-    }
   }
 }
 </style>

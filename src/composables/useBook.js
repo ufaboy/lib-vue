@@ -1,7 +1,6 @@
 import {inject, ref} from "vue";
 import {loadBook} from "@/utils/loadData";
 import router from "@/router";
-import {isMobile} from "@/utils/helpers";
 
 export default function useBook() {
     const loader = inject("loader");
@@ -34,13 +33,6 @@ export default function useBook() {
         }
         return book
     };
-    const moveMedia = function(book) {
-        ['picture', 'video', 'audio'].map(media => {
-            const regexp = new RegExp(`class="${media}"`, "g");
-            book.text = book.text.replace(regexp, `class="${media} media--right"`)
-        })
-        return book;
-    }
     const downloadBook = async function(id) {
         loader.show();
         const result = await loadBook(id)
@@ -49,9 +41,6 @@ export default function useBook() {
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = await prepareUrlForMedia(result)
-            if (!isMobile() && window.innerWidth > 1368) {
-                book.value = moveMedia(book.value)
-            }
         } else {
             book.value = result
         }
