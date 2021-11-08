@@ -35,7 +35,7 @@
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
       </div>
-      <star-rating :model-value="book.rating" :size="18" />
+      <StarRating :model-value="book.rating" :size="18" />
     </router-link>
     <observer @intersect="getBooksAndPush('push')"/>
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
