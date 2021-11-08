@@ -35,6 +35,7 @@
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
       </div>
+      <star-rating :model-value="book.rating" size="18" />
     </router-link>
     <observer @intersect="getBooksAndPush('push')"/>
     <button class="scroll-btn" v-show="showTopButton" title="Go to top" @click="scrollToTop">Top</button>
@@ -48,6 +49,8 @@ import useBooks from "@/composables/useBooks";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "@/utils/helpers";
+import StarRating from "../components/StarRating";
+
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 // eslint-disable-next-line no-undef
@@ -134,7 +137,7 @@ onBeforeUnmount(() => {
     display: flex;
     flex-flow: row nowrap;
     cursor: pointer;
-    width: 425px;
+    width: 400px;
     border-radius: 5px;
     height: fit-content;
     overflow: hidden;
@@ -148,7 +151,7 @@ onBeforeUnmount(() => {
 
     .book-text-wrap {
       max-height: 100px;
-      width: calc(100% - 115px);
+      width: calc(100% - 125px);
     }
 
     .book-name {
@@ -181,6 +184,16 @@ onBeforeUnmount(() => {
       overflow: hidden;
       text-overflow: ellipsis;
 
+    }
+    .star-rating {
+      display: flex;
+      flex-flow: column-reverse nowrap;
+      .c-icon {
+        fill: transparent;
+      }
+      .c-icon.active {
+        fill: var(--star-active);
+      }
     }
   }
 

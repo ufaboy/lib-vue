@@ -32,7 +32,7 @@ const apiUrl = process.env.VUE_APP_API_URL
 const props = defineProps({
   categories: Array,
   book: Object,
-  rawText: Object,
+  rawText: String,
   scrollingProgress: {
     type: Object,
     default() {

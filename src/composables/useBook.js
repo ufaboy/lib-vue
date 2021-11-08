@@ -16,7 +16,7 @@ export default function useBook() {
         cover_path: '',
         files: []
     });
-    const rawText = ref({})
+    const rawText = ref('')
     const typeBook = ref('BookEmpty')
 
     const openBook = (book, type) => {
