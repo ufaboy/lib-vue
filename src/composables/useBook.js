@@ -38,7 +38,7 @@ export default function useBook() {
         loader.show();
         const result = await loadBook(id)
         loader.hide();
-        const comicsBook = result.genres.findIndex(genre => genre.category.name === 'comics') > -1
+        const comicsBook = result.genres.findIndex(genre => genre.categoryid === 3) > -1
         typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         if (!comicsBook) {
             book.value = await prepareUrlForMedia(result)

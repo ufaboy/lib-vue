@@ -28,7 +28,7 @@
       </section>
     </teleport>
 
-    <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
+    <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.rows"
                  :key="'book'+book.id">
       <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/img/book-dead-solid.svg'">
       <div class="book-text-wrap">

@@ -43,7 +43,7 @@
 
       </thead>
       <tbody tabindex="0" @keydown="arrowNavigate">
-      <tr class="row" :class="{'picante': book.ad, 'active-row': index === activeRow}" v-for="(book, index) of books.items" :key="book.id" tabindex="-1">
+      <tr class="row" :class="{'picante': book.ad, 'active-row': index === activeRow}" v-for="(book, index) of books.rows" :key="book.id" tabindex="-1">
         <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
         <td class="td" :class="columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
@@ -53,40 +53,40 @@
           <div v-for="(genre, index) of book.genres" :key="index">{{ book.genres.length ? genre.name : '' }}</div>
         </td>
         <td class="td" :class="columnsClasses.rating">{{ book.rating }}</td>
-        <td class="td" :class="columnsClasses.view_count">{{ book.view_count }}</td>
-        <td class="td" :class="columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
-        <td class="td" :class="columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
+        <td class="td" :class="columnsClasses.viewCount">{{ book.viewCount }}</td>
+        <td class="td" :class="columnsClasses.lastRead">{{ book.lastRead }}</td>
+        <td class="td" :class="columnsClasses.updatedAt">{{ book.updatedAt }}</td>
       </tr>
       </tbody>
     </table>
     <div class="table-paginator" v-if="isMobile()">
-      <button class="btn-outline table-pag__btn" v-if="books._links.first"
-              @click="toPage(books._links.first)">first
+      <button class="btn-outline table-pag__btn"
+              @click="setPageNumber(1)">first
       </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.prev"
-              @click="toPage(books._links.prev)">prev
+      <button class="btn-outline table-pag__btn" v-if="page > 1"
+              @click="setPageNumber(page - 1)">prev
       </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.self"
-              @click="toPage(books._links.self)">{{ books._meta ? books._meta.currentPage : '' }}
+      <button class="btn-outline table-pag__btn"
+              @click="setPageNumber(page)">{{ page }}
       </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.next"
-              @click="toPage(books._links.next)">next
+      <button class="btn-outline table-pag__btn" v-if="page < lastPage"
+              @click="setPageNumber(page + 1)">next
       </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.last"
-              @click="toPage(books._links.last)">last
+      <button class="btn-outline table-pag__btn" v-if="lastPage"
+              @click="setPageNumber(lastPage)">last
       </button>
       <select class="select" @change="getBooksAndReplace" v-model="page">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
     <div class="table-paginator" v-else>
-      <button class="btn-outline table-pag__btn" v-if="books._links.first"
-              @click="toPage(books._links.first)">first
+      <button class="btn-outline table-pag__btn"
+              @click="setPageNumber(1)">first
       </button>
       <button class="btn-outline table-pag__btn" :class="{active: page === item}" v-for="(item, index) in paginator" :key="index"
       @click="setPageNumber(item)">{{item}}</button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.last"
-              @click="toPage(books._links.last)">last
+      <button class="btn-outline table-pag__btn" v-if="lastPage"
+              @click="setPageNumber(lastPage)">last
       </button>
     </div>
   </div>
@@ -96,22 +96,21 @@
 import {isMobile} from "@/utils/helpers";
 import useBooks from "@/composables/useBooks";
 import useBook from "@/composables/useBook";
-import useDate from "@/composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {ref} from "vue";
 
 document.title = 'Table Books';
-const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
+const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'viewCount', 'lastRead', 'updatedAt']
 const columnsClasses = {
   id: 'cell-id',
   name: 'cell-name',
   annotation: 'cell-annotation',
   genres: 'cell-genre',
   rating: 'cell-rating',
-  view_count: 'cell-view_count',
-  last_read: 'cell-last_read',
-  updated_at: 'cell-updated_at'
+  viewCount: 'cell-view_count',
+  lastRead: 'cell-last_read',
+  updatedAt: 'cell-updated_at'
 }
 
 // eslint-disable-next-line no-undef,no-unused-vars
@@ -120,10 +119,9 @@ const props = defineProps({
 })
 const {
   filter, searchQuery, orderBy, limit, books, page, paginator, pagBtnArr, loadOrderBy,
-  sortBy, toPage, getBooksAndReplace, setPageNumber
+  sortBy, lastPage, getBooksAndReplace, setPageNumber
 } = useBooks();
 const {openBook} = useBook();
-const {getDate} = useDate();
 const activeRow = ref(null)
 function changeSortAsc() {
   orderBy.value.asc = !orderBy.value.asc

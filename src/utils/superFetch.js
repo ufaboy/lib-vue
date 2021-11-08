@@ -1,27 +1,5 @@
 import router from "@/router";
 
-async function $goPage(url) {
-    const token = sessionStorage.getItem('lib-token')
-    if (!token) {
-        throw new Error(`Token Error: token: ${token}`)
-    }
-    const response = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8',
-            Authorization: `Bearer ${token}`
-        }
-    })
-    if (response.ok) {
-        return await response.json();
-    } else if (response.status === 401) {
-        router.push('/login')
-    } else {
-        console.log({'$goPage': response})
-        return Promise.reject(response)
-    }
-}
-
 async function $get(rawUrl) {
     try {
         const token = sessionStorage.getItem('lib-token')
@@ -128,6 +106,6 @@ async function $delete(rawUrl, data = null) {
     }
 }
 
-export {$goPage, $get, $post, $patch, $delete}
+export { $get, $post, $patch, $delete}
 
 

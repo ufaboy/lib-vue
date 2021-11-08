@@ -1,4 +1,4 @@
-import {$get, $goPage} from "./superFetch";
+import {$get} from "./superFetch";
 
 
 async function loadCategories(name) {
@@ -6,7 +6,7 @@ async function loadCategories(name) {
         return await $get(url)
 }
 
-async function loadGenres(name, orderBy = 'created_at') {
+async function loadGenres(name, orderBy = 'createdAt') {
     let url = `/genre?order_by=${orderBy}`
     if (name) {
         url = `${url}&name=${name}`
@@ -20,7 +20,7 @@ async function loadBooks(page = 1, limit = 10, sort = '-id', filter = {}) {
         url += `&name=${filter.name}`
     }
     if (filter.genre) {
-        url += `&genre_id=${filter.genre}`
+        url += `&genreId=${filter.genre}`
     }
     if (filter.rating) {
         url += `&rating=${filter.rating}`
@@ -42,12 +42,8 @@ async function loadNotes() {
     return await $get('/book/view?id=1');
 }
 
-async function goPage(page) {
-    return await $goPage(page);
-}
-
 async function loadMediaFiles() {
     return await $get('/media-storage/media-manager')
 }
 
-export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage, loadMediaFiles};
+export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, loadMediaFiles};

@@ -1,4 +1,4 @@
-import {goPage, loadBooks} from "@/utils/loadData";
+import {loadBooks} from "@/utils/loadData";
 import {computed, inject, ref,} from 'vue'
 
 export default function useBooks() {
@@ -10,14 +10,14 @@ export default function useBooks() {
     });
     const searchQuery = ref('');
     const limit = ref(10);
-    const orderBy = ref({name: 'updated_at', asc: false});
+    const orderBy = ref({name: 'updatedAt', asc: false});
     const page = ref(1);
+    const lastPage = ref(0);
     const pagBtnArr = ref([]);
     const infinityState = ref(true);
     const books = ref({
-        items: [],
-        _links: {},
-        _meta: {},
+        rows: [],
+        count: null,
     });
     const paginator = ref([])
     function calcPaginator() {
@@ -25,10 +25,10 @@ export default function useBooks() {
         for (let i = page.value; i > 0 && i > page.value - 5 ; i--) {
             arr.unshift(i)
         }
-        for (let i = page.value + 1; i <= books.value._meta.pageCount && arr.length < 9; i++) {
+        for (let i = page.value + 1; i <= books.value.count && arr.length < 9; i++) {
             arr.push(i)
         }
-        const decimalPages =Math.floor(books.value._meta.pageCount / 10)
+        const decimalPages = Math.floor(books.value.count / 10)
         for (let i = 1; i <= decimalPages; i++) {
             const decimal = Number(i + '0')
             if (decimal > page.value + 4) {
@@ -36,6 +36,7 @@ export default function useBooks() {
             }
         }
         paginator.value = arr
+        lastPage.value = Math.floor(books.value.count / limit.value)
     }
     const saveOrderBy = function () {
         localStorage.setItem('orderby-books', JSON.stringify(orderBy.value));
@@ -66,12 +67,10 @@ export default function useBooks() {
             loader.show();
             const result = await loadBooks(page.value, limit.value, sort, formFilter);
             loader.hide();
-            books.value._links = result._links
-            books.value._meta = result._meta
-            books.value.items.splice(0, books.value.items.length)
-            books.value.items.push(...result.items)
-            page.value = result._meta.currentPage
-            pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
+            books.value.count = result.count
+            books.value.rows.splice(0, books.value.rows.length)
+            books.value.rows.push(...result.rows)
+            pagBtnArr.value = Array.from({length: result.count}, (v, k) => k + 1);
             calcPaginator();
         } catch (e) {
             console.log({'getBooksAndReplace': e})
@@ -96,29 +95,19 @@ export default function useBooks() {
         loader.hide();
         if (result) {
             if (method === 'push') {
-                books.value.items.push(...result.items)
+                books.value.rows.push(...result.rows)
                 page.value = ++page.value
             } else {
-                books.value.items.splice(0, books.value.items.length)
-                books.value.items.push(...result.items)
+                books.value.rows.splice(0, books.value.rows.length)
+                books.value.rows.push(...result.rows)
                 page.value = ++page.value
             }
-            if (result.items.length < limit.value) {
+            if (result.rows.length < limit.value) {
                 infinityState.value = false
             }
         }
     };
-    const toPage = async (url) => {
-        try {
-            loader.show();
-            books.value = await goPage(url.href);
-            page.value = books.value._meta.currentPage
-            loader.hide();
-            calcPaginator();
-        } catch (e) {
-            console.log({'goPage': e})
-        }
-    };
+
     const setPageNumber = function (item) {
         page.value = item
         getBooksAndReplace();
@@ -170,7 +159,7 @@ export default function useBooks() {
         resetTable,
         updateFilterPage,
         sortBy,
-        toPage,
+        lastPage,
         getBooksAndReplace,
         getBooksAndPush,
     }

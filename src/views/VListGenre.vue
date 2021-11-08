@@ -7,10 +7,11 @@
         </option>
       </select>
     </section>
-    <router-link :to="{ name: 'list-book', params: {
-      'id': genre.id,
-      'name': genre.name,
-    }}" class="genre" v-for="genre of genres" :key="'genre'+genre.id">{{ genre.name }}
+    <router-link class="genre"
+        :to="{ name: 'list-book', params: {'id': genre.id,'name': genre.name,}}"
+        v-for="genre of genres"
+        :key="'genre'+genre.id">
+      {{ genre.name }}
     </router-link>
     <!--    <observer @intersect="loadGenres('push')"/>-->
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
