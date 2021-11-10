@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount, onMounted, nextTick, toRefs, inject, computed} from "vue";
+import {ref, onBeforeUnmount, nextTick, toRefs, inject, computed, onUpdated} from "vue";
 import {isMobile} from "@/utils/helpers";
 import TheModal from "@/components/TheModal.vue";
 import {updateBook} from "@/utils/uploadData";
@@ -99,6 +99,7 @@ async function saveEditor(newText) {
 }
 
 async function scrollToBookmark() {
+  console.log('scrollToBookmark',{'props.book': props.book})
   if (props.book.bookmark) {
     window.scrollTo(0, props.book.bookmark)
   }
@@ -116,7 +117,7 @@ function scrollByClick(e) {
 onBeforeUnmount(() => {
   saveScrollingBook(props.book.id)
 });
-onMounted(async () => {
+onUpdated(async () => {
   await nextTick()
   await scrollToBookmark()
   listenClickByImg()

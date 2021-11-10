@@ -10,6 +10,7 @@ export default function useBook() {
         annotation: '',
         text: '',
         source: null,
+        bookmark: null,
         cover: null,
         rating: null,
         ad: false,
