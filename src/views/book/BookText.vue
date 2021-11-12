@@ -99,7 +99,7 @@ async function saveEditor(newText) {
 }
 
 async function scrollToBookmark() {
-  console.log('scrollToBookmark',{'props.book': props.book})
+  console.log('scrollToBookmark', {'props.book': props.book})
   if (props.book.bookmark) {
     window.scrollTo(0, props.book.bookmark)
   }
@@ -132,6 +132,7 @@ onUpdated(async () => {
   justify-content: center;
   width: 100%;
   position: relative;
+
   p {
     word-break: break-word;
     padding: initial;
@@ -217,16 +218,17 @@ onUpdated(async () => {
 }
 
 @media only screen and (min-width: 893px) and (max-width: 1368px) {
-.book {
-  .text {
-    .picture, .video {
-      float: left;
-      width: 375px;
-      margin: 0.5rem 1rem 0.5rem 0;
+  .book {
+    .text {
+      .picture, .video {
+        float: left;
+        width: 375px;
+        margin: 0.5rem 1rem 0.5rem 0;
+      }
     }
   }
 }
-}
+
 @media only screen and (min-width: 1368px) {
   .book {
 
