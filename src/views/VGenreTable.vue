@@ -27,7 +27,7 @@
         </tr>
       </transition-group>
     </table>
-    <dialog ref="genreModal" class="dialog dialog-genre">
+    <dialog ref="genreModal" class="dialog dialog-genre" @close="showGenreModal = false">
       <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories" @update-genres="getGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
