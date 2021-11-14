@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import {ref, onBeforeUnmount, nextTick, toRefs, inject, computed, onUpdated} from "vue";
+import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
 import {isMobile} from "@/utils/helpers";
 import TheModal from "@/components/TheModal.vue";
 import {updateBook} from "@/utils/uploadData";
@@ -117,10 +117,9 @@ function scrollByClick(e) {
 onBeforeUnmount(() => {
   saveScrollingBook(props.book.id)
 });
-onUpdated(async () => {
-  await nextTick()
-  await scrollToBookmark()
-  listenClickByImg()
+onMounted(async () => {
+  setTimeout(scrollToBookmark, 1000)
+  setTimeout(listenClickByImg, 1000)
 });
 
 </script>
