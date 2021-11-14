@@ -55,6 +55,10 @@ body, {
   left: 0;
   top: 0;
   background-color: var(--surface);
+  .select-chapter {
+    width: calc(100% - 2rem);
+    margin: 0.5rem 1rem;
+  }
 }
 
 .basement {

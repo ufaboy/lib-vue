@@ -4,20 +4,25 @@
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
-    <the-modal v-if="showEditorModal">
-      <editor-modal :editor-node="editorNode" @save-editor="saveEditor" @hide-modal="showEditorModal = false"/>
-    </the-modal>
+    <dialog ref="textEditorModal" class="dialog dialog-text" @close="showEditorModal = false">
+      <editor-modal v-if="showEditorModal" :editor-node="editorNode" @save-editor="saveEditor"
+                    @hide-modal="closeDialog"/>
+    </dialog>
     <image-slider v-if="Number.isInteger(activeImageIndex)"
                   :raw-images="book.files"
                   :active-image-index="activeImageIndex"
                   @select-image="selectImageByIndex"></image-slider>
+    <teleport to="#aside">
+      <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
+        <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{ chapter.innerHTML }}</option>
+      </select>
+    </teleport>
   </div>
 </template>
 
 <script setup>
 import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
 import {isMobile} from "@/utils/helpers";
-import TheModal from "@/components/TheModal.vue";
 import {updateBook} from "@/utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
 import useSlideButton from "@/composables/useSlideButton";
@@ -55,15 +60,33 @@ const widthProgressLine = computed(() => {
 })
 
 const {windowHeights} = toRefs(props)
+const textEditorModal = ref(null);
 const showEditorModal = ref(false);
 const activeImageIndex = ref();
 const editorNode = ref({});
+const chapterElement = ref(null);
+const chapterOptions = ref([]);
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
+
+
+function calcChapterOptions() {
+  const chapters = document.getElementsByClassName('zag')
+  chapterOptions.value = chapters
+}
+function scrollToChapter() {
+  chapterElement.value.scrollIntoView()
+}
 
 function editMode(e) {
   editorNode.value = e.target
   editingText = e.target.innerHTML
   showEditorModal.value = true
+  textEditorModal.value.showModal()
+}
+
+function closeDialog() {
+  textEditorModal.value.close()
+  showEditorModal.value = false
 }
 
 function openImage(img) {
@@ -120,6 +143,7 @@ onBeforeUnmount(() => {
 onMounted(async () => {
   scrollToBookmark();
   listenClickByImg();
+  calcChapterOptions();
 });
 
 </script>
@@ -182,6 +206,17 @@ onMounted(async () => {
     left: 0;
     top: 0;
     background-color: var(--primary);
+  }
+
+}
+
+
+@media only screen and (min-width: 893px) {
+  .book {
+    .dialog-text {
+      left: calc(50% - 300px);
+      top: calc(50% - 160px);
+    }
   }
 }
 

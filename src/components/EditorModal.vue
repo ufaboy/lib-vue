@@ -40,7 +40,7 @@ function saveEditor() {
   border-radius: 1rem;
 
   .textarea {
-    width: 100%;
+    width: 600px;
     resize: vertical;
     padding: 0.5rem;
     margin-bottom: 1rem;
