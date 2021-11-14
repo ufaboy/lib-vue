@@ -6,7 +6,22 @@
         <button class="sidebar-btn btn" @click="addNote">add</button>
       </section>
     </teleport>
-    <table class="notes-table">
+    <div v-if="isMobile()">
+      <section class="note" v-for="(note, index) of filteredNotes" :key="'note-' + index">
+        <div class="note-group">
+          <label for="note-name">name</label>
+          <input id="note-name" type="text" class="note__name" v-model="note.name">
+        </div>
+        <div class="note-group">
+          <label for="note-type">type</label>
+          <input id="note-type" type="text" class="note__type" v-model="note.type">
+        </div>
+
+        <label for="note-url">type</label>
+        <input id="note-url" type="text" class="note__url" v-model="note.url">
+      </section>
+    </div>
+    <table v-else class="notes-table">
       <caption class="caption">Fast Notes Links</caption>
       <thead class="thead">
       <tr>
@@ -43,7 +58,6 @@
       </tr>
       </tbody>
     </table>
-
   </div>
 </template>
 
@@ -108,58 +122,84 @@ getNotes()
     margin-left: 0.5rem;
   }
 
-  .notes-table {
-    border: 1px solid;
-    border-color: whitesmoke;
-    margin-bottom: 1rem;
 
-    .thead {
-      border-bottom: 1px solid;
-      border-color: inherit;
-    }
-
-    .th {
-      padding: 0.3rem;
-    }
-
-    .td {
-      padding: 0.3rem;
-      text-align: center;
-    }
-
-    .note {
-      border-bottom: 1px solid;
-      border-color: inherit;
-    }
-
-    .cell-dropdown {
-      display: flex;
-      flex-flow: row nowrap;
-      margin-top: 0.5rem;
-    }
-  }
 
   .note__name, .note__url, .note__type {
     padding: 6px;
   }
 
-  .note__type {
-    max-width: 100px;
-    min-width: 100px;
-  }
 
-  .note__url {
-    width: 400px;
-  }
 
   .td__btn {
     margin-right: initial;
+  }
+}
+@media only screen and (min-width: 893px) {
+  .notes {
+    .notes-table {
+      border: 1px solid;
+      border-color: whitesmoke;
+      margin-bottom: 1rem;
+
+      .thead {
+        border-bottom: 1px solid;
+        border-color: inherit;
+      }
+
+      .th {
+        padding: 0.3rem;
+      }
+
+      .td {
+        padding: 0.3rem;
+        text-align: center;
+      }
+
+      .note {
+        border-bottom: 1px solid;
+        border-color: inherit;
+      }
+
+      .cell-dropdown {
+        display: flex;
+        flex-flow: row nowrap;
+        margin-top: 0.5rem;
+      }
+    }
+    .note__type {
+      max-width: 100px;
+      min-width: 100px;
+    }
+
+    .note__url {
+      width: 400px;
+    }
   }
 }
 
 @media only screen and (max-width: 892px) {
   .notes {
     padding: 0.5rem;
+    .note-group {
+      width: 49%;
+    }
+    .note {
+      border-radius: 5px;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+      background-color: var(--surface-light);
+
+      label {
+        width: 100%;
+        font-size: 1.5rem;
+      }
+      input {
+        width: 100%;
+      }
+    }
 
     .note__url {
       width: 100%;
