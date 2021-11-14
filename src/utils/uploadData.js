@@ -1,7 +1,6 @@
 import {$post, $patch, $delete} from "@/utils/superFetch";
 
 async function sendGenre(genreForm) {
-    console.log({sendGenre: genreForm})
     if (genreForm.id) {
         return await $patch(`/genre/update?id=${genreForm.id}`, genreForm);
     } else {

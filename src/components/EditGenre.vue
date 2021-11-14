@@ -1,5 +1,5 @@
 <template>
-  <form class="edit-genre" @submit.prevent="updateGenre">
+  <form class="edit-genre" @submit.prevent="updateGenre" method="dialog">
     <header class="header">
       <h1>Genre</h1>
       <!--        <button v-if="adAccess"-->

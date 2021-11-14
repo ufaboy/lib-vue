@@ -27,17 +27,16 @@
         </tr>
       </transition-group>
     </table>
-    <TheModal v-if="showModal" :width="400">
-      <EditGenre :genre="activeGenre" :categories="categories" @update-genres="getGenres"
-                  @hide-modal="showModal = false"/>
-    </TheModal>
+    <dialog ref="genreModal" class="dialog dialog-genre">
+      <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories" @update-genres="getGenres"
+                 @hide-modal="closeDialog"/>
+    </dialog>
   </div>
 </template>
 
 <script setup>
 import useGenres from "@/composables/useGenres";
 import EditGenre from '@/components/EditGenre.vue'
-import TheModal from "@/components/TheModal";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "@/utils/helpers";
@@ -55,7 +54,7 @@ const props = defineProps({
   categories: Array,
 })
 
-const {genres, ascending, showModal, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
+const {genres, ascending, genreModal, showGenreModal, closeDialog, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
 if (genres.value.length === 0) {
   getGenres();
 }
@@ -68,6 +67,15 @@ if (genres.value.length === 0) {
 
   .flip-list-move {
     transition: transform 1s;
+  }
+
+}
+@media only screen and (min-width: 893px) {
+  .genre-table {
+    .dialog-genre {
+      left: calc(50% - 175px);
+      top: calc(50% - 200px);
+    }
   }
 }
 

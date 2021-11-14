@@ -3,10 +3,11 @@ import {loadGenres} from "../utils/loadData";
 
 export default function useGenres() {
     const loader = inject("loader");
+    const genreModal = ref(null)
+    const showGenreModal = ref(false)
     const genres = ref([]);
     const ascending = ref(1);
     const orderBy = ref(null);
-    const showModal = ref(false);
     const activeGenre = ref({
         id: null,
         name: null,
@@ -15,7 +16,8 @@ export default function useGenres() {
     });
     const openRow = (row) => {
         activeGenre.value = row
-        showModal.value = true
+        showGenreModal.value = true
+        genreModal.value.showModal()
     }
     const createGenre = () => {
         activeGenre.value = ref({
@@ -24,7 +26,12 @@ export default function useGenres() {
             description: null,
             category: {id: null, name: null},
         });
-        showModal.value = true
+        showGenreModal.value = true
+        genreModal.value.showModal()
+    }
+    const closeDialog = () => {
+        genreModal.value.close()
+        showGenreModal.value = false
     }
 
     const getGenres = async () => {
@@ -49,5 +56,5 @@ export default function useGenres() {
     }
 
 
-    return {genres, ascending, orderBy, showModal, activeGenre, openRow, createGenre, getGenres, sortBy}
+    return {genres, ascending, orderBy, genreModal, showGenreModal, closeDialog, activeGenre, openRow, createGenre, getGenres, sortBy}
 }
