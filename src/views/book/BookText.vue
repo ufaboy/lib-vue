@@ -99,7 +99,6 @@ async function saveEditor(newText) {
 }
 
 async function scrollToBookmark() {
-  console.log('scrollToBookmark', {'props.book': props.book})
   if (props.book.bookmark) {
     window.scrollTo(0, props.book.bookmark)
   }
@@ -117,9 +116,10 @@ function scrollByClick(e) {
 onBeforeUnmount(() => {
   saveScrollingBook(props.book.id)
 });
+
 onMounted(async () => {
-  setTimeout(scrollToBookmark, 1000)
-  setTimeout(listenClickByImg, 1000)
+  scrollToBookmark();
+  listenClickByImg();
 });
 
 </script>
