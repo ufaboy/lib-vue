@@ -122,8 +122,17 @@ async function saveEditor(newText) {
 }
 
 async function scrollToBookmark() {
+  const clientHeight = document.documentElement.clientHeight
+  const scrollHeight = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight,
+      document.body.clientHeight, document.documentElement.clientHeight
+  );
+  const windowHeights = scrollHeight - clientHeight;
   if (props.book.bookmark) {
-    window.scrollTo(0, props.book.bookmark)
+    const x = (props.book.bookmark * windowHeights) / 100
+    console.log({scrollToBookmark: props.book.bookmark, clientHeight: clientHeight, scrollHeight: scrollHeight, windowHeights: windowHeights})
+    window.scrollTo(0, x)
   }
 }
 

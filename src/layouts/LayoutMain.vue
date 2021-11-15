@@ -22,13 +22,12 @@ const activeBurger = ref(false)
 const categories = ref([])
 const {
   scrollingProgress,
-  scrollTop,
   windowHeights,
   throttleScroll
 } = useScroll()
 
 async function saveScrollingBook(id) {
-  const formData = {bookId: id, bookmark: scrollTop.value}
+  const formData = {bookId: id, bookmark: scrollingProgress.value.progress}
   const result = await updateBookMark(formData)
   if (!result) {
     console.log({'saveScrollingBook': result})
