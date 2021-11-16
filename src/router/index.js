@@ -6,6 +6,7 @@ import {authMiddleware} from "@/middleware/auth";
 
 import Home from '@/views/VHome.vue'
 import Main from "../layouts/LayoutMain";
+import LayoutTest from "../layouts/LayoutTest";
 // const Home = () => import('@/views/VHome.vue')
 const VListBook = () => import('@/views/VListBook.vue')
 const VListGenre = () => import('@/views/VListGenre.vue')
@@ -98,15 +99,22 @@ const routes = [
     component: () => import('@/views/VLogin.vue'),
   },
   {
+    path: '/test',
+    name: 'test',
+    component: LayoutTest,
+    children: [
+      {
+        path: '',
+        component: () => import('@/views/VTestPage.vue')
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'error',
     component: VError,
   },
-  {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/views/VTestPage.vue'),
-  },
+
   // {
   //   path: '/about',
   //   name: 'About',
