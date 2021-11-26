@@ -21,7 +21,7 @@ module.exports = {
     // настройки манифеста
     manifestOptions: {
       name: 'My Library',
-      display: 'fullscreen',
+      display: 'standalone',
       short_name: 'Library',
       description: 'My library for some text',
       icons: [
