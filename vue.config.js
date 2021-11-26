@@ -14,13 +14,14 @@ module.exports = {
     themeColor: '#080C2A',
     msTileColor: '#000000',
     background_color: "#000000",
-    display: 'fullscreen',
+
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {},
 
     // настройки манифеста
     manifestOptions: {
       name: 'My Library',
+      display: 'fullscreen',
       short_name: 'Library',
       description: 'My library for some text',
       icons: [
