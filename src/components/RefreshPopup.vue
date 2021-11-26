@@ -25,8 +25,8 @@ export default {
     }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log({controllerchange: navigator.serviceWorker})
-      if (this.refreshing) return
-      this.refreshing = true
+      if (this.updateExists) return
+      this.updateExists = true
       window.location.reload()
     })
   },

@@ -14,6 +14,7 @@ module.exports = {
     themeColor: '#080C2A',
     msTileColor: '#000000',
     background_color: "#000000",
+    display: 'fullscreen',
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {},
 
