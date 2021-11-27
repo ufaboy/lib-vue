@@ -11,7 +11,7 @@ module.exports = {
   },
   pwa: {
     name: 'Library',
-    themeColor: '#080C2A',
+    // themeColor: '#080C2A',
     // background_color: "#004e92",
 
     workboxPluginMode: 'GenerateSW',
@@ -21,6 +21,7 @@ module.exports = {
     manifestOptions: {
       name: 'My Library',
       display: 'standalone',
+      "theme_color": "#3367D6",
       background_color: "#004e92",
       short_name: 'Library',
       description: 'My library for some text',
