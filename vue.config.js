@@ -12,8 +12,7 @@ module.exports = {
   pwa: {
     name: 'Library',
     themeColor: '#080C2A',
-    msTileColor: '#000000',
-    background_color: "#000000",
+    background_color: "linear-gradient(#000428, #004e92)",
 
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {},
@@ -26,10 +25,28 @@ module.exports = {
       description: 'My library for some text',
       icons: [
         {
+          'src': './img/icons/maskable_icon_x48.png',
+          'sizes': '48x48',
+          'type': 'image/png',
+          'purpose': 'maskable'
+        },
+        {
+          'src': './img/icons/maskable_icon_x96.png',
+          'sizes': '96x96',
+          'type': 'image/png',
+          'purpose': 'maskable'
+        },
+        {
           'src': './img/icons/maskable_icon_x72.png',
           'sizes': '72x72',
           'type': 'image/png',
           'purpose': 'maskable'
+        },
+        {
+          'src': './img/icons/maskable_icon_x128.png',
+          'sizes': '128x128',
+          'type': 'image/png',
+          'purpose': 'any'
         },
         {
           'src': './img/icons/maskable_icon_x144.png',
