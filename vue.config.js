@@ -12,7 +12,8 @@ module.exports = {
   pwa: {
     name: 'Library',
     themeColor: '#080C2A',
-    background_color: "linear-gradient(#000428, #004e92)",
+    // background_color: "linear-gradient(#000428, #004e92)",
+    background_color: "#004e92",
 
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {},
@@ -45,12 +46,6 @@ module.exports = {
         {
           'src': './img/icons/maskable_icon_x128.png',
           'sizes': '128x128',
-          'type': 'image/png',
-          'purpose': 'any'
-        },
-        {
-          'src': './img/icons/maskable_icon_x144.png',
-          'sizes': '144x144',
           'type': 'image/png',
           'purpose': 'any'
         },
