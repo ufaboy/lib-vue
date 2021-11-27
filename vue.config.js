@@ -19,9 +19,10 @@ module.exports = {
 
     // настройки манифеста
     manifestOptions: {
+      start_url : "/",
       name: 'My Library',
       display: 'standalone',
-      "theme_color": "#3367D6",
+      theme_color: "#3367D6",
       background_color: "#004e92",
       short_name: 'Library',
       description: 'My library for some text',
@@ -76,7 +77,7 @@ module.exports = {
         },
         {
           'src': './icons/pwa/regular_icon_x144.png',
-          'sizes': '512x512',
+          'sizes': '144x144',
           'type': 'image/png',
           'purpose': 'any'
         },
