@@ -22,6 +22,7 @@ module.exports = {
     manifestOptions: {
       name: 'My Library',
       display: 'standalone',
+      background_color: "linear-gradient(#000428, #004e92)",
       short_name: 'Library',
       description: 'My library for some text',
       icons: [
