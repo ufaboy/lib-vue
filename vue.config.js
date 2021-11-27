@@ -55,13 +55,25 @@ module.exports = {
           'src': './icons/pwa/maskable_icon_x144.png',
           'sizes': '144x144',
           'type': 'image/png',
-          'purpose': 'any maskable'
+          'purpose': 'maskable'
+        },
+        {
+          'src': './icons/pwa/regular_icon_x144.png',
+          'sizes': '144x144',
+          'type': 'image/png',
+          'purpose': 'any'
         },
         {
           'src': './icons/pwa/maskable_icon_x192.png',
           'sizes': '192x192',
           'type': 'image/png',
           'purpose': 'maskable'
+        },
+        {
+          'src': './icons/pwa/maskable_icon_x192.png',
+          'sizes': '192x192',
+          'type': 'image/png',
+          'purpose': 'any'
         },
         {
           'src': './icons/pwa/maskable_icon_x384.png',
@@ -75,12 +87,7 @@ module.exports = {
           'type': 'image/png',
           'purpose': 'maskable'
         },
-        {
-          'src': './icons/pwa/regular_icon_x144.png',
-          'sizes': '144x144',
-          'type': 'image/png',
-          'purpose': 'any'
-        },
+
         {
           'src': './icons/pwa/regular_icon_x512.png',
           'sizes': '512x512',
@@ -90,5 +97,6 @@ module.exports = {
 
       ],
     }
-  }
+  },
+
 }
