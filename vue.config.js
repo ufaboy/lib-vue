@@ -53,7 +53,7 @@ module.exports = {
           'src': './img/icons/maskable_icon_x144.png',
           'sizes': '144x144',
           'type': 'image/png',
-          'purpose': 'maskable'
+          'purpose': 'any maskable'
         },
         {
           'src': './img/icons/maskable_icon_x192.png',
