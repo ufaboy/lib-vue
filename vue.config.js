@@ -12,8 +12,7 @@ module.exports = {
   pwa: {
     name: 'Library',
     themeColor: '#080C2A',
-    // background_color: "linear-gradient(#000428, #004e92)",
-    background_color: "#004e92",
+    // background_color: "#004e92",
 
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {},
@@ -22,7 +21,7 @@ module.exports = {
     manifestOptions: {
       name: 'My Library',
       display: 'standalone',
-      background_color: "linear-gradient(#000428, #004e92)",
+      background_color: "#004e92",
       short_name: 'Library',
       description: 'My library for some text',
       icons: [
@@ -48,7 +47,7 @@ module.exports = {
           'src': './img/icons/maskable_icon_x128.png',
           'sizes': '128x128',
           'type': 'image/png',
-          'purpose': 'any'
+          'purpose': 'maskable'
         },
         {
           'src': './img/icons/maskable_icon_x192.png',
