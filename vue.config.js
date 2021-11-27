@@ -11,7 +11,7 @@ module.exports = {
   },
   pwa: {
     name: 'Library',
-    // themeColor: '#080C2A',
+    themeColor: '#3367D6',
     // background_color: "#004e92",
 
     workboxPluginMode: 'GenerateSW',
