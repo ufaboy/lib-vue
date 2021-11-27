@@ -148,7 +148,7 @@ export default function useBooks() {
     const getCover = (book) => {
         if (book.cover_path) {
             return `${process.env.VUE_APP_API_URL}/${book.cover_path}`
-        } else return '/img/book-dead-solid.svg'
+        } else return '/icons/svg/book-dead-solid.svg'
     };
 
 

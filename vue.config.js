@@ -27,61 +27,61 @@ module.exports = {
       description: 'My library for some text',
       icons: [
         {
-          'src': './img/icons/maskable_icon_x48.png',
+          'src': './icons/pwa/maskable_icon_x48.png',
           'sizes': '48x48',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x96.png',
+          'src': './icons/pwa/maskable_icon_x96.png',
           'sizes': '96x96',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x72.png',
+          'src': './icons/pwa/maskable_icon_x72.png',
           'sizes': '72x72',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x128.png',
+          'src': './icons/pwa/maskable_icon_x128.png',
           'sizes': '128x128',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x144.png',
+          'src': './icons/pwa/maskable_icon_x144.png',
           'sizes': '144x144',
           'type': 'image/png',
           'purpose': 'any maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x192.png',
+          'src': './icons/pwa/maskable_icon_x192.png',
           'sizes': '192x192',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x384.png',
+          'src': './icons/pwa/maskable_icon_x384.png',
           'sizes': '384x384',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/maskable_icon_x512.png',
+          'src': './icons/pwa/maskable_icon_x512.png',
           'sizes': '512x512',
           'type': 'image/png',
           'purpose': 'maskable'
         },
         {
-          'src': './img/icons/regular_icon_x144.png',
+          'src': './icons/pwa/regular_icon_x144.png',
           'sizes': '512x512',
           'type': 'image/png',
           'purpose': 'any'
         },
         {
-          'src': './img/icons/regular_icon_x512.png',
+          'src': './icons/pwa/regular_icon_x512.png',
           'sizes': '512x512',
           'type': 'image/png',
           'purpose': 'any'

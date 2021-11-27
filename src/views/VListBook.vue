@@ -30,7 +30,7 @@
 
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
                  :key="'book'+book.id">
-      <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/img/book-dead-solid.svg'">
+      <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/icons/svg/book-dead-solid.svg'">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
