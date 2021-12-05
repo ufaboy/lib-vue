@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><% VITE_APP_TITLE /></title>
+  <meta name="description" content="My library for some text">
+  <!-- <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate icon" href="/favicon.ico" type="image/png" sizes="16x16"> -->
+  <!-- <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180"> -->
+  <!-- <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF"> -->
+  <link rel="icon" href="/favicon.ico" />   
+  <link rel="preconnect" href="<% VITE_API_URL />"/>
+  <meta name="theme-color" content="#3367D6">
+  </head>
+  <body>
+  <noscript>
+      <strong>We're sorry but <% VITE_APP_TITLE /> doesn't work properly without JavaScript enabled.
+          Please enable it to continue.</strong>
+  </noscript>
+  <aside id="aside" class="hide"></aside>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

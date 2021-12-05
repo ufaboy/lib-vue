@@ -13,8 +13,8 @@
 
 </template>
 
-<script>
-import SelectComponent from "../components/SelectComponent";
+<script lang="ts">
+import SelectComponent from "../components/SelectComponent.vue";
 export default {
   name: "TestPage",
   components: {SelectComponent},
@@ -26,6 +26,7 @@ export default {
     document.title = 'Test';
   },
   mounted() {
+    // @ts-expect-error
     this.generateDots()
   },
   methods: {
@@ -34,7 +35,7 @@ export default {
       // style.innerHTML = `.cssClass { ${this.createDotsString()}; }`;
       style.innerHTML = `.star-animating { } .star-animating:before { ${this.createDotsString()}; } .star-animating:after { ${this.createDotsString()}; }`;
       document.getElementsByTagName('head')[0].appendChild(style);
-      document.getElementById('stars').className = 'star-animating stars';
+      document.getElementById('stars')!.className = 'star-animating stars';
     },
     createDotsString() {
       const maxDots = document.documentElement.clientHeight > 900 ? 500 : 150;
@@ -48,7 +49,7 @@ export default {
       }
       return str
     },
-    randomInteger(min, max) {
+    randomInteger(min:number, max:number) {
       // случайное число от min до (max+1)
       let rand = min + Math.random() * (max + 1 - min);
       return Math.floor(rand);

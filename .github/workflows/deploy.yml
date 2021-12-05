@@ -7,7 +7,7 @@ on:
 
 env:
   DEPLOY_PATH: ${{ secrets.PROJECT_PATH }}
-  BUILD_SCRIPT: npm run build
+  BUILD_SCRIPT: npm run build:prod
   BUILD_SCRIPT_OUTPUT: dist
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         run: npm i
       # Устанавливаем env
       - name: Install env
-        run: echo "VUE_APP_API_URL="${{ secrets.API_URL }} > .env.production
+        run: echo "VITE_API_URL="${{ secrets.API_URL }} > .env.production
       # Собираем приложение
       - name: Build Appliction
         run: $BUILD_SCRIPT

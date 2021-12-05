@@ -7,7 +7,7 @@
         <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn">create</router-link>
         <select class="sidebar-btn form-field__select" v-model="filter.genre"
                 @change="getBooksAndReplace">
-          <option :value="{}" v-if="!filter.genre.id">genre</option>
+          <option :value="{}" v-if="!filter.genre?.id">genre</option>
           <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
             <option v-for="genre of category.genres"
                     :key="'select-genre'+genre.id"
@@ -24,6 +24,18 @@
           <IconSortAsc class="icon" v-if="orderBy.asc"/>
           <IconSortDesc class="icon" v-else/>
         </button>
+        <div class="toggle-three-state" v-if="getAdAccess()">
+          <label class="three-state-label">Off
+            <input type="radio" class="3state-input" :value="false" v-model="filter.ad" @change="getBooksAndReplace">
+          </label>
+          <label class="three-state-label">AD
+            <input type="radio" class="3state-input" :value="undefined" v-model="filter.ad"
+                   @change="getBooksAndReplace">
+          </label>
+          <label class="three-state-label">On
+            <input type="radio" class="3state-input" :value="true" v-model="filter.ad" @change="getBooksAndReplace">
+          </label>
+        </div>
       </section>
     </teleport>
 
@@ -42,8 +54,9 @@
       </tr>
 
       </thead>
-      <tbody tabindex="0" @keydown="arrowNavigate">
-      <tr class="row" :class="{'picante': book.ad, 'active-row': index === activeRow}" v-for="(book, index) of books.items" :key="book.id" tabindex="-1">
+      <tbody tabindex="0">
+      <tr class="row" :class="{'picante': book.ad}"
+          v-for="(book, index) of books.items" :key="book.id" :tabindex="index + 1">
         <td class="td" :class="columnsClasses.id" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td" :class="columnsClasses.name" @click="openBook(book, 'view')">{{ book.name }}</td>
         <td class="td" :class="columnsClasses.annotation" :data-tooltip="book.annotation" data-tooltip-location='right'>
@@ -83,8 +96,10 @@
       <button class="btn-outline table-pag__btn" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
-      <button class="btn-outline table-pag__btn" :class="{active: page === item}" v-for="(item, index) in paginator" :key="index"
-      @click="setPageNumber(item)">{{item}}</button>
+      <button class="btn-outline table-pag__btn" :class="{active: page === item}" v-for="(item, index) in paginator"
+              :key="index"
+              @click="setPageNumber(item)">{{ item }}
+      </button>
       <button class="btn-outline table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
@@ -92,18 +107,20 @@
   </div>
 </template>
 
-<script setup>
-import {isMobile} from "@/utils/helpers";
-import useBooks from "@/composables/useBooks";
-import useBook from "@/composables/useBook";
-import useDate from "@/composables/useDate";
+<script setup lang="ts">
+import {ref} from "vue";
+import {isMobile} from "../../utils/helpers";
+import {getAdAccess} from "../../utils/userData";
+import useBooks from "../../composables/useBooks";
+import useBook from "../../composables/useBook";
+import useDate from "../../composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {ref} from "vue";
+
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
-const columnsClasses = {
+const columnsClasses: ColumnsClasses = {
   id: 'cell-id',
   name: 'cell-name',
   annotation: 'cell-annotation',
@@ -113,30 +130,45 @@ const columnsClasses = {
   last_read: 'cell-last_read',
   updated_at: 'cell-updated_at'
 }
+interface ColumnsClasses {
+  [key: string]: string,
+  id: string,
+  name: string,
+  annotation: string,
+  genres: string,
+  rating: string,
+  view_count: string,
+  last_read: string,
+  updated_at: string,
+}
 
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-})
+interface Category {
+    id: number,
+    name: string,
+    genres?: Array<Genre>
+}
+interface Genre {
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: number,
+    created_at: number,
+}
+const props = defineProps<{
+  categories: Category[]
+}>()
 const {
   filter, searchQuery, orderBy, limit, books, page, paginator, pagBtnArr, loadOrderBy,
   sortBy, toPage, getBooksAndReplace, setPageNumber
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
-const activeRow = ref(null)
+
 function changeSortAsc() {
   orderBy.value.asc = !orderBy.value.asc
   page.value = 1
   getBooksAndReplace()
-}
-function arrowNavigate(event) {
-  if (event.key === 'ArrowUp' && activeRow.value >= 1) {
-    activeRow.value--
-  } else if (event.key === 'ArrowDown' && activeRow.value < limit.value - 1) {
-    activeRow.value++
-  }
-  console.log({arrowNavigate: event})
 }
 
 loadOrderBy();
@@ -146,6 +178,7 @@ getBooksAndReplace();
 <style lang="scss">
 .books-table {
   padding: 0 1.5rem;
+
   .btn {
     text-transform: capitalize;
   }
@@ -159,6 +192,23 @@ getBooksAndReplace();
   }
 
 
+
+}
+.toggle-three-state {
+  display: flex;
+  flex: 1;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 0.5rem;
+  .three-state-label {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
+    input {
+      margin-top: 5px;
+    }
+  }
 }
 @media only screen and (min-width: 893px) {
   .table {
@@ -214,6 +264,7 @@ getBooksAndReplace();
     }
   }
 }
+
 @media only screen and (max-width: 892px) {
   .books-table {
     padding: 0 0.5rem;

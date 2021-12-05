@@ -56,7 +56,7 @@
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
-          <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
+          <!-- <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
             <IconCarriage class="icon"/>
           </button>
           <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
@@ -64,7 +64,7 @@
           </button>
           <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
             <IconSlash class="icon"/>
-          </button>
+          </button> -->
         </span>
         </div>
         <textarea class="editor clarity"
@@ -81,22 +81,22 @@
           <input type="file"
                  class="upload-input desktop"
                  multiple
-                 @change="loadFiles($event.target.files)">
+                 @change="loadFiles">
         </label>
-        <button class="positive-btn" @click="sendFiles()">all upload</button>
+        <button class="positive-btn" @click="uploadAllFiles">all upload</button>
         <button class="negative-btn" @click="deleteAllFiles">remove files</button>
       </header>
 
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="index">
           <div class="action-panel">
-            <button class="btn" @click="sendFiles(media)" v-if="!media.id">
+            <button class="btn" @click="uploadSingleFile(media)" v-if="!media.id">
               load
             </button>
             <button class="btn"
-                    @click="book.cover_path = media.url"
+                    @click="setCover(media)"
                     v-if="checkType(media) === 'image' && media.id">
-              {{ book.cover_path === media.url ? 'current' : 'set' }}cover
+              {{ getCoverBtnText(media)}}cover
             </button>
             <button class="btn " @click="copyFileName(media)"
                     v-if="media.id">tag
@@ -112,78 +112,119 @@
           <audio v-else-if="checkType(media) === 'audio'" class="media audio" controls muted>
             <source :src="getSrc(media)">
           </audio>
-          <figcaption class="figure-caption">{{ media.name ? media.name : media.full_name }}</figcaption>
+          <figcaption class="figure-caption">{{getCaption(media)}}</figcaption>
         </figure>
       </div>
     </div>
-    <TheModal :width="750" v-if="showGenreBookModal" @hide-modal="showGenreBookModal = false">
-      <GenreBook :genres-props="genres" :categories="categories" @set-genres="setGenres"
-                 @hide-modal="showGenreBookModal = false"/>
-    </TheModal>
+    <dialog ref="genreBookModal" class="dialog dialog-genre-book" @close="showGenreBookModal = false">
+      <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
+                 @hide-modal="closeDialog"/>
+    </dialog>
+
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
-import {isMobile} from "@/utils/helpers";
-
-import {loadBook} from "@/utils/loadData";
-import {getAdAccess} from "@/utils/userData";
-import {deleteFiles, deleteFile, updateBook, uploadFiles} from "@/utils/uploadData";
-import useBook from "@/composables/useBook";
-import IconParagraph from '@/components/icons/IconParagraph.vue'
-import IconCarriage from '@/components/icons/IconCarriage.vue'
-import IconSlash from '@/components/icons/IconSlash.vue'
+import {API_URL} from '../../../runtimeEnv';
+import {isMobile} from '../../utils/helpers';
+import {loadBook} from '../../utils/loadData';
+import {getAdAccess} from '../../utils/userData';
+import {deleteFiles, deleteFile, updateBook, uploadFiles} from '../../utils/uploadData';
+import useBook from '../../composables/useBook';
+// import IconParagraph from '@/components/icons/IconParagraph.vue'
+// import IconCarriage from '@/components/icons/IconCarriage.vue'
+// import IconSlash from '@/components/icons/IconSlash.vue'
 import GenreBook from '@/components/GenreBook.vue'
-import TheModal from "@/components/TheModal";
-import StarRating from "@/components/StarRating";
+import StarRating from "@/components/StarRating.vue";
+import {BookFile, FileRaw} from '../../interfaces/book';
 
 document.title = 'Editor';
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-})
-const printToast = inject('printToast')
-const loader = inject("loader");
+
+interface CategoryExtended extends Category{
+    genres?: Array<Genre>
+}
+
+interface Category {
+  id: number,
+  name: string,
+}
+
+interface Genre {
+  id: number,
+  name: string,
+  description: string,
+  category: Category,
+  ad: boolean,
+  created_at: number,
+}
+
+interface PromiseFulfilledResult {
+  status: "fulfilled";
+  value: BookFile;
+}
+
+interface PromiseRejectedResult {
+  status: "rejected";
+  reason: string;
+}
+
+type PromiseSettledResult = PromiseFulfilledResult | PromiseRejectedResult;
+type FileMix = FileRaw | BookFile
+
+const props = defineProps<{
+  categories: CategoryExtended[]
+}>()
+// @ts-expect-error
+const printToast: Function = inject('printToast')
+
+// @ts-expect-error
+const loader: Loader = inject("loader");
 const router = useRouter();
 const route = useRoute();
-const {book} = useBook();
-const editor = ref(null)
-const showGenreBookModal = ref(false);
-const files = ref([]);
+const {book, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
+const editor = ref<HTMLTextAreaElement>()
+const files = ref<FileMix[]>([]);
 
-const genres = ref([]);
+const genres = ref<Genre[]>([
+  {
+    id: 0,
+    name: '',
+    ad: false,
+    created_at: 0,
+    description: '',
+    category: {id: 0, name: ''},
+  }
+]);
 const editorMode = ref('raw');
 
 function resetBook() {
-  if (book.value.id) {
+  if (book.value?.id) {
     getBook()
   } else {
     book.value = {
-      id: null,
-      name: null,
+      id: 0,
+      name: '',
       annotation: '',
       text: '',
-      source: null,
-      cover: null,
-      rating: null,
-      ad: false,
+      source: '',
+      bookmark: 0,
       cover_path: '',
-      files: []
+      rating: 0,
+      ad: false,
+      files: [],
+      genres: []
     }
   }
   genres.value = []
 }
 
-function openGenreModal() {
-  showGenreBookModal.value = !isMobile()
-}
 
 async function checkBook() {
   let validation = true
   let messages = []
-  if (!book.value.name) {
+  if (!book.value?.name) {
     messages.push('empty name')
     validation = false
   }
@@ -201,13 +242,14 @@ function toggleEditor() {
   editorMode.value = editorMode.value === 'raw' ? 'html' : 'raw'
 }
 
-function setGenres(e) {
-  book.value.ad = e.value.findIndex(item => item.ad) > -1
+function setGenres(e: { value: Genre[]; }) {
+
+  book.value.ad = e.value.findIndex((item: Genre) => item.ad) > -1
   genres.value = e.value;
   showGenreBookModal.value = false;
 }
 
-function colorizeGenre(i) {
+function colorizeGenre(i: number) {
   const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
   return color[i]
 }
@@ -218,8 +260,8 @@ async function sendBook() {
     return false
   }
   try {
-    let genresIdArray = genres.value.map(genre => genre.id)
-    const bookData = {...book.value, genres: genresIdArray}
+    // let genresIdArray = genres.value.map(genre => genre.id)
+    const bookData = {...book.value, genres: genres.value}
     await updateBook(bookData)
     await router.replace('/books')
   } catch (e) {
@@ -227,23 +269,30 @@ async function sendBook() {
   }
 }
 
-function loadFiles(e) {
-  for (const file of e) {
-    files.value.push({name: file.name, status: null, file: file})
+function loadFiles(evt: Event) {
+  console.log({loadFiles: evt});
+const fileList = (evt.target as HTMLInputElement).files
+if(fileList) {
+  for (const file of Array.from(fileList)) {
+    files.value.push({name: file.name, status: '', file: file})
   }
+}
 }
 
 async function deleteAllFiles() {
   try {
-    await deleteFiles(book.value.id)
-    files.value.splice(0, files.value.length)
+    if(book.value?.id) {
+    await deleteFiles(book.value?.id)
+    files.value?.splice(0, files.value.length)
+    }
   } catch (e) {
     console.log({deleteAllFiles: e})
   }
 }
 
-function checkType(media) {
-  const type = media.file ? media.file.type : media.type
+function checkType(media: FileMix) {
+  // @ts-expect-error
+  const type: string = media.file ? media.file.type : media.type ? media.type : ''
   if (type.includes('image')) {
     return 'image'
   } else if (type.includes('video')) {
@@ -253,83 +302,125 @@ function checkType(media) {
   } else return 'file'
 }
 
-async function deleteOneFile(fileIndex) {
+async function deleteOneFile(fileIndex: number) {
   try {
-    await deleteFile(files.value[fileIndex].id);
-    files.value.splice(fileIndex, 1)
+    if (files.value) {
+      await deleteFile(files.value[fileIndex].id ?? 0);
+      files.value.splice(fileIndex, 1)
+    }
   } catch (e) {
     console.error({deleteFile: e})
   }
 }
+function uploadSingleFile(fileToUpload: FileMix) {
+  const fileArray:FileRaw[] = [{...fileToUpload as FileRaw}]
+  sendFiles(fileArray)
+}
+function uploadAllFiles() {
+  // @ts-expect-error
+    const fileArray:FileRaw[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
+    sendFiles(fileArray)
+}
 
-async function sendFiles(fileToUpload) {
+async function sendFiles(fileArray:FileRaw[]) {
   try {
-    const fileArray = fileToUpload ? [fileToUpload.file] : files.value.filter(item => item.file).map(fileObject => fileObject.file)
+    if (!fileArray) {
+      throw new Error('empty files')
+    }
     loader.show();
-    const results = await uploadFiles(fileArray, book.value.id)
+    // @ts-expect-error
+    const response = await uploadFiles(fileArray, book.value.id)
     loader.hide();
-    const errors = results
-        .filter(p => p.status === 'rejected')
-        .map(p => p.reason);
-    console.log('sendFiles', {resultPromise: results, errors: errors})
-    const toastText = errors.length ? `upload errors: ${errors.length}` : 'Upload success'
-    printToast(toastText, 'success')
-    for (const item of results) {
-      if (item.status === 'fulfilled') {
-        const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
-        if (fileIndex > -1) {
-          files.value.splice(fileIndex, 1)
-        }
-        files.value.push({...item.value, name: item.value.full_name, status: item.status})
-      } else if (item.status === 'rejected') {
-        const fileIndex = files.value.findIndex(element => element.name === item.value.full_name)
-        files.value[fileIndex].status = 'rejected'
-        files.value[fileIndex].error = item.value
+
+let errors:string[] = []
+    for (let index = 0; index < response.length; index++) {
+      if (response[index].status === 'fulfilled') {
+        const result = (response[index] as PromiseFulfilledResult).value
+        const fileData = {...result, status: 'fulfilled'}
+        files.value.splice(index, 1, fileData)
+      } else if (response[index].status === 'rejected') {
+        const result = (response[index] as PromiseRejectedResult).reason
+        files.value[index].status = 'rejected'
+        // @ts-expect-error
+        files.value[index].error = result
+        errors.push(result)
       }
     }
-  } catch (e) {
-    printToast(e.message, 'error')
+    if(errors.length) {
+      const toastText = errors.length ? `upload errors: ${errors.length}` : 'Upload success'
+        printToast(toastText, 'success')
+    }
+    console.log('sendFiles', {response: response, files: files.value})
+  } catch (e:unknown) {
+    if (typeof e === "string") {
+        printToast(e, 'error')
+    } else if (e instanceof Error) {
+        printToast(e.message, 'error')
+    }
+    
     console.log({sendFiles: e})
   }
 }
 
 function autoResize() {
-  const scrollHeight = Number(editor.value.scrollHeight) + 50;
+  if(editor.value) {
+const scrollHeight = Number(editor.value.scrollHeight) + 50;
   editor.value.style.cssText = `height: ${scrollHeight}px`;
+  }
 }
 
-function getSrc(media) {
+function getSrc(media: FileMix) {
   const loaded = !!media.id
-  return loaded ? `${process.env.VUE_APP_API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
+  // @ts-expect-error
+  return loaded ? `${API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
 }
 
-async function copyFileName(file) {
-  if (file.type.includes('image')) {
-    await navigator.clipboard.writeText(`<img class="picture" src="APIURL/${file.url}">`)
-  } else if (file.type.includes('video')) {
-    await navigator.clipboard.writeText(`<video class="video" autoplay loop muted controls><source src="APIURL/${file.url}"/></video>`)
-  } else if (file.type.includes('audio/mp4')) {
-    await navigator.clipboard.writeText(`<audio class="audio" controls><source src="APIURL/${file.url}"/></audio>`)
+function getCaption(media: FileMix) {
+  const file = media.hasOwnProperty('full_name')
+  if(file) {
+    return (media as BookFile).full_name
+  } else {
+  return (media as FileRaw).name 
   }
 }
 
-async function formatText(type) {
-  if (type === 'caret') {
-    book.value.text = book.value.text.replace(/\n/g, '<p>')
-  } else if (type === 'double-p') {
-    book.value.text = book.value.text.replace(/<p><p>/g, '<p>')
-  } else if (type === 'comment') {
-    let selectionText = editor.value.substring(editor.value.selectionStart, editor.value.selectionEnd);
-    if (selectionText.includes('<!-- ') && selectionText.includes(' -->')) {
-      selectionText = selectionText.replace('<!-- ', '');
-      selectionText = selectionText.replace(' -->', '');
-    } else {
-      selectionText = '<!-- ' + selectionText + ' -->'
-    }
+function setCover(media:FileMix) {
+  const fileData = media as BookFile
+  book.value.cover_path = fileData.url
+}
+function getCoverBtnText(media:FileMix) {
+  const fileData = media as BookFile
+  book.value.cover_path === fileData.url ? 'current' : 'set' 
+}
 
-    editor.value.setRangeText(selectionText)
+async function copyFileName(file: FileMix ) {
+  const fileData = file as BookFile
+  if (fileData.type.includes('image')) {
+    await navigator.clipboard.writeText(`<img class="picture" src="APIURL/${fileData.url}">`)
+  } else if (fileData.type.includes('video')) {
+    await navigator.clipboard.writeText(`<video class="video" autoplay loop muted controls><source src="APIURL/${fileData.url}"/></video>`)
+  } else if (fileData.type.includes('audio/mp4')) {
+    await navigator.clipboard.writeText(`<audio class="audio" controls><source src="APIURL/${fileData.url}"/></audio>`)
   }
 }
+
+// async function formatText(type:string) {
+//   if (type === 'caret') {
+//     book.value.text = book.value.text.replace(/\n/g, '<p>')
+//   } else if (type === 'double-p') {
+//     book.value.text = book.value.text.replace(/<p><p>/g, '<p>')
+//   } else if (type === 'comment') {
+//     let selectionText = editor.value?.substring(editor.value.selectionStart, editor.value.selectionEnd);
+//     if (selectionText.includes('<!-- ') && selectionText.includes(' -->')) {
+//       selectionText = selectionText.replace('<!-- ', '');
+//       selectionText = selectionText.replace(' -->', '');
+//     } else {
+//       selectionText = '<!-- ' + selectionText + ' -->'
+//     }
+
+//     editor.value.setRangeText(selectionText)
+//   }
+// }
 
 async function getBook() {
   if (!route.params.id) {
@@ -338,17 +429,19 @@ async function getBook() {
   try {
     const result = await loadBook(+route.params.id)
     book.value = {...result, ad: !!result.ad}
+    if(result.files?.length) {
     files.value.push(...result.files.map(file => {
-      return {...file, status: null}
+      return {...file, status: ''}
     }))
+    }
     genres.value = [...result.genres]
-  } catch (e) {
+  } catch (e) { 
     console.log({getBook: e})
   }
 }
 
 onUpdated(() => {
-  if (editor.value.scrollHeight > 60) {
+  if (editor.value && editor.value.scrollHeight > 60) {
     autoResize()
   }
 })
@@ -729,6 +822,15 @@ getBook();
   .footer {
     width: 100%;
     height: 2rem;
+  }
+}
+
+@media only screen and (min-width: 893px) {
+  .edit-book {
+    .dialog-genre-book {
+      left: calc(50% - 350px);
+      top: calc(50% - 210px);
+    }
   }
 }
 

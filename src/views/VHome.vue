@@ -10,11 +10,26 @@
   </main>
 </template>
 
-<script setup>
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-})
+
+<script setup lang="ts">
+import { defineProps} from 'vue'
+interface Category {
+    id: number,
+    name: string,
+    genres?: Array<Genre>
+}
+interface Genre {
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: number,
+    created_at: number,
+}
+const props = defineProps<{
+  categories: Category[]
+}>()
+
 document.title = 'Home';
 </script>
 

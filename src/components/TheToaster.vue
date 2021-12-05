@@ -7,7 +7,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {computed} from "vue";
 
 // eslint-disable-next-line no-undef,no-unused-vars

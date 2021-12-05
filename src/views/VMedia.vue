@@ -14,7 +14,7 @@
             Attach
           </button>
           <button class="fig-btn"
-                  @click.stop="deleteFileFromStorage(directories[activeDirIndex].name, file.full_name, index)">Delete
+                  @click.stop="deleteFileFromStorage(directories[activeDirIndex].dir_name, file.full_name, index)">Delete
           </button>
         </div>
 
@@ -28,13 +28,13 @@
       <audio class="media-full" v-else-if="activeMedia.type === 'audio'" controls>
         <source :src="activeMedia.url">
       </audio>
-      <span>{{ activeMedia.name }}</span>
+      <span>{{ activeMedia.full_name }}</span>
     </div>
 
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import useMedia from "../composables/useMedia";
 
 // eslint-disable-next-line no-undef,no-unused-vars

@@ -156,12 +156,9 @@ canvas {
   z-index: -1;
   top: 0;
   left: 0;
-  -webkit-transform: translate3d(0, 0, 0);
-  -moz-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
-//background: #020120;
   background: transparent;
 }
 </style>

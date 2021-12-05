@@ -2,65 +2,110 @@
   <div class="list-genre">
     <section class="sidebar" v-if="isMobile()">
       <select class="form-field__select" v-model="activeCategory">
-        <option class="option" :value="category" v-for="category of categories" :key="category.id">
+        <option
+          class="option"
+          :value="category"
+          v-for="category of categories"
+          :key="category.id"
+        >
           {{ category.name }}
         </option>
       </select>
     </section>
-    <router-link :to="{ name: 'list-book', params: {
-      'id': genre.id,
-      'name': genre.name,
-    }}" class="genre" v-for="genre of genres" :key="'genre'+genre.id">{{ genre.name }}
+    <router-link
+      :to="{
+        name: 'list-book',
+        params: {
+          id: genre.id,
+          name: genre.name,
+        },
+      }"
+      class="genre"
+      v-for="genre of genres"
+      :key="'genre' + genre.id"
+      >{{ genre.name }}
     </router-link>
     <!--    <observer @intersect="loadGenres('push')"/>-->
     <!--    <div class="loader" v-if="infinityLoading"></div>-->
   </div>
 </template>
 
-<script setup>
-import {computed, ref, toRefs, watch} from 'vue';
-import {useRoute} from 'vue-router'
-import {isMobile} from "@/utils/helpers";
+<script setup lang="ts">
+import { computed, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { isMobile } from "../utils/helpers";
 
-// eslint-disable-next-line no-undef
-const props = defineProps({
-  categories: Array,
-})
-document.title = 'Genres';
+
+
+interface Category {
+    id: number,
+    name: string,
+    genres: Array<Genre>
+}
+interface Genre {
+    [key: string]: number|string|Category|boolean
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+interface CategoryExtended extends Category{
+    genres: Array<Genre>
+}
+const props = defineProps<{
+  categories: CategoryExtended[]
+}>()
+document.title = "Genres";
 const route = useRoute();
-const activeCategory = ref({})
-const {categories} = toRefs(props)
-const genres = computed(() => {
-  let selectedCategory = {}
 
-  if (activeCategory.value.name) {
-    selectedCategory = categories.value.find(item => item.id === activeCategory.value.id || item.name === activeCategory.value.name)
+const activeCategory = ref<CategoryExtended|undefined>({ name: "", id: 0, genres: [] });
+const categories = ref<CategoryExtended[]>(props.categories);
+const genres = computed(() => {
+  let selectedCategory: CategoryExtended|undefined = { name: "", id: 0, genres: [] };
+
+  if (activeCategory.value!.name) {
+    selectedCategory = categories.value.find(
+      (item: any) =>
+        item.id === activeCategory.value!.id || item.name === activeCategory.value!.name
+    );
   } else if (route.params.id) {
-    selectedCategory = categories.value.find(item => item.id === +route.params.id)
+    selectedCategory = categories.value.find((item: Category) => item.id === +route.params.id);
   } else if (route.params.name) {
-    selectedCategory = categories.value.find(item => item.name === route.params.name)
+    selectedCategory = categories.value.find(
+      (item: Category) => item.name === route.params.name
+    );
   } else {
-    return []
+    return [];
   }
-  return selectedCategory ? Array.isArray(selectedCategory.genres) ? selectedCategory.genres : [] : []
-})
+  return selectedCategory
+    ? Array.isArray(selectedCategory.genres)
+      ? selectedCategory.genres
+      : []
+    : [];
+});
 
 async function prepareCategory() {
-  if (categories.value.length)  {
+  if (categories.value.length) {
     if (route.params.id) {
-      activeCategory.value = categories.value.find(item => item.id === +route.params.id)
+      activeCategory.value = categories.value.find(
+        (item) => item.id === +route.params.id
+      );
     } else if (route.params.name) {
-      activeCategory.value = categories.value.find(item => item.name === route.params.name)
+      activeCategory.value = categories.value.find(
+        (item) => item.name === route.params.name
+      );
     }
   }
 }
 
 if (route.params.id || route.params.name) {
-  prepareCategory()
+  prepareCategory();
 }
 watch(props, () => {
-  prepareCategory()
-})
+  prepareCategory();
+});
 </script>
 
 <style scoped lang="scss">

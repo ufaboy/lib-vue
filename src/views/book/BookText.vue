@@ -8,7 +8,7 @@
       <editor-modal v-if="showEditorModal" :editor-node="editorNode" @save-editor="saveEditor"
                     @hide-modal="closeDialog"/>
     </dialog>
-    <image-slider v-if="Number.isInteger(activeImageIndex)"
+    <image-slider v-if="Number.isInteger(activeImageIndex) && book.files?.length"
                   :raw-images="book.files"
                   :active-image-index="activeImageIndex"
                   @select-image="selectImageByIndex"></image-slider>
@@ -20,66 +20,118 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
-import {isMobile} from "@/utils/helpers";
-import {updateBook} from "@/utils/uploadData";
+import  {API_URL} from '../../../runtimeEnv';
+import {isMobile} from "../../utils/helpers";
+import {updateBook} from "../../utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
-import useSlideButton from "@/composables/useSlideButton";
+import useSlideButton from "../../composables/useSlideButton";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
 
-const printToast = inject('printToast')
-const saveScrollingBook = inject('saveScrollingBook')
+// @ts-expect-error
+const printToast: Function = inject('printToast')
+// @ts-expect-error
+const saveScrollingBook: Function= inject('saveScrollingBook')
 
-const apiUrl = process.env.VUE_APP_API_URL
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-  book: Object,
-  rawText: String,
+interface CategoryExtended extends Category{
+    genres?: Array<Genre>
+}
+
+interface Category {
+  id: number,
+  name: string,
+}
+interface Genre {
+  [key: string]: number|string|Category|boolean
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+
+interface Genre {
+    
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+interface BookFile {
+    created_at: number,
+    extension: string,
+    file_name: string,
+    full_name: string,
+    id: number,
+    path: string,
+    size: number,
+    type: string,
+    url: string,
+}
+
+interface Book {
+    id: number,
+    name: string,
+    annotation?: string,
+    text?: string,
+    book_type?: string,
+    source?: string,
+    bookmark?: number,
+    rating?: number,
+    ad?: boolean,
+    genres: Array<Genre>
+    cover_path?: string,
+    files?: Array<BookFile>,
+    view_count?: number,
+    created_at?: number,
+    updated_at?: number,
+    last_read?: number,
+}
+
+const props = defineProps<{
+  book: Book,
+  windowHeights: number,
   scrollingProgress: {
-    type: Object,
-    default() {
-      return {
-        progress: 0,
-        countPages: 0,
-        clientHeight: 0,
-        currentPage: 0,
-      }
-    }
-  },
-  windowHeights: {
-    type: Number,
-    default: 0
-  },
-})
+    progress: number,
+    countPages: number,
+    clientHeight: number,
+    currentPage: number,
+  }
+}>()
+
 let editingText = ''
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
 })
 
 const {windowHeights} = toRefs(props)
-const textEditorModal = ref(null);
+const textEditorModal = ref();
 const showEditorModal = ref(false);
-const activeImageIndex = ref();
-const editorNode = ref({});
-const chapterElement = ref(null);
-const chapterOptions = ref([]);
+const activeImageIndex = ref(0);
+const editorNode = ref<HTMLElement>();
+const chapterElement = ref<HTMLElement>();
+const chapterOptions = ref<Element[]>([]);
 const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
 
 
 function calcChapterOptions() {
   const chapters = document.getElementsByClassName('zag')
-  chapterOptions.value = chapters
+  for (const element of Array.from(chapters)) {
+    chapterOptions.value.push(element)
+  }; 
 }
 function scrollToChapter() {
-  chapterElement.value.scrollIntoView()
+  chapterElement.value?.scrollIntoView()
 }
 
-function editMode(e) {
-  editorNode.value = e.target
-  editingText = e.target.innerHTML
+function editMode(e: Event) {
+  editorNode.value = (e.target as HTMLElement)
+  editingText = (e.target as HTMLElement).innerHTML
   showEditorModal.value = true
   textEditorModal.value.showModal()
 }
@@ -89,32 +141,35 @@ function closeDialog() {
   showEditorModal.value = false
 }
 
-function openImage(img) {
-  if (document.documentElement.clientWidth > 800) {
-    const src = img.target.src
-    const replaceValue = `${apiUrl}/media/book_${props.book.id}/`
+function openImage(e: Event) {
+  if (document.documentElement.clientWidth > 800 && props.book.files) {
+    const src = (e.target as HTMLImageElement).src
+    const replaceValue = `${API_URL}/media/book_${props.book.id}/`
     const fileName = src.replace(replaceValue, '')
     const fileIndex = props.book.files.findIndex(file => file.full_name === fileName)
     activeImageIndex.value = fileIndex > -1 ? fileIndex : 0
   }
 }
 
-function selectImageByIndex(index) {
+function selectImageByIndex(index:number) {
   activeImageIndex.value = index
 }
 
 function listenClickByImg() {
   let images = document.getElementsByClassName('picture')
-  for (let image of images) {
+  for (let image of Array.from(images)) {
     image.addEventListener("click", openImage);
   }
 }
 
-async function saveEditor(newText) {
+async function saveEditor(newText:string) {
   try {
-    let text = props.book.text.replace(editingText, newText)
-    await updateBook({id: props.book.id, text: text})
-    printToast('Success', 'success')
+    if(props.book.text) {
+      let text = props.book.text.replace(editingText, newText)
+      await updateBook({id: props.book.id, name: props.book.name, genres: props.book.genres, text: text})
+      printToast('Success', 'success')
+    }
+    
   } catch (e) {
     printToast(`Ошибка: ${e}`, 'error')
     console.log({'saveEditor error': e})
@@ -136,11 +191,12 @@ async function scrollToBookmark() {
   }
 }
 
-function scrollByClick(e) {
-  let w = document.getElementById("progressbar").clientWidth;
-  let o = e.offsetX;
+function scrollByClick(e:Event) {
+  const progressElement = document.getElementById("progressbar")
+  let w = progressElement ? progressElement.clientWidth : 100;
+  let o = (e as MouseEvent).offsetX;
   let x = Math.floor((100 * o) / w);
-  document.getElementById("progressbar").value = x;
+  (document.getElementById("progressbar") as HTMLProgressElement).value = x;
   let y = Math.floor((windowHeights.value * x) / 100);
   window.scrollTo(0, y);
 }

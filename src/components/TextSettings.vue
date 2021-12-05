@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import IconClose from "@/components/icons/IconClose"
+import IconClose from "@/components/icons/IconClose.vue"
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['hide-modal', 'scroll-by-click'])
 // eslint-disable-next-line no-undef,no-unused-vars

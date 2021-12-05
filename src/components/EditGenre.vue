@@ -2,12 +2,6 @@
   <form class="edit-genre" @submit.prevent="updateGenre" method="dialog">
     <header class="header">
       <h1>Genre</h1>
-      <!--        <button v-if="adAccess"-->
-      <!--                type="button"-->
-      <!--                class="btn-switch btn"-->
-      <!--                :class="{'active': localGenre.ad}"-->
-      <!--                @click="localGenre.ad = !localGenre.ad">ad-->
-      <!--        </button>-->
       <button class="close-btn" type="reset" @click="closeModal">
         <IconClose class="icon" />
       </button>
@@ -45,16 +39,34 @@
   </form>
 </template>
 
-<script setup>
-import IconClose from "@/components/icons/IconClose"
-import useGenre from "@/composables/useGenre";
+<script setup lang="ts">
+import IconClose from "@/components/icons/IconClose.vue"
+import useGenre from "../composables/useGenre";
+import { GenreForm } from "../interfaces/genre";
 import {getAdAccess} from "../utils/userData";
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-  genre: Object,
-})
-// eslint-disable-next-line no-undef
+
+interface CategoryExtended extends Category{
+    genres?: Array<Genre>
+}
+
+interface Category {
+  id: number,
+  name: string,
+}
+
+interface Genre {
+  id: number,
+  name: string,
+  description: string,
+  category: Category,
+  ad: boolean,
+  created_at: number,
+}
+const props = defineProps<{
+  categories: CategoryExtended[],
+  genre: GenreForm,
+}>()
+
 const emit = defineEmits(['update-genres', 'hide-modal'])
 
 const adAccess = getAdAccess()
@@ -64,7 +76,7 @@ const categoriesSimple = props.categories.map(category => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .edit-genre {
   padding: 1rem;
   display: flex;

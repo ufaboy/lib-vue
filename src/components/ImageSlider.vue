@@ -3,7 +3,7 @@
     <button class="close-btn" type="reset" @click="closeSlider">
       <icon-close class="icon" width="36" height="36" />
     </button>
-    <img class="image" :src="activeImage.url" alt="image">
+    <img class="image" :src="activeImage?.url" alt="image">
     <footer id="sliderFooter" class="footer" ref="sliderFooter">
       <img class="footer-image" :class="{active: activeImageIndex === index}" :src="image.url" alt="image"
            v-for="(image, index) of images" :key="index"
@@ -14,8 +14,9 @@
 </template>
 
 <script setup>
-import IconClose from "./icons/IconClose";
+import IconClose from "./icons/IconClose.vue";
 import {computed, onBeforeUnmount, onBeforeUpdate} from "vue";
+import  {API_URL} from "../../runtimeEnv";
 
 // eslint-disable-next-line no-undef
 const props = defineProps({
@@ -25,7 +26,6 @@ const props = defineProps({
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['select-image']);
-const apiUrl = process.env.VUE_APP_API_URL;
 
 let images = [];
 let imagesRefs = [];
@@ -46,7 +46,7 @@ function calcImages() {
 }
 
 function getSrcImgUrl(e) {
-  return e.url ? `${apiUrl}/${e.url}` : ''
+  return e.url ? `${API_URL}/${e.url}` : ''
 }
 
 function closeSlider() {

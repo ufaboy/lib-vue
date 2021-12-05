@@ -32,12 +32,14 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref, computed, inject} from 'vue';
 import {useRouter} from 'vue-router'
-import {setUser} from '@/utils/userData';
-import {isMobile} from "@/utils/helpers";
-import CanvasSpace from "@/components/CanvasSpace";
+import {API_URL} from "../../runtimeEnv";
+import {setUser} from '../utils/userData';
+import {isMobile} from "../utils/helpers";
+import CanvasSpace from "../components/CanvasSpace.vue";
+import User from '../interfaces/user';
 
 document.title = 'Login';
 const router = useRouter()
@@ -51,7 +53,7 @@ const countDots = computed(() => {
 
 async function login() {
   const formData = {username: username.value, password: password.value};
-  const url = `${process.env.VUE_APP_API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
+  const url = `${API_URL}/auth/${signIn.value ? 'signin' : 'login'}`
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(formData),
@@ -59,7 +61,7 @@ async function login() {
       'Content-Type': 'application/json;charset=utf-8',
     }
   })
-  const result = await response.json();
+  const result:User = await response.json();
   if (response.ok) {
     if (result.token) {
       setUser(result)
@@ -69,6 +71,7 @@ async function login() {
     }
   } else {
     console.log({'response.notOk': response})
+    // @ts-expect-error
     printToast(result.message, 'error')
   }
 }
@@ -275,13 +278,9 @@ async function login() {
 }
 
 @media only screen and (max-width: 892px) {
-  .login-box {
-  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .login-box {
-  }
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {

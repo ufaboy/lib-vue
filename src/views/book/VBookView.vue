@@ -1,35 +1,32 @@
 <template>
   <component :is="typeBook === 'BookText' ? BookText : typeBook === 'BookMedia' ? BookMedia : BookEmpty" :book="book"
-             :raw-text="rawText"
              :scrolling-progress="scrollingProgress"
              :window-heights="windowHeights"
              @scrolling="scrolling"></component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useRoute} from 'vue-router';
-import useBook from "@/composables/useBook";
+import useBook from "../../composables/useBook";
 import BookText from "@/views/book/BookText.vue";
 import BookMedia from "@/views/book/BookMedia.vue";
 import BookEmpty from "@/views/book/BookEmpty.vue";
 
-// eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   categories: Array,
   scrollingProgress: Object,
   windowHeights: Number,
 })
 
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['scrolling'])
 const route = useRoute();
 
 const {rawText, book, typeBook, downloadBook} = useBook();
-function scrolling(e) {
+function scrolling(e:Event) {
   emit('scrolling', e)
 }
 document.title = 'Book';
-downloadBook(route.params.id)
+downloadBook(+route.params.id)
 
 </script>
 

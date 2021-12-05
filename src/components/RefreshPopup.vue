@@ -5,41 +5,37 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "RefreshPopup",
-  components: {},
-  props: {
-    swReg: Object
-  },
-  data: () => ({
-    registration: null,
-    updateExists: false,
-  }),
-  computed: {},
-  watch: {},
-  created() {
-    if (this.swReg) {
-      console.log({created: this.swReg})
-      this.registration = Object.assign({}, this.swReg)
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const emit = defineEmits<{
+  (e: 'refresh-sw'): void
+}>()
+
+const props = defineProps<{
+  swReg: any
+}>()
+const registration = ref()
+const updateExists = ref<boolean>(false)
+
+    if (props.swReg) {
+      console.log({created: props.swReg})
+      registration.value = Object.assign({}, props.swReg)
     }
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log({controllerchange: navigator.serviceWorker})
-      if (this.updateExists) return
-      this.updateExists = true
+      if (updateExists.value) return
+      updateExists.value = true
       window.location.reload()
     })
-  },
-  mounted() {},
-  methods: {
-    refreshApp() {
-      this.$emit('refresh-sw');
+
+function refreshApp() {
+      emit('refresh-sw');
     }
-  },
-}
+
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .sw-update-popup {
   display: flex;
   flex-flow: column;

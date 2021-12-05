@@ -38,22 +38,38 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {ref} from 'vue';
-import {isMobile} from "@/utils/helpers";
-import IconClose from "@/components/icons/IconClose"
+import {isMobile} from "../utils/helpers";
+import IconClose from "@/components/icons/IconClose.vue"
+import { CategoryExtended } from '../interfaces/category';
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['set-genres', 'hide-modal'])
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  genresProps: Array,
-  categories: Array,
-})
 
-const activeCategory = ref('');
-const selectedGenre = ref([]);
-const genres = ref([]);
+
+interface Category {
+    id: number,
+    name: string,
+    genres: Array<Genre>
+}
+interface Genre {
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: number,
+    created_at: number,
+}
+const props = defineProps<{
+  categories: Category[],
+  genresProps: Genre[],
+}>()
+
+
+const activeCategory = ref(0);
+const selectedGenre = ref<Genre[]>([]);
+const genres = ref<Genre[]>([]);
 
 if (props.genresProps && props.genresProps.length) {
   selectedGenre.value.push(...props.genresProps)
@@ -64,11 +80,11 @@ function sendGenre() {
   emit('set-genres', selectedGenre)
 }
 
-function calcCheckedChildes(e) {
+function calcCheckedChildes(e:Category) {
   return e.genres.find(item => genres.value.map(genre => genre.id).includes(item.id))
 }
 
-function colorizeGenre(i) {
+function colorizeGenre(i:number) {
   const color = ['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE', 'DeepSkyBlue', 'PURPLE',]
   return color[i]
 }
@@ -89,7 +105,7 @@ function closeModal() {
   flex-flow: row wrap;
   padding: 1rem;
   height: 100%;
-  width: 100%;
+  width: min-content;
   color: var(--surface-on);
   background-color: var(--surface);
   border-radius: 10px;
@@ -130,7 +146,7 @@ function closeModal() {
   .parent {
     cursor: pointer;
     margin: 0 0.5rem 0 0;
-    width: 25%;
+    max-width: 25%;
 
     .parent-title {
       text-transform: capitalize;

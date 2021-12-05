@@ -3,7 +3,7 @@
     <div class="book-video" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
       <ol class="media-list" v-if="!isMobile()">
         <li :class="{active: media.id === activeMedia.id}"
-            v-for="media of book.files"
+            v-for="media of book?.files"
             :key="media.id"
             @click="activeMedia = media">
           <button class="btn media-name">{{ media.file_name }}</button>
@@ -25,19 +25,64 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {computed, ref} from "vue";
-import {isMobile} from "@/utils/helpers";
-import ImageItem from "@/components/ImageItem";
+import {isMobile} from "../../utils/helpers";
+import ImageItem from "@/components/ImageItem.vue";
 
-const apiUrl = process.env.VUE_APP_API_URL
+import {API_URL} from "../../../runtimeEnv";
+import { BookDirFile } from "../../interfaces/book";
 
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  book: Object,
-})
-const activeImage = ref(null);
-const activeMedia = ref({type: '', url: null});
+interface Category {
+    id: number,
+    name: string
+}
+
+interface Genre {
+    [key: string]: number|string|Category|boolean
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+interface BookFile {
+    created_at: number,
+    extension: string,
+    file_name: string,
+    full_name: string,
+    id: number,
+    path: string,
+    size: number,
+    type: string,
+    url: string,
+}
+
+interface Book {
+    id: number,
+    name: string,
+    annotation?: string,
+    text?: string,
+    book_type?: string,
+    source?: string,
+    bookmark?: number,
+    rating?: number,
+    ad?: boolean,
+    genres: Array<Genre>
+    cover_path?: string,
+    files?: Array<BookFile>,
+    view_count?: number,
+    created_at?: number,
+    updated_at?: number,
+    last_read?: number,
+}
+
+const props = defineProps<{
+  book: Book,
+}>()
+const activeImage = ref('');
+const activeMedia = ref({id: 0, type: '', url: ''});
 const getTypeBook = computed(() => {
   if (props.book.genres.findIndex(item => item.name === 'picture') !== -1) {
     return 'picture'
@@ -48,11 +93,11 @@ const getTypeBook = computed(() => {
   } else return ''
 })
 const getSrcUrl = computed(() => {
-  return activeMedia.value.url ? `${apiUrl}/${activeMedia.value.url}` : ''
+  return activeMedia.value.url ? `${API_URL}/${activeMedia.value.url}` : ''
 })
 
-function getSrcImgUrl(e) {
-  return e.url ? `${apiUrl}/${e.url}` : ''
+function getSrcImgUrl(e:BookDirFile) {
+  return e.url ? `${API_URL}/${e.url}` : ''
 }
 
 </script>

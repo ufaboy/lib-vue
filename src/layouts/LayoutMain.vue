@@ -9,25 +9,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {onBeforeUnmount, provide, ref} from "vue";
 import {isMobile} from "../utils/helpers";
-import {loadCategories} from "@/utils/loadData";
+import {loadCategories} from "../utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
-import NavigatorDesktop from "../components/sidebar/NavigatorDesktop";
-import NavigatorMobile from "../components/sidebar/NavigatorMobile";
+import NavigatorDesktop from "../components/sidebar/NavigatorDesktop.vue";
+import NavigatorMobile from "../components/sidebar/NavigatorMobile.vue";
+import {CategoryExtended} from "../interfaces/category";
+import {BookScrolling} from "../interfaces/book";
 
 const activeBurger = ref(false)
-const categories = ref([])
+const categories = ref<CategoryExtended[]>([])
 const {
   scrollingProgress,
   windowHeights,
   throttleScroll
 } = useScroll()
 
-async function saveScrollingBook(id) {
-  const formData = {bookId: id, bookmark: scrollingProgress.value.progress}
+async function saveScrollingBook(id: number): Promise<void> {
+  const formData: BookScrolling = {bookId: id, bookmark: scrollingProgress.value.progress}
   const result = await updateBookMark(formData)
   if (!result) {
     console.log({'saveScrollingBook': result})
@@ -42,20 +44,17 @@ async function getCategories() {
 
 getCategories();
 window.addEventListener('scroll', throttleScroll, {passive: true})
-document.getElementById('aside').classList.replace('hide', 'show')
+document.getElementById('aside')!.classList.replace('hide', 'show')
 onBeforeUnmount(() => {
+  // @ts-expect-error
   window.removeEventListener('scroll', throttleScroll, {passive: true})
-  document.getElementById('aside').classList.replace('show', 'hide')
-
-
+  document.getElementById('aside')!.classList.replace('show', 'hide')
 })
 
 provide('saveScrollingBook', saveScrollingBook)
 </script>
 
 <style lang="scss">
-.basement {
-}
 
 @media only screen and (min-width: 893px) {
   #header {

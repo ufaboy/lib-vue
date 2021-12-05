@@ -61,17 +61,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang=ts>
 import {computed, inject, ref} from 'vue';
-import {loadNotes} from "@/utils/loadData";
-import {$patch} from "@/utils/superFetch";
-import {isMobile} from "@/utils/helpers";
+import {loadNotes} from "../utils/loadData";
+import {$patch} from "../utils/superFetch";
+import {isMobile} from "../utils/helpers";
 
+interface Note {
+  name:string, type:string, url:string
+}
 document.title = 'Notes';
 const loader = inject("loader");
-const notes = ref([]);
-const filterTypes = ref([])
-const allTypes = ref([])
+const notes = ref([{
+  name:'', type:'', url:''
+}]);
+const filterTypes = ref([''])
+const allTypes = ref([''])
 const filteredNotes = computed(() => {
   return filterTypes.value.length ? notes.value.filter(note => filterTypes.value.includes(note.type)) : notes.value;
 })
@@ -83,7 +88,8 @@ const getNotes = async () => {
     prepareNotes(notes.value)
   }
 };
-const prepareNotes = rawNotes => {
+const prepareNotes = (rawNotes:Note[]) => {
+  allTypes.value.splice(0, 1)
   for (const note of rawNotes) {
     if (!allTypes.value.includes(note.type) && note.type) {
       allTypes.value.push(note.type)
@@ -93,14 +99,16 @@ const prepareNotes = rawNotes => {
 const addNote = () => {
   notes.value.unshift({url: '', name: '', type: ''})
 };
-const deleteNote = (index) => {
+const deleteNote = (index:number):void => {
   notes.value.splice(index, 1)
   sendNotes()
 }
 const sendNotes = async () => {
   const formData = {text: JSON.stringify(notes.value)}
+  // @ts-expect-error
   loader.show()
   const result = await $patch('/book/update?id=1', formData)
+  // @ts-expect-error
   loader.hide()
   if (result) {
     notes.value.splice(0, notes.value.length)

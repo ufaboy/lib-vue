@@ -10,7 +10,7 @@
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
-          <button class="td-action" @click="sortBy(column, ascending ? 0 : 1)">
+          <button class="td-action" @click="sortBy(column, ascending)">
             <IconSortAsc class="icon" v-if="ascending"/>
             <IconSortDesc class="icon" v-else/>
           </button>
@@ -18,8 +18,8 @@
       </th>
       </thead>
       <transition-group name="flip-list" tag="tbody">
-        <tr class="row" :class="{picante: genre.ad}" v-for="genre of genres" :key="genre.id"
-            @click="openRow(genre)">
+        <tr class="row" :class="{picante: genre.ad}" v-for="(genre, index) of genres" :key="genre.id"
+            @click="openRow(genre)" :tabindex="index + 1">
           <td class="td" :class="columnsClasses.id">{{ genre.id }}</td>
           <td class="td" :class="columnsClasses.title">{{ genre.name }}</td>
           <td class="td" :class="columnsClasses.description">{{ genre.description }}</td>
@@ -28,34 +28,51 @@
       </transition-group>
     </table>
     <dialog ref="genreModal" class="dialog dialog-genre" @close="showGenreModal = false">
-      <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories" @update-genres="getGenres"
+      <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories"  @update-genres="getGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
   </div>
 </template>
 
-<script setup>
-import useGenres from "@/composables/useGenres";
-import EditGenre from '@/components/EditGenre.vue'
+<script setup lang="ts">
+import useGenres from "../composables/useGenres";
+import EditGenre from '../components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "@/utils/helpers";
+import {isMobile} from "../utils/helpers";
 
 document.title = 'Table Genres';
-const columns = ['id', 'name', 'description', 'category']
-const columnsClasses = {
+const columns: string[] = ['id', 'name', 'description', 'category']
+const columnsClasses: {[index: string]:string} = {
   id: 'cell-id',
   name: 'cell-name',
   description: 'cell-description',
   category: 'cell-category'
 }
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-})
+
+interface CategoryExtended extends Category{
+    genres?: Array<Genre>
+}
+
+interface Category {
+  id: number,
+  name: string,
+}
+interface Genre {
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+const props = defineProps<{
+  categories: CategoryExtended[]
+}>()
+
 
 const {genres, ascending, genreModal, showGenreModal, closeDialog, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
-if (genres.value.length === 0) {
+if (genres.value?.length === 1 && genres.value[0].id === 0) {
   getGenres();
 }
 </script>

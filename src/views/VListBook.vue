@@ -30,7 +30,7 @@
 
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
                  :key="'book'+book.id">
-      <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/icons/svg/book-dead-solid.svg'">
+      <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/img/book-dead-solid.svg'">
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
@@ -42,21 +42,40 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {onBeforeUnmount, ref, watch} from 'vue';
 import {useRoute} from 'vue-router'
-import useBooks from "@/composables/useBooks";
+import useBooks from "../composables/useBooks";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "@/utils/helpers";
-import StarRating from "../components/StarRating";
+import {isMobile} from "../utils/helpers";
+import StarRating from "../components/StarRating.vue";
 
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 // eslint-disable-next-line no-undef
-const props = defineProps({
-  categories: Array,
-})
+
+interface Category {
+    id: number,
+    name: string,
+    genres: Array<Genre>
+}
+interface Genre {
+    [key: string]: number|string|Category|boolean
+    id: number,
+    name: string,
+    description: string,
+    category: Category,
+    ad: boolean,
+    created_at: number,
+}
+interface CategoryExtended extends Category{
+    genres: Array<Genre>
+}
+
+const props = defineProps<{
+  categories: CategoryExtended[]
+}>()
 const route = useRoute();
 const {
   filter,
@@ -72,13 +91,12 @@ const {
 } = useBooks();
 const showTopButton = ref(false);
 
-function calcGenreById(id) {
+function calcGenreById(id:number) {
   let genreArray = []
   for (const cat of props.categories) {
     genreArray.push(...cat.genres)
   }
-  const genre = genreArray.find(genre => genre.id === id)
-  return genre ? genre : {}
+  return genreArray.find(genre => genre.id === id)
 }
 
 limit.value = 25;
@@ -94,7 +112,10 @@ function changeGenreLoadBook() {
 }
 
 watch(props, () => {
-  filter.value.genre = calcGenreById(+route.params.id)
+  const x = calcGenreById(+route.params.id)
+  if(x && filter.value.genre) {
+  filter.value.genre.id = x.id
+  }
 })
 
 function changeSortAsc() {
@@ -109,18 +130,23 @@ function changeSortOrderBy() {
   getBooksAndPush()
 }
 
-function onScroll(e) {
-  showTopButton.value = e.target.scrollingElement.scrollTop > 50;
+function onScroll(event: Event) {
+  if (event.target instanceof Document) {
+    showTopButton.value = event.target.scrollingElement!.scrollTop > 50;
+  }
 }
 
 function scrollToTop() {
-  document.scrollingElement.scrollTo({top: 0, behavior: "smooth"})
+  document.scrollingElement!.scrollTo({top: 0, behavior: "smooth"})
 }
 
 loadOrderBy();
-filter.value.genre = calcGenreById(+route.params.id)
+if(calcGenreById(+route.params.id)) {
+  filter.value.genre = calcGenreById(+route.params.id)
+}
 window.addEventListener('scroll', onScroll, {passive: true});
 onBeforeUnmount(() => {
+  // @ts-expect-error
   window.removeEventListener('scroll', onScroll, {passive: true})
 })
 </script>
@@ -238,10 +264,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media only screen and (max-width: 892px) and (orientation: landscape) {
-  .list-book {
-  }
-}
+@media only screen and (max-width: 892px) and (orientation: landscape) {}
 
 @media only screen and (max-width: 892px) and (orientation: portrait) {
   .list-book {
