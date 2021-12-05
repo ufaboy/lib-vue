@@ -224,7 +224,7 @@ async function checkBook() {
     validation = false
   }
   if (!validation) {
-    // this.$toast.error(messages);
+    messages.map(message=> printToast(message, 'danger'))
   }
   return validation
 }
@@ -344,9 +344,9 @@ let errors:string[] = []
     console.log('sendFiles', {response: response, files: files.value})
   } catch (e:unknown) {
     if (typeof e === "string") {
-        printToast(e, 'error')
+        printToast(e, 'danger')
     } else if (e instanceof Error) {
-        printToast(e.message, 'error')
+        printToast(e.message, 'danger')
     }
     
     console.log({sendFiles: e})

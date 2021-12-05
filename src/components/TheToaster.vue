@@ -1,6 +1,6 @@
 <template>
   <div class="toast">
-      <div class="message check" v-if="type === 'check'">
+      <div class="message check" v-if="type === 'success'">
         <IconCheck class="color" /> &nbsp; &nbsp;
         <span class="message-text">{{message}}</span>
       </div>
@@ -41,14 +41,7 @@ const props = defineProps({
     default: 'info'
   }
 })
-const messageTypeClass = computed(()=>{
-  return {
-    info: props.type === 'info',
-    error: props.type === 'error',
-    success: props.type === 'success',
-    warning: props.type === 'warning',
-  }
-})
+
 </script>
 
 <style lang="scss">
