@@ -38,7 +38,6 @@ const saveScrollingBook: Function= inject('saveScrollingBook')
 interface CategoryExtended extends Category{
     genres?: Array<Genre>
 }
-
 interface Category {
   id: number,
   name: string,
@@ -52,10 +51,8 @@ interface Genre {
     ad: boolean,
     created_at: number,
 }
-
 interface Genre {
-    
-    id: number,
+        id: number,
     name: string,
     description: string,
     category: Category,
@@ -73,7 +70,6 @@ interface BookFile {
     type: string,
     url: string,
 }
-
 interface Book {
     id: number,
     name: string,
@@ -112,7 +108,7 @@ const widthProgressLine = computed(() => {
 const {windowHeights} = toRefs(props)
 const textEditorModal = ref();
 const showEditorModal = ref(false);
-const activeImageIndex = ref(0);
+const activeImageIndex = ref<number|undefined>();
 const editorNode = ref<HTMLElement>();
 const chapterElement = ref<HTMLElement>();
 const chapterOptions = ref<Element[]>([]);

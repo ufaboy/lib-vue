@@ -98,7 +98,7 @@ if (genres.value?.length === 1 && genres.value[0].id === 0) {
 
 @media only screen and (max-width: 892px) {
   .genre-table {
-    padding: 0 0.5rem;
+    padding: 0;
     height: calc(100% - 3.5rem);
     .dialog {
       margin: auto;

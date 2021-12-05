@@ -1,5 +1,5 @@
 <template>
-  <form class="genre-book" @submit.prevent="sendGenre">
+  <form class="genre-book" @submit.prevent="sendGenre" method="dialog">
     <header class="modal-header">
       <h1>Genre</h1>
       <span>selected: {{ selectedGenre.length }}</span>

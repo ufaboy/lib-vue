@@ -8,7 +8,7 @@
     </header>
     <div class="form-field mb-1">
       <label class="form-field__label">name</label>
-      <input type="text" class="form-field__input" v-model.trim="localGenre.name">
+      <input type="text" class="form-field__input" required v-model.trim="localGenre.name">
     </div>
     <div class="form-field mb-1">
       <label class="form-field__label">description</label>
@@ -17,7 +17,7 @@
     <section class="form-row mb-1">
       <div class="form-field">
         <label class="form-field__label">category</label>
-        <select class="select form-field__select" v-model="localGenre.category">
+        <select class="select form-field__select" required v-model="localGenre.category">
           <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>

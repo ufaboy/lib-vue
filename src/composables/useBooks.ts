@@ -119,7 +119,7 @@ export default function useBooks() {
         const result = await loadBooks(page.value, limit.value, sort, formFilter);
         loader.hide();
         if (result) {
-            if (method === 'push' && books.value.items[0].id !== 0) {
+            if (method === 'push' && books.value.items.length) {
                 books.value?.items.push(...result.items)
                 page.value = ++page.value
             } else {
