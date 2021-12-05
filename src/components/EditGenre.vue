@@ -21,7 +21,7 @@
           <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
-      <div class="form-field">
+      <div class="form-field ad">
         <label class="form-field__label">ad</label>
         <div class="toggle toggle--knob" v-if="adAccess">
           <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="localGenre.ad">
@@ -100,8 +100,15 @@ const categoriesSimple = props.categories.map(category => {
     color: red;
   }
 
-  .form-field {
-
+  .form-field.ad {
+    .form-field__label {
+      justify-content: center;
+    }
+    .toggle {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
   }
 
   .footer {

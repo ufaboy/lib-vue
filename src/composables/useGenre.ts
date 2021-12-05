@@ -2,16 +2,16 @@ import {computed, inject, ref} from "vue";
 import {sendGenre} from "../utils/uploadData";
 import {getAdAccess} from "../utils/userData";
 import {$delete} from "../utils/superFetch";
-import { Genre, GenreForm } from "../interfaces/genre";
+import {Genre, GenreForm} from "../interfaces/genre";
 
 // @ts-expect-error
 export default function useGenre(props, emit) {
     const localGenre = ref({
         id: 0,
-    name: '',
-    description: '',
-    category: {id: 0, name: '' },
-    ad: false,
+        name: '',
+        description: '',
+        category: {id: 0, name: ''},
+        ad: false,
     })
     if (props.genre) {
         localGenre.value = props.genre
@@ -19,15 +19,15 @@ export default function useGenre(props, emit) {
     const adAccess = getAdAccess()
     const loader = inject("loader");
 
-    const invalidGenre = computed(():string => {
+    const invalidGenre = computed((): string => {
         return localGenre.value ? (!localGenre.value.name || !localGenre.value.category) ? 'Не заполнены поля' : '' : ''
     })
 
-    const updateGenre = async() => {
+    const updateGenre = async () => {
         if (invalidGenre) {
             return false;
         }
-        let genreForm:GenreForm = {
+        let genreForm: GenreForm = {
             name: localGenre.value.name,
             description: localGenre.value.description,
             ad: localGenre.value.ad,

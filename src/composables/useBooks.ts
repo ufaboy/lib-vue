@@ -12,7 +12,7 @@ export default function useBooks() {
             name: '',
             genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
             rating: 0,
-            ad: 0,
+            ad: undefined,
             searchQuery: ''
         }
     );
@@ -82,7 +82,7 @@ export default function useBooks() {
             name: filter.value.name ? filter.value.name : undefined,
             genre: filter.value.genre?.id ? filter.value.genre.id : undefined,
             rating: filter.value.rating ? filter.value.rating : undefined,
-            ad: filter.value.ad === 2 ? true : filter.value.ad === 2 ? false : undefined,
+            ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
             searchQuery: searchQuery.value
         }
         try {
@@ -106,7 +106,7 @@ export default function useBooks() {
             name: filter.value.name ? filter.value.name : undefined,
             genre: filter.value.genre?.id ? filter.value.genre.id : undefined,
             rating: filter.value.rating ? filter.value.rating : undefined,
-            ad: filter.value.ad === 2 ? true : filter.value.ad === 2 ? false : undefined,
+            ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
             searchQuery: searchQuery.value
         }
         if (!infinityState.value && method) {
@@ -158,7 +158,7 @@ export default function useBooks() {
                 category: {id: 0, name: ''}
             }
             filter.value.rating = 0
-            filter.value.ad = 0
+            filter.value.ad = undefined
             getBooksAndReplace()
         }
     };

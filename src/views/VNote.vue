@@ -29,12 +29,9 @@
         <th class="th">name</th>
         <th class="th">
           <span>type</span>
-          <div class="cell-dropdown">
-            <label class="checkbox-container" v-for="(type, index) of allTypes" :key="index">
-              {{ type }}
-              <input type="checkbox" multiple v-model="filterTypes" :value="type">
-              <span class="checkmark"></span></label>
-          </div>
+          <select v-model="filterType">
+            <option :value="type" v-for="(type, index) in types" :key="index">{{type}}</option>
+          </select>
         </th>
         <th class="th">url</th>
         <th class="th">actions</th>
@@ -72,30 +69,20 @@ interface Note {
 }
 document.title = 'Notes';
 const loader = inject("loader");
-const notes = ref([{
-  name:'', type:'', url:''
-}]);
-const filterTypes = ref([''])
-const allTypes = ref([''])
+const notes = ref<Note[]>([]);
+const types:string[] = ['', 'story', 'video', 'site', 'comic']
+const filterType = ref('')
 const filteredNotes = computed(() => {
-  return filterTypes.value.length ? notes.value.filter(note => filterTypes.value.includes(note.type)) : notes.value;
+  return filterType.value ? notes.value.filter(note => filterType.value === note.type) : notes.value;
 })
 
 const getNotes = async () => {
   const result = await loadNotes()
   if (result) {
     notes.value.push(...JSON.parse(result.text))
-    prepareNotes(notes.value)
   }
 };
-const prepareNotes = (rawNotes:Note[]) => {
-  allTypes.value.splice(0, 1)
-  for (const note of rawNotes) {
-    if (!allTypes.value.includes(note.type) && note.type) {
-      allTypes.value.push(note.type)
-    }
-  }
-}
+
 const addNote = () => {
   notes.value.unshift({url: '', name: '', type: ''})
 };
@@ -113,7 +100,6 @@ const sendNotes = async () => {
   if (result) {
     notes.value.splice(0, notes.value.length)
     notes.value.push(...JSON.parse(result.text))
-    prepareNotes(notes.value)
   }
 }
 

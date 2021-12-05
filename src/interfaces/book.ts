@@ -117,7 +117,7 @@ interface Filter {
     name: string
     genre: Genre | undefined,
     rating: number,
-    ad: number,
+    ad: boolean|undefined,
     searchQuery: string
 }
 
