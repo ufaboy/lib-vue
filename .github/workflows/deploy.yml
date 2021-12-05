@@ -7,7 +7,7 @@ on:
 
 env:
   DEPLOY_PATH: ${{ secrets.PROJECT_PATH }}
-  BUILD_SCRIPT: npm run build:prod
+  BUILD_SCRIPT: npm run build
   BUILD_SCRIPT_OUTPUT: dist
 
 jobs:
