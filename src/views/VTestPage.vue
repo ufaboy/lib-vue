@@ -9,15 +9,22 @@
     </div>
     <div class="stars" id="stars"></div>
     <div class="moon" ></div>
+    <div class="icons-bar">
+      <IconCheck /> <IconDanger /> <IconInfo /> <IconWarning />
+    </div>
   </div>
 
 </template>
 
 <script lang="ts">
 import SelectComponent from "../components/SelectComponent.vue";
+import IconCheck from "../components/icons/IconCheck.vue";
+import IconDanger from "../components/icons/IconDanger.vue";
+import IconInfo from "../components/icons/IconInfo.vue";
+import IconWarning from "../components/icons/IconWarning.vue";
 export default {
   name: "TestPage",
-  components: {SelectComponent},
+  components: {IconWarning, IconInfo, IconDanger, IconCheck, SelectComponent},
   props: {},
   data: () => ({}),
   computed: {},
@@ -60,6 +67,11 @@ export default {
 
 <style scoped lang="scss">
 .test-wrap {
+  .icons-bar {
+    height: 50px;
+    width: 100%;
+    background-color: #6c6962;
+  }
   .moon {
     height: 100px;
     width: 100px;

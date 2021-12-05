@@ -7,6 +7,7 @@ import {authMiddleware} from "../middleware/auth";
 import Home from '../views/VHome.vue'
 import Main from "../layouts/LayoutMain.vue";
 import LayoutTest from "../layouts/LayoutTest.vue";
+import VTestPage from "../views/VTestPage.vue";
 // const Home = () => import('../views/VHome.vue')
 const VListBook = () => import('@/views/VListBook.vue')
 const VListGenre = () => import('@/views/VListGenre.vue')
@@ -72,6 +73,11 @@ const routes: RouteRecordRaw[] = [
         path: '/media',
         name: 'media',
         component: VMedia
+      },
+      {
+        path: '/test',
+        name: 'test',
+        component: VTestPage
       },
       {
         path: '/note',

@@ -72,7 +72,7 @@ async function login() {
   } else {
     console.log({'response.notOk': response})
     // @ts-expect-error
-    printToast(result.message, 'error')
+    printToast(result.message, 'danger')
   }
 }
 
