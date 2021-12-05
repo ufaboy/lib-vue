@@ -187,16 +187,7 @@ const {book, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = 
 const editor = ref<HTMLTextAreaElement>()
 const files = ref<FileMix[]>([]);
 
-const genres = ref<Genre[]>([
-  {
-    id: 0,
-    name: '',
-    ad: false,
-    created_at: 0,
-    description: '',
-    category: {id: 0, name: ''},
-  }
-]);
+const genres = ref<Genre[]>([]);
 const editorMode = ref('raw');
 
 function resetBook() {
@@ -246,7 +237,7 @@ function setGenres(e: { value: Genre[]; }) {
 
   book.value.ad = e.value.findIndex((item: Genre) => item.ad) > -1
   genres.value = e.value;
-  showGenreBookModal.value = false;
+  closeDialog();
 }
 
 function colorizeGenre(i: number) {

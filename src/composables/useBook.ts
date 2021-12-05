@@ -38,7 +38,7 @@ const loader: Loader = inject("loader");
     };
     const closeDialog = () => {
         // @ts-expect-error
-        genreBookModal.value?.close()
+        genreBookModal.value.close()
         showGenreBookModal.value = false
     }
     function openGenreModal() {

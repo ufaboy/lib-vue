@@ -1,4 +1,4 @@
-import {Loader} from './../plugins/loader/index';
+import {Loader} from '../plugins/loader';
 import {computed, inject, ref,} from 'vue'
 import {goPage, loadBooks} from "../utils/loadData";
 import {API_URL} from '../../runtimeEnv';
@@ -9,12 +9,12 @@ export default function useBooks() {
     const loader: Loader = inject("loader");
     const filter = ref<Filter>(
         {
-        name: '',
-        genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
-        rating: 0,
-        ad: 0,
-        searchQuery: ''
-    }
+            name: '',
+            genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
+            rating: 0,
+            ad: 0,
+            searchQuery: ''
+        }
     );
     const searchQuery = ref('');
     const limit = ref<number>(10);
@@ -23,34 +23,7 @@ export default function useBooks() {
     const pagBtnArr = ref<Array<number>>();
     const infinityState = ref(true);
     const books = ref<BookData>({
-        items: [
-            {
-                id: 0,
-                name: '',
-                annotation: '',
-                source: '',
-                bookmark: 0,
-                book_type: '',
-                rating: 0,
-                ad: false,
-                cover_path: '',
-                view_count: 0,
-                last_read: 0,
-                updated_at: 0,
-                genres: [],
-                files: [{
-                    created_at: 0,
-                    extension: '',
-                    file_name: '',
-                    full_name: '',
-                    id: 0,
-                    path: '',
-                    size: 0,
-                    type: '',
-                    url: '',
-                }]
-            }
-        ],
+        items: [],
         _links: {
             first: {href: ''},
             last: {href: ''},
@@ -64,7 +37,8 @@ export default function useBooks() {
             perPage: 0,
             totalCount: 0
         }
-    });
+
+    })
     const paginator = ref<Array<number>>();
 
     function calcPaginator() {
@@ -210,7 +184,7 @@ export default function useBooks() {
     const getCover = (book: Book) => {
         if (book.cover_path) {
             return `${API_URL}/${book.cover_path}`
-        } else return '/img/book-dead-solid.svg'
+        } else return '/icons/svg/book-dead-solid.svg'
     };
 
 
