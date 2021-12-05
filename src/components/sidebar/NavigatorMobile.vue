@@ -1,7 +1,7 @@
 <template>
   <div class="navigator-mobile" :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
     <router-link class="breadcrumb-home" to="/">Home</router-link>
-    <button class="btn-icon" @click.stop="activeBurger = !activeBurger">
+    <button class="btn-icon" aria-label="Menu" @click.stop="activeBurger = !activeBurger">
       <svg class="icon" width="24" height="100%" viewBox="0 0 26 24">
         <rect y="0" width="26" height="4"/>
         <rect y="10" width="26" height="4"/>

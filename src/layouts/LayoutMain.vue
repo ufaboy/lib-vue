@@ -1,7 +1,7 @@
 <template>
   <div class="basement" @click="activeBurger = false">
     <teleport to="#aside" :disabled="isMobile()">
-      <navigator-mobile v-if="isMobile()" />
+      <Navigator-mobile v-if="isMobile()" />
       <NavigatorDesktop v-else />
     </teleport>
     <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
