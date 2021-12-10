@@ -9,14 +9,14 @@ export default function useBooks() {
     const loader: Loader = inject("loader");
     const filter = ref<Filter>(
         {
-            name: '',
+            name: undefined,
             genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
             rating: 0,
             ad: undefined,
-            searchQuery: ''
+            searchQuery: undefined
         }
     );
-    const searchQuery = ref('');
+    const searchQuery = ref<string|undefined>();
     const limit = ref<number>(10);
     const orderBy = ref({name: 'updated_at', asc: false});
     const page = ref<number>(1);

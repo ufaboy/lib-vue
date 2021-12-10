@@ -24,7 +24,8 @@ export default function useGenre(props, emit) {
     })
 
     const updateGenre = async () => {
-        if (invalidGenre) {
+        console.log('updateGenre', {invalidGenre: invalidGenre.value})
+        if (invalidGenre.value) {
             return false;
         }
         let genreForm: GenreForm = {
@@ -47,10 +48,9 @@ export default function useGenre(props, emit) {
         } catch (e) {
             console.log({'error updateGenre': e})
         }
-
     }
     const deleteGenre = async () => {
-        const url = `/genre/delete?id=${props.genre.id}`
+        const url = new URL(`/genre/delete?id=${props.genre.id}`)
         const result = await $delete(url)
         if (result) {
             emit('update-genres')

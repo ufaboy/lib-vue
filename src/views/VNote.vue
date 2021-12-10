@@ -63,6 +63,7 @@ import {computed, inject, ref} from 'vue';
 import {loadNotes} from "../utils/loadData";
 import {$patch} from "../utils/superFetch";
 import {isMobile} from "../utils/helpers";
+import {API_URL} from "../../runtimeEnv";
 
 interface Note {
   name:string, type:string, url:string
@@ -94,7 +95,7 @@ const sendNotes = async () => {
   const formData = {text: JSON.stringify(notes.value)}
   // @ts-expect-error
   loader.show()
-  const result = await $patch('/book/update?id=1', formData)
+  const result = await $patch(new URL(`${API_URL}/book/update?id=1`), formData)
   // @ts-expect-error
   loader.hide()
   if (result) {

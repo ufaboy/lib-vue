@@ -1,14 +1,13 @@
 import { router } from '../router';
-import  {API_URL} from "../../runtimeEnv";
 import { BookData } from '../interfaces/book';
 
 // @ts-expect-error
-async function $goPage(url:string): Promise<BookData> {
+async function $goPage(url:URL): Promise<BookData> {
     const token = sessionStorage.getItem('lib-token')
     if (!token) {
         throw new Error(`Token Error: token: ${token}`)
     }
-    const response = await fetch(url, {
+    const response = await fetch(url.toString(), {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
@@ -25,15 +24,14 @@ async function $goPage(url:string): Promise<BookData> {
     }
 }
 
-async function $get(rawUrl:string) {
+async function $get(url:URL) {
     try {
         const token = sessionStorage.getItem('lib-token')
-        const url = `${API_URL}${rawUrl}`;
         if (!token) {
             throw new Error(`Token Error: token: ${token}`)
         }
 
-        const response = await fetch(url, {
+        const response = await fetch(url.toString(), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -53,14 +51,13 @@ async function $get(rawUrl:string) {
 
 }
 
-async function $post(rawUrl:string, data:any = null) {
+async function $post(url:URL, data:any = null) {
     try {
         const token = sessionStorage.getItem('lib-token')
-        const url = `${API_URL}${rawUrl}`;
         if (!token) {
             throw new Error(`Token Error: token: ${token}`)
         }
-        const response = await fetch(url, {
+        const response = await fetch(url.toString(), {
             method: 'POST',
             body: data ? JSON.stringify(data) : data,
             headers: {
@@ -82,13 +79,12 @@ async function $post(rawUrl:string, data:any = null) {
 
 }
 
-async function $patch(rawUrl:string, data: any = null) {
+async function $patch(url:URL, data: any = null) {
     const token = sessionStorage.getItem('lib-token')
-    const url = `${API_URL}${rawUrl}`;
     if (!token) {
         console.log({token: token})
     }
-    const response = await fetch(url, {
+    const response = await fetch(url.toString(), {
         method: 'PATCH',
         body: data ? JSON.stringify(data) : data,
         headers: {
@@ -106,13 +102,12 @@ async function $patch(rawUrl:string, data: any = null) {
     }
 }
 
-async function $delete(rawUrl:string, data:any = null) {
+async function $delete(url:URL, data:any = null) {
     const token = sessionStorage.getItem('lib-token')
-    const url = `${API_URL}${rawUrl}`;
     if (!token) {
         throw new Error(`Token Error: token: ${token}`)
     }
-    const response = await fetch(url, {
+    const response = await fetch(url.toString(), {
         method: 'DELETE',
         body: data ? JSON.stringify(data) : data,
         headers: {

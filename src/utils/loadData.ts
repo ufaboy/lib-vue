@@ -1,56 +1,54 @@
 import {$get, $goPage} from "./superFetch";
 import {Book, BookDirFiles, FormFilter} from "../interfaces/book";
 import {CategoryExtended} from "../interfaces/category";
-import { BookData } from "../interfaces/book";
+import {BookData} from "../interfaces/book";
+import {API_URL} from "../../runtimeEnv";
 
-
-async function loadCategories(name?:string): Promise<CategoryExtended[]> {
-        const url = name ? `/category?name=${name}` : '/category'
-        return await $get(url)
-}
-
-async function loadGenres(name?:string, orderBy:string = 'created_at') {
-    let url = `/genre?order_by=${orderBy}`
+async function loadCategories(name?: string): Promise<CategoryExtended[]> {
+    const url = new URL(`${API_URL}/category`);
     if (name) {
-        url = `${url}&name=${name}`
+        url.searchParams.append('name', name);
     }
+    return await $get(url)
+}
+
+async function loadGenres(name?: string, orderBy: string = 'created_at') {
+    const url = new URL(`${API_URL}/genre`);
+    Object.entries({orderBy, name}).forEach(([key, value]) => {
+        if (value !== undefined) {
+            url.searchParams.append(key, value.toString());
+        }
+    })
     return await $get(url);
 }
 
-async function loadBooks(page:number = 1, limit:number = 10, sort:string = '-id', filter:FormFilter): Promise<BookData> {
-    let url = `/book?page=${page}&limit=${limit}&sort=${sort}`
-    if (filter.name) {
-        url += `&name=${filter.name}`
-    }
-    if (filter.genre) {
-        url += `&genre_id=${filter.genre}`
-    }
-    if (filter.rating) {
-        url += `&rating=${filter.rating}`
-    }
-    if (filter.ad !== undefined) {
-        url += `&ad=${filter.ad ? 1 : 0}`
-    }
-    if (filter.searchQuery) {
-        url += `&searchQuery=${filter.searchQuery}`
-    }
+async function loadBooks(page: number = 1, limit: number = 10, sort: string = '-id', filter: FormFilter): Promise<BookData> {
+    const url = new URL(`${API_URL}/book`);
+    Object.entries({page, limit, sort, ...filter,}).forEach(([key, value]) => {
+        if (value !== undefined) {
+            if (key === 'ad') {
+                value = value ? 1 : 0
+            }
+            url.searchParams.append(key, value.toString());
+        }
+    });
     return await $get(url);
 }
 
-async function loadBook(bookId:number):Promise<Book> {
-    return await $get(`/book/view?id=${bookId}`);
+async function loadBook(bookId: number): Promise<Book> {
+    return await $get(new URL(`${API_URL}/book/view?id=${bookId}`));
 }
 
-async function loadNotes():Promise<{ text: string; }> {
-    return await $get('/book/view?id=1');
+async function loadNotes(): Promise<{ text: string; }> {
+    return await $get(new URL(`${API_URL}/book/view?id=1`));
 }
 
-async function goPage(page:string) {
-    return await $goPage(page);
+async function goPage(page: string) {
+    return await $goPage(new URL(page));
 }
 
-async function loadMediaFiles():Promise<BookDirFiles[]> {
-    return await $get('/media-storage/media-manager')
+async function loadMediaFiles(): Promise<BookDirFiles[]> {
+    return await $get(new URL(`${API_URL}/media-storage/media-manager`));
 }
 
 export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage, loadMediaFiles};

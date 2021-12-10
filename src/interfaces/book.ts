@@ -114,11 +114,11 @@ interface ActiveMedia {
 }
 
 interface Filter {
-    name: string
+    name: string|undefined
     genre: Genre | undefined,
-    rating: number,
+    rating: number|undefined,
     ad: boolean|undefined,
-    searchQuery: string
+    searchQuery: string|undefined
 }
 
 interface FormFilter {

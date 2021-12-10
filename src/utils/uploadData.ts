@@ -7,33 +7,34 @@ import  {API_URL} from "../../runtimeEnv";
 
 async function sendGenre(genreForm: GenreForm) {
     if (genreForm.id) {
-        return await $patch(`/genre/update?id=${genreForm.id}`, genreForm);
+        return await $patch(new URL(`${API_URL}/genre/update?id=${genreForm.id}`), genreForm);
     } else {
-        return await $post(`/genre/create`, genreForm);
+        return await $post(new URL(`${API_URL}/genre/create`), genreForm);
     }
 }
 async function updateBookMark(formData: BookScrolling) {
-    const url = `/book/update-book?id=${formData.bookId}`;
+    const url = new URL(`${API_URL}/book/update-book?id=${formData.bookId}`);
     return await $patch(url, {bookmark: formData.bookmark});
 }
 async function updateBook(bookData: Book): Promise<Book> {
-    const url = bookData.id ? `/book/update?id=${bookData.id}` : `/book/create`
     if (bookData.id) {
-        let genresIdArray = bookData.genres.map(genre => genre.id)
+        const url = new URL(`${API_URL}/book/update?id=${bookData.id}`);
+        const genresIdArray = bookData.genres.map(genre => genre.id)
         return await $patch(url, {...bookData, genres: genresIdArray})
     } else {
+        const url = new URL(`${API_URL}/book/create`)
         return await $post(url, bookData)
     }
 }
 
 async function uploadFiles(files:FileRaw[], bookId:number) {
     const token = sessionStorage.getItem('lib-token')
-    const url = `${API_URL}/media-storage/upload?book_id=${bookId}`;
+    const url = new URL(`${API_URL}/media-storage/upload?book_id=${bookId}`)
     const resultPromise = await Promise.allSettled(
         files.map(async (fileRaw):Promise<BookFile> => {
             let formData = new FormData();
             formData.append('file', fileRaw.file);
-            const result = await fetch(url, {
+            const result = await fetch(url.toString(), {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -48,16 +49,16 @@ async function uploadFiles(files:FileRaw[], bookId:number) {
     return resultPromise
 }
 function deleteFile(fileId:number) {
-    return $delete(`/media-storage/delete?id=${fileId}`);
+    return $delete(new URL(`${API_URL}/media-storage/delete?id=${fileId}`));
 }
 function deleteFiles(bookId:number) {
-    return $delete(`/book/delete-all-media?id=${bookId}`);
+    return $delete(new URL(`${API_URL}/book/delete-all-media?id=${bookId}`));
 }
 function deleteFileByName(directory:string, name:string) {
-    return $delete(`/media-storage/delete-file-by-name`, {name: name, directory: directory})
+    return $delete(new URL(`${API_URL}/media-storage/delete-file-by-name`), {name: name, directory: directory})
 }
 function attachFileToBook(bookId:number, name:string) {
-    return $post(`/media-storage/attach-file?id=${bookId}`, {name: name})
+    return $post(new URL(`${API_URL}/media-storage/attach-file?id=${bookId}`), {name: name})
 }
 
 export {sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles, deleteFileByName, attachFileToBook};

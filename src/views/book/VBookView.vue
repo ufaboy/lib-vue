@@ -11,6 +11,7 @@ import useBook from "../../composables/useBook";
 import BookText from "@/views/book/BookText.vue";
 import BookMedia from "@/views/book/BookMedia.vue";
 import BookEmpty from "@/views/book/BookEmpty.vue";
+import BookTextAlt from "@/views/book/BookTextAlt.vue";
 
 const props = defineProps({
   categories: Array,
