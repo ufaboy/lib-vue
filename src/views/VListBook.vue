@@ -30,7 +30,8 @@
 
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
                  :key="'book'+book.id">
-      <img :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/icons/svg/book-dead-solid.svg'">
+      <img v-if="book.cover_path" :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/icons/svg/book-dead-solid.svg'">
+      <IconBook v-else />
       <div class="book-text-wrap">
         <div class="book-name">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
@@ -50,7 +51,7 @@ import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "../utils/helpers";
 import StarRating from "../components/StarRating.vue";
-
+import IconBook from "../components/icons/IconBook.vue";
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 // eslint-disable-next-line no-undef
