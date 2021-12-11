@@ -8,7 +8,7 @@ export default function useMedia() {
 // @ts-expect-error
 const loader: Loader = inject("loader");
     const directories = ref<BookDirFiles[]>([])
-    const activeDirIndex = ref(0);
+    const activeDirIndex = ref<number>();
     const activeMedia = ref<ActiveMedia>({
         full_name: '',
         type: '',
@@ -19,7 +19,7 @@ const loader: Loader = inject("loader");
         return `${API_URL}/${file.url}`
     }
     const activeDir = computed(() => {
-        return directories.value.length && Number.isInteger(activeDirIndex.value) ? directories.value[activeDirIndex.value].files : []
+        return directories.value.length && typeof activeDirIndex.value === 'number' ? directories.value[activeDirIndex.value].files : []
     })
     const openMedia = function (file:BookDirFile) {
         activeMedia.value = {
@@ -35,16 +35,16 @@ const loader: Loader = inject("loader");
     }
     const attachFile = async function (bookId: number, name:string, index:number) {
         const result = await attachFileToBook(bookId, name)
-        if (result) {
+        if (result && typeof activeDirIndex.value === 'number') {
             directories.value[activeDirIndex.value].files[index] = {...result}
         }
     }
     const deleteFileFromStorage = function (directory:string, name:string, index:number) {
         deleteFileByName(directory, name).then(()=>{
-            return directories.value[activeDirIndex.value].files.splice(index, 1)
+            const dirIndex = activeDirIndex.value as number
+            return directories.value[dirIndex].files.splice(index, 1)
         }).catch(()=>{
             return false
-
         })
     }
 

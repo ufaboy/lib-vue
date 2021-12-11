@@ -122,7 +122,7 @@ interface Filter {
 }
 
 interface FormFilter {
-    genre: number | undefined,
+    genre_id: number | undefined,
     rating: number | undefined,
     ad: boolean | undefined,
     searchQuery: string | undefined,

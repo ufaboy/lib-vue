@@ -80,7 +80,7 @@ export default function useBooks() {
         const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
         const formFilter: FormFilter = {
             name: filter.value.name ? filter.value.name : undefined,
-            genre: filter.value.genre?.id ? filter.value.genre.id : undefined,
+            genre_id: filter.value.genre?.id ? filter.value.genre.id : undefined,
             rating: filter.value.rating ? filter.value.rating : undefined,
             ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
             searchQuery: searchQuery.value
@@ -104,7 +104,7 @@ export default function useBooks() {
         const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
         const formFilter: FormFilter = {
             name: filter.value.name ? filter.value.name : undefined,
-            genre: filter.value.genre?.id ? filter.value.genre.id : undefined,
+            genre_id: filter.value.genre?.id ? filter.value.genre.id : undefined,
             rating: filter.value.rating ? filter.value.rating : undefined,
             ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
             searchQuery: searchQuery.value
