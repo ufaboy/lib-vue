@@ -10,11 +10,11 @@
         <img class="preview" :src="calcUrl(file)" alt="">
         <figcaption class="figcaption">{{ file.full_name }}</figcaption>
         <div class="btn-bar" v-if="!file.id">
-          <button class="fig-btn" @click.stop="attachFile(directories[activeDirIndex].bookId, file.full_name, index)">
+          <button class="fig-btn" @click.stop="attachFile(file.full_name, index)">
             Attach
           </button>
           <button class="fig-btn"
-                  @click.stop="deleteFileFromStorage(directories[activeDirIndex].dir_name, file.full_name, index)">Delete
+                  @click.stop="deleteFileFromStorage(file.full_name, index)">Delete
           </button>
         </div>
 

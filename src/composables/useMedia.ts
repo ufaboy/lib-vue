@@ -8,7 +8,7 @@ export default function useMedia() {
 // @ts-expect-error
 const loader: Loader = inject("loader");
     const directories = ref<BookDirFiles[]>([])
-    const activeDirIndex = ref<number>();
+    const activeDirIndex = ref<number|undefined>();
     const activeMedia = ref<ActiveMedia>({
         full_name: '',
         type: '',
@@ -33,19 +33,29 @@ const loader: Loader = inject("loader");
         directories.value = await loadMediaFiles()
         loader.hide();
     }
-    const attachFile = async function (bookId: number, name:string, index:number) {
-        const result = await attachFileToBook(bookId, name)
-        if (result && typeof activeDirIndex.value === 'number') {
-            directories.value[activeDirIndex.value].files[index] = {...result}
+    const attachFile = async function (name:string, index:number) {
+        if(typeof activeDirIndex.value === 'number') {
+            // @ts-expect-error
+            const bookId = directories[activeDirIndex.value].bookId as number
+            const result = await attachFileToBook(bookId, name)
+            if (result) {
+                directories.value[activeDirIndex.value].files[index] = {...result}
+            }
         }
+
     }
-    const deleteFileFromStorage = function (directory:string, name:string, index:number) {
-        deleteFileByName(directory, name).then(()=>{
+    const deleteFileFromStorage = function (name:string, index:number) {
+        if(typeof activeDirIndex.value === 'number') {
+            // @ts-expect-error
+            const directory = directories[activeDirIndex.value].dir_name
+            deleteFileByName(directory, name).then(()=>{
             const dirIndex = activeDirIndex.value as number
             return directories.value[dirIndex].files.splice(index, 1)
         }).catch(()=>{
             return false
         })
+        }
+        
     }
 
     return {directories, activeDirIndex, activeMedia, calcUrl, activeDir, openMedia, getMediaFiles, attachFile, deleteFileFromStorage}
