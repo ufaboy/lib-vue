@@ -119,7 +119,7 @@ function calcChapterOptions() {
   const chapters = document.getElementsByClassName('zag')
   for (const element of Array.from(chapters)) {
     chapterOptions.value.push(element)
-  }; 
+  }
 }
 function scrollToChapter() {
   chapterElement.value?.scrollIntoView()
@@ -138,6 +138,7 @@ function closeDialog() {
 }
 
 function openImage(e: Event) {
+  console.log('openImage', e)
   if (document.documentElement.clientWidth > 800 && props.book.files) {
     const src = (e.target as HTMLImageElement).src
     const replaceValue = `${API_URL}/media/book_${props.book.id}/`
@@ -153,8 +154,15 @@ function selectImageByIndex(index:number) {
 
 function listenClickByImg() {
   let images = document.getElementsByClassName('picture')
+  console.log('listenClickByImg', {images:images})
   for (let image of Array.from(images)) {
     image.addEventListener("click", openImage);
+  }
+}
+function removeImageListeners() {
+  let images = document.getElementsByClassName('picture')
+  for (let image of Array.from(images)) {
+    image.removeEventListener("click", openImage);
   }
 }
 
@@ -199,6 +207,7 @@ function scrollByClick(e:Event) {
 
 onBeforeUnmount(() => {
   saveScrollingBook(props.book.id)
+  removeImageListeners()
 });
 
 onMounted(async () => {
@@ -222,7 +231,6 @@ onMounted(async () => {
     padding: initial;
     text-indent: 1rem;
     margin: 0 0 0.3rem;
-    position: relative;
 
     span[data-tooltip]:hover {
       color: crimson;
