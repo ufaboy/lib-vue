@@ -33,7 +33,8 @@ async function uploadFiles(files:FileRaw[], bookId:number) {
     const resultPromise = await Promise.allSettled(
         files.map(async (fileRaw):Promise<BookFile> => {
             let formData = new FormData();
-            formData.append('file', fileRaw.file);
+            const file = fileRaw as unknown as Blob
+            formData.append('file', file);
             const result = await fetch(url.toString(), {
                 method: 'POST',
                 body: formData,
