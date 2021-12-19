@@ -56,15 +56,15 @@
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
-          <!-- <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
-            <IconCarriage class="icon"/>
-          </button>
-          <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
-            <IconParagraph class="icon"/>
-          </button>
-          <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
-            <IconSlash class="icon"/>
-          </button> -->
+            <!-- <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
+              <IconCarriage class="icon"/>
+            </button>
+            <button class="editor-btn" type="button" @click="formatText('double-p')" data-tooltip="двойные <p>">
+              <IconParagraph class="icon"/>
+            </button>
+            <button class="editor-btn" type="button" @click="formatText('comment')" data-tooltip="комментарий">
+              <IconSlash class="icon"/>
+            </button> -->
         </span>
         </div>
         <textarea class="editor clarity"
@@ -96,7 +96,7 @@
             <button class="btn"
                     @click="setCover(media)"
                     v-if="checkType(media) === 'image' && media.id">
-              {{ getCoverBtnText(media)}}cover
+              {{ getCoverBtnText(media) }}cover
             </button>
             <button class="btn " @click="copyFileName(media)"
                     v-if="media.id">tag
@@ -112,7 +112,7 @@
           <audio v-else-if="checkType(media) === 'audio'" class="media audio" controls muted>
             <source :src="getSrc(media)">
           </audio>
-          <figcaption class="figure-caption">{{getCaption(media)}}</figcaption>
+          <figcaption class="figure-caption">{{ getCaption(media) }}</figcaption>
         </figure>
       </div>
     </div>
@@ -142,8 +142,8 @@ import {BookFile, FileRaw} from '../../interfaces/book';
 
 document.title = 'Editor';
 
-interface CategoryExtended extends Category{
-    genres?: Array<Genre>
+interface CategoryExtended extends Category {
+  genres?: Array<Genre>
 }
 
 interface Category {
@@ -224,7 +224,7 @@ async function checkBook() {
     validation = false
   }
   if (!validation) {
-    messages.map(message=> printToast(message, 'danger'))
+    messages.map(message => printToast(message, 'danger'))
   }
   return validation
 }
@@ -262,19 +262,19 @@ async function sendBook() {
 
 function loadFiles(evt: Event) {
   console.log({loadFiles: evt});
-const fileList = (evt.target as HTMLInputElement).files
-if(fileList) {
-  for (const file of Array.from(fileList)) {
-    files.value.push({name: file.name, status: '', file: file})
+  const fileList = (evt.target as HTMLInputElement).files
+  if (fileList) {
+    for (const file of Array.from(fileList)) {
+      files.value.push({name: file.name, status: '', file: file})
+    }
   }
-}
 }
 
 async function deleteAllFiles() {
   try {
-    if(book.value?.id) {
-    await deleteFiles(book.value?.id)
-    files.value?.splice(0, files.value.length)
+    if (book.value?.id) {
+      await deleteFiles(book.value?.id)
+      files.value?.splice(0, files.value.length)
     }
   } catch (e) {
     console.log({deleteAllFiles: e})
@@ -303,17 +303,19 @@ async function deleteOneFile(fileIndex: number) {
     console.error({deleteFile: e})
   }
 }
+
 function uploadSingleFile(fileToUpload: FileMix) {
-  const fileArray:FileRaw[] = [{...fileToUpload as FileRaw}]
+  const fileArray: FileRaw[] = [{...fileToUpload as FileRaw}]
   sendFiles(fileArray)
 }
+
 function uploadAllFiles() {
   // @ts-expect-error
-    const fileArray:FileRaw[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
-    sendFiles(fileArray)
+  const fileArray: FileRaw[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
+  sendFiles(fileArray)
 }
 
-async function sendFiles(fileArray:FileRaw[]) {
+async function sendFiles(fileArray: FileRaw[]) {
   try {
     if (!fileArray) {
       throw new Error('empty files')
@@ -323,7 +325,7 @@ async function sendFiles(fileArray:FileRaw[]) {
     const response = await uploadFiles(fileArray, book.value.id)
     loader.hide();
 
-let errors:string[] = []
+    let errors: string[] = []
     for (let index = 0; index < response.length; index++) {
       if (response[index].status === 'fulfilled') {
         const result = (response[index] as PromiseFulfilledResult).value
@@ -337,26 +339,26 @@ let errors:string[] = []
         errors.push(result)
       }
     }
-    if(errors.length) {
+    if (errors.length) {
       const toastText = errors.length ? `upload errors: ${errors.length}` : 'Upload success'
-        printToast(toastText, 'success')
+      printToast(toastText, 'success')
     }
     console.log('sendFiles', {response: response, files: files.value})
-  } catch (e:unknown) {
+  } catch (e: unknown) {
     if (typeof e === "string") {
-        printToast(e, 'danger')
+      printToast(e, 'danger')
     } else if (e instanceof Error) {
-        printToast(e.message, 'danger')
+      printToast(e.message, 'danger')
     }
-    
+
     console.log({sendFiles: e})
   }
 }
 
 function autoResize() {
-  if(editor.value) {
-const scrollHeight = Number(editor.value.scrollHeight) + 50;
-  editor.value.style.cssText = `height: ${scrollHeight}px`;
+  if (editor.value) {
+    const scrollHeight = Number(editor.value.scrollHeight) + 50;
+    editor.value.style.cssText = `height: ${scrollHeight}px`;
   }
 }
 
@@ -368,23 +370,24 @@ function getSrc(media: FileMix) {
 
 function getCaption(media: FileMix) {
   const file = media.hasOwnProperty('full_name')
-  if(file) {
+  if (file) {
     return (media as BookFile).full_name
   } else {
-  return (media as FileRaw).name 
+    return (media as FileRaw).name
   }
 }
 
-function setCover(media:FileMix) {
+function setCover(media: FileMix) {
   const fileData = media as BookFile
   book.value.cover_path = fileData.url
 }
-function getCoverBtnText(media:FileMix) {
+
+function getCoverBtnText(media: FileMix) {
   const fileData = media as BookFile
-  book.value.cover_path === fileData.url ? 'current' : 'set' 
+  book.value.cover_path === fileData.url ? 'current' : 'set'
 }
 
-async function copyFileName(file: FileMix ) {
+async function copyFileName(file: FileMix) {
   const fileData = file as BookFile
   if (fileData.type.includes('image')) {
     await navigator.clipboard.writeText(`<img class="picture" src="APIURL/${fileData.url}">`)
@@ -420,13 +423,13 @@ async function getBook() {
   try {
     const result = await loadBook(+route.params.id)
     book.value = {...result, ad: !!result.ad}
-    if(result.files?.length) {
-    files.value.push(...result.files.map(file => {
-      return {...file, status: ''}
-    }))
+    if (result.files?.length) {
+      files.value.push(...result.files.map(file => {
+        return {...file, status: ''}
+      }))
     }
     genres.value = [...result.genres]
-  } catch (e) { 
+  } catch (e) {
     console.log({getBook: e})
   }
 }
