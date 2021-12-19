@@ -138,7 +138,6 @@ function closeDialog() {
 }
 
 function openImage(e: Event) {
-  console.log('openImage', e)
   if (document.documentElement.clientWidth > 800 && props.book.files) {
     const src = (e.target as HTMLImageElement).src
     const replaceValue = `${API_URL}/media/book_${props.book.id}/`
@@ -154,7 +153,6 @@ function selectImageByIndex(index:number) {
 
 function listenClickByImg() {
   let images = document.getElementsByClassName('picture')
-  console.log('listenClickByImg', {images:images})
   for (let image of Array.from(images)) {
     image.addEventListener("click", openImage);
   }
