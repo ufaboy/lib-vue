@@ -23,7 +23,8 @@ async function updateBook(bookData: Book): Promise<Book> {
         return await $patch(url, {...bookData, genres: genresIdArray})
     } else {
         const url = new URL(`${API_URL}/book/create`)
-        return await $post(url, bookData)
+        const genresIdArray = bookData.genres.map(genre => genre.id)
+        return await $post(url, {...bookData, genres: genresIdArray})
     }
 }
 
