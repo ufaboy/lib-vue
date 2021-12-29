@@ -90,7 +90,7 @@
       <div class="media-wrapper">
         <figure class="figure" v-for="(media, index) of files" :key="index">
           <div class="action-panel">
-            <button class="btn" @click="uploadSingleFile(media)" v-if="!media.id">
+            <button class="btn" @click="uploadSingleFile(media, index)" v-if="!media.id">
               load
             </button>
             <button class="btn"
@@ -265,7 +265,7 @@ function loadFiles(evt: Event) {
   const fileList = (evt.target as HTMLInputElement).files
   if (fileList) {
     for (const file of Array.from(fileList)) {
-      files.value.push({name: file.name, status: '', file: file})
+      (files.value as FileMix[]).push({name: file.name, status: '', file: file})
     }
   }
 }
@@ -304,55 +304,70 @@ async function deleteOneFile(fileIndex: number) {
   }
 }
 
-function uploadSingleFile(fileToUpload: FileMix) {
-  const fileArray: FileRaw[] = [{...fileToUpload as FileRaw}]
-  sendFiles(fileArray)
-}
-
-function uploadAllFiles() {
-  // @ts-expect-error
-  const fileArray: FileRaw[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
-  sendFiles(fileArray)
-}
-
-async function sendFiles(fileArray: FileRaw[]) {
-  try {
-    if (!fileArray) {
-      throw new Error('empty files')
-    }
+async function uploadSingleFile(fileToUpload: FileMix, index: number) {
+  if (Array.isArray(files.value) && files.value.length) {
+    const fileData = (fileToUpload as FileRaw).file
+    const fileArray: File[] = [fileData]
     loader.show();
     // @ts-expect-error
     const response = await uploadFiles(fileArray, book.value.id)
     loader.hide();
+    if (response[0].status === 'fulfilled') {
+      const result = (response[0] as PromiseFulfilledResult).value
+      const fileData = {...result, status: 'fulfilled'}
+      files.value.splice(index, 1, fileData)
+    } else if (response[0].status === 'rejected') {
+      const result = (response[0] as PromiseRejectedResult).reason
+      files.value[index].status = 'rejected'
+      // @ts-expect-error
+      files.value[index].error = result
+      printToast('upload error', 'danger')
+    }
+  }
 
-    let errors: string[] = []
-    for (let index = 0; index < response.length; index++) {
-      if (response[index].status === 'fulfilled') {
-        const result = (response[index] as PromiseFulfilledResult).value
-        const fileData = {...result, status: 'fulfilled'}
-        files.value.splice(index, 1, fileData)
-      } else if (response[index].status === 'rejected') {
-        const result = (response[index] as PromiseRejectedResult).reason
-        files.value[index].status = 'rejected'
-        // @ts-expect-error
-        files.value[index].error = result
-        errors.push(result)
+}
+
+async function uploadAllFiles() {
+  try {
+    if (Array.isArray(files.value) && files.value.length) {
+      // @ts-expect-error
+      const fileArray: File[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
+      loader.show();
+      // @ts-expect-error
+      const response = await uploadFiles(fileArray, book.value.id)
+      loader.hide();
+
+      let errors: string[] = []
+      for (let index = 0; index < response.length; index++) {
+        if (response[index].status === 'fulfilled') {
+          const result = (response[index] as PromiseFulfilledResult).value
+          const fileData = {...result, status: 'fulfilled'}
+          // @ts-expect-error
+          const filesIndex = files.value.findIndex(item => item.name === fileData.full_name)
+          console.log('uploadAllFiles', {files: files.value, fileArray: fileArray, fileData: fileData})
+          files.value.splice(filesIndex, 1, fileData)
+        } else if (response[index].status === 'rejected') {
+          const result = (response[index] as PromiseRejectedResult).reason
+          files.value[index].status = 'rejected'
+          // @ts-expect-error
+          files.value[index].error = result
+          errors.push(result)
+        }
+      }
+      if (errors.length) {
+        const toastText = `upload errors: ${errors.length}`
+        printToast(toastText, 'danger')
       }
     }
-    if (errors.length) {
-      const toastText = errors.length ? `upload errors: ${errors.length}` : 'Upload success'
-      printToast(toastText, 'success')
-    }
-    console.log('sendFiles', {response: response, files: files.value})
   } catch (e: unknown) {
     if (typeof e === "string") {
       printToast(e, 'danger')
     } else if (e instanceof Error) {
       printToast(e.message, 'danger')
     }
-
-    console.log({sendFiles: e})
+    console.log('uploadAllFiles', {error: e})
   }
+
 }
 
 function autoResize() {
@@ -424,7 +439,7 @@ async function getBook() {
     const result = await loadBook(+route.params.id)
     book.value = {...result, ad: !!result.ad}
     if (result.files?.length) {
-      files.value.push(...result.files.map(file => {
+      (files.value as FileMix[]).push(...result.files.map(file => {
         return {...file, status: ''}
       }))
     }
@@ -789,8 +804,8 @@ getBook();
     }
   }
 
-  .media.video {
-  }
+  // .media.video {
+  // }
 
   .media.audio {
     width: 100%;
@@ -856,7 +871,6 @@ getBook();
         padding: 0.3rem;
       }
     }
-
   }
 }
 
@@ -866,8 +880,8 @@ getBook();
       width: 100%;
       margin-right: 0;
 
-      .description {
-      }
+      // .description {
+      // }
     }
   }
 }

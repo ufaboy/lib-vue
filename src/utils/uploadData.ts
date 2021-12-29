@@ -1,8 +1,7 @@
 import {Book, BookFile, BookScrolling, FileRaw} from "../interfaces/book";
 import {GenreForm} from "../interfaces/genre";
-import {$post, $patch, $delete} from "./superFetch";
-import  {API_URL} from "../../runtimeEnv";
-
+import {$delete, $patch, $post} from "./superFetch";
+import {API_URL} from "../../runtimeEnv";
 
 
 async function sendGenre(genreForm: GenreForm) {
@@ -31,8 +30,8 @@ async function updateBook(bookData: Book): Promise<Book> {
 async function uploadFiles(files:FileRaw[], bookId:number) {
     const token = sessionStorage.getItem('lib-token')
     const url = new URL(`${API_URL}/media-storage/upload?book_id=${bookId}`)
-    const resultPromise = await Promise.allSettled(
-        files.map(async (fileRaw):Promise<BookFile> => {
+    return await Promise.allSettled(
+        files.map(async (fileRaw): Promise<BookFile> => {
             let formData = new FormData();
             const file = fileRaw as unknown as Blob
             formData.append('file', file);
@@ -46,9 +45,6 @@ async function uploadFiles(files:FileRaw[], bookId:number) {
             return result.json()
         })
     )
-    console.log({resultPromise: resultPromise});
-    
-    return resultPromise
 }
 function deleteFile(fileId:number) {
     return $delete(new URL(`${API_URL}/media-storage/delete?id=${fileId}`));
