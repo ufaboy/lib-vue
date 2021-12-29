@@ -47,7 +47,7 @@ function closeModal() {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .sorting {
   padding: 1rem;
   color: var(--text);

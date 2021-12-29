@@ -78,7 +78,7 @@ async function login() {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .login-page {
   height: 100%;
   width: 100%;

@@ -107,7 +107,7 @@ const sendNotes = async () => {
 getNotes()
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .notes {
   width: 100%;
   height: calc(100% - 3.5rem);

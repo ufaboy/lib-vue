@@ -56,7 +56,7 @@ getMediaFiles()
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .media-manager {
   display: flex;
   flex-flow: row nowrap;

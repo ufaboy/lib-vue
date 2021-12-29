@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .error-wrapper {
   margin: 0;
   background-color: #252842;

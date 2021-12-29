@@ -101,7 +101,7 @@ loadFilter()
 
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .filter {
   padding: 1rem;
   color: var(--text);

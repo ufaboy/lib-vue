@@ -108,7 +108,7 @@ watch(props, () => {
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .list-genre {
   display: flex;
   flex-flow: row wrap;

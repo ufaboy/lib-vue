@@ -99,7 +99,7 @@ function closeModal() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .genre-book {
   display: flex;
   flex-flow: row wrap;

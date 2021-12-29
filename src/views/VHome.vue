@@ -33,7 +33,7 @@ const props = defineProps<{
 document.title = 'Home';
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .home {
   display: flex;
   padding: 1rem 1.5rem;

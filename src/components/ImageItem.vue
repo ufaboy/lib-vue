@@ -31,7 +31,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .image {
   &__wrapper {
     display: flex;

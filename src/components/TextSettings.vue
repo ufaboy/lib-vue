@@ -39,7 +39,7 @@ function scrollByClick(e) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .text-settings {
   padding: 1rem;
   .text-settings-header {

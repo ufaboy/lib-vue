@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .test-wrap {
   .icons-bar {
     height: 50px;

@@ -52,7 +52,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .loader {
   --background: linear-gradient(135deg, #23C4F8, #275EFE);
   --shadow: #{rgba(#275EFE, .28)};

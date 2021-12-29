@@ -211,7 +211,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .selectWrapper {
   position: relative;
   // Both native and custom selects must have the same width/height.

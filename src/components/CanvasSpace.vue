@@ -148,7 +148,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 canvas {
   width: 100%;
   height: 100%;

@@ -50,7 +50,7 @@ function changeRating(value) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .star-rating {
   .c-icon {
     --star-active: #fece3c;
