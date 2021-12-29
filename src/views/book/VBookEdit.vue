@@ -81,6 +81,7 @@
           <input type="file"
                  class="upload-input desktop"
                  multiple
+                 accept="video/webm,image/webp,audio/mpeg"
                  @change="loadFiles">
         </label>
         <button class="positive-btn" @click="uploadAllFiles">all upload</button>
