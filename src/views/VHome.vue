@@ -12,20 +12,23 @@
 
 
 <script setup lang="ts">
-import { defineProps} from 'vue'
+import {defineProps} from 'vue'
+
 interface Category {
-    id: number,
-    name: string,
-    genres?: Array<Genre>
+  id: number,
+  name: string,
+  genres?: Array<Genre>
 }
+
 interface Genre {
-    id: number,
-    name: string,
-    description: string,
-    category: Category,
-    ad: number,
-    created_at: number,
+  id: number,
+  name: string,
+  description: string,
+  category: Category,
+  ad: number,
+  created_at: number,
 }
+
 const props = defineProps<{
   categories: Category[]
 }>()

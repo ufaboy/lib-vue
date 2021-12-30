@@ -339,19 +339,17 @@ async function uploadAllFiles() {
       loader.hide();
 
       let errors: string[] = []
-      for (let index = 0; index < response.length; index++) {
-        if (response[index].status === 'fulfilled') {
-          const result = (response[index] as PromiseFulfilledResult).value
+      for (const item of response) {
+        if (item.status === 'fulfilled') {
+          const result = (item as PromiseFulfilledResult).value
           const fileData = {...result, status: 'fulfilled'}
           // @ts-expect-error
           const filesIndex = files.value.findIndex(item => item.name === fileData.full_name)
-          console.log('uploadAllFiles', {files: files.value, fileArray: fileArray, fileData: fileData})
           files.value.splice(filesIndex, 1, fileData)
-        } else if (response[index].status === 'rejected') {
-          const result = (response[index] as PromiseRejectedResult).reason
-          files.value[index].status = 'rejected'
-          // @ts-expect-error
-          files.value[index].error = result
+        } else if (item.status === 'rejected') {
+          const result = (item as PromiseRejectedResult).reason
+          // files.value[filesIndex].status = 'rejected'
+          // files.value[filesIndex].error = result
           errors.push(result)
         }
       }
