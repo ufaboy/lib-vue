@@ -320,6 +320,18 @@ onMounted(async () => {
 
 @media only screen and (min-width: 893px) and (max-width: 1368px) {
   .book {
+    //.text {
+    //  .picture, .video {
+    //    float: left;
+    //    width: 375px;
+    //    margin: 0.5rem 1rem 0.5rem 0;
+    //  }
+    //}
+  }
+}
+
+@media only screen and (min-width: 1368px) {
+  .book {
     .text {
       .picture, .video {
         float: left;
@@ -327,12 +339,6 @@ onMounted(async () => {
         margin: 0.5rem 1rem 0.5rem 0;
       }
     }
-  }
-}
-
-@media only screen and (min-width: 1368px) {
-  .book {
-
   }
 }
 </style>
