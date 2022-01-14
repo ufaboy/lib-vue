@@ -5,6 +5,7 @@ import {API_URL} from '../../runtimeEnv';
 import {BookData, Filter, BookLink, Book, FormFilter} from "../interfaces/book";
 
 export default function useBooks() {
+    let debTimer: number | undefined = undefined
     // @ts-expect-error
     const loader: Loader = inject("loader");
     const filter = ref<Filter>(
@@ -186,7 +187,14 @@ export default function useBooks() {
             return `${API_URL}/${book.cover_path}`
         } else return '/icons/svg/book-dead-solid.svg'
     };
-
+    const debounceGetBooksAndReplace = () => {
+        if (debTimer) {
+            clearTimeout(debTimer)
+            debTimer = setTimeout(() => getBooksAndReplace(), 500);
+        } else {
+            debTimer = setTimeout(() => getBooksAndReplace(), 500);
+        }
+    }
 
     return {
         filter,
@@ -209,5 +217,6 @@ export default function useBooks() {
         toPage,
         getBooksAndReplace,
         getBooksAndPush,
+        debounceGetBooksAndReplace
     }
 }

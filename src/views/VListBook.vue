@@ -88,7 +88,8 @@ const {
   getCover,
   loadOrderBy,
   saveOrderBy,
-  getBooksAndPush
+  getBooksAndPush,
+  debounceGetBooksAndReplace
 } = useBooks();
 const showTopButton = ref(false);
 
@@ -104,12 +105,12 @@ limit.value = 25;
 
 function searchByName() {
   page.value = 1
-  getBooksAndPush()
+  debounceGetBooksAndReplace()
 }
 
 function changeGenreLoadBook() {
   page.value = 1
-  getBooksAndPush()
+  debounceGetBooksAndReplace()
 }
 
 watch(props, () => {

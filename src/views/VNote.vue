@@ -28,8 +28,8 @@
         <th class="th">index</th>
         <th class="th">name</th>
         <th class="th">
-          <span>type</span>
           <select v-model="filterType">
+            <option disabled value="">type</option>
             <option :value="type" v-for="(type, index) in types" :key="index">{{type}}</option>
           </select>
         </th>
@@ -44,7 +44,9 @@
           <input type="text" class="note__name" v-model="note.name">
         </td>
         <td class="td">
-          <input type="text" class="note__type" v-model="note.type">
+          <select class="note__type" v-model="note.type">
+            <option :value="type" v-for="(type, index) in types" :key="index">{{type}}</option>
+          </select>
         </td>
         <td class="td">
           <input type="text" class="note__url" v-model="note.url">

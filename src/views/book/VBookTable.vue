@@ -3,7 +3,7 @@
     <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input type="search" class="sidebar-input search-text" v-model.trim="searchQuery" placeholder="Search ..."
-               @input="getBooksAndReplace">
+               @input="debounceGetBooksAndReplace">
         <router-link :to="{ name: 'book-create'}" class="sidebar-btn btn-outline create-btn">create</router-link>
         <select class="sidebar-btn form-field__select" v-model="filter.genre"
                 @change="getBooksAndReplace">
@@ -160,7 +160,7 @@ const props = defineProps<{
 }>()
 const {
   filter, searchQuery, orderBy, limit, books, page, paginator, pagBtnArr, loadOrderBy,
-  sortBy, toPage, getBooksAndReplace, setPageNumber
+  sortBy, toPage, getBooksAndReplace, setPageNumber, debounceGetBooksAndReplace
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();

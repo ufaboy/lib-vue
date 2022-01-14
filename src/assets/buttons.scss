@@ -1,9 +1,12 @@
-.btn, .btn-outline {
+@mixin btn {
   border-radius: 5px;
   padding: 6px 15px;
   text-decoration: none;
   cursor: pointer;
   color: var(--surface-on);
+}
+.btn, .btn-outline {
+  @include btn;
 }
 .btn:hover, .btn-outline:hover {
   background-color: var(--surface-light);
@@ -21,7 +24,7 @@
 }
 
 .positive-btn {
-  @extend .btn;
+  @include btn;
   color: var(--text-primary);
   background-color: #4CAF50;
   border: none;
@@ -30,7 +33,7 @@
   }
 }
 .positive-btn-outline {
-  @extend .btn-outline;
+  @include btn;
   border-color: #4CAF50;
   &:hover {
     background-color: #d0ead1;
@@ -38,7 +41,7 @@
 }
 
 .negative-btn {
-  @extend .btn;
+  @include btn;
   color: var(--text-primary);
   background-color: #f44336;
   &:hover {
@@ -46,7 +49,7 @@
   }
 }
 .negative-btn-outline {
-  @extend .btn-outline;
+  @include btn;
   border-color: #f44336;
   &:hover {
     background-color: #efb3af;
@@ -54,14 +57,14 @@
 }
 
 .regular-btn {
-  @extend .btn;
+  @include btn;
   background-color: #457b9d;
   &:hover {
     background-color: #5a8cab;
   }
 }
 .regular-btn-outline {
-  @extend .btn-outline;
+  @include btn;
   border-color: #457b9d;
   &:hover {
     background-color: #cce1ee;
@@ -114,7 +117,7 @@
   border: none;
 }
 .close-btn {
-  @extend .btn-content;
+  @include btn;
 }
 .image-entry-btn {
   color: var(--text);
