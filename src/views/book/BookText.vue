@@ -245,7 +245,21 @@ onMounted(async () => {
 
     h1, h2, h3 {
       text-align: center;
-      margin-bottom: 0.5rem;
+    }
+    h1 {
+      margin: 0 0 1rem 0;
+    }
+    h2, h3 {
+      margin: 1rem 0;
+    }
+  }
+  .toc {
+    .toc-anchor {
+      text-decoration: none;
+      padding: 0.5rem;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      border-radius: 5px;
     }
   }
 

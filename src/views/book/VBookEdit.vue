@@ -5,6 +5,7 @@
         <div class="btn-tab--left">
           <button class="negative-btn" type="reset" @click="resetBook">reset</button>
           <button class="positive-btn" @click="sendBook">save</button>
+          <button class="regular-btn" @click="startTypograf">typograf</button>
         </div>
         <div class="btn-tab--right">
           <StarRating v-model="book.rating"></StarRating>
@@ -128,6 +129,7 @@
 <script setup lang="ts">
 import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
+import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
 import {isMobile} from '../../utils/helpers';
 import {loadBook} from '../../utils/loadData';
@@ -447,6 +449,13 @@ async function getBook() {
     console.log({getBook: e})
   }
 }
+function startTypograf() {
+  let tp = new Typograf({locale: ['ru', 'en-US']});
+  let elem: HTMLTextAreaElement = document.querySelector('textarea.editor') as HTMLTextAreaElement;
+  const typoResult = tp.execute(elem.value);
+  elem.value = typoResult;
+  console.log('startTypograf', {typoResult:typoResult})
+}
 
 onUpdated(() => {
   if (editor.value && editor.value.scrollHeight > 60) {
@@ -514,8 +523,11 @@ getBook();
       }
 
       .btn-tab--left {
-        :first-child {
+        > button {
           margin-right: 1rem;
+        }
+        button:last-child {
+          margin-right: 0;
         }
       }
 
