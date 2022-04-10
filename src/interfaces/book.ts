@@ -140,6 +140,19 @@ interface FormFilter {
     name: string | undefined
 }
 
+interface BookSave {
+    id: number | undefined,
+    ad?: boolean | undefined,
+    annotation?: string | undefined,
+    cover_path?: string | undefined,
+    name: string | undefined,
+    rating?: number | undefined
+    source?: string | undefined,
+    text: string | undefined,
+    genres: Genre[],
+    author_id?: number
+}
+
 export {
     BookLink,
     Book,
@@ -153,5 +166,6 @@ export {
     BookDirFiles,
     Filter,
     FormFilter,
-    ActiveMedia
+    ActiveMedia,
+    BookSave
 }

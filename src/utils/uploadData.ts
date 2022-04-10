@@ -1,4 +1,4 @@
-import {Book, BookFile, BookScrolling, FileRaw} from "../interfaces/book";
+import {Book, BookSave, BookFile, BookScrolling, FileRaw} from "../interfaces/book";
 import {GenreForm} from "../interfaces/genre";
 import {$delete, $patch, $post} from "./superFetch";
 import {API_URL} from "../../runtimeEnv";
@@ -22,7 +22,7 @@ async function updateBookMark(formData: BookScrolling) {
     const url = new URL(`${API_URL}/book/update-book?id=${formData.bookId}`);
     return await $patch(url, {bookmark: formData.bookmark});
 }
-async function updateBook(bookData: Book): Promise<Book> {
+async function updateBook(bookData: BookSave): Promise<Book> {
     if (bookData.id) {
         const url = new URL(`${API_URL}/book/update?id=${bookData.id}`);
         const genresIdArray = bookData.genres.map(genre => genre.id)

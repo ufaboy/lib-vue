@@ -136,7 +136,7 @@ import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
-import {BookFile, FileRaw} from '../../interfaces/book';
+import {BookFile, FileRaw, BookSave} from '../../interfaces/book';
 import {isMobile} from '../../utils/helpers';
 import {loadBook} from '../../utils/loadData';
 import {getAdAccess} from '../../utils/userData';
@@ -263,7 +263,7 @@ async function sendBook() {
   }
   try {
     // let genresIdArray = genres.value.map(genre => genre.id)
-    let data = {
+    let data:BookSave = {
       id: book.value.id,
       ad: book.value.ad,
       annotation: book.value.annotation,
