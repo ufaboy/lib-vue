@@ -3,6 +3,7 @@ import {router} from './router';
 import App from './App.vue'
 import { registerSW } from 'virtual:pwa-register'
 
+
 const app = createApp(App);
 
 const updateSW = registerSW({
@@ -12,6 +13,7 @@ const updateSW = registerSW({
   
 //styles
 import '../src/assets/main.scss'
+import './assets/index.css'
 //styles
 
 //self plugins

@@ -2,8 +2,15 @@ import {Book, BookFile, BookScrolling, FileRaw} from "../interfaces/book";
 import {GenreForm} from "../interfaces/genre";
 import {$delete, $patch, $post} from "./superFetch";
 import {API_URL} from "../../runtimeEnv";
+import {Author} from "../interfaces/author";
 
-
+async function sendAuthor(sendAuthor:Author) {
+    if (sendAuthor.id) {
+        return await $patch(new URL(`${API_URL}/author/update?id=${sendAuthor.id}`), sendAuthor);
+    } else {
+        return await $post(new URL(`${API_URL}/author/create`), sendAuthor);
+    }
+}
 async function sendGenre(genreForm: GenreForm) {
     if (genreForm.id) {
         return await $patch(new URL(`${API_URL}/genre/update?id=${genreForm.id}`), genreForm);
@@ -59,4 +66,4 @@ function attachFileToBook(bookId:number, name:string) {
     return $post(new URL(`${API_URL}/media-storage/attach-file?id=${bookId}`), {name: name})
 }
 
-export {sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles, deleteFileByName, attachFileToBook};
+export {sendAuthor, sendGenre, updateBook, updateBookMark, uploadFiles, deleteFile, deleteFiles, deleteFileByName, attachFileToBook};

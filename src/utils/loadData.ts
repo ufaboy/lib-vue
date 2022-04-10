@@ -3,6 +3,7 @@ import {Book, BookDirFiles, FormFilter} from "../interfaces/book";
 import {CategoryExtended} from "../interfaces/category";
 import {BookData} from "../interfaces/book";
 import {API_URL} from "../../runtimeEnv";
+import {Author} from "../interfaces/author";
 
 async function loadCategories(name?: string): Promise<CategoryExtended[]> {
     const url = new URL(`${API_URL}/category`);
@@ -51,4 +52,14 @@ async function loadMediaFiles(): Promise<BookDirFiles[]> {
     return await $get(new URL(`${API_URL}/media-storage/media-manager`));
 }
 
-export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, goPage, loadMediaFiles};
+async function loadAuthors(name?: string, orderBy: string = 'created_at'): Promise<Author[]> {
+    const url = new URL(`${API_URL}/author`);
+    Object.entries({orderBy, name}).forEach(([key, value]) => {
+        if (value !== undefined) {
+            url.searchParams.append(key, value.toString());
+        }
+    })
+    return await $get(url);
+}
+
+export {loadCategories, loadGenres, loadBooks, loadBook, loadNotes, loadAuthors, goPage, loadMediaFiles};

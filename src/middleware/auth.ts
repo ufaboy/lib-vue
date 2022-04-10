@@ -1,5 +1,5 @@
 // @ts-expect-error
-export const authMiddleware = async (to, from, next) => {
+export const authMiddleware = (to, from, next) => {
   // if (store.state.user) {
   //   next();
   // } else {

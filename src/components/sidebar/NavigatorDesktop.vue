@@ -15,6 +15,9 @@
     <li class="navigator-element">
       <router-link class="navigator-link" to="/media">Media</router-link>
     </li>
+    <li class="navigator-element">
+      <router-link class="navigator-link" to="/authors">Authors</router-link>
+    </li>
     <li class="navigator-element" v-if="btnViewEditMode.name">
       <router-link class="navigator-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
     </li>

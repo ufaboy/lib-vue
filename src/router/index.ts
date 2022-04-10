@@ -14,6 +14,7 @@ const VListGenre = () => import('@/views/VListGenre.vue')
 const VBookView = () => import('@/views/book/VBookView.vue')
 const VBookTable = () => import('@/views/book/VBookTable.vue')
 const VGenreTable = () => import('@/views/VGenreTable.vue')
+const VAuthorTable = () => import('@/views/VAuthorTable.vue')
 const VBookEdit = () => import('@/views/book/VBookEdit.vue')
 const VMedia = () => import('@/views/VMedia.vue')
 const VNote = () => import('@/views/VNote.vue')
@@ -68,6 +69,11 @@ const routes: RouteRecordRaw[] = [
         path: '/book/update/:id',
         name: 'book-edit',
         component: VBookEdit
+      },
+      {
+        path: '/authors',
+        name: 'authors',
+        component: VAuthorTable
       },
       {
         path: '/media',

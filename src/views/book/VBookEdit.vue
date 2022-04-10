@@ -28,6 +28,12 @@
                  class="form-field__input"
                  v-model.trim="book.source">
         </div>
+        <div class="form-field">
+          <label class="form-field__label">author</label>
+          <select class="select w100" v-model="authorData">
+            <option v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
+          </select>
+        </div>
       </section>
       <div class="form-field mb-1">
         <label class="form-field__label">
@@ -122,7 +128,6 @@
       <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
-
   </div>
 </template>
 
@@ -131,20 +136,22 @@ import {ref, onUpdated, inject} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
+import {BookFile, FileRaw} from '../../interfaces/book';
 import {isMobile} from '../../utils/helpers';
 import {loadBook} from '../../utils/loadData';
 import {getAdAccess} from '../../utils/userData';
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from '../../utils/uploadData';
 import useBook from '../../composables/useBook';
+import useAuthors from '../../composables/useAuthors'
+import GenreBook from '@/components/GenreBook.vue'
+import StarRating from "@/components/StarRating.vue";
 // import IconParagraph from '@/components/icons/IconParagraph.vue'
 // import IconCarriage from '@/components/icons/IconCarriage.vue'
 // import IconSlash from '@/components/icons/IconSlash.vue'
-import GenreBook from '@/components/GenreBook.vue'
-import StarRating from "@/components/StarRating.vue";
-import {BookFile, FileRaw} from '../../interfaces/book';
+
+
 
 document.title = 'Editor';
-
 interface CategoryExtended extends Category {
   genres?: Array<Genre>
 }
@@ -186,7 +193,8 @@ const printToast: Function = inject('printToast')
 const loader: Loader = inject("loader");
 const router = useRouter();
 const route = useRoute();
-const {book, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
+const {book, authorData, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
+const {authors, getAuthors} = useAuthors()
 const editor = ref<HTMLTextAreaElement>()
 const files = ref<FileMix[]>([]);
 
@@ -207,13 +215,13 @@ function resetBook() {
       cover_path: '',
       rating: 0,
       ad: false,
+      author: {id: 0, name: '', url: '', ad: false},
       files: [],
       genres: []
     }
   }
   genres.value = []
 }
-
 
 async function checkBook() {
   let validation = true
@@ -255,8 +263,20 @@ async function sendBook() {
   }
   try {
     // let genresIdArray = genres.value.map(genre => genre.id)
-    const bookData = {...book.value, genres: genres.value}
-    await updateBook(bookData)
+    let data = {
+      id: book.value.id,
+      ad: book.value.ad,
+      annotation: book.value.annotation,
+      cover_path: book.value.cover_path,
+      name: book.value.name,
+      rating: book.value.rating,
+      source: book.value.source,
+      text: book.value.text,
+      genres: genres.value}
+    if (authorData.value.id) {
+      data.author_id = authorData.value.id
+    }
+    await updateBook(data)
     await router.replace('/books')
   } catch (e) {
     console.log({sendBook: e, genres: genres.value})
@@ -438,13 +458,16 @@ async function getBook() {
   }
   try {
     const result = await loadBook(+route.params.id)
-    book.value = {...result, ad: !!result.ad}
+    book.value = {...result, ad: !!result.ad, author: result.author ?? {id: 0, name: '', url: '', ad: false}}
     if (result.files?.length) {
       (files.value as FileMix[]).push(...result.files.map(file => {
         return {...file, status: ''}
       }))
     }
     genres.value = [...result.genres]
+    if (result.author) {
+      authorData.value = result.author
+    }
   } catch (e) {
     console.log({getBook: e})
   }
@@ -463,6 +486,7 @@ onUpdated(() => {
   }
 })
 getBook();
+getAuthors();
 </script>
 
 <style lang="scss">
@@ -842,6 +866,9 @@ getBook();
   .footer {
     width: 100%;
     height: 2rem;
+  }
+  .w100 {
+    width: 100%;
   }
 }
 

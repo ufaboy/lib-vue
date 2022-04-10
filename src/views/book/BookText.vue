@@ -14,7 +14,10 @@
                   @select-image="selectImageByIndex"></image-slider>
     <teleport to="#aside">
       <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
-        <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{ chapter.innerHTML }}</option>
+        <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
+            chapter.innerHTML
+          }}
+        </option>
       </select>
     </teleport>
   </div>
@@ -22,71 +25,79 @@
 
 <script setup lang="ts">
 import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
-import  {API_URL} from '../../../runtimeEnv';
+import {API_URL} from '../../../runtimeEnv';
 import {isMobile} from "../../utils/helpers";
 import {updateBook} from "../../utils/uploadData";
 import EditorModal from "@/components/EditorModal.vue";
 import useSlideButton from "../../composables/useSlideButton";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
+import {Author} from "../../interfaces/author";
 
 // @ts-expect-error
 const printToast: Function = inject('printToast')
 // @ts-expect-error
-const saveScrollingBook: Function= inject('saveScrollingBook')
+const saveScrollingBook: Function = inject('saveScrollingBook')
 
-interface CategoryExtended extends Category{
-    genres?: Array<Genre>
+interface CategoryExtended extends Category {
+  genres?: Array<Genre>
 }
+
 interface Category {
   id: number,
   name: string,
 }
+
 interface Genre {
-  [key: string]: number|string|Category|boolean
-    id: number,
-    name: string,
-    description: string,
-    category: Category,
-    ad: boolean,
-    created_at: number,
+  [key: string]: number | string | Category | boolean
+
+  id: number,
+  name: string,
+  description: string,
+  category: Category,
+  ad: boolean,
+  created_at: number,
 }
+
 interface Genre {
-        id: number,
-    name: string,
-    description: string,
-    category: Category,
-    ad: boolean,
-    created_at: number,
+  id: number,
+  name: string,
+  description: string,
+  category: Category,
+  ad: boolean,
+  created_at: number,
 }
+
 interface BookFile {
-    created_at: number,
-    extension: string,
-    file_name: string,
-    full_name: string,
-    id: number,
-    path: string,
-    size: number,
-    type: string,
-    url: string,
+  created_at: number,
+  extension: string,
+  file_name: string,
+  full_name: string,
+  id: number,
+  path: string,
+  size: number,
+  type: string,
+  url: string,
 }
+
 interface Book {
-    id: number,
-    name: string,
-    annotation?: string,
-    text?: string,
-    book_type?: string,
-    source?: string,
-    bookmark?: number,
-    rating?: number,
-    ad?: boolean,
-    genres: Array<Genre>
-    cover_path?: string,
-    files?: Array<BookFile>,
-    view_count?: number,
-    created_at?: number,
-    updated_at?: number,
-    last_read?: number,
+  id: number,
+  name: string,
+  annotation?: string,
+  text?: string,
+  book_type?: string,
+  source?: string,
+  bookmark?: number,
+  rating?: number,
+  ad?: boolean,
+  author?: Author,
+  genres: Array<Genre>
+  cover_path?: string,
+  files?: Array<BookFile>,
+  view_count?: number,
+  created_at?: number,
+  updated_at?: number,
+  last_read?: number,
 }
 
 const props = defineProps<{
@@ -108,7 +119,7 @@ const widthProgressLine = computed(() => {
 const {windowHeights} = toRefs(props)
 const textEditorModal = ref();
 const showEditorModal = ref(false);
-const activeImageIndex = ref<number|undefined>();
+const activeImageIndex = ref<number | undefined>();
 const editorNode = ref<HTMLElement>();
 const chapterElement = ref<HTMLElement>();
 const chapterOptions = ref<Element[]>([]);
@@ -121,6 +132,7 @@ function calcChapterOptions() {
     chapterOptions.value.push(element)
   }
 }
+
 function scrollToChapter() {
   chapterElement.value?.scrollIntoView()
 }
@@ -147,7 +159,7 @@ function openImage(e: Event) {
   }
 }
 
-function selectImageByIndex(index:number) {
+function selectImageByIndex(index: number) {
   activeImageIndex.value = index
 }
 
@@ -157,6 +169,7 @@ function listenClickByImg() {
     image.addEventListener("click", openImage);
   }
 }
+
 function removeImageListeners() {
   let images = document.getElementsByClassName('picture')
   for (let image of Array.from(images)) {
@@ -164,14 +177,14 @@ function removeImageListeners() {
   }
 }
 
-async function saveEditor(newText:string) {
+async function saveEditor(newText: string) {
   try {
-    if(props.book.text) {
+    if (props.book.text) {
       let text = props.book.text.replace(editingText, newText)
       await updateBook({id: props.book.id, name: props.book.name, genres: props.book.genres, text: text})
       printToast('Success', 'success')
     }
-    
+
   } catch (e) {
     printToast(`Ошибка: ${e}`, 'error')
     console.log({'saveEditor error': e})
@@ -188,12 +201,17 @@ async function scrollToBookmark() {
   const windowHeights = scrollHeight - clientHeight;
   if (props.book.bookmark) {
     const x = (props.book.bookmark * windowHeights) / 100
-    console.log({scrollToBookmark: props.book.bookmark, clientHeight: clientHeight, scrollHeight: scrollHeight, windowHeights: windowHeights})
+    console.log({
+      scrollToBookmark: props.book.bookmark,
+      clientHeight: clientHeight,
+      scrollHeight: scrollHeight,
+      windowHeights: windowHeights
+    })
     window.scrollTo(0, x)
   }
 }
 
-function scrollByClick(e:Event) {
+function scrollByClick(e: Event) {
   const progressElement = document.getElementById("progressbar")
   let w = progressElement ? progressElement.clientWidth : 100;
   let o = (e as MouseEvent).offsetX;
@@ -246,13 +264,16 @@ onMounted(async () => {
     h1, h2, h3 {
       text-align: center;
     }
+
     h1 {
       margin: 0 0 1rem 0;
     }
+
     h2, h3 {
       margin: 1rem 0;
     }
   }
+
   .toc {
     .toc-anchor {
       text-decoration: none;

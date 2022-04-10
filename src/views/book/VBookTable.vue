@@ -67,6 +67,7 @@
         </td>
         <td class="td" :class="columnsClasses.rating">{{ book.rating }}</td>
         <td class="td" :class="columnsClasses.view_count">{{ book.view_count }}</td>
+        <td class="td" :class="columnsClasses.author">{{ book.author ? book.author.name : '' }}</td>
         <td class="td" :class="columnsClasses.last_read">{{ getDate(book.last_read) }}</td>
         <td class="td" :class="columnsClasses.updated_at">{{ getDate(book.updated_at) }}</td>
       </tr>
@@ -119,7 +120,7 @@ import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 
 
 document.title = 'Table Books';
-const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
+const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'author', 'last_read', 'updated_at']
 const columnsClasses: ColumnsClasses = {
   id: 'cell-id',
   name: 'cell-name',
@@ -127,6 +128,7 @@ const columnsClasses: ColumnsClasses = {
   genres: 'cell-genre',
   rating: 'cell-rating',
   view_count: 'cell-view_count',
+  author: 'cell-author',
   last_read: 'cell-last_read',
   updated_at: 'cell-updated_at'
 }
@@ -138,6 +140,7 @@ interface ColumnsClasses {
   genres: string,
   rating: string,
   view_count: string,
+  author: string,
   last_read: string,
   updated_at: string,
 }

@@ -29,7 +29,8 @@ interface Book {
     bookmark?: number,
     rating?: number,
     ad?: boolean,
-    genres: Array<Genre>
+    author?: Author,
+    genres:Array<Genre>
     cover_path?: string,
     files?: Array<BookFile>,
     view_count?: number,
@@ -49,6 +50,7 @@ interface BookTable {
     view_count: number,
     last_read: number,
     updated_at: number
+    author?: Author,
     ad: boolean,
     cover_path: string,
     genres: Genre[],
@@ -59,6 +61,13 @@ interface BookData {
     items: BookTable[],
     _links: BookLinks,
     _meta: BookMeta
+}
+
+interface Author {
+    id:number,
+    name: string,
+    url: string,
+    ad: boolean
 }
 
 interface BookFile {
@@ -73,6 +82,7 @@ interface BookFile {
     url: string,
     status?: string,
 }
+
 interface FileRaw {
     id?: number,
     name: string,
@@ -80,7 +90,7 @@ interface FileRaw {
     file: File,
     type?: string,
     error?: string
-  }
+}
 
 interface BookScrolling {
     bookId: number,
@@ -101,7 +111,8 @@ interface BookDirFile {
 }
 
 interface BookDirFiles {
-    [key: string]: number|string|BookDirFile[],
+    [key: string]: number | string | BookDirFile[],
+
     bookId: number,
     dir_name: string,
     files: BookDirFile[]
@@ -114,11 +125,11 @@ interface ActiveMedia {
 }
 
 interface Filter {
-    name: string|undefined
+    name: string | undefined
     genre: Genre | undefined,
-    rating: number|undefined,
-    ad: boolean|undefined,
-    searchQuery: string|undefined
+    rating: number | undefined,
+    ad: boolean | undefined,
+    searchQuery: string | undefined
 }
 
 interface FormFilter {
@@ -129,4 +140,18 @@ interface FormFilter {
     name: string | undefined
 }
 
-export {BookLink, Book, BookTable, BookData, FileRaw, BookFile, BookScrolling, BookFilesUpload, BookDirFile, BookDirFiles, Filter, FormFilter, ActiveMedia}
+export {
+    BookLink,
+    Book,
+    BookTable,
+    BookData,
+    FileRaw,
+    BookFile,
+    BookScrolling,
+    BookFilesUpload,
+    BookDirFile,
+    BookDirFiles,
+    Filter,
+    FormFilter,
+    ActiveMedia
+}
