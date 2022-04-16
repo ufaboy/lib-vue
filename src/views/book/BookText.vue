@@ -12,14 +12,14 @@
                   :raw-images="book.files"
                   :active-image-index="activeImageIndex"
                   @select-image="selectImageByIndex"></image-slider>
-    <teleport to="#aside">
+<!--    <teleport to="#aside">
       <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
         <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
             chapter.innerHTML
           }}
         </option>
       </select>
-    </teleport>
+    </teleport>-->
   </div>
 </template>
 

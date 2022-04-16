@@ -1,20 +1,22 @@
-import {defineConfig, loadEnv } from 'vite'
+import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import {VitePWA} from 'vite-plugin-pwa'
-import { injectHtml } from 'vite-plugin-html'
+import {createHtmlPlugin} from 'vite-plugin-html'
 
 // @ts-ignore
-export default ({ mode }) => {
+export default ({mode}) => {
     process.env = {...process.env, ...loadEnv(mode, process.cwd())};
     return defineConfig({
         plugins: [
             vue(),
-            injectHtml({
-                data: {
-                    title: process.env.VITE_APP_TITLE,
-                    api_url: process.env.VITE_API_URL
-                    // injectScript: '<script src="./inject.js"></script>',
-                },
+            createHtmlPlugin({
+                inject: {
+                    data: {
+                        title: process.env.VITE_APP_TITLE,
+                        api_url: process.env.VITE_API_URL
+                        // injectScript: '<script src="./inject.js"></script>',
+                    },
+                }
             }),
             VitePWA({
                 // includeAssets: ['robots.txt'],

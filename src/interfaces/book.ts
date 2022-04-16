@@ -124,7 +124,7 @@ interface ActiveMedia {
     url: string,
 }
 
-interface Filter {
+interface QueryData {
     name: string | undefined
     genre: Genre | undefined,
     rating: number | undefined,
@@ -137,7 +137,6 @@ interface FormFilter {
     rating: number | undefined,
     ad: boolean | undefined,
     searchQuery: string | undefined,
-    name: string | undefined
 }
 
 interface BookSave {
@@ -164,7 +163,7 @@ export {
     BookFilesUpload,
     BookDirFile,
     BookDirFiles,
-    Filter,
+    QueryData,
     FormFilter,
     ActiveMedia,
     BookSave

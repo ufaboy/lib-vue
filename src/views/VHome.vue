@@ -1,18 +1,22 @@
 <template>
-  <main class="home">
-    <nav class="nav">
-      <router-link class="content-link"
-                   :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
-                   v-for="category of categories"
-                   :key="category.id">{{ category.name }}
-      </router-link>
-    </nav>
-  </main>
+  <div class="home">
+    <Sidebar :categories="categories"/>
+    <main class="absolute top-0 left-[10rem]">
+      <nav class="nav h-fit mt-3">
+        <router-link class="content-link "
+                     :to="{ name: 'list-genre', params: { id: category.id, name: category.name}}"
+                     v-for="category of categories"
+                     :key="category.id">{{ category.name }}
+        </router-link>
+      </nav>
+    </main>
+  </div>
 </template>
 
 
 <script setup lang="ts">
 import {defineProps} from 'vue'
+import Sidebar from "../components/Sidebar.vue";
 
 interface Category {
   id: number,
@@ -39,7 +43,6 @@ document.title = 'Home';
 <style lang="scss">
 .home {
   display: flex;
-  padding: 1rem 1.5rem;
 
   .nav {
     flex: 1;
@@ -51,8 +54,6 @@ document.title = 'Home';
       text-decoration: none;
       margin-right: 1rem;
       padding: 1rem 0.5rem;
-      color: var(--text);
-      background: var(--surface);
       text-transform: capitalize;
       cursor: pointer;
       border-radius: 0.5rem;

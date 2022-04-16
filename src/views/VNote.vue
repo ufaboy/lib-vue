@@ -1,11 +1,11 @@
 <template>
   <div class="notes">
-    <teleport to="#aside" :disabled="isMobile()">
+<!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <button class="sidebar-btn btn mb-half" @click="sendNotes">save</button>
         <button class="sidebar-btn btn" @click="addNote">add</button>
       </section>
-    </teleport>
+    </teleport>-->
     <div v-if="isMobile()">
       <section class="note" v-for="(note, index) of filteredNotes" :key="'note-' + index">
         <div class="note-group">

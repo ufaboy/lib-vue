@@ -1,10 +1,10 @@
 <template>
   <div class="authors-table">
-    <teleport to="#aside" :disabled="isMobile()">
+<!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <button class="sidebar-btn btn-outline" @click="createAuthor">create</button>
       </section>
-    </teleport>
+    </teleport>-->
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">

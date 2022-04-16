@@ -6,9 +6,7 @@
 <!--    <section id="page-1" class="page"></section>-->
 <!--    <section id="page-2" class="page"></section>-->
   </div>
-  <teleport to="#aside">
 
-  </teleport>
 </div>
 </template>
 

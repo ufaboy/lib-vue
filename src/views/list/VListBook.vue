@@ -1,6 +1,6 @@
 <template>
   <main class="list-book">
-    <teleport to="#aside" :disabled="isMobile()">
+<!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input class="sidebar-input mb-half"
                type="search"
@@ -26,7 +26,7 @@
           <IconSortDesc class="icon" v-else/>
         </button>
       </section>
-    </teleport>
+    </teleport>-->
 
     <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
                  :key="'book'+book.id">
@@ -46,12 +46,12 @@
 <script setup lang="ts">
 import {onBeforeUnmount, ref, watch} from 'vue';
 import {useRoute} from 'vue-router'
-import useBooks from "../composables/useBooks";
+import useBooks from "../../composables/useBooks";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "../utils/helpers";
-import StarRating from "../components/StarRating.vue";
-import IconBook from "../components/icons/IconBook.vue";
+import {isMobile} from "../../utils/helpers";
+import StarRating from "../../components/StarRating.vue";
+import IconBook from "../../components/icons/IconBook.vue";
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 // eslint-disable-next-line no-undef

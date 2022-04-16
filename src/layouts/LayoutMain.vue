@@ -1,33 +1,36 @@
 <template>
-  <div class="basement" @click="activeBurger = false">
-    <teleport to="#aside" :disabled="isMobile()">
-      <Navigator-mobile v-if="isMobile()" />
-      <NavigatorDesktop v-else />
-    </teleport>
-    <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
-                 :window-heights="windowHeights"></router-view>
-  </div>
+  <main class="layout-main h-full bg-white dark:bg-gray-900 text-slate-900 dark:text-white" @click="activeBurger = false">
+    <HeaderMobile v-if="isMobile()" />
+    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="" />
+    <router-view class="page overflow-x-hidden overflow-y-auto"
+                 v-bind="$attrs"
+                 :categories="categories"
+                 :scrolling-progress="scrollingProgress"
+                 :window-heights="windowHeights" />
+  </main>
 </template>
 
 <script setup lang="ts">
 import {onBeforeUnmount, provide, ref} from "vue";
-import {isMobile} from "../utils/helpers";
+import {isMobile} from '../utils/helpers';
 import {loadCategories} from "../utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
-import NavigatorDesktop from "../components/sidebar/NavigatorDesktop.vue";
-import NavigatorMobile from "../components/sidebar/NavigatorMobile.vue";
 import {CategoryExtended} from "../interfaces/category";
 import {BookScrolling} from "../interfaces/book";
+import HeaderMobile from "../components/HeaderMobile.vue";
+import Sidebar from "../components/Sidebar.vue";
 
 const activeBurger = ref(false)
-const categories = ref<CategoryExtended[]>([])
+
 const {
   scrollingProgress,
   windowHeights,
   throttleScroll
 } = useScroll()
-
+function searchInputHandler(event:string) {
+  console.log('searchInputHandler', event)
+}
 async function saveScrollingBook(id: number): Promise<void> {
   const formData: BookScrolling = {bookId: id, bookmark: scrollingProgress.value.progress}
   const result = await updateBookMark(formData)
@@ -36,29 +39,23 @@ async function saveScrollingBook(id: number): Promise<void> {
   }
 }
 
-async function getCategories() {
-  if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
-    categories.value = await loadCategories()
-  }
-}
-
-getCategories();
 window.addEventListener('scroll', throttleScroll, {passive: true})
-document.getElementById('aside')!.classList.replace('hide', 'show')
 onBeforeUnmount(() => {
   // @ts-expect-error
   window.removeEventListener('scroll', throttleScroll, {passive: true})
-  document.getElementById('aside')!.classList.replace('show', 'hide')
 })
 
 provide('saveScrollingBook', saveScrollingBook)
 </script>
 
 <style lang="scss">
-
+.layout-main {
+}
 @media only screen and (min-width: 893px) {
-  #header {
-    display: none;
+  .page {
+    width: calc(100% - 10rem);
+    position: absolute;
+    left: 10rem;
   }
 }
 
