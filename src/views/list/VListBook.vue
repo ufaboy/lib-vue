@@ -1,5 +1,5 @@
 <template>
-  <main class="list-book flex-row flex-wrap w-[calc(100%-10rem)] absolute left-[10rem]">
+  <main class="list-book flex flex-row flex-wrap w-[calc(100%-10rem)] absolute left-[10rem]">
 <!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input class="sidebar-input mb-half"

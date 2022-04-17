@@ -1,5 +1,5 @@
 <template>
-  <div class="book" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book w-[calc(100%-10rem)]" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
@@ -239,8 +239,7 @@ onMounted(async () => {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  width: 100%;
-  position: relative;
+  position: absolute;
 
   p {
     word-break: break-word;

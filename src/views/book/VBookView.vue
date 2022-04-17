@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import {useRoute} from 'vue-router';
-import useBook from "../../composables/useBook";
 import BookText from "@/views/book/BookText.vue";
 import BookMedia from "@/views/book/BookMedia.vue";
 import BookEmpty from "@/views/book/BookEmpty.vue";
@@ -17,17 +15,16 @@ const props = defineProps({
   categories: Array,
   scrollingProgress: Object,
   windowHeights: Number,
+  book: Object,
+  typeBook: String
 })
 
 const emit = defineEmits(['scrolling'])
-const route = useRoute();
 
-const {rawText, book, typeBook, downloadBook} = useBook();
 function scrolling(e:Event) {
   emit('scrolling', e)
 }
 document.title = 'Book';
-downloadBook(+route.params.id)
 
 </script>
 

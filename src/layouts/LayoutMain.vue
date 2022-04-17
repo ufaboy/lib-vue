@@ -6,12 +6,14 @@
                  v-bind="$attrs"
                  :categories="categories"
                  :scrolling-progress="scrollingProgress"
+                 :book="book"
+                 :typeBook="typeBook"
                  :window-heights="windowHeights" />
   </main>
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, provide, ref} from "vue";
+import {onBeforeUnmount, provide, ref, watch } from "vue";
 import {isMobile} from '../utils/helpers';
 import {loadCategories} from "../utils/loadData";
 import useScroll from "../composables/useScroll";
@@ -20,9 +22,13 @@ import {CategoryExtended} from "../interfaces/category";
 import {BookScrolling} from "../interfaces/book";
 import HeaderMobile from "../components/HeaderMobile.vue";
 import Sidebar from "../components/Sidebar.vue";
+import useBook from "../composables/useBook";
+import {useRoute} from "vue-router";
 
+const route = useRoute();
 const activeBurger = ref(false)
 const categories = ref<CategoryExtended[]>([])
+const {rawText, book, typeBook, downloadBook} = useBook();
 const {
   scrollingProgress,
   windowHeights,
@@ -45,6 +51,16 @@ async function getCategories() {
 }
 
 getCategories();
+watch(route, (newValue, oldValue) => {
+  if (newValue.name === 'book-view') {
+    console.log('watch downloadBook', {newValue:newValue.params.id, oldValue:oldValue.params.id})
+    downloadBook(+route.params.id)
+  }
+})
+if (route.name === 'book-view') {
+  downloadBook(+route.params.id)
+}
+
 window.addEventListener('scroll', throttleScroll, {passive: true})
 onBeforeUnmount(() => {
   // @ts-expect-error
