@@ -99,7 +99,7 @@ export default function useBooks() {
         }
     };
     const getBooksAndPush = async (method = '') => {
-        const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
+        const sort = `${queryData.value.orderBy.asc ? '' : '-'}${queryData.value.orderBy.name}`
         const formFilter: FormFilter = {
             genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
             rating: queryData.value.rating ? queryData.value.rating : undefined,
@@ -113,7 +113,7 @@ export default function useBooks() {
         }
 
         loader.show();
-        const result = await loadBooks(queryData.value.page, limit.value, sort, formFilter);
+        const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
         loader.hide();
         if (result) {
             if (method === 'push' && books.value.items.length) {
@@ -124,7 +124,7 @@ export default function useBooks() {
                 books.value?.items.push(...result.items)
                 queryData.value.page = ++queryData.value.page
             }
-            if (result.items.length < limit.value) {
+            if (result.items.length < queryData.value.limit) {
                 infinityState.value = false
             }
         }
@@ -159,7 +159,7 @@ export default function useBooks() {
             getBooksAndReplace()
         }
     };
-    const updateFilterPage = (newFilter: Filter) => {
+    const updateFilterPage = (newFilter: QueryData) => {
         if (queryData.value) {
             if (newFilter?.genre) {
                 queryData.value.genre = newFilter.genre

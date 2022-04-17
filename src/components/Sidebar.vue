@@ -1,9 +1,9 @@
 <template>
-  <aside id="sidebar" class="fixed left-0 top-0 h-full w-[10rem]">
+  <aside id="sidebar" class="fixed bg-white dark:bg-neutral-800 left-0 top-0 h-full w-[10rem]">
     <ul class="navigator-desktop overflow-x-hidden overflow-y-auto">
-      <li class="navigator-element mb-3 text-slate-900 dark:text-white p-3"
+      <li class="navigator-element hover:dark:bg-neutral-700 mb-3 text-slate-900 dark:text-white cursor-pointer"
           v-for="(route, index) in routes" :key="index">
-        <router-link class="navigator-link" :to="route.value">{{ route.name }}</router-link>
+        <router-link class="navigator-link flex w-full p-3" :to="route.value">{{ route.name }}</router-link>
       </li>
     </ul>
     <slot></slot>
@@ -39,12 +39,12 @@ const props = defineProps<{
   categories: CategoryExtended[]
 }>()
 const routes = [
-  {name: 'Home', value: {name: 'home'}},
+  {name: 'Home', value: {name: 'list-categories'}},
   {name: 'Books', value: {name: 'book-index'}},
-  {name: 'Genre', value: {name: 'genres'}},
+  {name: 'Genre', value: {name: 'genre-index'}},
   {name: 'Note', value: {name: 'note'}},
   {name: 'Media', value: {name: 'media'}},
-  {name: 'Authors', value: {name: 'authors'}},
+  {name: 'Authors', value: {name: 'author-index'}},
 ]
 const {queryData, books} = useBooks();
 let debounce: number | undefined = undefined;

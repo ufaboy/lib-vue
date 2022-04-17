@@ -1,5 +1,5 @@
 <template>
-  <main class="list-book">
+  <main class="list-book flex-row flex-wrap w-[calc(100%-10rem)] absolute left-[10rem]">
 <!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input class="sidebar-input mb-half"
@@ -79,12 +79,8 @@ const props = defineProps<{
 }>()
 const route = useRoute();
 const {
-  filter,
-  searchQuery,
-  limit,
-  orderBy,
+  queryData,
   books,
-  page,
   getCover,
   loadOrderBy,
   saveOrderBy,
@@ -101,33 +97,33 @@ function calcGenreById(id:number) {
   return genreArray.find(genre => genre.id === id)
 }
 
-limit.value = 25;
+queryData.value.limit = 25;
 
 function searchByName() {
-  page.value = 1
+  queryData.value.page = 1
   debounceGetBooksAndReplace()
 }
 
 function changeGenreLoadBook() {
-  page.value = 1
+  queryData.value.page = 1
   debounceGetBooksAndReplace()
 }
 
 watch(props, () => {
   const x = calcGenreById(+route.params.id)
-  if(x && filter.value.genre) {
-  filter.value.genre.id = x.id
+  if(x && queryData.value.genre) {
+    queryData.value.genre.id = x.id
   }
 })
 
 function changeSortAsc() {
-  orderBy.value.asc = !orderBy.value.asc
-  page.value = 1
+  queryData.value.orderBy.asc = !queryData.value.orderBy.asc
+  queryData.value.page = 1
   getBooksAndPush()
 }
 
 function changeSortOrderBy() {
-  page.value = 1
+  queryData.value.page = 1
   saveOrderBy()
   getBooksAndPush()
 }
@@ -144,7 +140,7 @@ function scrollToTop() {
 
 loadOrderBy();
 if(calcGenreById(+route.params.id)) {
-  filter.value.genre = calcGenreById(+route.params.id)
+  queryData.value.genre = calcGenreById(+route.params.id)
 }
 window.addEventListener('scroll', onScroll, {passive: true});
 onBeforeUnmount(() => {
@@ -155,11 +151,11 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 .list-book {
-  display: flex;
+/*  display: flex;
   flex-flow: row wrap;
   height: calc(100% - 3.5rem);
   padding: 0.5rem 1.5rem;
-  align-content: baseline;
+  align-content: baseline;*/
 
   .book {
     display: flex;

@@ -1,17 +1,15 @@
 <template>
-  <div class="list-genre h-fit flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
-<!--    <section class="sidebar" v-if="isMobile()">
-      <select class="form-field__select" v-model="activeCategory">
-        <option
-          class="option"
+  <div class="list-genre md:w-full lg:absolute lg:top-0 lg:left-[10rem] lg:w-[calc(100%-10rem)] h-fit md:block lg:flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
+    <select v-if="isMobile()" class="w-full h-fit bg-white dark:bg-neutral-900 text-slate-900 dark:text-white p-4 border border-2 rounded uppercase mb-5" v-model="activeCategory">
+      <option
+          class="option text-slate-900 dark:text-white"
           :value="category"
           v-for="category of categories"
           :key="category.id"
-        >
-          {{ category.name }}
-        </option>
-      </select>
-    </section>-->
+      >
+        {{ category.name }}
+      </option>
+    </select>
     <router-link
       :to="{
         name: 'list-book',
@@ -20,7 +18,7 @@
           name: genre.name,
         },
       }"
-      class="genre border border-2 rounded uppercase w-48 h-fit p-4 mr-3 mb-3 hover:bg-slate-500"
+      class="genre block border border-2 rounded uppercase lg:w-48 md:w-full h-fit p-4 lg:mr-3 mb-3 hover:bg-slate-500"
       v-for="genre of genres"
       :key="'genre' + genre.id"
       >{{ genre.name }}

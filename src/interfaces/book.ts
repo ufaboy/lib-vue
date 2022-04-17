@@ -123,13 +123,19 @@ interface ActiveMedia {
     type: string,
     url: string,
 }
+interface Order {
+    name: string,
+    asc: boolean
+}
 
 interface QueryData {
-    name: string | undefined
     genre: Genre | undefined,
     rating: number | undefined,
+    limit: number,
+    page: number,
     ad: boolean | undefined,
-    searchQuery: string | undefined
+    searchQuery: string | undefined,
+    orderBy: Order
 }
 
 interface FormFilter {

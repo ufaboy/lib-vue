@@ -1,6 +1,6 @@
 <template>
   <main class="layout-main h-full bg-white dark:bg-gray-900 text-slate-900 dark:text-white" @click="activeBurger = false">
-    <HeaderMobile v-if="isMobile()" />
+    <HeaderMobile v-if="isMobile()" :categories="categories" />
     <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="" />
     <router-view class="page overflow-x-hidden overflow-y-auto"
                  v-bind="$attrs"
@@ -22,7 +22,7 @@ import HeaderMobile from "../components/HeaderMobile.vue";
 import Sidebar from "../components/Sidebar.vue";
 
 const activeBurger = ref(false)
-
+const categories = ref<CategoryExtended[]>([])
 const {
   scrollingProgress,
   windowHeights,
@@ -38,7 +38,13 @@ async function saveScrollingBook(id: number): Promise<void> {
     console.log({'saveScrollingBook': result})
   }
 }
+async function getCategories() {
+  if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
+    categories.value = await loadCategories()
+  }
+}
 
+getCategories();
 window.addEventListener('scroll', throttleScroll, {passive: true})
 onBeforeUnmount(() => {
   // @ts-expect-error

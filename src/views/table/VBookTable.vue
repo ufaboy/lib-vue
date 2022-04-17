@@ -1,64 +1,13 @@
 <template>
   <div class="books-table overflow-x-hidden overflow-y-auto">
-    <HeaderMobile v-if="isMobile()" />
-    <Sidebar v-else>
-      <ul>
-        <li>
-          <input type="search" class="text-black w-full" @input="debounceSearch" v-model="queryData.searchQuery">
-        </li>
-        <li>
-          <router-link :to="{ name: 'book-create'}" class="capitalize">create</router-link>
-        </li>
-        <li>
-          <select class="sidebar-btn form-field__select" v-model="queryData.genre"
-                  @change="sendLoadEvent">
-            <option :value="{}" v-if="!queryData.genre?.id">genre</option>
-            <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-              <option v-for="genre of category.genres"
-                      :key="'select-genre'+genre.id"
-                      :value="genre">{{ genre.name }}
-              </option>
-            </optgroup>
-          </select>
-        </li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <!--    <input type="search" class="sidebar-input search-text" v-model.trim="searchQuery" placeholder="Search ..."
-                   @input="debounceGetBooksAndReplace">
-
-
-            <select class="sidebar-btn form-field__select" v-model="orderBy.name"
-                    @change="getBooksAndReplace">
-              <option v-for="(option, index) of columns" :value="option" :key="option + index">{{ option }}
-              </option>
-            </select>
-            <button class="btn-icon sidebar-btn" @click="changeSortAsc">
-              <IconSortAsc class="icon" v-if="orderBy.asc"/>
-              <IconSortDesc class="icon" v-else/>
-            </button>
-            <div class="toggle-three-state" v-if="getAdAccess()">
-              <label class="three-state-label">Off
-                <input type="radio" class="3state-input" :value="false" v-model="filter.ad" @change="getBooksAndReplace">
-              </label>
-              <label class="three-state-label">AD
-                <input type="radio" class="3state-input" :value="undefined" v-model="filter.ad"
-                       @change="getBooksAndReplace">
-              </label>
-              <label class="three-state-label">On
-                <input type="radio" class="3state-input" :value="true" v-model="filter.ad" @change="getBooksAndReplace">
-              </label>
-            </div>-->
-      </ul>
-    </Sidebar>
     <table class="table border-collapse h-fit">
       <thead class="thead sticky top-0">
       <tr tabindex="0">
-        <th class="th py-2" :class="{active: orderBy.name === column}" v-for="(column, index) of columns" :key="index">
-          <div class="flex flex-row flex-nowrap" :class="{'active' : orderBy.name === column}">
+        <th class="th py-2" :class="{active: queryData.orderBy.name === column}" v-for="(column, index) of columns" :key="index">
+          <div class="flex flex-row flex-nowrap" :class="{'active' : queryData.orderBy.name === column}">
             <div class="td-title mr-2">{{ column }}</div>
             <button class="td-action" @click="sortBy(column)">
-              <IconSortAsc class="icon" v-if="orderBy.name === column && orderBy.asc"/>
+              <IconSortAsc class="icon" v-if="queryData.orderBy.name === column && queryData.orderBy.asc"/>
               <IconSortDesc class="icon" v-else/>
             </button>
           </div>
@@ -103,7 +52,7 @@
       <button class="btn-outline table-pag__btn" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
-      <select class="select" @change="getBooksAndReplace" v-model="page">
+      <select class="select" @change="getBooksAndReplace" v-model="queryData.page">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
@@ -111,7 +60,7 @@
       <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
-      <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" :class="{'bg-green-900': page === item}" v-for="(item, index) in paginator"
+      <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" :class="{'bg-green-900': queryData.page === item}" v-for="(item, index) in paginator"
               :key="index"
               @click="setPageNumber(item)">{{ item }}
       </button>
@@ -166,15 +115,15 @@ const props = defineProps<{
   categories: Category[]
 }>()
 const {
-  filter, searchQuery, orderBy, limit, books, page, paginator, pagBtnArr, loadOrderBy,
+  queryData, books, paginator, pagBtnArr, loadOrderBy,
   sortBy, toPage, getBooksAndReplace, setPageNumber, debounceGetBooksAndReplace
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
 
 function changeSortAsc() {
-  orderBy.value.asc = !orderBy.value.asc
-  page.value = 1
+  queryData.orderBy.value.asc = !queryData.orderBy.value.asc
+  queryData.page.value = 1
   getBooksAndReplace()
 }
 

@@ -4,99 +4,116 @@ import {getAdAccess} from "../utils/userData";
 import {authMiddleware} from "../middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
 
-import VHome from '../views/VHome.vue'
-import VLogin from '../views/VLogin.vue'
-
-const VListBook = () => import('@/views/list/VListBook.vue')
-const VListGenre = () => import('@/views/list/VListGenre.vue')
-const VBookView = () => import('@/views/book/VBookView.vue')
-const VBookTable = () => import('@/views/table/VBookTable.vue')
-const VGenreTable = () => import('@/views/table/VGenreTable.vue')
-const VAuthorTable = () => import('@/views/VAuthorTable.vue')
-const VBookEdit = () => import('@/views/book/VBookEdit.vue')
-const VMedia = () => import('@/views/VMedia.vue')
-const VNote = () => import('@/views/VNote.vue')
-const VError = () => import('@/views/VError.vue')
-const VTestPage = () => import('@/views/VTestPage.vue')
+import VListCategories from '../views/VListCategories.vue'
+import LayoutMain from "../layouts/LayoutMain.vue";
+import LayoutTest from "../layouts/LayoutTest.vue";
+import VTestPage from "../views/VTestPage.vue";
+const VListBook = () => import('../views/list/VListBook.vue')
+const VListGenre = () => import('../views/list/VListGenre.vue')
+const VBookView = () => import('../views/book/VBookView.vue')
+const VBookTable = () => import('../views/table/VBookTable.vue')
+const VGenreTable = () => import('../views/table/VGenreTable.vue')
+const VAuthorTable = () => import('../views/table/VAuthorTable.vue')
+const VBookEdit = () => import('../views/book/VBookEdit.vue')
+const VMedia = () => import('../views/VMedia.vue')
+const VNote = () => import('../views/VNote.vue')
+const VError = () => import('../views/VError.vue')
 
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
-    component: VHome,
-  },
-  {
-    path: '/list-book/:id',
-    name: 'list-book',
-    component: VListBook,
-  },
-  {
-    path: '/list-genre/:name',
-    name: 'list-genre',
-    component: VListGenre
-  },
-  {
-    path: '/list-genre/:name',
-    name: 'list-genre',
-    component: VListGenre
-  },
-  {
-    path: '/book/create',
-    name: 'book-create',
-    component: VBookEdit
-  },
-  {
-    path: '/book/update/:id',
-    name: 'book-edit',
-    component: VBookEdit
-  },
-  {
-    path: '/book/view/:id',
-    name: 'book-view',
-    component: VBookView
-  },
-  {
-    path: '/book',
-    name: 'book-index',
-    component: VBookTable
-  },
-  {
-    path: '/genre',
-    name: 'genres',
-    component: VGenreTable
-  },
-  {
-    path: '/authors',
-    name: 'authors',
-    component: VAuthorTable
-  },
-  {
-    path: '/media',
-    name: 'media',
-    component: VMedia
-  },
-  {
-    path: '/note',
-    name: 'note',
-    component: VNote,
-    beforeEnter: (to, from, next) => {
-      if (getAdAccess()) {
-        next()
-      } else {
-        next(new Error('dont panic'))
-      }
-    }
+    component: LayoutMain,
+    children: [
+      {
+        path: '',
+        name: 'list-categories',
+        component: VListCategories,
+      },
+      {
+        path: '/list-book/:id',
+        name: 'list-book',
+        component: VListBook,
+      },
+      {
+        path: '/list-genre/:name',
+        name: 'list-genre',
+        component: VListGenre
+      },
+      {
+        path: '/list-genre/:name',
+        name: 'list-genre',
+        component: VListGenre
+      },
+      {
+        path: '/genre',
+        name: 'genre-index',
+        component: VGenreTable
+      },
+      {
+        path: '/books',
+        name: 'book-index',
+        component: VBookTable
+      },
+      {
+        path: '/book/:id',
+        name: 'book-view',
+        component: VBookView
+      },
+      {
+        path: '/book/create',
+        name: 'book-create',
+        component: VBookEdit
+      },
+      {
+        path: '/book/update/:id',
+        name: 'book-edit',
+        component: VBookEdit
+      },
+      {
+        path: '/authors',
+        name: 'author-index',
+        component: VAuthorTable
+      },
+      {
+        path: '/media',
+        name: 'media',
+        component: VMedia
+      },
+      {
+        path: '/test',
+        name: 'test',
+        component: VTestPage
+      },
+      {
+        path: '/note',
+        name: 'note',
+        component: VNote,
+        beforeEnter: (to, from, next) => {
+          if (getAdAccess()) {
+            next()
+          } else {
+            next(new Error('dont panic'))
+          }
+        }
+      },
+    ],
   },
   {
     path: '/login',
     name: 'login',
-    component: VLogin,
+    component: () => import('../views/VLogin.vue'),
   },
   {
     path: '/test',
     name: 'test',
-    component: VTestPage,
+    component: LayoutTest,
+    children: [
+      {
+        path: '',
+        component: () => import('../views/VTestPage.vue')
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',

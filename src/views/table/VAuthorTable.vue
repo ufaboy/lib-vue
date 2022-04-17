@@ -37,9 +37,9 @@
 
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "../utils/helpers";
-import useAuthors from "../composables/useAuthors";
-import EditAuthor from "../components/EditAuthor.vue";
+import {isMobile} from "../../utils/helpers";
+import useAuthors from "../../composables/useAuthors";
+import EditAuthor from "../../components/EditAuthor.vue";
 
 document.title = 'Table Authors';
 const columns: string[] = ['id', 'name', 'url', 'ad']
