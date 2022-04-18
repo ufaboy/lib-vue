@@ -1,7 +1,13 @@
 <template>
   <main class="layout-main h-full bg-white dark:bg-gray-900 text-slate-900 dark:text-white" @click="activeBurger = false">
     <HeaderMobile v-if="isMobile()" :categories="categories" />
-    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="" />
+    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="" >
+      <ul v-if="route.name === 'genre-index'">
+        <li>
+          <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
+        </li>
+      </ul>
+    </Sidebar>
     <router-view class="page overflow-x-hidden overflow-y-auto"
                  v-bind="$attrs"
                  :categories="categories"

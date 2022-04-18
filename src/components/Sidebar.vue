@@ -1,7 +1,7 @@
 <template>
-  <aside id="sidebar" class="fixed bg-white dark:bg-neutral-800 left-0 top-0 h-full w-[10rem]">
+  <aside id="sidebar" class="fixed left-0 top-0 h-full w-[10rem] bg-white dark:bg-slate-900">
     <ul class="navigator-desktop overflow-x-hidden overflow-y-auto">
-      <li class="navigator-element hover:dark:bg-neutral-700 mb-3 text-slate-900 dark:text-white cursor-pointer"
+      <li class="navigator-element hover:dark:bg-slate-700 mb-3 text-slate-900 dark:text-white cursor-pointer"
           v-for="(route, index) in routes" :key="index">
         <router-link class="navigator-link flex w-full p-3" :to="route.value">{{ route.name }}</router-link>
       </li>

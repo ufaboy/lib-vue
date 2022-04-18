@@ -16,7 +16,7 @@
 
       </thead>
       <tbody tabindex="0">
-      <tr class="row cursor-pointer" :class="{'picante': book.ad}"
+      <tr class="row cursor-pointer hover:dark:bg-slate-700" :class="{'picante': book.ad}"
           v-for="(book, index) of books.items" :key="book.id" :tabindex="index + 1">
         <td class="td" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="td w-72" @click="openBook(book, 'view')">
@@ -122,8 +122,8 @@ const {openBook} = useBook();
 const {getDate} = useDate();
 
 function changeSortAsc() {
-  queryData.orderBy.value.asc = !queryData.orderBy.value.asc
-  queryData.page.value = 1
+  queryData.value.orderBy.asc = !queryData.value.orderBy.asc
+  queryData.value.page = 1
   getBooksAndReplace()
 }
 
