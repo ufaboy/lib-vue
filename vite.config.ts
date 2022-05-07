@@ -1,7 +1,8 @@
 import {defineConfig, loadEnv} from 'vite'
 import vue from '@vitejs/plugin-vue'
 import {VitePWA} from 'vite-plugin-pwa'
-import {createHtmlPlugin} from 'vite-plugin-html'
+import VitePluginHtmlEnv from 'vite-plugin-html-env'
+
 
 // @ts-ignore
 export default ({mode}) => {
@@ -9,15 +10,7 @@ export default ({mode}) => {
     return defineConfig({
         plugins: [
             vue(),
-            createHtmlPlugin({
-                inject: {
-                    data: {
-                        title: process.env.VITE_APP_TITLE,
-                        api_url: process.env.VITE_API_URL
-                        // injectScript: '<script src="./inject.js"></script>',
-                    },
-                }
-            }),
+            VitePluginHtmlEnv(),
             VitePWA({
                 // includeAssets: ['robots.txt'],
                 registerType: 'autoUpdate',
