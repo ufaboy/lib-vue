@@ -104,11 +104,12 @@ interface Category {
     genres?: Array<Genre>
 }
 interface Genre {
+    [key: string]: number|string|Category|boolean
     id: number,
     name: string,
     description: string,
     category: Category,
-    ad: number,
+    ad: boolean,
     created_at: number,
 }
 const props = defineProps<{

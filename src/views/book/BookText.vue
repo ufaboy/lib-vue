@@ -34,10 +34,8 @@ import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
 import {Author} from "../../interfaces/author";
 
-// @ts-expect-error
-const printToast: Function = inject('printToast')
-// @ts-expect-error
-const saveScrollingBook: Function = inject('saveScrollingBook')
+const printToast = inject('printToast') as Function
+const saveScrollingBook = inject('saveScrollingBook') as Function
 
 interface CategoryExtended extends Category {
   genres?: Array<Genre>

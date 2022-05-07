@@ -18,7 +18,6 @@ import useBooks from "../composables/useBooks";
 interface Category {
   id: number,
   name: string,
-  genres: Array<Genre>
 }
 interface Genre {
   [key: string]: number|string|Category|boolean
@@ -30,7 +29,7 @@ interface Genre {
   created_at: number,
 }
 interface CategoryExtended extends Category{
-  genres: Array<Genre>
+  genres?: Array<Genre>
 }
 
 const route = useRoute()
