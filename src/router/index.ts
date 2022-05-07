@@ -4,31 +4,31 @@ import {getAdAccess} from "../utils/userData";
 import {authMiddleware} from "../middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
 
-import Home from '../views/VHome.vue'
-import Main from "../layouts/LayoutMain.vue";
+import VListCategories from '../views/list/VListCategories.vue'
+import LayoutMain from "../layouts/LayoutMain.vue";
 import LayoutTest from "../layouts/LayoutTest.vue";
 import VTestPage from "../views/VTestPage.vue";
-// const Home = () => import('../views/VHome.vue')
-const VListBook = () => import('@/views/VListBook.vue')
-const VListGenre = () => import('@/views/VListGenre.vue')
-const VBookView = () => import('@/views/book/VBookView.vue')
-const VBookTable = () => import('@/views/book/VBookTable.vue')
-const VGenreTable = () => import('@/views/VGenreTable.vue')
-const VAuthorTable = () => import('@/views/VAuthorTable.vue')
-const VBookEdit = () => import('@/views/book/VBookEdit.vue')
-const VMedia = () => import('@/views/VMedia.vue')
-const VNote = () => import('@/views/VNote.vue')
-const VError = () => import('@/views/VError.vue')
+const VListBook = () => import('../views/list/VListBook.vue')
+const VListGenre = () => import('../views/list/VListGenre.vue')
+const VBookView = () => import('../views/book/VBookView.vue')
+const VBookTable = () => import('../views/table/VBookTable.vue')
+const VGenreTable = () => import('../views/table/VGenreTable.vue')
+const VAuthorTable = () => import('../views/table/VAuthorTable.vue')
+const VBookEdit = () => import('../views/book/VBookEdit.vue')
+const VMedia = () => import('../views/VMedia.vue')
+const VNote = () => import('../views/VNote.vue')
+const VError = () => import('../views/VError.vue')
 
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: Main,
+    component: LayoutMain,
     children: [
       {
         path: '',
-        component: Home,
+        name: 'list-categories',
+        component: VListCategories,
       },
       {
         path: '/list-book/:id',
@@ -47,12 +47,12 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/genre',
-        name: 'genre',
+        name: 'genre-index',
         component: VGenreTable
       },
       {
         path: '/books',
-        name: 'books',
+        name: 'book-index',
         component: VBookTable
       },
       {
@@ -72,7 +72,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/authors',
-        name: 'authors',
+        name: 'author-index',
         component: VAuthorTable
       },
       {

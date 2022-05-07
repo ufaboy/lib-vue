@@ -43,9 +43,12 @@ export default {
   methods: {
     show() {
       this.loading = true
+      document.documentElement.style.cursor = "wait";
+
     },
     hide() {
       this.loading = false
+      document.documentElement.style.cursor = "auto";
     }
   },
   created() {

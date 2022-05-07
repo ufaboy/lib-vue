@@ -1,10 +1,10 @@
 <template>
   <div class="authors-table">
-    <teleport to="#aside" :disabled="isMobile()">
+<!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <button class="sidebar-btn btn-outline" @click="createAuthor">create</button>
       </section>
-    </teleport>
+    </teleport>-->
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
@@ -37,9 +37,9 @@
 
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "../utils/helpers";
-import useAuthors from "../composables/useAuthors";
-import EditAuthor from "../components/EditAuthor.vue";
+import {isMobile} from "../../utils/helpers";
+import useAuthors from "../../composables/useAuthors";
+import EditAuthor from "../../components/EditAuthor.vue";
 
 document.title = 'Table Authors';
 const columns: string[] = ['id', 'name', 'url', 'ad']

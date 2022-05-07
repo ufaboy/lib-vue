@@ -1,32 +1,55 @@
 <template>
-  <div class="basement" @click="activeBurger = false">
-    <teleport to="#aside" :disabled="isMobile()">
-      <Navigator-mobile v-if="isMobile()" />
-      <NavigatorDesktop v-else />
-    </teleport>
-    <router-view v-bind="$attrs" :categories="categories" :scrolling-progress="scrollingProgress"
-                 :window-heights="windowHeights"></router-view>
-  </div>
+  <main class="layout-main
+  min-h-screen
+  bg-white
+  lg:dark:bg-slate-900
+  md:dark:bg-neutral-900
+  text-slate-900
+  dark:text-white" @click="activeBurger = false">
+    <HeaderMobile v-if="isMobile()" :categories="categories" />
+    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="">
+      <ul v-if="route.name === 'genre-index'">
+        <li>
+          <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
+        </li>
+      </ul>
+    </Sidebar>
+    <router-view class="page overflow-x-hidden overflow-y-auto bg-white dark:bg-slate-900"
+                 v-bind="$attrs"
+                 :categories="categories"
+                 :scrolling-progress="scrollingProgress"
+                 :book="book"
+                 :typeBook="typeBook"
+                 :window-heights="windowHeights"/>
+  </main>
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, provide, ref} from "vue";
-import {isMobile} from "../utils/helpers";
+import {onBeforeUnmount, provide, ref, watch} from "vue";
+import {isMobile} from '../utils/helpers';
 import {loadCategories} from "../utils/loadData";
 import useScroll from "../composables/useScroll";
 import {updateBookMark} from "../utils/uploadData";
-import NavigatorDesktop from "../components/sidebar/NavigatorDesktop.vue";
-import NavigatorMobile from "../components/sidebar/NavigatorMobile.vue";
 import {CategoryExtended} from "../interfaces/category";
 import {BookScrolling} from "../interfaces/book";
+import HeaderMobile from "../components/HeaderMobile.vue";
+import Sidebar from "../components/Sidebar.vue";
+import useBook from "../composables/useBook";
+import {useRoute} from "vue-router";
 
+const route = useRoute();
 const activeBurger = ref(false)
 const categories = ref<CategoryExtended[]>([])
+const {rawText, book, typeBook, downloadBook} = useBook();
 const {
   scrollingProgress,
   windowHeights,
   throttleScroll
 } = useScroll()
+
+function searchInputHandler(event: string) {
+  console.log('searchInputHandler', event)
+}
 
 async function saveScrollingBook(id: number): Promise<void> {
   const formData: BookScrolling = {bookId: id, bookmark: scrollingProgress.value.progress}
@@ -43,22 +66,34 @@ async function getCategories() {
 }
 
 getCategories();
+watch(route, (newValue, oldValue) => {
+  if (newValue.name === 'book-view') {
+    console.log('watch downloadBook', {newValue: newValue.params.id, oldValue: oldValue.params.id})
+    downloadBook(+route.params.id)
+  }
+})
+if (route.name === 'book-view') {
+  downloadBook(+route.params.id)
+}
+
 window.addEventListener('scroll', throttleScroll, {passive: true})
-document.getElementById('aside')!.classList.replace('hide', 'show')
 onBeforeUnmount(() => {
   // @ts-expect-error
   window.removeEventListener('scroll', throttleScroll, {passive: true})
-  document.getElementById('aside')!.classList.replace('show', 'hide')
 })
 
 provide('saveScrollingBook', saveScrollingBook)
 </script>
 
 <style lang="scss">
+.layout-main {
+}
 
 @media only screen and (min-width: 893px) {
-  #header {
-    display: none;
+  .page {
+    width: calc(100% - 10rem);
+    position: absolute;
+    left: 10rem;
   }
 }
 

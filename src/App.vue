@@ -1,5 +1,5 @@
 <template>
-  <router-view></router-view>
+  <router-view class="" />
   <teleport to="body">
     <TheToaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
   </teleport>
@@ -11,7 +11,6 @@ import {isMobile} from "./utils/helpers";
 
 const toastMessage = ref('')
 const toastType = ref('')
-
 
 function printToast(message: string, type: string): void {
   toastMessage.value = message

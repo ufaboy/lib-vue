@@ -1,13 +1,13 @@
 <template>
-  <div class="edit-book">
-    <div class="text-container">
-      <div class="btn-tab">
-        <div class="btn-tab--left">
-          <button class="negative-btn" type="reset" @click="resetBook">reset</button>
-          <button class="positive-btn" @click="sendBook">save</button>
-          <button class="regular-btn" @click="startTypograf">typograf</button>
+  <div class="edit-book flex flex-row flex-nowrap px-1 py-2">
+    <div class="text-container w-[800px]">
+      <div class="flex flex-row justify-between mb-5">
+        <div class="flex flex-row">
+          <button class="py-1 mr-2 justify-items-center px-3 rounded-md bg-red-600" type="reset" @click="resetBook">reset</button>
+          <button class="py-1 mr-2 justify-items-center px-3 rounded-md bg-green-700" @click="sendBook">save</button>
+          <button class="py-1 justify-items-center px-3 rounded-md bg-blue-600" @click="startTypograf">typograf</button>
         </div>
-        <div class="btn-tab--right">
+        <div class="flex flex-row">
           <StarRating v-model="book.rating"></StarRating>
           <div class="toggle toggle--knob" v-if="getAdAccess()">
             <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
@@ -17,30 +17,30 @@
           </div>
         </div>
       </div>
-      <section class="form-row">
-        <div class="form-field">
+      <section class="form-row flex flex-row justify-between mb-5">
+        <div class="form-field flex flex-col">
           <label class="form-field__label">name</label>
-          <input type="text" class="form-field__input" v-model.trim="book.name">
+          <input type="text" class="form-field__input p-1" v-model.trim="book.name">
         </div>
-        <div class="form-field">
+        <div class="form-field flex flex-col">
           <label class="form-field__label">source</label>
           <input type="url"
-                 class="form-field__input"
+                 class="form-field__input p-1"
                  v-model.trim="book.source">
         </div>
-        <div class="form-field">
+        <div class="form-field flex flex-col">
           <label class="form-field__label">author</label>
-          <select class="select w100" v-model="authorData">
-            <option v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
+          <select class="select w100 p-1" v-model="authorData">
+            <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
           </select>
         </div>
       </section>
-      <div class="form-field mb-1">
+      <div class="form-field flex flex-col mb-5">
         <label class="form-field__label">
           annotation
           <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280" optimum="150"/>
         </label>
-        <textarea class="form-field__textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
+        <textarea class="form-field__textarea border p-1" rows="4" maxlength="300" v-model.trim="book.annotation"/>
       </div>
       <section class="form-field genre mb-1" @click="openGenreModal">
         <span v-if="genres.length === 0">Не выбраны жанры</span>
@@ -58,7 +58,7 @@
           </optgroup>
         </select>
       </section>
-      <div class="form-field">
+      <div class="form-field flex flex-col">
         <div class="form-field__label">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
@@ -74,7 +74,7 @@
             </button> -->
         </span>
         </div>
-        <textarea class="editor clarity"
+        <textarea class="editor clarity border"
                   v-model="book.text"
                   v-if="editorMode === 'raw'"
                   ref="editor"
@@ -145,6 +145,7 @@ import useBook from '../../composables/useBook';
 import useAuthors from '../../composables/useAuthors'
 import GenreBook from '@/components/GenreBook.vue'
 import StarRating from "@/components/StarRating.vue";
+
 // import IconParagraph from '@/components/icons/IconParagraph.vue'
 // import IconCarriage from '@/components/icons/IconCarriage.vue'
 // import IconSlash from '@/components/icons/IconSlash.vue'
@@ -491,12 +492,6 @@ getAuthors();
 
 <style lang="scss">
 .edit-book {
-  height: calc(100% - 3.5rem);
-  overflow-y: auto;
-  padding: 0.5rem 1.5rem;
-  display: flex;
-  flex-flow: row;
-
   .header {
     width: 100%;
     margin-bottom: 2rem;
@@ -525,7 +520,6 @@ getAuthors();
   }
 
   .text-container {
-    width: 800px;
 
     .form-row {
       margin: 0 0 1rem 0;

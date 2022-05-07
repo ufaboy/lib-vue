@@ -65,7 +65,7 @@ async function login() {
   if (response.ok) {
     if (result.token) {
       setUser(result)
-      await router.push('/')
+      await router.push({name: 'list-categories'})
     } else {
       console.log({'response.not token': response})
     }

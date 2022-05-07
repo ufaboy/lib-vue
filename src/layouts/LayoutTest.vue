@@ -1,5 +1,9 @@
 <template>
-<router-view></router-view>
+  <main class="layout-test">
+    <router-view name="sidebar"/>
+    <router-view></router-view>
+  </main>
+
 </template>
 
 <script>

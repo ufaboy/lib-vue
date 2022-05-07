@@ -123,13 +123,19 @@ interface ActiveMedia {
     type: string,
     url: string,
 }
+interface Order {
+    name: string,
+    asc: boolean
+}
 
-interface Filter {
-    name: string | undefined
+interface QueryData {
     genre: Genre | undefined,
     rating: number | undefined,
+    limit: number,
+    page: number,
     ad: boolean | undefined,
-    searchQuery: string | undefined
+    searchQuery: string | undefined,
+    orderBy: Order
 }
 
 interface FormFilter {
@@ -137,7 +143,6 @@ interface FormFilter {
     rating: number | undefined,
     ad: boolean | undefined,
     searchQuery: string | undefined,
-    name: string | undefined
 }
 
 interface BookSave {
@@ -164,7 +169,7 @@ export {
     BookFilesUpload,
     BookDirFile,
     BookDirFiles,
-    Filter,
+    QueryData,
     FormFilter,
     ActiveMedia,
     BookSave

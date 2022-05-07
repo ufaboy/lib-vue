@@ -1,28 +1,29 @@
 <template>
-  <div class="navigator-mobile" :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
-    <router-link class="breadcrumb-home" to="/">Home</router-link>
-    <button class="btn-icon" aria-label="Menu" @click.stop="activeBurger = !activeBurger">
-      <svg class="icon" width="24" height="100%" viewBox="0 0 26 24">
-        <rect y="0" width="26" height="4"/>
-        <rect y="10" width="26" height="4"/>
-        <rect y="20" width="26" height="4"/>
-      </svg>
-    </button>
-    <ul class="breadcrumb">
-      <li class="breadcrumb-li">
-        <router-link class="breadcrumb-link" to="/books">Books</router-link>
-      </li>
-      <li class="breadcrumb-li">
-        <router-link class="breadcrumb-link" to="/genre">Genre</router-link>
-      </li>
-      <li class="breadcrumb-li">
-        <router-link class="breadcrumb-link" to="/note">Note</router-link>
-      </li>
-      <li class="breadcrumb-li" v-if="btnViewEditMode.name">
-        <router-link class="breadcrumb-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
-      </li>
-    </ul>
-  </div>
+<header class="header md:sticky flex top-0 justify-between items-center relative text-white bg-neutral-800 w-full h-fit p-3" :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
+  <router-link class="breadcrumb-home" to="/">Home</router-link>
+  <button class="btn-icon" aria-label="Menu" @click.stop="activeBurger = !activeBurger">
+    <svg class="icon" width="24" height="100%" viewBox="0 0 26 24">
+      <rect y="0" width="26" height="4"/>
+      <rect y="10" width="26" height="4"/>
+      <rect y="20" width="26" height="4"/>
+    </svg>
+  </button>
+  <ul v-if="activeBurger" class="absolute bg-neutral-800 left-0 top-[3rem] w-full">
+    <li class="p-2 mb-3">
+      <router-link class="breadcrumb-link" :to="{name: 'book-index'}">Books</router-link>
+    </li>
+    <li class="p-2 mb-3">
+      <router-link class="breadcrumb-link" :to="{name: 'genre-index'}">Genre</router-link>
+    </li>
+    <li class="p-2 mb-3">
+      <router-link class="breadcrumb-link" :to="{name: 'note'}">Note</router-link>
+    </li>
+    <li class="p-2 mb-3" v-if="btnViewEditMode.name">
+      <router-link class="breadcrumb-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
+    </li>
+    <slot name="burger"></slot>
+  </ul>
+</header>
 </template>
 
 <script setup lang="ts">
@@ -94,14 +95,14 @@ const btnViewEditMode = computed(() => {
     border-radius: 5px;
     text-decoration: none;
   }
-.btn-icon {
-  border: none;
-  padding: 0;
-  background-color: transparent;
-  .icon {
-    fill: var(--primary);
+  .btn-icon {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    .icon {
+      fill: var(--primary);
+    }
   }
-}
 
 
   @keyframes slide-top {

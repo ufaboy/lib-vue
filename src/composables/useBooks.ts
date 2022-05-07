@@ -2,25 +2,23 @@ import {Loader} from '../plugins/loader';
 import {computed, inject, ref,} from 'vue'
 import {goPage, loadBooks} from "../utils/loadData";
 import {API_URL} from '../../runtimeEnv';
-import {BookData, Filter, BookLink, Book, FormFilter} from "../interfaces/book";
+import {BookData, QueryData, BookLink, Book, FormFilter} from "../interfaces/book";
 
 export default function useBooks() {
     let debTimer: number | undefined = undefined
     // @ts-expect-error
     const loader: Loader = inject("loader");
-    const filter = ref<Filter>(
+    const queryData = ref<QueryData>(
         {
-            name: undefined,
             genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
             rating: 0,
             ad: undefined,
-            searchQuery: undefined
+            searchQuery: undefined,
+            limit: 12,
+            page: 1,
+            orderBy: {name: 'updated_at', asc: false}
         }
     );
-    const searchQuery = ref<string|undefined>();
-    const limit = ref<number>(10);
-    const orderBy = ref({name: 'updated_at', asc: false});
-    const page = ref<number>(1);
     const pagBtnArr = ref<Array<number>>();
     const infinityState = ref(true);
     const books = ref<BookData>({
@@ -44,16 +42,16 @@ export default function useBooks() {
 
     function calcPaginator() {
         let arr = [];
-        for (let i = page.value; i > 0 && i > page.value - 5; i--) {
+        for (let i = queryData.value.page; i > 0 && i > queryData.value.page - 5; i--) {
             arr.unshift(i)
         }
-        for (let i = page.value + 1; i <= books.value!._meta.pageCount && arr.length < 9; i++) {
+        for (let i = queryData.value.page + 1; i <= books.value!._meta.pageCount && arr.length < 9; i++) {
             arr.push(i)
         }
         const decimalPages = Math.floor(books.value!._meta.pageCount / 10)
         for (let i = 1; i <= decimalPages; i++) {
             const decimal = Number(i + '0')
-            if (decimal > page.value + 4) {
+            if (decimal > queryData.value.page + 4) {
                 arr.push(decimal)
             }
         }
@@ -61,40 +59,39 @@ export default function useBooks() {
     }
 
     const saveOrderBy = function () {
-        localStorage.setItem('orderby-books', JSON.stringify(orderBy.value));
+        localStorage.setItem('orderby-books', JSON.stringify(queryData.value.orderBy));
     }
     const loadOrderBy = function () {
         const data = localStorage.getItem('orderby-books')
         if (data) {
-            orderBy.value = JSON.parse(data)
+            queryData.value.orderBy = JSON.parse(data)
         }
     }
 
     const filterCount = computed(() => {
         let count = 0
-        if (Number.isInteger(filter.value!.ad)) count++
-        if (Number.isInteger(filter.value!.genre?.id)) count++
-        if (Number.isInteger(filter.value!.rating)) count++
+        if (Number.isInteger(queryData.value!.ad)) count++
+        if (Number.isInteger(queryData.value!.genre?.id)) count++
+        if (Number.isInteger(queryData.value!.rating)) count++
         return count
     })
     const getBooksAndReplace = async () => {
-        const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
+        const sort = `${queryData.value.orderBy.asc ? '' : '-'}${queryData.value.orderBy.name}`
         const formFilter: FormFilter = {
-            name: filter.value.name ? filter.value.name : undefined,
-            genre_id: filter.value.genre?.id ? filter.value.genre.id : undefined,
-            rating: filter.value.rating ? filter.value.rating : undefined,
-            ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
-            searchQuery: searchQuery.value
+            genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
+            rating: queryData.value.rating ? queryData.value.rating : undefined,
+            ad: queryData.value.ad ? true : queryData.value.ad === undefined ? undefined : false,
+            searchQuery: queryData.value.searchQuery
         }
         try {
             loader.show();
-            const result = await loadBooks(page.value, limit.value, sort, formFilter);
+            const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
             loader.hide();
             books.value!._links = result._links
             books.value!._meta = result._meta
             books.value!.items.splice(0, books.value!.items.length)
             books.value!.items.push(...result.items)
-            page.value = result._meta.currentPage
+            queryData.value.page = result._meta.currentPage
             pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
             calcPaginator();
         } catch (e) {
@@ -102,13 +99,12 @@ export default function useBooks() {
         }
     };
     const getBooksAndPush = async (method = '') => {
-        const sort = `${orderBy.value.asc ? '' : '-'}${orderBy.value.name}`
+        const sort = `${queryData.value.orderBy.asc ? '' : '-'}${queryData.value.orderBy.name}`
         const formFilter: FormFilter = {
-            name: filter.value.name ? filter.value.name : undefined,
-            genre_id: filter.value.genre?.id ? filter.value.genre.id : undefined,
-            rating: filter.value.rating ? filter.value.rating : undefined,
-            ad: filter.value.ad ? true : filter.value.ad === undefined ? undefined : false,
-            searchQuery: searchQuery.value
+            genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
+            rating: queryData.value.rating ? queryData.value.rating : undefined,
+            ad: queryData.value.ad ? true : queryData.value.ad === undefined ? undefined : false,
+            searchQuery: queryData.value.searchQuery
         }
         if (!infinityState.value && method) {
             return false
@@ -117,18 +113,18 @@ export default function useBooks() {
         }
 
         loader.show();
-        const result = await loadBooks(page.value, limit.value, sort, formFilter);
+        const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
         loader.hide();
         if (result) {
             if (method === 'push' && books.value.items.length) {
                 books.value?.items.push(...result.items)
-                page.value = ++page.value
+                queryData.value.page = ++queryData.value.page
             } else {
                 books.value?.items.splice(0, books.value.items.length)
                 books.value?.items.push(...result.items)
-                page.value = ++page.value
+                queryData.value.page = ++queryData.value.page
             }
-            if (result.items.length < limit.value) {
+            if (result.items.length < queryData.value.limit) {
                 infinityState.value = false
             }
         }
@@ -137,7 +133,7 @@ export default function useBooks() {
         try {
             loader.show();
             books.value = await goPage(url.href);
-            page.value = books.value?._meta.currentPage
+            queryData.value.page = books.value?._meta.currentPage
             loader.hide();
             calcPaginator();
         } catch (e) {
@@ -145,12 +141,12 @@ export default function useBooks() {
         }
     };
     const setPageNumber = function (item: number) {
-        page.value = item
+        queryData.value.page = item
         getBooksAndReplace();
     }
     const resetTable = () => {
-        if (filter.value) {
-            filter.value.genre = {
+        if (queryData.value) {
+            queryData.value.genre = {
                 id: 0,
                 name: '',
                 description: '',
@@ -158,27 +154,27 @@ export default function useBooks() {
                 created_at: 0,
                 category: {id: 0, name: ''}
             }
-            filter.value.rating = 0
-            filter.value.ad = undefined
+            queryData.value.rating = 0
+            queryData.value.ad = undefined
             getBooksAndReplace()
         }
     };
-    const updateFilterPage = (newFilter: Filter) => {
-        if (filter.value) {
+    const updateFilterPage = (newFilter: QueryData) => {
+        if (queryData.value) {
             if (newFilter?.genre) {
-                filter.value.genre = newFilter.genre
+                queryData.value.genre = newFilter.genre
             }
             if (newFilter?.rating) {
-                filter.value.rating = newFilter.rating
+                queryData.value.rating = newFilter.rating
             }
-            filter.value.ad = newFilter.ad
+            queryData.value.ad = newFilter.ad
             getBooksAndReplace()
         }
 
     };
     const sortBy = (column: string) => {
-        orderBy.value.asc = !orderBy.value.asc
-        orderBy.value.name = column
+        queryData.value.orderBy.asc = !queryData.value.orderBy.asc
+        queryData.value.orderBy.name = column
         saveOrderBy()
         getBooksAndReplace();
     };
@@ -197,12 +193,8 @@ export default function useBooks() {
     }
 
     return {
-        filter,
-        searchQuery,
-        limit,
-        orderBy,
+        queryData,
         books,
-        page,
         pagBtnArr,
         infinityState,
         filterCount,

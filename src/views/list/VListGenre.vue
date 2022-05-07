@@ -1,17 +1,15 @@
 <template>
-  <div class="list-genre">
-    <section class="sidebar" v-if="isMobile()">
-      <select class="form-field__select" v-model="activeCategory">
-        <option
-          class="option"
+  <div class="list-genre md:w-full lg:absolute lg:top-0 lg:left-[10rem] lg:w-[calc(100%-10rem)] h-fit md:block lg:flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
+    <select v-if="isMobile()" class="w-full h-fit bg-white dark:bg-neutral-900 text-slate-900 dark:text-white p-4 border border-2 rounded uppercase mb-5" v-model="activeCategory">
+      <option
+          class="option text-slate-900 dark:text-white"
           :value="category"
           v-for="category of categories"
           :key="category.id"
-        >
-          {{ category.name }}
-        </option>
-      </select>
-    </section>
+      >
+        {{ category.name }}
+      </option>
+    </select>
     <router-link
       :to="{
         name: 'list-book',
@@ -20,7 +18,7 @@
           name: genre.name,
         },
       }"
-      class="genre"
+      class="genre block border border-2 rounded uppercase lg:w-48 md:w-full h-fit p-4 lg:mr-3 mb-3 hover:bg-slate-500"
       v-for="genre of genres"
       :key="'genre' + genre.id"
       >{{ genre.name }}
@@ -33,7 +31,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { isMobile } from "../utils/helpers";
+import { isMobile } from "../../utils/helpers";
 
 
 
@@ -110,73 +108,12 @@ watch(props, () => {
 
 <style lang="scss">
 .list-genre {
-  display: flex;
-  flex-flow: row wrap;
-  padding: 1rem;
 
-  .genre {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    text-transform: capitalize;
-    text-decoration: none;
-    cursor: pointer;
-    width: 300px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-    padding: 1rem;
-    color: var(--surface-on);
-    background: var(--surface);
-    border-radius: 5px;
-
-    .title {
-      margin-right: 0.5rem;
-    }
-  }
-
-  .genre:hover {
-    color: var(--text-primary);
-    background: var(--primary-dark);
-  }
 }
 
 @media only screen and (max-width: 892px) {
   .list-genre {
-    padding: 0.5rem;
-    columns: 400px;
 
-    .sidebar {
-      width: 100%;
-      max-width: 100%;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-      max-height: 42px;
-
-      .search-input {
-        flex: 1;
-        margin-right: 0.5rem;
-        color: (var(--color));
-        background-color: var(--background-2);
-      }
-
-      .select {
-        flex: 1;
-        padding: 0.5rem;
-
-        .option {
-          padding: 0.5rem;
-        }
-      }
-    }
-
-    .genre {
-      margin-bottom: 0.5rem;
-      margin-right: 0;
-      padding: 0.5rem;
-      width: 100%;
-    }
   }
 }
 
@@ -187,19 +124,7 @@ watch(props, () => {
 
 @media only screen and (max-width: 892px) and (orientation: portrait) {
   .list-genre {
-    .header {
-      .search-input {
-        max-width: 220px;
-      }
 
-      .select {
-        //max-width: 165px;
-      }
-    }
-
-    .genre {
-      justify-content: space-between;
-    }
   }
 }
 </style>
