@@ -1,5 +1,5 @@
 <template>
-  <router-view class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white" />
+  <router-view class="" />
   <teleport to="body">
     <TheToaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
   </teleport>

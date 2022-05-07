@@ -1,5 +1,5 @@
 <template>
-  <div class="notes">
+  <div class="notes overflow-x-hidden overflow-y-auto">
 <!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <button class="sidebar-btn btn mb-half" @click="sendNotes">save</button>
@@ -28,7 +28,7 @@
         <th class="th">index</th>
         <th class="th">name</th>
         <th class="th">
-          <select v-model="filterType">
+          <select class="p-1" v-model="filterType">
             <option disabled value="">type</option>
             <option :value="type" v-for="(type, index) in types" :key="index">{{type}}</option>
           </select>
@@ -38,21 +38,21 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="note" v-for="(note, index) of filteredNotes" :key="'note-' + index">
+      <tr class="note row hover:dark:bg-slate-700" v-for="(note, index) of filteredNotes" :key="'note-' + index">
         <td class="td">{{ index }}</td>
         <td class="td">
-          <input type="text" class="note__name" v-model="note.name">
+          <input type="text" class="p-2" v-model="note.name">
         </td>
         <td class="td">
-          <select class="note__type" v-model="note.type">
+          <select class="p-2 cursor-pointer" v-model="note.type">
             <option :value="type" v-for="(type, index) in types" :key="index">{{type}}</option>
           </select>
         </td>
         <td class="td">
-          <input type="text" class="note__url" v-model="note.url">
+          <input type="text" class="p-2" v-model="note.url">
         </td>
         <td class="td">
-          <button class="td__btn negative-btn" @click="deleteNote(index)">del</button>
+          <button class="td__btn negative-btn hover:dark:bg-slate-600 p-2 rounded-md" @click="deleteNote(index)">del</button>
         </td>
       </tr>
       </tbody>
@@ -111,21 +111,11 @@ getNotes()
 
 <style lang="scss">
 .notes {
-  width: 100%;
-  height: calc(100% - 3.5rem);
   padding: 1rem 1.5rem;
 
   .notes__btn {
     margin-left: 0.5rem;
   }
-
-
-
-  .note__name, .note__url, .note__type {
-    padding: 6px;
-  }
-
-
 
   .td__btn {
     margin-right: initial;
@@ -133,7 +123,7 @@ getNotes()
 }
 @media only screen and (min-width: 893px) {
   .notes {
-    .notes-table {
+/*    .notes-table {
       border: 1px solid;
       border-color: whitesmoke;
       margin-bottom: 1rem;
@@ -170,12 +160,12 @@ getNotes()
 
     .note__url {
       width: 400px;
-    }
+    }*/
   }
 }
 
 @media only screen and (max-width: 892px) {
-  .notes {
+/*  .notes {
     padding: 0.5rem;
     .note-group {
       width: 49%;
@@ -201,7 +191,7 @@ getNotes()
     .note__url {
       width: 100%;
     }
-  }
+  }*/
 }
 
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {

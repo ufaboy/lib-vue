@@ -4,7 +4,7 @@ import {getAdAccess} from "../utils/userData";
 import {authMiddleware} from "../middleware/auth";
 // import {rolesMiddleware} from "@/middleware/roles";
 
-import VListCategories from '../views/VListCategories.vue'
+import VListCategories from '../views/list/VListCategories.vue'
 import LayoutMain from "../layouts/LayoutMain.vue";
 import LayoutTest from "../layouts/LayoutTest.vue";
 import VTestPage from "../views/VTestPage.vue";

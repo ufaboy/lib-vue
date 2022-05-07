@@ -65,10 +65,10 @@ document.title = 'Home';
     text-shadow: 1px 1px 2px #427388;
   }
 
-  .content-link:last-of-type {
+/*  .content-link:last-of-type {
     margin-bottom: 0;
     margin-right: 0;
-  }
+  }*/
 }
 
 @media only screen and (max-width: 892px) {

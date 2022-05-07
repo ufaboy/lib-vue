@@ -129,7 +129,7 @@ function changeSortAsc() {
 
 function calcGenres(genres:Genre[]) {
   return genres.reduce((previousValue:string, currentValue:Genre, index:number, array:Genre[]):string => {
-    return previousValue += index !== array.length ? `${currentValue.name}, ` : `${currentValue.name}`;
+    return previousValue += index !== array.length - 1 ? `${currentValue.name}, ` : `${currentValue.name}`;
   }, '' )
 }
 

@@ -1,25 +1,31 @@
 <template>
-  <main class="layout-main h-full bg-white dark:bg-gray-900 text-slate-900 dark:text-white" @click="activeBurger = false">
+  <main class="layout-main
+  min-h-screen
+  bg-white
+  lg:dark:bg-slate-900
+  md:dark:bg-neutral-900
+  text-slate-900
+  dark:text-white" @click="activeBurger = false">
     <HeaderMobile v-if="isMobile()" :categories="categories" />
-    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="" >
+    <Sidebar v-else :categories="categories" @search-input="searchInputHandler" @load-data="">
       <ul v-if="route.name === 'genre-index'">
         <li>
           <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
         </li>
       </ul>
     </Sidebar>
-    <router-view class="page overflow-x-hidden overflow-y-auto"
+    <router-view class="page overflow-x-hidden overflow-y-auto bg-white dark:bg-slate-900"
                  v-bind="$attrs"
                  :categories="categories"
                  :scrolling-progress="scrollingProgress"
                  :book="book"
                  :typeBook="typeBook"
-                 :window-heights="windowHeights" />
+                 :window-heights="windowHeights"/>
   </main>
 </template>
 
 <script setup lang="ts">
-import {onBeforeUnmount, provide, ref, watch } from "vue";
+import {onBeforeUnmount, provide, ref, watch} from "vue";
 import {isMobile} from '../utils/helpers';
 import {loadCategories} from "../utils/loadData";
 import useScroll from "../composables/useScroll";
@@ -40,9 +46,11 @@ const {
   windowHeights,
   throttleScroll
 } = useScroll()
-function searchInputHandler(event:string) {
+
+function searchInputHandler(event: string) {
   console.log('searchInputHandler', event)
 }
+
 async function saveScrollingBook(id: number): Promise<void> {
   const formData: BookScrolling = {bookId: id, bookmark: scrollingProgress.value.progress}
   const result = await updateBookMark(formData)
@@ -50,6 +58,7 @@ async function saveScrollingBook(id: number): Promise<void> {
     console.log({'saveScrollingBook': result})
   }
 }
+
 async function getCategories() {
   if (categories.value && categories.value.length === 0 && sessionStorage.getItem('lib-token')) {
     categories.value = await loadCategories()
@@ -59,7 +68,7 @@ async function getCategories() {
 getCategories();
 watch(route, (newValue, oldValue) => {
   if (newValue.name === 'book-view') {
-    console.log('watch downloadBook', {newValue:newValue.params.id, oldValue:oldValue.params.id})
+    console.log('watch downloadBook', {newValue: newValue.params.id, oldValue: oldValue.params.id})
     downloadBook(+route.params.id)
   }
 })
@@ -79,6 +88,7 @@ provide('saveScrollingBook', saveScrollingBook)
 <style lang="scss">
 .layout-main {
 }
+
 @media only screen and (min-width: 893px) {
   .page {
     width: calc(100% - 10rem);

@@ -1,5 +1,17 @@
 <template>
-  <main class="list-book flex flex-row flex-wrap w-[calc(100%-10rem)] absolute left-[10rem]">
+  <main class="list-book
+  pt-4
+  flex
+  flex-row
+  flex-wrap
+  lg:w-[calc(100%-10rem)]
+  absolute
+  lg:left-[10rem]
+  bg-white
+  lg:dark:bg-slate-900
+  md:dark:bg-neutral-900
+  text-slate-900
+  dark:text-white">
 <!--    <teleport to="#aside" :disabled="isMobile()">
       <section class="sidebar">
         <input class="sidebar-input mb-half"
@@ -27,13 +39,15 @@
         </button>
       </section>
     </teleport>-->
-
-    <router-link :to="{ name: 'book-view', params: {id: book.id}}" class="book" v-for="book of books.items"
+    <router-link :to="{ name: 'book-view', params: {id: book.id}}"
+                 class="book h-fit mr-4 mb-4 overflow-hidden flex flex-row flex-wrap drop-shadow-md justify-between w-80 p-4 cursor-pointer rounded-md dark:bg-slate-800 hover:dark:bg-slate-700"
+                 v-for="book of books.items"
                  :key="'book'+book.id">
-      <img v-if="book.cover_path" :src="getCover(book)" alt="cover" class="book-cover" onerror="this.src = '/icons/svg/book-dead-solid.svg'">
+      <img v-if="book.cover_path" :src="getCover(book)" alt="cover" class="book-cover"
+           onerror="this.onerror=null;this.src = '/icons/svg/book-dead-solid.svg'">
       <IconBook v-else />
       <div class="book-text-wrap">
-        <div class="book-name">{{ book.name }}</div>
+        <div class="book-name font-bold truncate">{{ book.name }}</div>
         <div class="book-annotation">{{ book.annotation }}</div>
       </div>
       <StarRating :model-value="book.rating" :size="18" />
@@ -151,39 +165,13 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 .list-book {
-/*  display: flex;
-  flex-flow: row wrap;
-  height: calc(100% - 3.5rem);
-  padding: 0.5rem 1.5rem;
-  align-content: baseline;*/
-
   .book {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    cursor: pointer;
-    width: 400px;
-    border-radius: 5px;
-    height: fit-content;
-    overflow: hidden;
-    margin-bottom: 1rem;
-    margin-right: 1rem;
-    padding: 1rem;
-    color: var(--surface-on);
-    background: var(--surface);
-    box-shadow: 5px 5px 20px #333;
+    //box-shadow: 5px 5px 20px #333;
     text-decoration: none;
 
     .book-text-wrap {
-      max-height: 100px;
+      height: 110px;
       width: calc(100% - 150px);
-    }
-
-    .book-name {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-weight: bold;
     }
 
     .book-cover {
@@ -222,12 +210,6 @@ onBeforeUnmount(() => {
       }
     }
   }
-
-  .book:hover {
-    color: var(--text-primary);
-    background: var(--primary-dark);
-  }
-
 }
 
 @media only screen and (max-width: 892px) {
