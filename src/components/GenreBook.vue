@@ -1,5 +1,6 @@
 <template>
-  <form class="genre-book" @submit.prevent="sendGenre" method="dialog">
+  <form class="genre-book "
+        @submit.prevent="sendGenre" method="dialog">
     <header class="modal-header">
       <h1>Genre</h1>
       <span>selected: {{ selectedGenre.length }}</span>
@@ -12,7 +13,7 @@
       <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
     </div>
-    <fieldset class="genres" v-if="!isMobile()">
+    <fieldset class="genres border-2" v-if="!isMobile()">
       <legend>all genres</legend>
       <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
            :key="category.id" @click="activeCategory = Number(category.id)">

@@ -68,11 +68,16 @@
               @click="toPage(books._links.last)">last
       </button>
     </div>
+    <teleport to="#sidebar" v-if="isMounted">
+      <SidebarBookTable :categories="categories" :queryData="queryData"
+                        @search-input="searchInputHandler"
+                        @load-data="updateFilterPage" />
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {ref, onMounted} from 'vue';
 import {isMobile} from "../../utils/helpers";
 import {getAdAccess} from "../../utils/userData";
 import useBooks from "../../composables/useBooks";
@@ -81,6 +86,7 @@ import useDate from "../../composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import Sidebar from "../../components/Sidebar.vue";
+import SidebarBookTable from '../../components/sidebars/SidebarBookTable.vue';
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'author', 'last_read', 'updated_at']
@@ -115,13 +121,20 @@ interface Genre {
 const props = defineProps<{
   categories: Category[]
 }>()
+const emit = defineEmits(['search-input'])
 const {
-  queryData, books, paginator, pagBtnArr, loadOrderBy,
+  queryData, books, paginator, pagBtnArr, loadOrderBy, updateFilterPage,
   sortBy, toPage, getBooksAndReplace, setPageNumber, debounceGetBooksAndReplace
 } = useBooks();
 const {openBook} = useBook();
 const {getDate} = useDate();
 
+const isMounted = ref(false)
+
+function searchInputHandler(e: string | undefined) {
+  queryData.value.searchQuery = e
+  getBooksAndReplace()
+}
 function changeSortAsc() {
   queryData.value.orderBy.asc = !queryData.value.orderBy.asc
   queryData.value.page = 1
@@ -133,6 +146,9 @@ function calcGenres(genres:Genre[]) {
     return previousValue += index !== array.length - 1 ? `${currentValue.name}, ` : `${currentValue.name}`;
   }, '' )
 }
+onMounted(() => {
+  isMounted.value = true
+})
 
 loadOrderBy();
 getBooksAndReplace();

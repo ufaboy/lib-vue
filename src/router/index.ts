@@ -16,7 +16,7 @@ const VGenreTable = () => import('../views/table/VGenreTable.vue')
 const VAuthorTable = () => import('../views/table/VAuthorTable.vue')
 const VBookEdit = () => import('../views/book/VBookEdit.vue')
 const VMedia = () => import('../views/VMedia.vue')
-const VNote = () => import('../views/VNote.vue')
+const VNoteTable = () => import('../views/table/VNoteTable.vue')
 const VError = () => import('../views/VError.vue')
 
 
@@ -88,7 +88,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/note',
         name: 'note',
-        component: VNote,
+        component: VNoteTable,
         beforeEnter: (to, from, next) => {
           if (getAdAccess()) {
             next()

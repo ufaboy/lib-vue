@@ -46,14 +46,7 @@ const routes = [
   {name: 'Authors', value: {name: 'author-index'}},
 ]
 const {queryData, books} = useBooks();
-let debounce: number | undefined = undefined;
-function debounceSearch (event: Event) {
-  const eventTarget = event.target as HTMLInputElement
-  clearTimeout(debounce)
-  debounce = setTimeout(() => {
-    emit('search-input', eventTarget.value)
-  }, 600)
-}
+
 function sendLoadEvent() {
   emit('load-data', queryData.value)
 }
