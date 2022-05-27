@@ -1,22 +1,22 @@
 <template>
-  <form method="dialog" class="edit-author" @submit.prevent="updateAuthor">
-    <header class="header">
+  <form method="dialog" class="flex flex-col text-slate-900 dark:text-white" @submit.prevent="updateAuthor">
+    <header class="header flex flex-row items-center justify-between mb-2">
       <h1>Author</h1>
       <button class="close-btn" type="reset" @click="closeModal">
-        <IconClose class="icon" />
+        <IconClose class="icon text-inherit" />
       </button>
     </header>
-    <div class="form-field mb-1">
-      <label class="form-field__label">name</label>
-      <input type="text" class="form-field__input" required v-model.trim="editableAuthor.name">
+    <div class="flex flex-col">
+      <label class="mb-1">name</label>
+      <input type="text" class="p-2" required v-model.trim="editableAuthor.name">
     </div>
-    <div class="form-field mb-1">
-      <label class="form-field__label">url</label>
-      <input type="text" class="form-field__input" required v-model.trim="editableAuthor.url">
+    <div class="flex flex-col">
+      <label class="mb-1">url</label>
+      <input type="text" class="p-3" required v-model.trim="editableAuthor.url">
     </div>
-    <footer class="footer">
-      <button class="negative-btn" type="reset" @click="deleteAuthor">Удалить</button>
-      <button class="positive-btn">Сохранить</button>
+    <footer class="flex flex-row items-center justify-between mt-3">
+      <button class="p-2 border rounded-md border-grey-700" type="reset" @click="deleteAuthor">Удалить</button>
+      <button class="p-2 border rounded-md border-green-700">Сохранить</button>
     </footer>
   </form>
 </template>

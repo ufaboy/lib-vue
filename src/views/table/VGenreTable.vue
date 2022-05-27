@@ -13,7 +13,7 @@
       </th>
       </thead>
       <transition-group name="flip-list" tag="tbody">
-        <tr class="row" :class="{picante: genre.ad}" v-for="(genre, index) of genres" :key="genre.id"
+        <tr class="row cursor-pointer" :class="{picante: genre.ad}" v-for="(genre, index) of genres" :key="genre.id"
             @click="openRow(genre)" :tabindex="index + 1">
           <td class="td" >{{ genre.id }}</td>
           <td class="td" >{{ genre.name }}</td>
@@ -22,7 +22,16 @@
         </tr>
       </transition-group>
     </table>
-    <dialog ref="genreModal" class="dialog dialog-genre" @close="showGenreModal = false">
+    <teleport to="#sidebar" :disabled="isMobile()" v-if="isMounted">
+      <hr class="my-3">
+      <ul>
+        <li>
+          <button class="capitalize flex w-full p-3" @click="createGenre">create</button>
+        </li>
+      </ul>
+    </teleport>
+
+    <dialog ref="genreModal" class="dialog dark:bg-slate-700 rounded-lg w-72" @close="showGenreModal = false">
       <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories"  @update-genres="getGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
@@ -35,6 +44,7 @@ import EditGenre from '../../components/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "../../utils/helpers";
+import {onMounted, ref} from "vue";
 
 document.title = 'Table Genres';
 const columns: string[] = ['id', 'name', 'description', 'category']
@@ -64,7 +74,10 @@ interface Genre {
 const props = defineProps<{
   categories: CategoryExtended[]
 }>()
-
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 
 const {genres, ascending, genreModal, showGenreModal, closeDialog, activeGenre, openRow, createGenre, sortBy, getGenres} = useGenres()
 if (genres.value?.length === 1 && genres.value[0].id === 0) {

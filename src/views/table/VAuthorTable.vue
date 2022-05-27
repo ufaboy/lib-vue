@@ -1,10 +1,13 @@
 <template>
   <div class="authors-table">
-<!--    <teleport to="#aside" :disabled="isMobile()">
-      <section class="sidebar">
-        <button class="sidebar-btn btn-outline" @click="createAuthor">create</button>
-      </section>
-    </teleport>-->
+    <teleport to="#sidebar" :disabled="isMobile()" v-if="isMounted">
+      <hr class="my-3">
+      <ul>
+        <li>
+          <button class="capitalize flex w-full p-3" @click="createAuthor">create</button>
+        </li>
+      </ul>
+    </teleport>
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
@@ -18,7 +21,7 @@
       </th>
       </thead>
       <tbody>
-        <tr class="row" :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
+        <tr class="row cursor-pointer" :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
             @click="openRow(author)" :tabindex="index + 1">
           <td class="td" :class="columnsClasses.id">{{ author.id }}</td>
           <td class="td" :class="columnsClasses.name">{{ author.name }}</td>
@@ -27,7 +30,7 @@
         </tr>
       </tbody>
     </table>
-    <dialog ref="modalAuthor" class="dialog dialog-author" @close="modalAuthorShow = false">
+    <dialog ref="modalAuthor" class="dialog dark:bg-slate-700 rounded-lg w-72" @close="modalAuthorShow = false">
       <EditAuthor v-if="modalAuthorShow" @hide-modal="closeDialog" :author="activeAuthor" @update-authors="getAuthors" />
     </dialog>
   </div>
@@ -40,6 +43,7 @@ import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "../../utils/helpers";
 import useAuthors from "../../composables/useAuthors";
 import EditAuthor from "../../components/EditAuthor.vue";
+import {onMounted, ref} from "vue";
 
 document.title = 'Table Authors';
 const columns: string[] = ['id', 'name', 'url', 'ad']
@@ -55,6 +59,11 @@ const {
   getAuthors, modalAuthorShow, createAuthor, openRow, modalAuthor, activeAuthor,
   sortBy, ascending, orderBy, closeDialog
 } = useAuthors()
+
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 getAuthors();
 </script>
 
@@ -71,10 +80,6 @@ getAuthors();
 
 @media only screen and (min-width: 893px) {
   .authors-table {
-    .dialog-author {
-      left: calc(50% - 175px);
-      top: calc(50% - 200px);
-    }
   }
 }
 
@@ -82,10 +87,6 @@ getAuthors();
   .authors-table {
     padding: 0;
     height: calc(100% - 3.5rem);
-
-    .dialog {
-      margin: auto;
-    }
   }
 }
 

@@ -9,13 +9,7 @@
       :categories="categories"
       @search-input="searchInputHandler"
       @load-data=""
-    >
-      <ul v-if="route.name === 'genre-index'">
-        <li>
-          <button class="sidebar-btn btn-outline" @click="createGenre">create</button>
-        </li>
-      </ul>
-    </Sidebar>
+     />
     <router-view
       class="page overflow-x-hidden overflow-y-auto bg-white dark:bg-slate-900"
       v-bind="$attrs"
