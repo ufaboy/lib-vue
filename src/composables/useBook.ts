@@ -54,7 +54,6 @@ export default function useBook() {
     const prepareUrlForMedia = async (result: Book) => {
         if (result.text) {
             const regexp = new RegExp("APIURL", "g");
-            // @ts-expect-error
             result.text = result.text.replace(regexp, API_URL)
             return result
         }

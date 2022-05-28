@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@types/service_worker_api': ^0.0.9
+  '@types/workbox-window': ^4.3.4
   '@vitejs/plugin-vue': ^2.3.3
   autoprefixer: ^10.4.7
   postcss: ^8.4.14
@@ -17,9 +17,9 @@ specifiers:
   vue: ^3.2.36
   vue-router: ^4.0.15
   vue-tsc: ^0.34.16
+  workbox-window: ^6.5.3
 
 dependencies:
-  '@types/service_worker_api': 0.0.9
   register-service-worker: 1.7.2
   typograf: 6.14.1
   vite-plugin-html-env: 1.1.2_vite@2.9.9
@@ -27,6 +27,7 @@ dependencies:
   vue-router: 4.0.15_vue@3.2.36
 
 devDependencies:
+  '@types/workbox-window': 4.3.4
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.9+vue@3.2.36
   autoprefixer: 10.4.7_postcss@8.4.14
   postcss: 8.4.14
@@ -37,6 +38,7 @@ devDependencies:
   vite-plugin-html: 3.2.0_vite@2.9.9
   vite-plugin-pwa: 0.11.13_vite@2.9.9
   vue-tsc: 0.34.16_typescript@4.7.2
+  workbox-window: 6.5.3
 
 packages:
 
@@ -1331,30 +1333,13 @@ packages:
       '@types/node': 17.0.35
     dev: true
 
-  /@types/service_worker_api/0.0.9:
-    resolution: {integrity: sha512-hNIwvB36flZ8Ana8TDbnKmnpS3XzvFLw/UQp/ztdxvwzmfF2Vjj0mFLTcdtd5F2ik6OD0ohMsuH4Tapy+ZfSXg==}
-    deprecated: ServiceWorker types are now provided by '--lib dom'
-    dependencies:
-      '@types/whatwg-fetch': 0.0.33
-    dev: false
-
   /@types/trusted-types/2.0.2:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
     dev: true
 
-  /@types/whatwg-fetch/0.0.33:
-    resolution: {integrity: sha512-XSWTlUwpjUyLiDu50HhtpUyhvt7QND1ANfyFfiw/TH63GC1ngZMl2rgxuH5SQKfPjMoKRXv94r7crWnJ3mg5tA==}
-    deprecated: fetch types are now provided by '--lib dom'
-    dependencies:
-      '@types/whatwg-streams': 3.2.1
-    dev: false
-
-  /@types/whatwg-streams/3.2.1:
-    resolution: {integrity: sha512-Syv05sRL25b8cC8tqgXSQgLZZmqGq2GO+NafrtHbjPJccP6gWBXmHvo2Trw3AWXQ4QLIkVuOB7uStCuhzswyiw==}
-    deprecated: This is a stub types definition. whatwg-streams provides its own type definitions, so you do not need this installed.
-    dependencies:
-      whatwg-streams: 0.1.1
-    dev: false
+  /@types/workbox-window/4.3.4:
+    resolution: {integrity: sha512-Zyac7JfCO1iWLeHxC/hwJ132nXta/x0hl1kERdvHSUU2qVgQ7slmF9C0xhzWADRu7XO4v9+po9xtGD4yonlzyA==}
+    dev: true
 
   /@vitejs/plugin-vue/2.3.3_vite@2.9.9+vue@3.2.36:
     resolution: {integrity: sha512-SmQLDyhz+6lGJhPELsBdzXGc+AcaT8stgkbiTFGpXPe8Tl1tJaBw1A6pxDqDuRsVkD8uscrkx3hA7QDOoKYtyw==}
@@ -1613,10 +1598,6 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /bluebird/1.0.8:
-    resolution: {integrity: sha512-e8rlJcByuxPdMiiwU3lGtENflMtUncAblzSlN7rBAZ9ygb75D/rng3Xt5FbZpYqVCzK+sFHVIMht4G6fbfUfbA==}
-    dev: false
-
   /boolbase/1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
     dev: true
@@ -1831,10 +1812,6 @@ packages:
       ms: 2.1.2
     dev: true
 
-  /deep-equal/0.1.2:
-    resolution: {integrity: sha512-rUCt39nKM7s6qUyYgp/reJmtXjgkOS/JbLO24DioMZaBNkD3b7C7cD3zJjSyjclEElNTpetAIRD6fMIbBIbX1Q==}
-    dev: false
-
   /deepmerge/4.2.2:
     resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
     engines: {node: '>=0.10.0'}
@@ -1847,10 +1824,6 @@ packages:
       has-property-descriptors: 1.0.0
       object-keys: 1.1.1
     dev: true
-
-  /defined/0.0.0:
-    resolution: {integrity: sha512-zpqiCT8bODLu3QSmLLic8xJnYWBFjOSu/fBCm189oAiTtPq/PSanNACKZDS7kgSyCJY7P+IcODzlIogBK/9RBg==}
-    dev: false
 
   /defined/1.0.0:
     resolution: {integrity: sha512-Y2caI5+ZwS5c3RiNDJ6u53VhQHv+hHKwhkI1iHvceKUHw9Df6EK2zRLfjejRgMuCuxK7PfSWIMwWecceVvThjQ==}
@@ -2406,6 +2379,7 @@ packages:
 
   /inherits/2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+    dev: true
 
   /internal-slot/1.0.3:
     resolution: {integrity: sha512-O0DB1JC/sPyZl7cIo78n5dR7eUSwwpYPiXRhTzNxZVAMUuB8vlnRFyLxdrVToks6XPLVnFfbzaVd5WLjhgg+vA==}
@@ -2593,10 +2567,6 @@ packages:
     optionalDependencies:
       graceful-fs: 4.2.10
     dev: true
-
-  /jsonify/0.0.0:
-    resolution: {integrity: sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=}
-    dev: false
 
   /jsonpointer/5.0.0:
     resolution: {integrity: sha512-PNYZIdMjVIvVgDSYKTT63Y+KZ6IZvGRNNWcxwD+GNnUz1MKPfv30J8ueCjdwcN0nDx2SlshgyB7Oy0epAzVRRg==}
@@ -2943,12 +2913,6 @@ packages:
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
-  /resumer/0.0.0:
-    resolution: {integrity: sha1-8ej0YeQGS6Oegq883CqMiT0HZ1k=}
-    dependencies:
-      through: 2.3.8
-    dev: false
-
   /reusify/1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
@@ -3139,18 +3103,6 @@ packages:
       - ts-node
     dev: true
 
-  /tape/2.3.3:
-    resolution: {integrity: sha1-Lnzgox3wn41oUWZKcYQuDKUFevc=}
-    hasBin: true
-    dependencies:
-      deep-equal: 0.1.2
-      defined: 0.0.0
-      inherits: 2.0.4
-      jsonify: 0.0.0
-      resumer: 0.0.0
-      through: 2.3.8
-    dev: false
-
   /temp-dir/2.0.0:
     resolution: {integrity: sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg==}
     engines: {node: '>=8'}
@@ -3176,10 +3128,6 @@ packages:
       source-map: 0.8.0-beta.0
       source-map-support: 0.5.21
     dev: true
-
-  /through/2.3.8:
-    resolution: {integrity: sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=}
-    dev: false
 
   /to-fast-properties/2.0.0:
     resolution: {integrity: sha1-3F5pjL0HkmW8c+A3doGk5Og/YW4=}
@@ -3381,13 +3329,6 @@ packages:
   /webidl-conversions/4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
     dev: true
-
-  /whatwg-streams/0.1.1:
-    resolution: {integrity: sha1-3VV1yWW84T2nbcDdSVYpqHVy504=}
-    dependencies:
-      bluebird: 1.0.8
-      tape: 2.3.3
-    dev: false
 
   /whatwg-url/7.1.0:
     resolution: {integrity: sha512-WUu7Rg1DroM7oQvGWfOiAK21n74Gg+T4elXEQYkOhtyLeWiJFoOGLXPKI/9gzIie9CtwVLm8wtw6YJdKyxSjeg==}
