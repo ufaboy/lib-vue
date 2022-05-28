@@ -4,13 +4,13 @@
       <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-3">create</router-link>
     </li>
     <li class="p-3">
-      <input type="search" class="flex w-full p-1 mb-3" @input="debounceSearch" v-model="queryData.searchQuery">
+      <input type="search" class="flex w-full p-1" placeholder="search" @input="debounceSearch" v-model="queryData.searchQuery">
     </li>
 
     <li class="p-3">
       <select class="sidebar-btn form-field__select flex w-full p-1" v-model="genreId"
               @change="sendLoadEvent">
-        <option class="flex w-full p-1" :value="{}" v-if="!queryData.genre?.id">genre</option>
+        <option class="flex w-full p-1" :value="null">select genre</option>
         <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
           <option class="flex w-full p-1" v-for="genre of category.genres"
                   :key="'select-genre'+genre.id"

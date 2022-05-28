@@ -8,9 +8,10 @@ export default function useBooks() {
     let debTimer: number | undefined = undefined
     // @ts-expect-error
     const loader: Loader = inject("loader");
+    const emptyGenre = ref({id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}});
     const queryData = ref<QueryData>(
         {
-            genre: {id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}},
+            genre: emptyGenre.value,
             rating: 0,
             ad: undefined,
             searchQuery: undefined,
@@ -83,6 +84,7 @@ export default function useBooks() {
             ad: queryData.value.ad ? true : queryData.value.ad === undefined ? undefined : false,
             searchQuery: queryData.value.searchQuery
         }
+        console.log('getBooksAndReplace')
         try {
             loader.show();
             const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
@@ -95,6 +97,7 @@ export default function useBooks() {
             pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
             calcPaginator();
         } catch (e) {
+            loader.hide();
             console.log({'getBooksAndReplace': e})
         }
     };
@@ -161,9 +164,8 @@ export default function useBooks() {
     };
     const updateFilterPage = (newFilter: QueryData) => {
         if (queryData.value) {
-            if (newFilter?.genre) {
-                queryData.value.genre = newFilter.genre
-            }
+            queryData.value.genre = newFilter.genre ? newFilter.genre : emptyGenre.value
+
             if (newFilter?.rating) {
                 queryData.value.rating = newFilter.rating
             }

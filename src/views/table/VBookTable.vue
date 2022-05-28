@@ -146,10 +146,16 @@ function calcGenres(genres:Genre[]) {
     return previousValue += index !== array.length - 1 ? `${currentValue.name}, ` : `${currentValue.name}`;
   }, '' )
 }
+function cutLimitByHeight() {
+  const x = Math.floor(window.innerHeight / 80)
+  queryData.value.limit = x
+  console.log('height', window.innerHeight, x)
+}
 onMounted(() => {
   isMounted.value = true
-})
 
+})
+cutLimitByHeight()
 loadOrderBy();
 getBooksAndReplace();
 </script>
