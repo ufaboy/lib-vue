@@ -1,10 +1,10 @@
 <template>
-  <div class="book w-[calc(100%-10rem)]" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book lg:w-[calc(100%-10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
-    <dialog ref="textEditorModal" class="dialog dialog-text" @close="showEditorModal = false">
+    <dialog ref="textEditorModal" class="dialog dark:bg-slate-800 rounded-lg" @close="showEditorModal = false">
       <editor-modal v-if="showEditorModal" :editor-node="editorNode" @save-editor="saveEditor"
                     @hide-modal="closeDialog"/>
     </dialog>
@@ -307,16 +307,6 @@ onMounted(async () => {
     background-color: var(--primary);
   }
 
-}
-
-
-@media only screen and (min-width: 893px) {
-  .book {
-    .dialog-text {
-      left: calc(50% - 300px);
-      top: calc(50% - 160px);
-    }
-  }
 }
 
 @media only screen and (max-width: 892px) {

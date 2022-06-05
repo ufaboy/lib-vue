@@ -1,21 +1,21 @@
 <template>
-  <form class="genre-book"
+  <form class="w-auto"
         @submit.prevent="sendGenre" method="dialog">
-    <header class="modal-header">
+    <header class="flex flex-row justify-between">
       <h1>Genre</h1>
       <span>selected: {{ selectedGenre.length }}</span>
       <button class="close-btn dark:text-white" type="reset" @click="closeModal">
         <IconClose class="icon" />
       </button>
     </header>
-    <div class="form-field mb-1">
+    <div class="mt-2">
       <span v-if="selectedGenre.length === 0">Не выбраны жанры</span>
-      <span class="fieldset-genre" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
+      <span class="mr-1" :style="{color: colorizeGenre(index)}" v-for="(genre, index) of selectedGenre"
             :key="genre.id">{{ genre.name }}</span>
     </div>
-    <fieldset class="genres border-2" v-if="!isMobile()">
+    <fieldset class="flex flex-row flex-nowrap border p-2" v-if="!isMobile()">
       <legend>all genres</legend>
-      <div class="parent" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
+      <div class="flex flex-col mr-1 mb-1" :class="{'checked-childes': calcCheckedChildes(category)}" v-for="category of categories"
            :key="category.id" @click="activeCategory = Number(category.id)">
         <div class="parent-title">{{ category.name }}</div>
         <label class="checkbox-container" v-for="genre of category.genres" :key="genre.id">{{ genre.name }}
@@ -32,7 +32,7 @@
 <!--        </option>-->
 <!--      </optgroup>-->
 <!--    </select>-->
-    <footer class="footer">
+    <footer class="mt-2 flex flex-row justify-around">
       <button class="btn-gray" type="button" @click="reset">Сброс</button>
       <button class="btn-green">Сохранить</button>
     </footer>
@@ -99,118 +99,3 @@ function closeModal() {
   emit('hide-modal')
 }
 </script>
-
-<style lang="scss">
-.genre-book {
-  display: flex;
-  flex-flow: row wrap;
-  padding: 1rem;
-  height: 100%;
-  width: min-content;
-  color: var(--surface-on);
-  background-color: var(--surface);
-  border-radius: 10px;
-
-  .modal-header {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    width: 100%;
-  }
-
-  .search-field {
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-
-  .genre-titles {
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-bottom: 0.5rem;
-    padding: 0.5rem;
-  }
-
-  .fieldset-genre {
-    margin-right: 5px;
-  }
-
-  .genres {
-    display: flex;
-    flex-flow: row nowrap;
-    width: 100%;
-    padding: 0.5rem;
-  }
-
-  .parent {
-    cursor: pointer;
-    margin: 0 0.5rem 0 0;
-    max-width: 25%;
-
-    .parent-title {
-      text-transform: capitalize;
-      margin-bottom: 0.5rem;
-    }
-  }
-
-  .parent.checked-childes {
-    .parent-title {
-      color: var(--color-p);
-    }
-
-  }
-
-  .parent:last-of-type {
-    margin: 0 0 0 0;
-  }
-
-  .checkbox-container {
-    margin-bottom: 0.5rem;
-    text-overflow: ellipsis;
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-
-    .checkmark {
-
-    }
-
-    //.checkmark:after {
-    //  left: 6px;
-    //  top: 2px;
-    //  width: 7px;
-    //  height: 11px;
-    //}
-  }
-
-  .select-genre {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .footer {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 1rem;
-    width: 100%;
-  }
-}
-
-@media only screen and (max-width: 892px) {
-  .select {
-    width: 100%;
-  }
-}
-
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: landscape) {
-  .genre-book {
-  }
-}
-
-@media only screen and (min-width: 412px) and (max-width: 892px) and (orientation: portrait) {
-  .genre-book {
-  }
-}
-</style>

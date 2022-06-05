@@ -4,22 +4,16 @@
         <IconCheck class="color" /> &nbsp; &nbsp;
         <span class="message-text">{{message}}</span>
       </div>
-
       <div class="message info" v-if="type === 'info'">
         <IconInfo class="spin" />
-        &nbsp; &nbsp;
         <span class="message-text">{{message}}</span>
       </div>
-
       <div class="message warning" v-if="type === 'warning'">
         <IconWarning class="rotate" />
-        &nbsp; &nbsp;
         <span class="message-text">{{message}}</span>
       </div>
-
       <div class="message danger" v-if="type === 'danger'">
         <IconDanger class="shine" />
-        &nbsp; &nbsp;
         <span class="message-text">{{message}}</span>
       </div>
   </div>

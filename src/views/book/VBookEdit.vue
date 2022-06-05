@@ -119,7 +119,7 @@
         </figure>
       </div>
     </div>
-    <dialog ref="genreBookModal" class="dialog dialog-genre-book bg-white lg:dark:bg-slate-800 md:dark:bg-neutral-800 text-slate-800 dark:text-white" @close="showGenreBookModal = false">
+    <dialog ref="genreBookModal" class="dialog dialog-genre-book bg-white dark:bg-slate-800 text-slate-800 dark:text-white" @close="showGenreBookModal = false">
       <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
                  @hide-modal="closeDialog"/>
     </dialog>

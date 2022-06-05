@@ -1,8 +1,7 @@
 <template>
   <main
-    class="layout-main min-h-screen bg-white lg:dark:bg-slate-900 md:dark:bg-neutral-900 text-slate-900 dark:text-white"
-    @click="activeBurger = false"
-  >
+    class="layout-main min-h-screen bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white"
+    @click="activeBurger = false">
     <HeaderMobile v-if="isMobile()" :categories="categories" />
     <Sidebar
       v-else
@@ -11,7 +10,7 @@
       @load-data=""
      />
     <router-view
-      class="page overflow-x-hidden overflow-y-auto bg-white dark:bg-slate-900"
+      class="page overflow-x-hidden overflow-y-auto"
       v-bind="$attrs"
       :categories="categories"
       :scrolling-progress="scrollingProgress"
@@ -68,7 +67,6 @@ async function getCategories() {
   }
 }
 
-getCategories();
 watch(route, (newValue, oldValue) => {
   if (newValue.name === "book-view") {
     console.log("watch downloadBook", {
@@ -89,6 +87,7 @@ onBeforeUnmount(() => {
 });
 
 provide("saveScrollingBook", saveScrollingBook);
+getCategories();
 </script>
 
 <style lang="scss">

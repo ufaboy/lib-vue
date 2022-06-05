@@ -169,7 +169,6 @@ onBeforeUnmount(() => {
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-
     }
     .star-rating {
       display: flex;
@@ -184,7 +183,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media only screen and (max-width: 892px) {
+/*@media only screen and (max-width: 892px) {
   .sidebar {
     justify-content: space-between;
     margin-bottom: 0.5rem;
@@ -253,5 +252,5 @@ onBeforeUnmount(() => {
       }
     }
   }
-}
+}*/
 </style>

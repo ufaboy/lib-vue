@@ -70,6 +70,3 @@ const categoriesSimple = props.categories.map(category => {
   return {id: category.id, name: category.name}
 })
 </script>
-
-<style lang="scss">
-</style>
