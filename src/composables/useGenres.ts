@@ -45,7 +45,7 @@ export default function useGenres() {
         showGenreModal.value = false
     }
 
-    const getGenres = async () => {
+    async function getGenres() {
         // @ts-expect-error
         loader.show();
         const result = await loadGenres()
@@ -54,7 +54,7 @@ export default function useGenres() {
         if (result) {
             genres.value = result
         } else console.log({'getGenres': result})
-    };
+    }
     const sortBy = (orderBy:string, asc:boolean) => {
         genres.value?.sort(function (a, b) {
             if (a[orderBy] > b[orderBy]) {

@@ -1,14 +1,14 @@
 <template>
-  <div class="media-manager">
+  <div class="media-manager h-full flex flex-row">
     <ol class="ol-dir">
       <li class="li-dir" v-for="(dir, index) of directories" :key="'dir-' + index" @click="activeDirIndex = index">
         {{ dir.dir_name }}
       </li>
     </ol>
-    <div class="preview-wrapper">
-      <figure class="figure" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
+    <div class="preview-wrapper scrollbar">
+      <figure class="figure group cursor-pointer" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
         <img class="preview" :src="calcUrl(file)" alt="">
-        <figcaption class="figcaption">{{ file.full_name }}</figcaption>
+        <figcaption class="truncate text-nowrap dark:text-blue-300 dark:group-hover:text-white">{{ file.full_name }}</figcaption>
         <div class="btn-bar" v-if="!file.id">
           <button class="fig-btn" @click.stop="attachFile(file.full_name, index)">
             Attach
@@ -20,7 +20,7 @@
 
       </figure>
     </div>
-    <div class="media-wrapper">
+    <div class="media-wrapper scrollbar ml-3">
       <img class="media-full" :src="activeMedia.url" alt="" v-if="activeMedia.type === 'image'">
       <video class="media-full" v-else-if="activeMedia.type === 'video'" controls>
         <source :src="activeMedia.url">
@@ -58,10 +58,6 @@ getMediaFiles()
 
 <style lang="scss">
 .media-manager {
-  display: flex;
-  flex-flow: row nowrap;
-  height: calc(100% - 3.5rem);
-  padding: 0.5rem 1.5rem;
 
   .ol-dir {
     margin-right: 1rem;
@@ -73,7 +69,6 @@ getMediaFiles()
   }
 
   .preview-wrapper {
-    margin-right: 1rem;
     width: 360px;
     display: flex;
     flex-shrink: 0;
@@ -124,6 +119,10 @@ getMediaFiles()
       object-fit: cover;
       cursor: pointer;
       border-radius: 5px;
+      transition: all .2s ease-in-out;
+      &:hover {
+          transform: scale(1.1);
+      }
     }
   }
 

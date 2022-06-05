@@ -8,42 +8,37 @@
     </header>
     <div class="flex flex-col mb-2">
       <label class="mb-1">name</label>
-      <input type="text" class="p-2" required v-model.trim="localGenre.name">
+      <input type="text" class="input-text" required v-model.trim="localGenre.name">
     </div>
     <div class="flex flex-col mb-2">
       <label class="mb-1">description</label>
-      <textarea class="p-2" v-model.trim="localGenre.description" rows="3"></textarea>
+      <textarea class="textarea" v-model.trim="localGenre.description" rows="3"></textarea>
     </div>
     <section class="flex flex-row items-center justify-between">
       <div class="flex flex-col">
         <label class="mb-1">category</label>
-        <select class="select p-2" required v-model="localGenre.category">
+        <select class="select" required v-model="localGenre.category">
           <option v-for="category of categoriesSimple" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
       <div class="flex flex-col ad">
         <label class="mb-1">ad</label>
-        <div class="toggle toggle--knob" v-if="adAccess">
-          <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="localGenre.ad">
-          <label class="toggle--btn" for="toggle--knob">
-            <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
-          </label>
-        </div>
+        <ToggleAd v-model="localGenre.ad" />
       </div>
     </section>
-
     <footer class="flex flex-row items-center justify-between mt-3">
-      <button class="p-2 border rounded-md border-red-700 text-red-700" type="reset" @click="deleteGenre">Удалить</button>
-      <button class="p-2 border rounded-md border-green-700 text-green-700">Сохранить</button>
+      <button class="btn-red" type="reset" @click="deleteGenre">Удалить</button>
+      <button class="btn-green">Сохранить</button>
     </footer>
   </form>
 </template>
 
 <script setup lang="ts">
 import IconClose from "@/components/icons/IconClose.vue"
-import useGenre from "../composables/useGenre";
-import { GenreForm } from "../interfaces/genre";
-import {getAdAccess} from "../utils/userData";
+import useGenre from "../../composables/useGenre";
+import { GenreForm } from "../../interfaces/genre";
+import {getAdAccess} from "../../utils/userData";
+import ToggleAd from "../ToggleAd.vue";
 
 interface CategoryExtended extends Category{
     genres?: Array<Genre>

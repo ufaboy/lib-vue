@@ -1,10 +1,10 @@
 <template>
-  <form class="genre-book "
+  <form class="genre-book"
         @submit.prevent="sendGenre" method="dialog">
     <header class="modal-header">
       <h1>Genre</h1>
       <span>selected: {{ selectedGenre.length }}</span>
-      <button class="close-btn" type="reset" @click="closeModal">
+      <button class="close-btn dark:text-white" type="reset" @click="closeModal">
         <IconClose class="icon" />
       </button>
     </header>
@@ -33,17 +33,17 @@
 <!--      </optgroup>-->
 <!--    </select>-->
     <footer class="footer">
-      <button class="negative-btn" type="button" @click="reset">сброс</button>
-      <button class="positive-btn">Сохранить</button>
+      <button class="btn-gray" type="button" @click="reset">Сброс</button>
+      <button class="btn-green">Сохранить</button>
     </footer>
   </form>
 </template>
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import {isMobile} from "../utils/helpers";
+import {isMobile} from "../../utils/helpers";
 import IconClose from "@/components/icons/IconClose.vue"
-import { CategoryExtended } from '../interfaces/category';
+import { CategoryExtended } from '../../interfaces/category';
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['set-genres', 'hide-modal'])
@@ -196,12 +196,6 @@ function closeModal() {
     margin-top: 1rem;
     width: 100%;
   }
-
-  button {
-    display: flex;
-    align-items: center;
-  }
-
 }
 
 @media only screen and (max-width: 892px) {

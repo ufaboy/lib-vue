@@ -32,7 +32,7 @@ import { updateBookMark } from "../utils/uploadData";
 import { CategoryExtended } from "../interfaces/category";
 import { BookScrolling } from "../interfaces/book";
 import HeaderMobile from "../components/HeaderMobile.vue";
-import Sidebar from "../components/Sidebar.vue";
+import Sidebar from "../components/sidebars/Sidebar.vue";
 import useBook from "../composables/useBook";
 import { useRoute } from "vue-router";
 

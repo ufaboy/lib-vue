@@ -30,7 +30,7 @@
         </tr>
       </tbody>
     </table>
-    <dialog ref="modalAuthor" class="dialog dark:bg-slate-700 rounded-lg w-72" @close="modalAuthorShow = false">
+    <dialog ref="modalAuthor" class="dialog dark:bg-slate-800 rounded-lg w-72" @close="modalAuthorShow = false">
       <EditAuthor v-if="modalAuthorShow" @hide-modal="closeDialog" :author="activeAuthor" @update-authors="getAuthors" />
     </dialog>
   </div>
@@ -42,7 +42,7 @@ import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "../../utils/helpers";
 import useAuthors from "../../composables/useAuthors";
-import EditAuthor from "../../components/EditAuthor.vue";
+import EditAuthor from "../../components/modals/EditAuthor.vue";
 import {onMounted, ref} from "vue";
 
 document.title = 'Table Authors';

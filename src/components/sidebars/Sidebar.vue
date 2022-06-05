@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import {computed} from "vue";
 import {useRoute} from 'vue-router'
-import useBooks from "../composables/useBooks";
+import useBooks from "../../composables/useBooks";
 
 interface Category {
   id: number,

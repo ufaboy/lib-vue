@@ -98,8 +98,5 @@ export default ({mode}) => {
         resolve: {
             alias: [{find: '@', replacement: '/src'}],
         },
-        server: {
-            port: 8080,
-        },
     });
 }

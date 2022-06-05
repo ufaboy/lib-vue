@@ -8,23 +8,23 @@
     </header>
     <div class="flex flex-col">
       <label class="mb-1">name</label>
-      <input type="text" class="p-2" required v-model.trim="editableAuthor.name">
+      <input type="text" class="input-text" required v-model.trim="editableAuthor.name">
     </div>
     <div class="flex flex-col">
       <label class="mb-1">url</label>
-      <input type="text" class="p-3" required v-model.trim="editableAuthor.url">
+      <input type="text" class="input-text" required v-model.trim="editableAuthor.url">
     </div>
     <footer class="flex flex-row items-center justify-between mt-3">
-      <button class="p-2 border rounded-md border-grey-700" type="reset" @click="deleteAuthor">Удалить</button>
-      <button class="p-2 border rounded-md border-green-700">Сохранить</button>
+      <button class="btn-red" type="reset" @click="deleteAuthor">Удалить</button>
+      <button class="btn-green">Сохранить</button>
     </footer>
   </form>
 </template>
 
 <script setup lang="ts">
 import IconClose from "@/components/icons/IconClose.vue";
-import useAuthor from "../composables/useAuthor";
-import {Author} from "../interfaces/author";
+import useAuthor from "../../composables/useAuthor";
+import {Author} from "../../interfaces/author";
 
 const props = defineProps<{
   author: Author,

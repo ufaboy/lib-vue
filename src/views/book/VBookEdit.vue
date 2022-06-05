@@ -3,48 +3,43 @@
     <div class="text-container w-[800px]">
       <div class="flex flex-row justify-between mb-5">
         <div class="flex flex-row">
-          <button class="py-1 mr-2 justify-items-center px-3 rounded-md bg-red-600" type="reset" @click="resetBook">reset</button>
-          <button class="py-1 mr-2 justify-items-center px-3 rounded-md bg-green-700" @click="sendBook">save</button>
-          <button class="py-1 justify-items-center px-3 rounded-md bg-blue-600" @click="startTypograf">typograf</button>
+          <button class="btn-gray mr-2" type="reset" @click="resetBook">reset</button>
+          <button class="btn-green mr-2" @click="sendBook">save</button>
+          <button class="btn-blue" @click="startTypograf">typograf</button>
         </div>
         <div class="flex flex-row">
-          <StarRating v-model="book.rating"></StarRating>
-          <div class="toggle toggle--knob" v-if="getAdAccess()">
-            <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="book.ad">
-            <label class="toggle--btn" for="toggle--knob">
-              <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
-            </label>
-          </div>
+          <StarRating class="mr-2" v-model="book.rating" />
+          <ToggleAd v-model="book.ad" v-if="getAdAccess()" />
         </div>
       </div>
-      <section class="form-row flex flex-row justify-between mb-5">
-        <div class="form-field flex flex-col">
-          <label class="form-field__label">name</label>
-          <input type="text" class="form-field__input p-1" v-model.trim="book.name">
+      <section class=" flex flex-row justify-between mb-5">
+        <div class="flex flex-col mr-3">
+          <label class="">Name</label>
+          <input type="text" class="input-text" v-model.trim="book.name">
         </div>
-        <div class="form-field flex flex-col">
-          <label class="form-field__label">source</label>
+        <div class="flex flex-col mr-3">
+          <label class="">Source</label>
           <input type="url"
-                 class="form-field__input p-1"
+                 class="input-text"
                  v-model.trim="book.source">
         </div>
-        <div class="form-field flex flex-col">
-          <label class="form-field__label">author</label>
-          <select class="select w100 p-1" v-model="authorData">
+        <div class="flex flex-col w-24">
+          <label class="">Author</label>
+          <select class="select w-full" v-model="authorData">
             <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
           </select>
         </div>
       </section>
-      <div class="form-field flex flex-col mb-5">
-        <label class="form-field__label">
+      <div class="flex flex-col mb-5">
+        <label class="">
           annotation
           <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280" optimum="150"/>
         </label>
-        <textarea class="form-field__textarea border p-1" rows="4" maxlength="300" v-model.trim="book.annotation"/>
+        <textarea class="textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
       </div>
-      <section class="form-field genre mb-1" @click="openGenreModal">
+      <section class="genre cursor-pointer mb-3" @click="openGenreModal">
         <span v-if="genres.length === 0">Не выбраны жанры</span>
-        <span :style="{color: colorizeGenre(index)}"
+        <span class="mr-1" :style="{color: colorizeGenre(index)}"
               v-for="(genre, index) of genres"
               :key="genre.id">
             {{ genre.name }}
@@ -58,8 +53,8 @@
           </optgroup>
         </select>
       </section>
-      <div class="form-field flex flex-col">
-        <div class="form-field__label">
+      <div class="flex flex-col">
+        <div class="">
           <span class="title">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
           <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
@@ -74,7 +69,7 @@
             </button> -->
         </span>
         </div>
-        <textarea class="editor clarity border"
+        <textarea class="editor clarity textarea"
                   v-model="book.text"
                   v-if="editorMode === 'raw'"
                   ref="editor"
@@ -82,45 +77,45 @@
         <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
     </div>
-    <div class="media-container" v-if="book.id">
+    <div class="media-container ml-3" v-if="book.id">
       <header class="header-media">
-        <label class="upload-dropbox btn-outline">Choose files
+        <label class="upload-dropbox btn-outline mr-2">Choose files
           <input type="file"
-                 class="upload-input desktop"
+                 class="upload-input hidden desktop"
                  multiple
                  accept="video/webm,image/webp,audio/mpeg"
                  @change="loadFiles">
         </label>
-        <button class="positive-btn" @click="uploadAllFiles">all upload</button>
-        <button class="negative-btn" @click="deleteAllFiles">remove files</button>
+        <button class="btn-green mr-2" @click="uploadAllFiles">Upload all</button>
+        <button class="btn-red" @click="deleteAllFiles">Remove all</button>
       </header>
 
       <div class="media-wrapper">
-        <figure class="figure" v-for="(media, index) of files" :key="index">
-          <div class="action-panel">
-            <button class="btn" @click="uploadSingleFile(media, index)" v-if="!media.id">
+        <figure class="figure group relative" v-for="(media, index) of files" :key="index">
+          <div class="action-panel absolute top-1 left-1 hidden group-hover:flex z-10 w-full flex flex-row flex-wrap justify-between">
+            <button class="btn bg-sky-500/50 hover:bg-sky-500/75" @click="uploadSingleFile(media, index)" v-if="!media.id">
               load
             </button>
-            <button class="btn"
+            <button class="btn bg-sky-500/50 hover:bg-sky-500/75 mr-2"
                     @click="setCover(media)"
                     v-if="checkType(media) === 'image' && media.id">
               {{ getCoverBtnText(media) }}cover
             </button>
-            <button class="btn " @click="copyFileName(media)"
+            <button class="btn bg-green-500/50 hover:bg-green-500/75 mr-2" @click="copyFileName(media)"
                     v-if="media.id">tag
             </button>
-            <button class="btn btn--red" @click="deleteOneFile(index)" v-if="media.id">
+            <button class="btn bg-red-500/50 hover:bg-red-500/75" @click="deleteOneFile(index)" v-if="media.id">
               delete
             </button>
           </div>
-          <img class="media image" :src="getSrc(media)" v-if="checkType(media) === 'image'" alt="img">
+          <img class="media image w-72 h-36 object-cover rounded" :src="getSrc(media)" v-if="checkType(media) === 'image'" alt="img">
           <video v-else-if="checkType(media) === 'video'" class="media video" controls>
             <source :src="getSrc(media)">
           </video>
           <audio v-else-if="checkType(media) === 'audio'" class="media audio" controls muted>
             <source :src="getSrc(media)">
           </audio>
-          <figcaption class="figure-caption">{{ getCaption(media) }}</figcaption>
+          <figcaption class="figure-caption truncate">{{ getCaption(media) }}</figcaption>
         </figure>
       </div>
     </div>
@@ -143,13 +138,9 @@ import {getAdAccess} from '../../utils/userData';
 import {deleteFiles, deleteFile, updateBook, uploadFiles} from '../../utils/uploadData';
 import useBook from '../../composables/useBook';
 import useAuthors from '../../composables/useAuthors'
-import GenreBook from '@/components/GenreBook.vue'
+import GenreBook from '@/components/modals/GenreBook.vue'
 import StarRating from "@/components/StarRating.vue";
-
-// import IconParagraph from '@/components/icons/IconParagraph.vue'
-// import IconCarriage from '@/components/icons/IconCarriage.vue'
-// import IconSlash from '@/components/icons/IconSlash.vue'
-
+import ToggleAd from "../../components/ToggleAd.vue";
 
 
 document.title = 'Editor';
@@ -491,13 +482,13 @@ getAuthors();
 </script>
 
 <style lang="scss">
-.edit-book {
+/*.edit-book {
   .header {
     width: 100%;
     margin-bottom: 2rem;
   }
 
-  .form-field.genre {
+  .genre {
     justify-content: initial;
     cursor: pointer;
     border-radius: 5px;
@@ -521,7 +512,7 @@ getAuthors();
 
   .text-container {
 
-    .form-row {
+    . {
       margin: 0 0 1rem 0;
     }
 
@@ -646,14 +637,14 @@ getAuthors();
       margin: 0 0.3rem;
     }
 
-    /* Hide default HTML checkbox */
+    !* Hide default HTML checkbox *!
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    /* The slider */
+    !* The slider *!
     .slider {
       position: absolute;
       cursor: pointer;
@@ -692,7 +683,7 @@ getAuthors();
       transform: translateX(26px);
     }
 
-    /* Rounded sliders */
+    !* Rounded sliders *!
     .slider.round {
       border-radius: 34px;
     }
@@ -856,14 +847,6 @@ getAuthors();
       fill: var(--color-p);
     }
   }
-
-  .footer {
-    width: 100%;
-    height: 2rem;
-  }
-  .w100 {
-    width: 100%;
-  }
 }
 
 @media only screen and (min-width: 893px) {
@@ -950,5 +933,5 @@ getAuthors();
       }
     }
   }
-}
+}*/
 </style>

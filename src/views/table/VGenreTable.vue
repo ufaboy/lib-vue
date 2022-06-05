@@ -31,7 +31,7 @@
       </ul>
     </teleport>
 
-    <dialog ref="genreModal" class="dialog dark:bg-slate-700 rounded-lg w-72" @close="showGenreModal = false">
+    <dialog ref="genreModal" class="dialog dark:bg-slate-800 rounded-lg w-72" @close="showGenreModal = false">
       <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories"  @update-genres="getGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import useGenres from "../../composables/useGenres";
-import EditGenre from '../../components/EditGenre.vue'
+import EditGenre from '../../components/modals/EditGenre.vue'
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
 import {isMobile} from "../../utils/helpers";

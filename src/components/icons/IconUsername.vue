@@ -1,9 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg"
-       :width="width"
-       :height="height"
-       :viewBox="viewBox"
-  >
+  <svg :width="size" :height="size" :viewBox="viewBox" :fill="fill">
     <g>
       <path d="M 10.90625 7.046875 C 10.90625 8.101562 10.054688 8.953125 9 8.953125 C 7.945312 8.953125 7.09375 8.101562 7.09375 7.046875 C 7.09375 5.996094 7.945312 5.140625 9 5.140625 C 10.054688 5.140625 10.90625 5.996094 10.90625 7.046875 Z M 10.90625 7.046875 "/>
       <path d="M 11.605469 9.632812 L 6.394531 9.632812 C 6.058594 9.632812 5.78125 9.90625 5.78125 10.246094 L 5.78125 14.125 C 6.71875 14.707031 7.824219 15.046875 9.007812 15.046875 C 10.1875 15.046875 11.285156 14.710938 12.21875 14.132812 L 12.21875 10.246094 C 12.21875 9.910156 11.941406 9.632812 11.605469 9.632812 Z M 11.605469 9.632812 "/>
@@ -12,37 +8,19 @@
   </svg>
 </template>
 
-<script>
-export default {
-  props: {
-    iconName: {
-      type: String,
-      default: 'box'
-    },
-    width: {
-      type: [Number, String],
-      default: 18
-    },
-    height: {
-      type: [Number, String],
-      default: 18
-    },
-    iconColor: {
-      type: String,
-      default: '#fff'
-    },
-    viewBox: {
-      type: String,
-      default: '0 0 18 18'
-    }
-  }
+<script lang="ts" setup>
+import { defineProps, withDefaults } from 'vue';
+interface Props {
+  size?: number;
+  color?: string;
+  viewBox?: string;
+  fill?: string;
 }
-</script>
 
-<style scoped>
-svg {
-  display: inline-block;
-  vertical-align: baseline;
-  margin-bottom: -2px; /* yes, I'm that particular about formatting */
-}
-</style>
+withDefaults(defineProps<Props>(), {
+  size: 18,
+  color: 'currentColor',
+  viewBox: '0 0 18 18',
+  fill: 'none',
+});
+</script>

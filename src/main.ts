@@ -13,7 +13,7 @@ const updateSW = registerSW({
   
 //styles
 import '../src/assets/main.scss'
-import './assets/index.css'
+import './assets/tailwind.css'
 //styles
 
 //self plugins

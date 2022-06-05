@@ -12,33 +12,6 @@
   md:dark:bg-neutral-900
   text-slate-900
   dark:text-white">
-<!--    <teleport to="#aside" :disabled="isMobile()">
-      <section class="sidebar">
-        <input class="sidebar-input mb-half"
-               type="search"
-               v-model="searchQuery"
-               @input.prevent.stop="searchByName"
-               placeholder="Search ...">
-        <select class="sidebar-btn form-field__select mb-half" v-model="filter.genre"
-                @change="changeGenreLoadBook">
-          <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-            <option v-for="genre of category.genres"
-                    :key="'select-genre'+genre.id"
-                    :value="genre">{{ genre.name }}
-            </option>
-          </optgroup>
-        </select>
-        <select class="sidebar-btn form-field__select mb-half" v-model="orderBy.name"
-                @change="changeSortOrderBy">
-          <option v-for="(option, index) of orderByOptions" :value="option" :key="option + index">{{ option }}
-          </option>
-        </select>
-        <button class="btn-icon sidebar-btn" @click="changeSortAsc">
-          <IconSortAsc class="icon" v-if="orderBy.asc"/>
-          <IconSortDesc class="icon" v-else/>
-        </button>
-      </section>
-    </teleport>-->
     <router-link :to="{ name: 'book-view', params: {id: book.id}}"
                  class="book h-fit mr-4 mb-4 overflow-hidden flex flex-row flex-wrap drop-shadow-md justify-between w-80 p-4 cursor-pointer rounded-md dark:bg-slate-800 hover:dark:bg-slate-700"
                  v-for="book of books.items"
@@ -68,7 +41,6 @@ import StarRating from "../../components/StarRating.vue";
 import IconBook from "../../components/icons/IconBook.vue";
 document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
-// eslint-disable-next-line no-undef
 
 interface Category {
     id: number,

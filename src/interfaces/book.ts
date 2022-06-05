@@ -28,7 +28,7 @@ interface Book {
     source?: string,
     bookmark?: number,
     rating?: number,
-    ad?: boolean,
+    ad: boolean,
     author?: Author,
     genres:Array<Genre>
     cover_path?: string,

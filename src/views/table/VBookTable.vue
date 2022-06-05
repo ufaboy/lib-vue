@@ -56,15 +56,15 @@
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
       </select>
     </div>
-    <div class="table-paginator flex justify-center mt-4" v-else>
-      <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" v-if="books._links.first"
+    <div class="table-paginator flex justify-center my-3" v-else>
+      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
-      <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" :class="{'bg-green-900': queryData.page === item}" v-for="(item, index) in paginator"
+      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" :class="{'bg-green-900': queryData.page === item}" v-for="(item, index) in paginator"
               :key="index"
               @click="setPageNumber(item)">{{ item }}
       </button>
-      <button class="hover:bg-slate-500 w-12 mr-2 p-2 border rounded" v-if="books._links.last"
+      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
     </div>
@@ -85,7 +85,7 @@ import useBook from "../../composables/useBook";
 import useDate from "../../composables/useDate";
 import IconSortAsc from '@/components/icons/IconSortAsc.vue'
 import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import Sidebar from "../../components/Sidebar.vue";
+import Sidebar from "../../components/sidebars/Sidebar.vue";
 import SidebarBookTable from '../../components/sidebars/SidebarBookTable.vue';
 
 document.title = 'Table Books';

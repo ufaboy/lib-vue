@@ -28,7 +28,7 @@ import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
 import {API_URL} from '../../../runtimeEnv';
 import {isMobile} from "../../utils/helpers";
 import {updateBook} from "../../utils/uploadData";
-import EditorModal from "@/components/EditorModal.vue";
+import EditorModal from "@/components/modals/EditorModal.vue";
 import useSlideButton from "../../composables/useSlideButton";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
