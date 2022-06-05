@@ -26,12 +26,15 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, nextTick, onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+import useBook from "../../composables/useBook";
 import {isMobile} from "../../utils/helpers";
 import ImageItem from "@/components/ImageItem.vue";
 
 import {API_URL} from "../../../runtimeEnv";
 import { BookDirFile } from "../../interfaces/book";
+
 
 interface Category {
     id: number,
@@ -78,17 +81,16 @@ interface Book {
     last_read?: number,
 }
 
-const props = defineProps<{
-  book: Book,
-}>()
+const route = useRoute();
+const {book, downloadBook} = useBook();
 const activeImage = ref('');
 const activeMedia = ref({id: 0, type: '', url: ''});
 const getTypeBook = computed(() => {
-  if (props.book.genres.findIndex(item => item.name === 'picture') !== -1) {
+  if (book.value.genres.findIndex(item => item.name === 'picture') !== -1) {
     return 'picture'
-  } else if (props.book.genres.findIndex(item => item.name === 'audio') !== -1) {
+  } else if (book.value.genres.findIndex(item => item.name === 'audio') !== -1) {
     return 'audio'
-  } else if (props.book.genres.findIndex(item => item.name === 'video') !== -1) {
+  } else if (book.value.genres.findIndex(item => item.name === 'video') !== -1) {
     return 'video'
   } else return ''
 })
@@ -99,7 +101,7 @@ const getSrcUrl = computed(() => {
 function getSrcImgUrl(e:BookDirFile) {
   return e.url ? `${API_URL}/${e.url}` : ''
 }
-
+downloadBook(+route.params.id)
 </script>
 
 <style lang="scss">

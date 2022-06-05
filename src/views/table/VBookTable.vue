@@ -1,5 +1,5 @@
 <template>
-  <div class="books-table overflow-x-hidden overflow-y-auto">
+  <main class="books-table ">
     <table class="table border-collapse h-fit">
       <thead class="thead sticky top-0">
       <tr tabindex="0">
@@ -68,12 +68,12 @@
               @click="toPage(books._links.last)">last
       </button>
     </div>
-    <teleport to="#sidebar" v-if="isMounted">
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
       <SidebarBookTable :categories="categories" :queryData="queryData"
                         @search-input="searchInputHandler"
                         @load-data="updateFilterPage" />
     </teleport>
-  </div>
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -159,42 +159,3 @@ cutLimitByHeight()
 loadOrderBy();
 getBooksAndReplace();
 </script>
-
-<style lang="scss">
-.books-table {
-  padding: 0 1.5rem;
-  .td-action {
-    opacity: 0;
-  }
-
-  .th:hover, .th.active {
-    .td-action {
-      opacity: 1;
-    }
-  }
-
-  .table-paginator {
-    .select {
-      min-width: 3.5rem;
-      padding: 5px;
-      margin-left: 5px;
-    }
-  }
-}
-.toggle-three-state {
-  display: flex;
-  flex: 1;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  padding: 0.5rem;
-  .three-state-label {
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: space-between;
-    align-items: center;
-    input {
-      margin-top: 5px;
-    }
-  }
-}
-</style>

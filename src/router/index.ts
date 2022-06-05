@@ -10,7 +10,8 @@ import LayoutTest from "../layouts/LayoutTest.vue";
 import VTestPage from "../views/VTestPage.vue";
 const VListBook = () => import('../views/list/VListBook.vue')
 const VListGenre = () => import('../views/list/VListGenre.vue')
-const VBookView = () => import('../views/book/VBookView.vue')
+const BookText = () => import('../views/book/BookText.vue')
+const ComicBook = () => import('../views/book/ComicBook.vue')
 const VBookTable = () => import('../views/table/VBookTable.vue')
 const VGenreTable = () => import('../views/table/VGenreTable.vue')
 const VAuthorTable = () => import('../views/table/VAuthorTable.vue')
@@ -58,7 +59,12 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/book/:id',
         name: 'book-view',
-        component: VBookView
+        component: BookText
+      },
+      {
+        path: '/comic/:id',
+        name: 'comic-view',
+        component: ComicBook
       },
       {
         path: '/book/create',

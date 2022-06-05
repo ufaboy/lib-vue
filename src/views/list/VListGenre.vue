@@ -1,5 +1,5 @@
 <template>
-  <div class="list-genre md:w-full lg:absolute lg:top-0 lg:left-[10rem] lg:w-[calc(100%-10rem)] h-fit md:block lg:flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
+  <div class="list-genre md:w-full lg:absolute lg:top-0 lg:left-[10rem] lg:w-[calc(100%_-_10rem)] h-fit md:block lg:flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
     <select v-if="isMobile()" class="w-full h-fit bg-white dark:bg-neutral-900 text-slate-900 dark:text-white p-4 border border-2 rounded uppercase mb-5" v-model="activeCategory">
       <option
           class="option text-slate-900 dark:text-white"

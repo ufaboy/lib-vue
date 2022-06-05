@@ -33,12 +33,16 @@ export default function useBook() {
     const genreBookModal = ref<InstanceType<typeof HTMLElement>>()
     const showGenreBookModal = ref(false)
     const authorData = ref<Author>({id: 0, name:'', ad: true, url: ''})
-    const openBook = (book: Book, type: string) => {
+
+    function openBook(book: Book, type: string) {
         router.push({
-            name: type === 'edit' ? 'book-edit' : 'book-view',
+            name: type === 'edit' ? 'book-edit' : isComic(book) ? 'comic-view' : 'book-view',
             params: {id: book.id}
         })
-    };
+    }
+    function isComic(book: Book) {
+        return book.genres.findIndex(genre => genre.category.name === 'comics') > -1
+    }
     const closeDialog = () => {
         // @ts-expect-error
         genreBookModal.value.close()
@@ -59,27 +63,24 @@ export default function useBook() {
         }
         return result
     };
-    const downloadBook = async function (id: number) {
+    async function downloadBook(id: number) {
         loader.show();
         const result = await loadBook(id)
         loader.hide();
-        const comicsBook = result.genres.findIndex(genre => genre.category.name === 'comics') > -1
 
-        if (!comicsBook) {
+        if (isComic(result)) {
+            book.value = result
+        } else {
             book.value = await prepareUrlForMedia(result)
             rawText.value = book.value.text ?? ''
-        } else {
-            book.value = result
         }
 
-        typeBook.value = comicsBook ? 'BookMedia' : 'BookText'
         return book.value
     }
     return {
         rawText,
         book,
         authorData,
-        typeBook,
         genreBookModal,
         showGenreBookModal,
         closeDialog,

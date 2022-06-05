@@ -1,5 +1,5 @@
 <template>
-  <div class="book lg:w-[calc(100%-10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
     <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
@@ -24,11 +24,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onBeforeUnmount, toRefs, inject, computed, onMounted} from "vue";
+import {ref, onBeforeUnmount, toRefs, inject, nextTick, computed, onMounted} from "vue";
+import {useRoute} from "vue-router";
 import {API_URL} from '../../../runtimeEnv';
 import {isMobile} from "../../utils/helpers";
 import {updateBook} from "../../utils/uploadData";
 import EditorModal from "@/components/modals/EditorModal.vue";
+import useBook from "../../composables/useBook";
 import useSlideButton from "../../composables/useSlideButton";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
@@ -37,69 +39,8 @@ import {Author} from "../../interfaces/author";
 const printToast = inject('printToast') as Function
 const saveScrollingBook = inject('saveScrollingBook') as Function
 
-interface CategoryExtended extends Category {
-  genres?: Array<Genre>
-}
-
-interface Category {
-  id: number,
-  name: string,
-}
-
-interface Genre {
-  [key: string]: number | string | Category | boolean
-
-  id: number,
-  name: string,
-  description: string,
-  category: Category,
-  ad: boolean,
-  created_at: number,
-}
-
-interface Genre {
-  id: number,
-  name: string,
-  description: string,
-  category: Category,
-  ad: boolean,
-  created_at: number,
-}
-
-interface BookFile {
-  created_at: number,
-  extension: string,
-  file_name: string,
-  full_name: string,
-  id: number,
-  path: string,
-  size: number,
-  type: string,
-  url: string,
-}
-
-interface Book {
-  id: number,
-  name: string,
-  annotation?: string,
-  text?: string,
-  book_type?: string,
-  source?: string,
-  bookmark?: number,
-  rating?: number,
-  ad?: boolean,
-  author?: Author,
-  genres: Array<Genre>
-  cover_path?: string,
-  files?: Array<BookFile>,
-  view_count?: number,
-  created_at?: number,
-  updated_at?: number,
-  last_read?: number,
-}
 
 const props = defineProps<{
-  book: Book,
   windowHeights: number,
   scrollingProgress: {
     progress: number,
@@ -108,7 +49,8 @@ const props = defineProps<{
     currentPage: number,
   }
 }>()
-
+const route = useRoute();
+const {book, downloadBook} = useBook();
 let editingText = ''
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
@@ -148,11 +90,11 @@ function closeDialog() {
 }
 
 function openImage(e: Event) {
-  if (document.documentElement.clientWidth > 800 && props.book.files) {
+  if (document.documentElement.clientWidth > 800 && book.value.files) {
     const src = (e.target as HTMLImageElement).src
-    const replaceValue = `${API_URL}/media/book_${props.book.id}/`
+    const replaceValue = `${API_URL}/media/book_${book.value.id}/`
     const fileName = src.replace(replaceValue, '')
-    const fileIndex = props.book.files.findIndex(file => file.full_name === fileName)
+    const fileIndex = book.value.files.findIndex(file => file.full_name === fileName)
     activeImageIndex.value = fileIndex > -1 ? fileIndex : 0
   }
 }
@@ -177,9 +119,9 @@ function removeImageListeners() {
 
 async function saveEditor(newText: string) {
   try {
-    if (props.book.text) {
-      let text = props.book.text.replace(editingText, newText)
-      await updateBook({id: props.book.id, name: props.book.name, genres: props.book.genres, text: text})
+    if (book.value.text) {
+      let text = book.value.text.replace(editingText, newText)
+      await updateBook({id: book.value.id, name: book.value.name, genres: book.value.genres, text: text})
       printToast('Success', 'success')
     }
 
@@ -197,10 +139,10 @@ async function scrollToBookmark() {
       document.body.clientHeight, document.documentElement.clientHeight
   );
   const windowHeights = scrollHeight - clientHeight;
-  if (props.book.bookmark) {
-    const x = (props.book.bookmark * windowHeights) / 100
+  if (book.value.bookmark) {
+    const x = (book.value.bookmark * windowHeights) / 100
     console.log({
-      scrollToBookmark: props.book.bookmark,
+      scrollToBookmark: book.value.bookmark,
       clientHeight: clientHeight,
       scrollHeight: scrollHeight,
       windowHeights: windowHeights
@@ -220,12 +162,15 @@ function scrollByClick(e: Event) {
 }
 
 onBeforeUnmount(() => {
-  saveScrollingBook(props.book.id)
+  saveScrollingBook(book.value.id)
   removeImageListeners()
 });
 
 onMounted(async () => {
-  scrollToBookmark();
+  downloadBook(+route.params.id).then(() => {
+    nextTick(() => scrollToBookmark())
+  });
+
   listenClickByImg();
   calcChapterOptions();
 });

@@ -14,6 +14,9 @@
     <li class="p-2 mb-3">
       <router-link class="breadcrumb-link" :to="{name: 'note'}">Note</router-link>
     </li>
+    <li class="p-2 mb-3">
+      <router-link class="breadcrumb-link" :to="{name: 'author-index'}">Authors</router-link>
+    </li>
     <li class="p-2 mb-3" v-if="btnViewEditMode.name">
       <router-link class="breadcrumb-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
     </li>

@@ -3,15 +3,7 @@
   pt-4
   flex
   flex-row
-  flex-wrap
-  lg:w-[calc(100%-10rem)]
-  absolute
-  lg:left-[10rem]
-  bg-white
-  lg:dark:bg-slate-900
-  md:dark:bg-neutral-900
-  text-slate-900
-  dark:text-white">
+  flex-wrap">
     <router-link :to="{ name: 'book-view', params: {id: book.id}}"
                  class="book h-fit mr-4 mb-4 overflow-hidden flex flex-row flex-wrap drop-shadow-md justify-between w-80 p-4 cursor-pointer rounded-md dark:bg-slate-800 hover:dark:bg-slate-700"
                  v-for="book of books.items"

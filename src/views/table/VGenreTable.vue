@@ -22,7 +22,7 @@
         </tr>
       </transition-group>
     </table>
-    <teleport to="#sidebar" :disabled="isMobile()" v-if="isMounted">
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
         <li>
