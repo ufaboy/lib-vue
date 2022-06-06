@@ -1,6 +1,6 @@
 <template>
   <div class="list-genre md:w-full lg:absolute lg:top-0 lg:left-[10rem] lg:w-[calc(100%_-_10rem)] h-fit md:block lg:flex flex-row flex-wrap text-slate-900 dark:text-white pt-3">
-    <select v-if="isMobile()" class="w-full h-fit bg-white dark:bg-neutral-900 text-slate-900 dark:text-white p-4 border border-2 rounded uppercase mb-5" v-model="activeCategory">
+    <select v-if="isMobile()" class="w-full h-fit bg-white dark:bg-neutral-900 text-slate-900 dark:text-white p-4 border border-2 rounded uppercase mb-5" @change="changeCategory" v-model="activeCategory">
       <option
           class="option text-slate-900 dark:text-white"
           :value="category"
@@ -30,10 +30,8 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { isMobile } from "../../utils/helpers";
-
-
 
 interface Category {
     id: number,
@@ -57,23 +55,24 @@ const props = defineProps<{
 }>()
 document.title = "Genres";
 const route = useRoute();
+const router = useRouter();
 
-const activeCategory = ref<CategoryExtended|undefined>({ name: "", id: 0, genres: [] });
-const categories = ref<CategoryExtended[]>(props.categories);
+const defaultCategory = { name: "", id: 0, genres: [] }
+const activeCategory = ref<CategoryExtended>(defaultCategory);
 const genres = computed(() => {
-  let selectedCategory: CategoryExtended|undefined = { name: "", id: 0, genres: [] };
+  let selectedCategory: CategoryExtended = defaultCategory;
 
   if (activeCategory.value!.name) {
-    selectedCategory = categories.value.find(
+    selectedCategory = props.categories.find(
       (item: any) =>
         item.id === activeCategory.value!.id || item.name === activeCategory.value!.name
-    );
+    ) || defaultCategory;
   } else if (route.params.id) {
-    selectedCategory = categories.value.find((item: Category) => item.id === +route.params.id);
+    selectedCategory = props.categories.find((item: Category) => item.id === +route.params.id) || defaultCategory;
   } else if (route.params.name) {
-    selectedCategory = categories.value.find(
+    selectedCategory = props.categories.find(
       (item: Category) => item.name === route.params.name
-    );
+    ) || defaultCategory;
   } else {
     return [];
   }
@@ -83,17 +82,20 @@ const genres = computed(() => {
       : []
     : [];
 });
-
+function changeCategory() {
+  router.push({name:'list-genre', params: {name: activeCategory.value.name}})
+}
 async function prepareCategory() {
-  if (categories.value.length) {
+  if (props.categories.length) {
     if (route.params.id) {
-      activeCategory.value = categories.value.find(
-        (item) => item.id === +route.params.id
-      );
+      const cat = props.categories.find(
+          (item) => item.id === +route.params.id
+      )
+      activeCategory.value = cat || defaultCategory;
     } else if (route.params.name) {
-      activeCategory.value = categories.value.find(
+      activeCategory.value = props.categories.find(
         (item) => item.name === route.params.name
-      );
+      ) || defaultCategory;
     }
   }
 }
@@ -105,26 +107,3 @@ watch(props, () => {
   prepareCategory();
 });
 </script>
-
-<style lang="scss">
-.list-genre {
-
-}
-
-@media only screen and (max-width: 892px) {
-  .list-genre {
-
-  }
-}
-
-@media only screen and (max-width: 892px) and (orientation: landscape) {
-  .list-genre {
-  }
-}
-
-@media only screen and (max-width: 892px) and (orientation: portrait) {
-  .list-genre {
-
-  }
-}
-</style>

@@ -42,11 +42,6 @@ const routes: RouteRecordRaw[] = [
         component: VListGenre
       },
       {
-        path: '/list-genre/:name',
-        name: 'list-genre',
-        component: VListGenre
-      },
-      {
         path: '/genre',
         name: 'genre-index',
         component: VGenreTable
