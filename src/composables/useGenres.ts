@@ -21,6 +21,7 @@ export default function useGenres() {
         name: '',
         description: '',
         category_id: 0,
+        ad: false
     });
     const openRow = (row:GenreForm) => {
         activeGenre.value = row
@@ -34,6 +35,7 @@ export default function useGenres() {
             name: '',
             description: '',
             category_id: 0,
+            ad: false
         };
         showGenreModal.value = true
         // @ts-expect-error

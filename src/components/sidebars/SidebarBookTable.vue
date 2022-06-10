@@ -1,13 +1,12 @@
 <template>
   <ul>
     <li>
-      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-3">create</router-link>
+      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-2">create</router-link>
     </li>
-    <li class="p-3">
+    <li class="p-2">
       <input type="search" class="input-text w-full" placeholder="search" @input="debounceSearch" v-model="queryData.searchQuery">
     </li>
-
-    <li class="p-3">
+    <li class="p-2">
       <select class="select w-full p-1" v-model="genreId"
               @change="sendLoadEvent">
         <option class="flex w-full p-1" :value="null">select genre</option>
@@ -18,6 +17,9 @@
           </option>
         </optgroup>
       </select>
+    </li>
+    <li class="p-2 flex flex-row justify-center">
+      <TheToggle v-model="ad" />
     </li>
     <!--    <input type="search" class="sidebar-input search-text" v-model.trim="searchQuery" placeholder="Search ..."
                @input="debounceGetBooksAndReplace">
@@ -32,24 +34,15 @@
           <IconSortAsc class="icon" v-if="orderBy.asc"/>
           <IconSortDesc class="icon" v-else/>
         </button>
-        <div class="toggle-three-state" v-if="getAdAccess()">
-          <label class="three-state-label">Off
-            <input type="radio" class="3state-input" :value="false" v-model="filter.ad" @change="getBooksAndReplace">
-          </label>
-          <label class="three-state-label">AD
-            <input type="radio" class="3state-input" :value="undefined" v-model="filter.ad"
-                   @change="getBooksAndReplace">
-          </label>
-          <label class="three-state-label">On
-            <input type="radio" class="3state-input" :value="true" v-model="filter.ad" @change="getBooksAndReplace">
-          </label>
-        </div>-->
+        -->
   </ul>
 </template>
 
 <script lang="ts" setup>
-import {ref, defineEmits} from 'vue'
+import {ref, watch} from 'vue'
 import {QueryData} from '../../interfaces/book';
+import {getAdAccess} from "../../utils/userData";
+import TheToggle from "../TheToggle.vue";
 
 interface Category {
   id: number,
@@ -79,7 +72,9 @@ const emit = defineEmits(['search-input', 'load-data'])
 let debounce: number | undefined = undefined;
 
 const genreId = ref(null)
+const ad = ref<boolean|null>(null)
 
+watch(ad, () => sendLoadEvent())
 function debounceSearch(event: Event) {
   const eventTarget = event.target as HTMLInputElement
   clearTimeout(debounce)
@@ -95,7 +90,7 @@ function sendLoadEvent() {
     return !!genre
   })
 
-  const data = {...props.queryData, genre: genre}
+  const data = {...props.queryData, genre: genre, ad: ad.value}
   emit('load-data', data)
 }
 </script>

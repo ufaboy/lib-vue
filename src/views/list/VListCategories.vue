@@ -1,6 +1,6 @@
 <template>
   <div class="list-categories w-full lg:absolute lg:top-0 lg:left-[10rem]">
-      <nav class="w-full flex md:flex-col lg:flex-row lg:flex-wrap mt-3">
+      <nav class="w-full flex md:flex-col lg:flex-row lg:flex-wrap mt-3 px-3">
         <router-link class="content-link md:w-full lg:w-40"
                      :to="{ name: 'list-genre', params: { name: category.name}}"
                      v-for="category of categories"

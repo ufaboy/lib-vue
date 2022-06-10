@@ -14,7 +14,7 @@ interface GenreForm {
     name: string,
     description?: string,
     category_id?: number,
-    ad?: boolean,
+    ad: boolean,
 }
 interface GenreFilter {
     

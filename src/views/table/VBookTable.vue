@@ -3,9 +3,9 @@
     <table class="table border-collapse h-fit">
       <thead class="thead sticky top-0">
       <tr tabindex="0">
-        <th class="th py-2" :class="{active: queryData.orderBy.name === column}" v-for="(column, index) of columns" :key="index">
-          <div class="flex flex-row flex-nowrap" :class="{'active' : queryData.orderBy.name === column}">
-            <div class="td-title mr-2">{{ column }}</div>
+        <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy.name === column}" v-for="(column, index) of columns" :key="index">
+          <div class="flex flex-row flex-nowrap" >
+            <div class="td-title mr-1">{{ column }}</div>
             <button class="td-action" @click="sortBy(column)">
               <IconSortAsc class="icon" v-if="queryData.orderBy.name === column && queryData.orderBy.asc"/>
               <IconSortDesc class="icon" v-else/>
@@ -25,7 +25,7 @@
         <td class="td w-72 text-ellipsis" :data-tooltip="book.annotation" data-tooltip-location='top'>
           <p class="limited-p max-w-[13rem]">{{ book.annotation }}</p>
         </td>
-        <td class="td w-52" :data-tooltip="calcGenres(book.genres)" data-tooltip-location='top'>
+        <td class="td w-48" :data-tooltip="calcGenres(book.genres)" data-tooltip-location='top'>
           <p class="limited-p max-w-[10rem]">{{ calcGenres(book.genres) }}</p>
         </td>
         <td class="td">{{ book.rating }}</td>
