@@ -1,13 +1,5 @@
 <template>
   <div class="authors-table">
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
-      <hr class="my-3">
-      <ul>
-        <li>
-          <button class="capitalize flex w-full p-3" @click="createAuthor">create</button>
-        </li>
-      </ul>
-    </teleport>
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
@@ -30,6 +22,14 @@
         </tr>
       </tbody>
     </table>
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+      <hr class="my-3">
+      <ul>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <button class="capitalize flex w-full p-2" @click="createAuthor">create</button>
+        </li>
+      </ul>
+    </teleport>
     <dialog ref="modalAuthor" class="dialog dark:bg-slate-800 rounded-lg w-72" @close="modalAuthorShow = false">
       <EditAuthor v-if="modalAuthorShow" @hide-modal="closeDialog" :author="activeAuthor" @update-authors="getAuthors" />
     </dialog>

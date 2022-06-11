@@ -25,8 +25,8 @@
     <teleport to="#sidebar" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
-        <li>
-          <button class="capitalize flex w-full p-3" @click="createGenre">create</button>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <button class="flex w-full p-2" @click="createGenre">Create</button>
         </li>
       </ul>
     </teleport>
@@ -91,18 +91,5 @@ if (genres.value?.length === 1 && genres.value[0].id === 0) {
     transition: transform 1s;
   }
 
-}
-@media only screen and (min-width: 893px) {
-  .genre-table {}
-}
-
-@media only screen and (max-width: 892px) {
-  .genre-table {}
-}
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .genre-table {}
-}
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-  .genre-table {}
 }
 </style>

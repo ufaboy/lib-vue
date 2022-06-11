@@ -69,6 +69,7 @@
       </button>
     </div>
     <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+      <hr class="my-3">
       <SidebarBookTable :categories="categories" :queryData="queryData"
                         @search-input="searchInputHandler"
                         @load-data="updateFilterPage" />

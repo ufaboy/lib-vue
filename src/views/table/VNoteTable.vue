@@ -1,11 +1,5 @@
 <template>
   <div class="notes overflow-x-hidden overflow-y-auto">
-    <!--    <teleport to="#aside" :disabled="isMobile()">
-          <section class="sidebar">
-            <button class="sidebar-btn btn mb-half" @click="sendNotes">save</button>
-            <button class="sidebar-btn btn" @click="addNote">add</button>
-          </section>
-        </teleport>-->
     <div v-if="isMobile()">
       <section class="note" v-for="(note, index) of filteredNotes" :key="'note-' + index">
         <div class="note-group">
@@ -55,11 +49,22 @@
       </tr>
       </tbody>
     </table>
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+      <hr class="my-3">
+      <ul>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <button class="flex w-full p-2" @click="sendNotes">Save</button>
+        </li>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <button class="flex w-full p-2" @click="addNote">Add</button>
+        </li>
+      </ul>
+    </teleport>
   </div>
 </template>
 
 <script setup lang=ts>
-import {computed, inject, ref} from 'vue';
+import {computed, inject, onMounted, ref} from 'vue';
 import {loadNotes} from "../../utils/loadData";
 import {$patch} from "../../utils/superFetch";
 import {isMobile} from "../../utils/helpers";
@@ -106,7 +111,10 @@ const sendNotes = async () => {
     notes.value.push(...JSON.parse(result.text))
   }
 }
-
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
 getNotes()
 </script>
 

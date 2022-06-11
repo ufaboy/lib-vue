@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li>
+    <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
       <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-2">create</router-link>
     </li>
     <li class="p-2">

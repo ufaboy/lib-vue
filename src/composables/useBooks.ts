@@ -81,10 +81,9 @@ export default function useBooks() {
         const formFilter: FormFilter = {
             genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
             rating: queryData.value.rating ? queryData.value.rating : undefined,
-            ad: queryData.value.ad ? true : queryData.value.ad === undefined ? undefined : false,
+            ad: queryData.value.ad ?? undefined,
             searchQuery: queryData.value.searchQuery
         }
-        console.log('getBooksAndReplace')
         try {
             loader.show();
             const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
@@ -106,7 +105,7 @@ export default function useBooks() {
         const formFilter: FormFilter = {
             genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
             rating: queryData.value.rating ? queryData.value.rating : undefined,
-            ad: queryData.value.ad ? true : queryData.value.ad === undefined ? undefined : false,
+            ad: queryData.value.ad ?? undefined,
             searchQuery: queryData.value.searchQuery
         }
         if (!infinityState.value && method) {
