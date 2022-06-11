@@ -1,6 +1,6 @@
 <template>
   <main
-    class="layout-main h-screen bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white"
+    class="layout bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white"
     @click="activeBurger = false">
     <HeaderMobile v-if="isMobile()" :categories="categories" />
     <Sidebar
@@ -9,10 +9,10 @@
       @search-input="searchInputHandler" />
     <router-view
       class="lg:w-[calc(100%_-_10rem)] lg:absolute lg:left-40 overflow-x-hidden overflow-y-auto lg:w-[calc(100%_-_10rem)]
-  lg:absolute
-  lg:left-[10rem]
-  bg-inherit
-  text-inherit"
+      lg:absolute
+      lg:left-[10rem]
+      bg-inherit
+      text-inherit"
       v-bind="$attrs"
       :categories="categories"
       :scrolling-progress="scrollingProgress"
