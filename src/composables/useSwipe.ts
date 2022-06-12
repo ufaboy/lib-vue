@@ -1,5 +1,5 @@
 import {ref} from 'vue'
-export default function useSlideButton() {
+export default function useSwipe() {
     const startPos = ref({x: 0, y: 0});
     const endPos = ref({x: 0, y: 0});
     const slideLeftRight = ref(false);

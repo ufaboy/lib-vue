@@ -31,7 +31,7 @@ import {isMobile} from "../../utils/helpers";
 import {updateBook} from "../../utils/uploadData";
 import EditorModal from "@/components/modals/EditorModal.vue";
 import useBook from "../../composables/useBook";
-import useSlideButton from "../../composables/useSlideButton";
+import useSwipe from "../../composables/useSwipe";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
 import {Author} from "../../interfaces/author";
@@ -63,7 +63,7 @@ const activeImageIndex = ref<number | undefined>();
 const editorNode = ref<HTMLElement>();
 const chapterElement = ref<HTMLElement>();
 const chapterOptions = ref<Element[]>([]);
-const {slideLeftRight, touchStart, touchEnd} = useSlideButton();
+const {slideLeftRight, touchStart, touchEnd} = useSwipe();
 
 
 function calcChapterOptions() {

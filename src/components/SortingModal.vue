@@ -23,8 +23,8 @@
 </template>
 
 <script setup>
-import IconSortAsc from "@/components/icons/IconSortAsc"
-import IconSortDesc from "@/components/icons/IconSortDesc"
+import IconSortAsc from "../components/icons/IconSortAsc.vue"
+import IconSortDesc from "../components/icons/IconSortDesc.vue"
 import {ref} from "vue";
 
 // eslint-disable-next-line no-undef
@@ -50,7 +50,8 @@ function closeModal() {
 <style lang="scss">
 .sorting {
   padding: 1rem;
-  color: var(--text);
+  width: 200px;
+  height: 200px;
 
   .fieldset__legend {
     padding: 5px;
