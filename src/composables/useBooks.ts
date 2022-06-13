@@ -17,7 +17,8 @@ export default function useBooks() {
             searchQuery: undefined,
             limit: 12,
             page: 1,
-            orderBy: {name: 'updated_at', asc: false}
+            orderBy: 'updated_at',
+            ascending: false
         }
     );
     const pagBtnArr = ref<Array<number>>();
@@ -59,14 +60,17 @@ export default function useBooks() {
         paginator.value = arr
     }
 
-    const saveOrderBy = function () {
-        localStorage.setItem('orderby-books', JSON.stringify(queryData.value.orderBy));
+    const saveQuery = function () {
+        localStorage.setItem('query-books', JSON.stringify(queryData.value));
     }
-    const loadOrderBy = function () {
-        const data = localStorage.getItem('orderby-books')
-        if (data) {
-            queryData.value.orderBy = JSON.parse(data)
+    const loadQuery = function () {
+        const query = localStorage.getItem('query-books')
+        if (query) {
+            queryData.value = JSON.parse(query)
         }
+    }
+    function clearQuery() {
+        localStorage.removeItem('query-books')
     }
 
     const filterCount = computed(() => {
@@ -77,7 +81,7 @@ export default function useBooks() {
         return count
     })
     const getBooksAndReplace = async () => {
-        const sort = `${queryData.value.orderBy.asc ? '' : '-'}${queryData.value.orderBy.name}`
+        const sort = `${queryData.value.ascending ? '' : '-'}${queryData.value.orderBy}`
         const formFilter: FormFilter = {
             genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
             rating: queryData.value.rating ? queryData.value.rating : undefined,
@@ -101,7 +105,7 @@ export default function useBooks() {
         }
     };
     const getBooksAndPush = async (method = '') => {
-        const sort = `${queryData.value.orderBy.asc ? '' : '-'}${queryData.value.orderBy.name}`
+        const sort = `${queryData.value.ascending ? '' : '-'}${queryData.value.orderBy}`
         const formFilter: FormFilter = {
             genre_id: queryData.value.genre?.id ? queryData.value.genre.id : undefined,
             rating: queryData.value.rating ? queryData.value.rating : undefined,
@@ -174,9 +178,9 @@ export default function useBooks() {
 
     };
     const sortBy = (column: string) => {
-        queryData.value.orderBy.asc = !queryData.value.orderBy.asc
-        queryData.value.orderBy.name = column
-        saveOrderBy()
+        queryData.value.ascending = !queryData.value.ascending
+        queryData.value.orderBy = column
+        saveQuery()
         getBooksAndReplace();
     };
     const getCover = (book: Book) => {
@@ -201,8 +205,9 @@ export default function useBooks() {
         filterCount,
         paginator,
         setPageNumber,
-        saveOrderBy,
-        loadOrderBy,
+        saveQuery,
+        loadQuery,
+        clearQuery,
         getCover,
         resetTable,
         updateFilterPage,

@@ -3,17 +3,15 @@
     <table class="table border-collapse h-fit">
       <thead class="thead sticky top-0">
       <tr tabindex="0">
-        <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy.name === column}" v-for="(column, index) of columns" :key="index">
+        <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy === column}" v-for="(column, index) of columns" :key="index">
           <div class="flex flex-row flex-nowrap" >
             <div class="td-title mr-1">{{ column }}</div>
             <button class="td-action" @click="sortBy(column)">
-              <IconSortAsc class="icon" v-if="queryData.orderBy.name === column && queryData.orderBy.asc"/>
-              <IconSortDesc class="icon" v-else/>
+              <IconSort class="icon" v-if="queryData.orderBy === column" :ascending="queryData.ascending"/>
             </button>
           </div>
         </th>
       </tr>
-
       </thead>
       <tbody tabindex="0">
       <tr class="row cursor-pointer hover:dark:bg-slate-700" :class="{'picante': book.ad}"
@@ -84,8 +82,7 @@ import {getAdAccess} from "../../utils/userData";
 import useBooks from "../../composables/useBooks";
 import useBook from "../../composables/useBook";
 import useDate from "../../composables/useDate";
-import IconSortAsc from '@/components/icons/IconSortAsc.vue'
-import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import IconSort from '@/components/icons/IconSort.vue'
 import Sidebar from "../../components/sidebars/Sidebar.vue";
 import SidebarBookTable from '../../components/sidebars/SidebarBookTable.vue';
 
@@ -124,7 +121,7 @@ const props = defineProps<{
 }>()
 const emit = defineEmits(['search-input'])
 const {
-  queryData, books, paginator, pagBtnArr, loadOrderBy, updateFilterPage,
+  queryData, books, paginator, pagBtnArr, loadQuery, saveQuery, updateFilterPage,
   sortBy, toPage, getBooksAndReplace, setPageNumber, debounceGetBooksAndReplace
 } = useBooks();
 const {openBook} = useBook();
@@ -134,11 +131,6 @@ const isMounted = ref(false)
 
 function searchInputHandler(e: string | undefined) {
   queryData.value.searchQuery = e
-  getBooksAndReplace()
-}
-function changeSortAsc() {
-  queryData.value.orderBy.asc = !queryData.value.orderBy.asc
-  queryData.value.page = 1
   getBooksAndReplace()
 }
 
@@ -157,6 +149,6 @@ onMounted(() => {
 
 })
 cutLimitByHeight()
-loadOrderBy();
+loadQuery();
 getBooksAndReplace();
 </script>

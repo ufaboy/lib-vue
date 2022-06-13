@@ -6,8 +6,7 @@
         <div class="table-cell flex flex-row flex-nowrap">
           <div class="td-title">{{ column }}</div>
           <button class="td-action" @click="sortBy(column, ascending)">
-            <IconSortAsc class="icon" v-if="ascending"/>
-            <IconSortDesc class="icon" v-else/>
+            <IconSort class="icon" :ascending="ascending"/>
           </button>
         </div>
       </th>
@@ -41,8 +40,7 @@
 <script setup lang="ts">
 import useGenres from "../../composables/useGenres";
 import EditGenre from '../../components/modals/EditGenre.vue'
-import IconSortAsc from '@/components/icons/IconSortAsc.vue'
-import IconSortDesc from '@/components/icons/IconSortDesc.vue'
+import IconSort from '@/components/icons/IconSort.vue'
 import {isMobile} from "../../utils/helpers";
 import {onMounted, ref} from "vue";
 

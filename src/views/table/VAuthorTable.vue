@@ -6,8 +6,7 @@
         <div class="table-cell">
           <div class="td-title">{{ column }}</div>
           <button class="td-action" @click="sortBy(column)">
-            <IconSortAsc class="icon" v-if="ascending"/>
-            <IconSortDesc class="icon" v-else/>
+            <IconSort class="icon" :ascending="ascending"/>
           </button>
         </div>
       </th>
@@ -37,13 +36,11 @@
 </template>
 
 <script setup lang="ts">
-
-import IconSortAsc from '@/components/icons/IconSortAsc.vue'
-import IconSortDesc from '@/components/icons/IconSortDesc.vue'
-import {isMobile} from "../../utils/helpers";
-import useAuthors from "../../composables/useAuthors";
-import EditAuthor from "../../components/modals/EditAuthor.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref} from 'vue';
+import useAuthors from '../../composables/useAuthors';
+import {isMobile} from '../../utils/helpers';
+import EditAuthor from '../../components/modals/EditAuthor.vue';
+import IconSort from '../../components/icons/IconSort.vue'
 
 document.title = 'Table Authors';
 const columns: string[] = ['id', 'name', 'url', 'ad']

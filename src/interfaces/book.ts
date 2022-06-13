@@ -123,10 +123,6 @@ interface ActiveMedia {
     type: string,
     url: string,
 }
-interface Order {
-    name: string,
-    asc: boolean
-}
 
 interface QueryData {
     genre: Genre | undefined,
@@ -135,7 +131,8 @@ interface QueryData {
     page: number,
     ad: boolean | undefined,
     searchQuery: string | undefined,
-    orderBy: Order
+    orderBy: string,
+    ascending: boolean
 }
 
 interface FormFilter {

@@ -11,16 +11,11 @@
       </option>
     </select>
     <router-link
-      :to="{
-        name: 'list-book',
-        params: {
-          id: genre.id,
-          name: genre.name,
-        },
-      }"
+      :to="{ name: 'list-book', params: { id: genre.id, name: genre.name }}"
       class="genre block border border-2 rounded uppercase lg:w-48 md:w-full h-fit p-4 lg:mr-3 mb-3 hover:bg-slate-500"
       v-for="genre of genres"
       :key="'genre' + genre.id"
+      @click="clearQuery"
       >{{ genre.name }}
     </router-link>
     <!--    <observer @intersect="loadGenres('push')"/>-->
@@ -31,6 +26,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import useBooks from "../../composables/useBooks";
 import { isMobile } from "../../utils/helpers";
 
 interface Category {
@@ -53,9 +49,11 @@ interface CategoryExtended extends Category{
 const props = defineProps<{
   categories: CategoryExtended[]
 }>()
-document.title = "Genres";
 const route = useRoute();
 const router = useRouter();
+const {clearQuery} = useBooks();
+document.title = "Genres";
+
 
 const defaultCategory = { name: "", id: 0, genres: [] }
 const activeCategory = ref<CategoryExtended>(defaultCategory);

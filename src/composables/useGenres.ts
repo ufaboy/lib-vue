@@ -4,7 +4,7 @@ import {loadGenres} from "../utils/loadData";
 
 export default function useGenres() {
     const loader = inject("loader");
-    const genreModal = ref<InstanceType<typeof HTMLElement>>()
+    const genreModal = ref<InstanceType<typeof HTMLDialogElement>>()
     const showGenreModal = ref(false)
     const genres = ref<Genre[]>([{
         id: 0,
@@ -26,7 +26,6 @@ export default function useGenres() {
     const openRow = (row:GenreForm) => {
         activeGenre.value = row
         showGenreModal.value = true
-        // @ts-expect-error
         genreModal.value?.showModal()
     }
     const createGenre = () => {
@@ -38,11 +37,9 @@ export default function useGenres() {
             ad: false
         };
         showGenreModal.value = true
-        // @ts-expect-error
         genreModal.value?.showModal()
     }
     const closeDialog = () => {
-        // @ts-expect-error
         genreModal.value?.close()
         showGenreModal.value = false
     }

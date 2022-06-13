@@ -1,62 +1,79 @@
 <template>
-  <form class="filter rad-shadow" method="dialog" @submit.prevent="findBookByFilter">
-    <header class="header">
-      <h2 class="filter-title">filter</h2>
+  <form class="flex flex-row flex-wrap text-slate-900 dark:text-white"
+        method="dialog" @submit.prevent="sendFilterEvent">
+    <header class="w-full flex flex-row justify-between items-center">
+      <h2 class="filter-title">Filter & Sort</h2>
       <button class="close-btn" type="reset" @click="closeModal">
         <IconClose class="icon" />
       </button>
     </header>
-    <div class="form-field mb-1">
-      <label class="form-field__label">Genre</label>
-      <select class="form-field__select" v-model="filter.genre">
-        <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-          <option v-for="genre of category.genres"
-                  :key="'select-genre'+genre.id"
-                  :value="genre">{{ genre.name }}
-          </option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="form-field mb-1">
-      <label class="form-field__label">Ad</label>
-      <div class="toggle toggle--knob" v-if="adAccess">
-        <input type="checkbox" id="toggle--knob" class="toggle--checkbox" v-model="filter.ad">
-        <label class="toggle--btn" for="toggle--knob">
-          <span class="toggle--feature" data-label-on="on" data-label-off="off"></span>
-        </label>
-      </div>
-    </div>
-    <div class="form-field mb-1">
-      <label class="form-field__label">Rating</label>
-      <select class="form-field__select" v-model="filter.rating" name="selectRating">
-        <option class="value" :value="rating.value" v-for="(rating, index) of ratingOptions"
-                :key="'rating-' + index">{{ rating.value }} {{ rating.name }}
+    <label class="w-full mt-4">Name</label>
+    <input type="search" class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.searchQuery">
+    <label class="w-full mt-4">Genre</label>
+    <select class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.genre">
+      <option class="flex w-full p-1" :value="null">select genre</option>
+      <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+        <option v-for="genre of category.genres"
+                :key="'select-genre'+genre.id"
+                :value="genre">{{ genre.name }}
         </option>
-      </select>
-    </div>
-    <footer class="footer">
-      <button class="negative-btn" type="button" @click="resetFilter">reset</button>
-      <button class="positive-btn">find</button>
+      </optgroup>
+    </select>
+    <label class="w-full mt-4">Ad</label>
+    <select class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.ad">
+      <option :value="null">Show All</option>
+      <option :value="false">Hide AD</option>
+      <option :value="true">Show only AD</option>
+    </select>
+    <label class="w-full mt-4">Rating</label>
+    <select class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.rating" name="selectRating">
+      <option class="value" :value="rating.value" v-for="(rating, index) of ratingOptions"
+              :key="'rating-' + index">{{ rating.value }} {{ rating.name }}
+      </option>
+    </select>
+    <label class="w-full mt-4">Sort by</label>
+    <select class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.orderBy">
+      <option class="capitalize " :value="sortOption" v-for="sortOption in sortingOptions">{{sortOption}}</option>
+    </select>
+    <label class="w-full mt-4">Ascending</label>
+    <select class="w-full mt-2 p-2 dark:bg-zinc-700" v-model="filter.ascending">
+      <option :value="true">up</option>
+      <option :value="false">down</option>
+    </select>
+    <footer class="w-full mt-4 flex flex-row justify-between items-center">
+      <button class="btn-red" type="reset" @click="resetFilter">Reset</button>
+      <button class="btn-green">Find</button>
     </footer>
   </form>
 </template>
 
-<script setup>
-import IconClose from "@/components/icons/IconClose"
-import {getAdAccess} from "@/utils/userData";
+<script lang="ts" setup>
 import {ref} from "vue";
+import {getAdAccess} from "../../utils/userData";
+import {Genre} from "../../interfaces/genre";
+import {CategoryExtended} from "../../interfaces/category";
+import {QueryData} from "../../interfaces/book";
+import IconClose from "../../components/icons/IconClose.vue"
 
-// eslint-disable-next-line no-undef
+
+interface Filter {
+  ad: boolean|null
+  rating: number|null
+  searchQuery: string|null
+  genre: Genre|null
+  orderBy: string
+  ascending: boolean
+}
+interface Props {
+  queryData: QueryData
+  categories: CategoryExtended[]
+}
 const emit = defineEmits(['active-filter', 'hide-modal', 'reset-filter'])
-// eslint-disable-next-line no-undef,no-unused-vars
-const props = defineProps({
-  categories: Array,
-  rating: Number,
-  ad: Number,
-  genre: Object,
-})
+const props = defineProps<Props>()
 
+const sortingOptions = ['name', 'view_count', 'rating', 'updated_at', 'last_read'];
 const ratingOptions = [
+  {name: 'All rating', value: 0},
   {name: 'Terrible', value: 1},
   {name: 'Bad', value: 2},
   {name: 'Middle', value: 3},
@@ -65,18 +82,23 @@ const ratingOptions = [
 ]
 const adAccess = getAdAccess()
 
-const filter = ref({
+const filter = ref<Filter>({
+  genre: null,
   rating: null,
   ad: null,
-  genre: {},
+  searchQuery: '',
+  orderBy: 'updated_at',
+  ascending: false
 })
 
 function loadFilter() {
-  filter.value.rating = props.rating ?? null
-  if (props.genre) {
-    filter.value.genre = props.genre
-  }
-  filter.value.ad = props.ad ?? null
+  const {genre, rating, ad, searchQuery, orderBy, ascending} = {...props.queryData}
+  filter.value.rating = rating ?? null
+  filter.value.ad = ad ?? null
+  filter.value.orderBy = orderBy ?? null
+  filter.value.searchQuery = searchQuery ?? null
+  filter.value.ascending = ascending ?? null
+  filter.value.genre = genre ?? null
 }
 
 function closeModal() {
@@ -88,12 +110,8 @@ function resetFilter() {
   closeModal()
 }
 
-function findBookByFilter() {
-  emit('active-filter', {
-    genre: Number.isInteger(filter.value.genre.id) ? filter.value.genre : null,
-    rating: filter.value.rating,
-    ad: filter.value.ad
-  })
+function sendFilterEvent() {
+  emit('active-filter', {...props.queryData, ...filter.value})
   closeModal()
 }
 
