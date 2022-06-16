@@ -146,7 +146,6 @@ function cutLimitByHeight() {
 }
 onMounted(() => {
   isMounted.value = true
-
 })
 cutLimitByHeight()
 loadQuery();

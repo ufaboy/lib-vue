@@ -123,11 +123,19 @@
       <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+      <hr class="my-3">
+      <ul>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <router-link class="flex w-full p-2" :to="{name: 'book-view', params: {id: route.params.id}}">View</router-link>
+        </li>
+      </ul>
+    </teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onUpdated, inject} from 'vue'
+import {ref, onUpdated, inject, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
@@ -141,7 +149,6 @@ import useAuthors from '../../composables/useAuthors'
 import GenreBook from '@/components/modals/GenreBook.vue'
 import StarRating from "@/components/StarRating.vue";
 import ToggleAd from "../../components/ToggleAd.vue";
-
 
 document.title = 'Editor';
 interface CategoryExtended extends Category {
@@ -185,6 +192,7 @@ const printToast: Function = inject('printToast')
 const loader: Loader = inject("loader");
 const router = useRouter();
 const route = useRoute();
+const isMounted = ref(false)
 const {book, authorData, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
 const {authors, getAuthors} = useAuthors()
 const editor = ref<HTMLTextAreaElement>()
@@ -471,7 +479,9 @@ function startTypograf() {
   elem.value = typoResult;
   console.log('startTypograf', {typoResult:typoResult})
 }
-
+onMounted(() => {
+  isMounted.value = true
+})
 onUpdated(() => {
   if (editor.value && editor.value.scrollHeight > 60) {
     autoResize()

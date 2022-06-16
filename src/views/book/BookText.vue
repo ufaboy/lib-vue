@@ -12,14 +12,22 @@
                   :raw-images="book.files"
                   :active-image-index="activeImageIndex"
                   @select-image="selectImageByIndex"></image-slider>
-<!--    <teleport to="#aside">
-      <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
-        <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
-            chapter.innerHTML
-          }}
-        </option>
-      </select>
-    </teleport>-->
+    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+      <hr class="my-3">
+      <ul>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">View</router-link>
+        </li>
+        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
+            <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
+                chapter.innerHTML
+              }}
+            </option>
+          </select>
+        </li>
+      </ul>
+    </teleport>
   </div>
 </template>
 
@@ -55,7 +63,7 @@ let editingText = ''
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
 })
-
+const isMounted = ref(false)
 const {windowHeights} = toRefs(props)
 const textEditorModal = ref();
 const showEditorModal = ref(false);
@@ -67,10 +75,12 @@ const {slideLeftRight, touchStart, touchEnd} = useSwipe();
 
 
 function calcChapterOptions() {
-  const chapters = document.getElementsByClassName('zag')
-  for (const element of Array.from(chapters)) {
+  const chapters = document.getElementsByClassName('chapter')
+  console.log('calcChapterOptions', chapters.length)
+
+/*  for (const element of chapters) {
     chapterOptions.value.push(element)
-  }
+  }*/
 }
 
 function scrollToChapter() {
@@ -167,11 +177,12 @@ onBeforeUnmount(() => {
 });
 
 onMounted(async () => {
+  isMounted.value = true
   downloadBook(+route.params.id).then(() => {
     nextTick(() => scrollToBookmark())
   });
-
   listenClickByImg();
+
   calcChapterOptions();
 });
 

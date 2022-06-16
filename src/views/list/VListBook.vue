@@ -6,7 +6,7 @@
                  dark:bg-slate-800 hover:dark:bg-slate-700"
                  v-for="book of books.items"
                  :key="'book'+book.id">
-      <img v-if="book.cover_path" :src="getCover(book)" alt="cover" class="shrink-0 rounded-md mr-2" width="100" height="100"
+      <img v-if="book.cover_path" :src="getCover(book)" alt="cover" class="shrink-0 rounded-md mr-2 object-cover w-[100px] h-[100px]" width="100" height="100"
            onerror="this.onerror=null;this.src = '/icons/svg/book-dead-solid.svg'">
       <IconBook class="mr-2 shrink-0 rounded-md w-[100px] h-[100px]" v-else/>
       <div class="h-[110px] w-[calc(100%_-_150px)]">
