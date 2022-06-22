@@ -66,7 +66,7 @@
               @click="toPage(books._links.last)">last
       </button>
     </div>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <SidebarBookTable :categories="categories" :queryData="queryData"
                         @search-input="searchInputHandler"

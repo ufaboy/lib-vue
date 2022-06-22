@@ -1,5 +1,5 @@
 <template>
-  <aside id="sidebar" class="fixed left-0 top-0 h-full w-[10rem] bg-white dark:bg-slate-900">
+  <aside id="sidebar" class="flex flex-col fixed left-0 top-0 h-full w-[10rem] bg-white dark:bg-slate-900">
     <ul class="navigator-desktop overflow-x-hidden overflow-y-auto">
       <li class="navigator-element hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer"
           v-for="(route, index) in routes" :key="index">
@@ -7,6 +7,12 @@
       </li>
     </ul>
     <slot></slot>
+    <div id="sidebar-target"></div>
+    <ul class="mt-auto">
+      <li class="p-2 flex justify-center">
+        <ThemeToggle />
+      </li>
+    </ul>
   </aside>
 </template>
 
@@ -14,6 +20,7 @@
 import {computed} from "vue";
 import {useRoute} from 'vue-router'
 import useBooks from "../../composables/useBooks";
+import ThemeToggle from "../ThemeToggle.vue";
 
 interface Category {
   id: number,

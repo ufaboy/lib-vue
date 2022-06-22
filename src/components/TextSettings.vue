@@ -1,22 +1,20 @@
 <template>
-<div class="text-settings">
-  <header class="text-settings-header">
+<div class="fixed left-0 bottom-0 w-full text-white bg-slate-500 dark:bg-neutral-800 p-4">
+  <header class="flex flex-row justify-between">
     <h2>Text Settings</h2>
     <button class="close-btn" type="reset" @click="closeModal">
       <IconClose class="icon" />
     </button>
   </header>
   <p>Current Progress: {{scrollingProgress.progress}}</p>
-  <progress class="progress" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>
+  <progress class="w-full h-4" :value="scrollingProgress.progress" max="100" id="progressbar" @click="scrollByClick"/>
   <p>{{scrollingProgress.currentPage}}/{{scrollingProgress.countPages}}</p>
 </div>
 </template>
 
 <script setup>
 import IconClose from "@/components/icons/IconClose.vue"
-// eslint-disable-next-line no-undef
 const emit = defineEmits(['hide-modal', 'scroll-by-click'])
-// eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   book: Object,
   scrollingProgress: {

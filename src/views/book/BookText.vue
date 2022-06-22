@@ -1,25 +1,27 @@
 <template>
-  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
-    <text-settings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
+    <TextSettings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
     <dialog ref="textEditorModal" class="dialog dark:bg-slate-800 rounded-lg" @close="showEditorModal = false">
-      <editor-modal v-if="showEditorModal" :editor-node="editorNode" @save-editor="saveEditor"
+      <EditorModal v-if="showEditorModal" :editor-node="editorNode" @save-editor="saveEditor"
                     @hide-modal="closeDialog"/>
     </dialog>
-    <image-slider v-if="Number.isInteger(activeImageIndex) && book.files?.length"
+    <ImageSlider v-if="Number.isInteger(activeImageIndex) && book.files?.length"
                   :raw-images="book.files"
                   :active-image-index="activeImageIndex"
-                  @select-image="selectImageByIndex"></image-slider>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+                  @select-image="selectImageByIndex">
+
+    </ImageSlider>
+    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
           <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">View</router-link>
         </li>
-        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <select class="select select-chapter" @change="scrollToChapter" v-model="chapterElement">
+        <li class="mb-2 p-2 text-slate-900 dark:text-white cursor-pointer">
+          <select class="select select-chapter w-full" @change="scrollToChapter" v-model="chapterElement">
             <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
                 chapter.innerHTML
               }}
@@ -75,16 +77,16 @@ const {slideLeftRight, touchStart, touchEnd} = useSwipe();
 
 
 function calcChapterOptions() {
-  const chapters = document.getElementsByClassName('chapter')
+  const chapters = document.getElementsByClassName('toc-anchor')
   console.log('calcChapterOptions', chapters.length)
-
-/*  for (const element of chapters) {
+//ts-ignore
+  for (const element of chapters) {
     chapterOptions.value.push(element)
-  }*/
+  }
 }
 
 function scrollToChapter() {
-  chapterElement.value?.scrollIntoView()
+  chapterElement.value?.click()
 }
 
 function editMode(e: Event) {
@@ -179,11 +181,12 @@ onBeforeUnmount(() => {
 onMounted(async () => {
   isMounted.value = true
   downloadBook(+route.params.id).then(() => {
-    nextTick(() => scrollToBookmark())
+    nextTick(() => {
+      scrollToBookmark()
+      calcChapterOptions();
+    })
   });
   listenClickByImg();
-
-  calcChapterOptions();
 });
 
 </script>
@@ -236,6 +239,13 @@ onMounted(async () => {
       border-radius: 5px;
     }
   }
+  figure {
+
+  }
+  .picture-group {
+    display: flex;
+    flex-flow: row wrap;
+  }
 
   .picture {
     object-fit: cover;
@@ -245,14 +255,6 @@ onMounted(async () => {
     display: flex;
     flex: 1;
 
-  }
-
-  .text-settings {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    background-color: var(--surface-light);
-    width: 100%;
   }
 
   .progress-line {
@@ -277,7 +279,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .book {
     .text {
-      .picture, .video {
+      figure {
         float: left;
         margin: 0 0.5rem 0.5rem 0;
         max-width: 394px;
@@ -289,7 +291,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .book {
     .text {
-      .picture, .video {
+      figure {
         width: 100%;
       }
     }
@@ -298,20 +300,20 @@ onMounted(async () => {
 
 @media only screen and (min-width: 893px) and (max-width: 1368px) {
   .book {
-    //.text {
-    //  .picture, .video {
-    //    float: left;
-    //    width: 375px;
-    //    margin: 0.5rem 1rem 0.5rem 0;
-    //  }
-    //}
+    .text {
+      figure {
+        float: left;
+        width: 375px;
+        margin: 0.5rem 1rem 0.5rem 0;
+      }
+    }
   }
 }
 
 @media only screen and (min-width: 1368px) {
   .book {
     .text {
-      .picture, .video {
+      figure {
         float: left;
         width: 375px;
         margin: 0.5rem 1rem 0.5rem 0;
