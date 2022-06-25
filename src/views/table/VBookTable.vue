@@ -57,14 +57,14 @@
       </select>
     </div>
     <div class="table-paginator flex justify-center my-3" v-else>
-      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" v-if="books._links.first"
+      <button class="hover:bg-slate-500 w-10 h-10 mr-2 p-1 border rounded shrink-0" v-if="books._links.first"
               @click="toPage(books._links.first)">first
       </button>
-      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" :class="{'bg-green-900': queryData.page === item}" v-for="(item, index) in paginator"
+      <button class="hover:bg-slate-500 w-10 h-10 mr-2 p-1 border rounded shrink-0" :class="{'bg-green-900': queryData.page === item}" v-for="(item, index) in paginator"
               :key="index"
               @click="setPageNumber(item)">{{ item }}
       </button>
-      <button class="hover:bg-slate-500 w-12 h-12 mr-2 p-2 border rounded shrink-0" v-if="books._links.last"
+      <button class="hover:bg-slate-500 w-10 h-10 mr-2 p-1 border rounded shrink-0" v-if="books._links.last"
               @click="toPage(books._links.last)">last
       </button>
     </div>

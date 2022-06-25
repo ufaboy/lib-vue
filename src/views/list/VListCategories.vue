@@ -1,7 +1,8 @@
 <template>
   <div class="list-categories w-full lg:absolute lg:top-0 lg:left-[10rem]">
       <nav class="w-full flex md:flex-col lg:flex-row lg:flex-wrap mt-3 px-3">
-        <router-link class="content-link md:w-full lg:w-40"
+        <router-link class="flex justify-center px-4 py-3 md:w-full lg:w-40 mr-3 mb-3 cursor-pointer rounded-md text-lg capitalize
+        ring-1 dark:ring-white hover:ring hover:bg-emerald-100 dark:hover:bg-slate-800"
                      :to="{ name: 'list-genre', params: { name: category.name}}"
                      v-for="category of categories"
                      :key="category.id">{{ category.name }}
@@ -12,8 +13,7 @@
 
 
 <script setup lang="ts">
-import {defineProps} from 'vue'
-
+document.title = 'Home';
 interface Category {
   id: number,
   name: string,
@@ -33,7 +33,6 @@ const props = defineProps<{
   categories: Category[]
 }>()
 
-document.title = 'Home';
 </script>
 
 <style lang="scss">

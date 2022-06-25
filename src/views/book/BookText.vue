@@ -1,8 +1,8 @@
 <template>
   <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
        :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
-    <div>
-      <div class="article-wrapper">
+    <div class="flex flex-row justify-center flex-wrap">
+      <div class="article-wrapper w-full">
         <h1 class="book-name text-lg font-bold text-center mb-4">{{book.name}}</h1>
         <ul class="flex-row flex-wrap hidden lg:flex">
           <li class="bg-slate-800 hover:bg-slate-700 rounded-md p-2 mr-3 mb-2"

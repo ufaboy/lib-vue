@@ -3,8 +3,8 @@
     <table class="table">
       <thead class="thead">
       <th class="th" :class="columnsClasses[column]" v-for="(column, index) of columns" :key="index">
-        <div class="table-cell">
-          <div class="td-title">{{ column }}</div>
+        <div class="flex flex-row justify-center">
+          <div class="mr-2">{{ column }}</div>
           <button class="td-action" @click="sortBy(column)">
             <IconSort class="icon" :ascending="ascending"/>
           </button>
@@ -21,7 +21,7 @@
         </tr>
       </tbody>
     </table>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
@@ -65,50 +65,5 @@ getAuthors();
 </script>
 
 <style lang="scss">
-.authors-table {
-  width: 100%;
-  padding: 0 1.5rem;
 
-  .flip-list-move {
-    transition: transform 1s;
-  }
-
-}
-
-@media only screen and (min-width: 893px) {
-  .authors-table {
-  }
-}
-
-@media only screen and (max-width: 892px) {
-  .authors-table {
-    padding: 0;
-    height: calc(100% - 3.5rem);
-  }
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .authors-table {
-    .table {
-      .cell-id {
-        display: none;
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-  .authors-table {
-    .dialog {
-      width: 100%;
-      margin: auto;
-    }
-
-    .table {
-      .cell-description, .cell-id {
-        display: none;
-      }
-    }
-  }
-}
 </style>

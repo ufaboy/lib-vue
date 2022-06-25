@@ -3,8 +3,8 @@
     <table class="table w-full">
       <thead class="thead sticky top-0">
       <th class="th py-2" v-for="(column, index) of columns" :key="index">
-        <div class="table-cell flex flex-row flex-nowrap">
-          <div class="td-title">{{ column }}</div>
+        <div class="flex flex-row flex-nowrap justify-center">
+          <div class="mr-2">{{ column }}</div>
           <button class="td-action" @click="sortBy(column, ascending)">
             <IconSort class="icon" :ascending="ascending"/>
           </button>

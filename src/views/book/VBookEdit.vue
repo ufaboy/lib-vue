@@ -23,7 +23,7 @@
                  class="input-text"
                  v-model.trim="book.source">
         </div>
-        <div class="flex flex-col w-24">
+        <div class="flex flex-col w-32">
           <label class="">Author</label>
           <select class="select w-full" v-model="authorData">
             <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
@@ -79,20 +79,20 @@
     </div>
     <div class="media-container ml-3" v-if="book.id">
       <header class="header-media">
-        <label class="upload-dropbox btn-outline mr-2">Choose files
+        <label class="upload-dropbox mr-2">
+          <span class="btn-blue">Choose files</span>
           <input type="file"
                  class="upload-input hidden desktop"
                  multiple
                  accept="video/webm,image/webp,audio/mpeg"
                  @change="loadFiles">
         </label>
-        <button class="btn-green mr-2" @click="uploadAllFiles">Upload all</button>
-        <button class="btn-red" @click="deleteAllFiles">Remove all</button>
+        <button class="btn-green leading-[normal] mr-2" @click="uploadAllFiles">Upload</button>
+        <button class="btn-red leading-[normal]" @click="deleteAllFiles">Remove</button>
       </header>
-
-      <div class="media-wrapper">
-        <figure class="figure group relative" v-for="(media, index) of files" :key="index">
-          <div class="action-panel absolute top-1 left-1 hidden group-hover:flex z-10 w-full flex flex-row flex-wrap justify-between">
+      <div class="media-wrapper mt-3">
+        <figure class="figure group relative mb-3" v-for="(media, index) of files" :key="index">
+          <div class="action-panel absolute top-1 left-0 hidden group-hover:flex z-10 w-full flex flex-row flex-wrap justify-between">
             <button class="btn bg-sky-500/50 hover:bg-sky-500/75" @click="uploadSingleFile(media, index)" v-if="!media.id">
               load
             </button>
@@ -125,7 +125,7 @@
       <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
                  @hide-modal="closeDialog" />
     </dialog>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+    <teleport to="#sidebar-target" v-if="!isMobile() && route.params.id && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
