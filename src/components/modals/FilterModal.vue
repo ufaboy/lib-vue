@@ -57,10 +57,10 @@ import IconClose from "../../components/icons/IconClose.vue"
 
 
 interface Filter {
-  ad: boolean|null
-  rating: number|null
-  searchQuery: string|null
-  genre: Genre|null
+  ad: boolean|undefined
+  rating: number|undefined
+  searchQuery: string|undefined
+  genre: Genre|undefined
   orderBy: string
   ascending: boolean
 }
@@ -83,9 +83,9 @@ const ratingOptions = [
 const adAccess = getAdAccess()
 
 const filter = ref<Filter>({
-  genre: null,
-  rating: null,
-  ad: null,
+  genre: undefined,
+  rating: undefined,
+  ad: undefined,
   searchQuery: '',
   orderBy: 'updated_at',
   ascending: false
@@ -93,12 +93,12 @@ const filter = ref<Filter>({
 
 function loadFilter() {
   const {genre, rating, ad, searchQuery, orderBy, ascending} = {...props.queryData}
-  filter.value.rating = rating ?? null
-  filter.value.ad = ad ?? null
-  filter.value.orderBy = orderBy ?? null
-  filter.value.searchQuery = searchQuery ?? null
+  filter.value.rating = rating ?? undefined
+  filter.value.ad = ad ?? undefined
+  filter.value.orderBy = orderBy ?? undefined
+  filter.value.searchQuery = searchQuery ?? undefined
   filter.value.ascending = ascending ?? null
-  filter.value.genre = genre ?? null
+  filter.value.genre = genre ?? undefined
 }
 
 function closeModal() {
