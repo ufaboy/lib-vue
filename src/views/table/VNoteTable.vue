@@ -30,33 +30,33 @@
       </tr>
       </thead>
       <tbody>
-      <tr class="note row hover:dark:bg-slate-800" v-for="(note, index) of filteredNotes" :key="'note-' + index">
-        <td class="td">{{ index }}</td>
-        <td class="td">
+      <tr class="note row hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" v-for="(note, index) of filteredNotes" :key="'note-' + index">
+        <td class="p-2">{{ index }}</td>
+        <td class="p-2">
           <input type="text" class="input-text" v-model="note.name">
         </td>
-        <td class="td">
+        <td class="p-2">
           <select class="select" v-model="note.type">
             <option :value="type" v-for="(type, index) in types" :key="index">{{ type }}</option>
           </select>
         </td>
-        <td class="td">
+        <td class="p-2">
           <input type="text" class="input-text" v-model="note.url">
         </td>
-        <td class="td">
+        <td class="p-2">
           <button class="btn hover:dark:bg-slate-600 p-2 rounded-md" @click="deleteNote(index)">del</button>
         </td>
       </tr>
       </tbody>
     </table>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="flex w-full p-2" @click="sendNotes">Save</button>
+          <button class="flex w-full py-1 px-2" @click="sendNotes">Save</button>
         </li>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="flex w-full p-2" @click="addNote">Add</button>
+          <button class="flex w-full py-1 px-2" @click="addNote">Add</button>
         </li>
       </ul>
     </teleport>

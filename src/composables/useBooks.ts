@@ -168,11 +168,11 @@ export default function useBooks() {
     const updateFilterPage = (newFilter: QueryData) => {
         if (queryData.value) {
             queryData.value.genre = newFilter.genre ? newFilter.genre : emptyGenre.value
-
             if (newFilter?.rating) {
                 queryData.value.rating = newFilter.rating
             }
             queryData.value.ad = newFilter.ad
+            queryData.value.limit = newFilter.limit
             getBooksAndReplace()
         }
 

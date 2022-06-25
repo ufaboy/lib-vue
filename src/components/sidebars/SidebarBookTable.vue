@@ -1,12 +1,12 @@
 <template>
   <ul>
     <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-2">create</router-link>
+      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-1">create</router-link>
     </li>
-    <li class="p-2">
+    <li class="py-1 px-2">
       <input type="search" class="input-text w-full" placeholder="search" @input="debounceSearch" v-model="queryData.searchQuery">
     </li>
-    <li class="p-2">
+    <li class="py-1 px-2">
       <select class="select w-full p-1" v-model="genreId"
               @change="sendLoadEvent">
         <option class="flex w-full p-1" :value="null">select genre</option>
@@ -18,23 +18,15 @@
         </optgroup>
       </select>
     </li>
-    <li class="p-2 flex flex-row justify-center">
+    <li class="py-1 px-2">
+      <select class="select w-full p-1" v-model="limit"
+              @change="sendLoadEvent">
+        <option class="flex w-full p-1" :value="limit" v-for="limit in limits">{{limit}}</option>
+      </select>
+    </li>
+    <li class="py-1 px-2 flex flex-row justify-center">
       <TheToggle v-model="ad" />
     </li>
-    <!--    <input type="search" class="sidebar-input search-text" v-model.trim="searchQuery" placeholder="Search ..."
-               @input="debounceGetBooksAndReplace">
-
-
-        <select class="sidebar-btn form-field__select" v-model="orderBy.name"
-                @change="getBooksAndReplace">
-          <option v-for="(option, index) of columns" :value="option" :key="option + index">{{ option }}
-          </option>
-        </select>
-        <button class="btn-icon sidebar-btn" @click="changeSortAsc">
-          <IconSortAsc class="icon" v-if="orderBy.asc"/>
-          <IconSortDesc class="icon" v-else/>
-        </button>
-        -->
   </ul>
 </template>
 
@@ -51,7 +43,6 @@ interface Category {
 
 interface Genre {
   [key: string]: number | string | Category | boolean
-
   id: number,
   name: string,
   description: string,
@@ -66,13 +57,15 @@ interface CategoryExtended extends Category {
 
 const props = defineProps<{
   categories: CategoryExtended[],
-  queryData: QueryData
+  queryData: QueryData,
 }>()
 const emit = defineEmits(['search-input', 'load-data'])
 let debounce: number | undefined = undefined;
 
 const genreId = ref(null)
 const ad = ref<boolean|null>(null)
+const limit = ref<number>(10)
+const limits = [10, 20, 25, 50, 100]
 
 watch(ad, () => sendLoadEvent())
 function debounceSearch(event: Event) {
@@ -90,7 +83,7 @@ function sendLoadEvent() {
     return !!genre
   })
 
-  const data = {...props.queryData, genre: genre, ad: ad.value}
+  const data = {...props.queryData, genre: genre, ad: ad.value, limit: limit.value}
   emit('load-data', data)
 }
 </script>

@@ -5,7 +5,7 @@
       <div class="article-wrapper w-full">
         <h1 class="book-name text-lg font-bold text-center mb-4">{{book.name}}</h1>
         <ul class="flex-row flex-wrap hidden lg:flex">
-          <li class="bg-slate-800 hover:bg-slate-700 rounded-md p-2 mr-3 mb-2"
+          <li class="bg-sky-300 hover:bg-sky-500 hover:text-white dark:bg-slate-800 dark:hover:bg-slate-700 rounded-md p-2 mr-3 mb-2"
               v-for="(chapter, index) in headerChapters" :key="index">
             <a :href="`#${chapter.url}`">{{chapter.name}}</a>
           </li>
@@ -36,10 +36,10 @@
     <teleport to="#sidebar-target" v-else-if="isMounted">
       <hr class="my-3">
       <ul>
-        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
+        <li class="hover:bg-sky-300 hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
+          <router-link class="flex w-full py-1 px-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
         </li>
-        <li class="mb-2 p-2 text-slate-900 dark:text-white cursor-pointer">
+        <li class="mb-2 py-1 px-2 text-slate-900 dark:text-white cursor-pointer">
           <select class="select select-chapter w-full truncate" @change="scrollToChapter" v-model="chapterElement">
             <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
               {{ chapter.name }}
@@ -280,6 +280,7 @@ onMounted(async () => {
 
   .picture {
     object-fit: cover;
+    border-radius: 0.75rem;
   }
 
   .illustrations {

@@ -1,9 +1,9 @@
 <template>
   <aside id="sidebar" class="flex flex-col fixed left-0 top-0 h-full w-[10rem] bg-white dark:bg-slate-900">
     <ul class="navigator-desktop overflow-x-hidden overflow-y-auto">
-      <li class="navigator-element hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer"
+      <li class="navigator-element hover:bg-sky-400 hover:text-white hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer"
           v-for="(route, index) in routes" :key="index">
-        <router-link class="navigator-link flex w-full p-2" :to="route.value">{{ route.name }}</router-link>
+        <router-link class="navigator-link flex w-full py-1 px-2" :to="route.value">{{ route.name }}</router-link>
       </li>
     </ul>
     <slot></slot>

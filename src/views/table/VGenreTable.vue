@@ -1,5 +1,5 @@
 <template>
-  <div class="genre-table flex overflow-x-hidden overflow-y-auto justify-center">
+  <div class="flex overflow-x-hidden overflow-y-auto justify-center">
     <table class="table w-full">
       <thead class="thead sticky top-0">
       <th class="th py-2" v-for="(column, index) of columns" :key="index">
@@ -12,25 +12,27 @@
       </th>
       </thead>
       <transition-group name="flip-list" tag="tbody">
-        <tr class="row cursor-pointer" :class="{picante: genre.ad}" v-for="(genre, index) of genres" :key="genre.id"
+        <tr class="row cursor-pointer hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" :class="{picante: genre.ad}" v-for="(genre, index) of genres" :key="genre.id"
             @click="openRow(genre)" :tabindex="index + 1">
-          <td class="td" >{{ genre.id }}</td>
-          <td class="td" >{{ genre.name }}</td>
-          <td class="td" >{{ genre.description }}</td>
-          <td class="td" >{{ genre.category ? genre.category.name : '' }}</td>
+          <td class="p-2">{{ genre.id }}</td>
+          <td class="p-2">{{ genre.name }}</td>
+          <td class="p-2">{{ genre.description }}</td>
+          <td class="p-2">{{ genre.category ? genre.category.name : '' }}</td>
         </tr>
       </transition-group>
     </table>
-    <teleport to="#sidebar" v-if="!isMobile() && isMounted">
+    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="flex w-full p-2" @click="createGenre">Create</button>
+          <button class="flex w-full py-1 px-2" @click="createGenre">Create</button>
         </li>
       </ul>
     </teleport>
 
-    <dialog ref="genreModal" class="dialog dark:bg-slate-800 rounded-lg w-72" @close="showGenreModal = false">
+    <dialog ref="genreModal"
+            class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-72"
+            @close="showGenreModal = false">
       <EditGenre v-if="showGenreModal" :genre="activeGenre" :categories="categories"  @update-genres="getGenres"
                  @hide-modal="closeDialog"/>
     </dialog>
@@ -84,10 +86,4 @@ if (genres.value?.length === 1 && genres.value[0].id === 0) {
 </script>
 
 <style lang="scss">
-.genre-table {
-  .flip-list-move {
-    transition: transform 1s;
-  }
-
-}
 </style>

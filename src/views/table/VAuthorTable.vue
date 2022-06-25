@@ -12,12 +12,12 @@
       </th>
       </thead>
       <tbody>
-        <tr class="row cursor-pointer" :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
+        <tr class="row cursor-pointer hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
             @click="openRow(author)" :tabindex="index + 1">
-          <td class="td" :class="columnsClasses.id">{{ author.id }}</td>
-          <td class="td" :class="columnsClasses.name">{{ author.name }}</td>
-          <td class="td" :class="columnsClasses.url">{{ author.url }}</td>
-          <td class="td" :class="columnsClasses.ad">{{ author.ad }}</td>
+          <td class="p-2" :class="columnsClasses.id">{{ author.id }}</td>
+          <td class="p-2" :class="columnsClasses.name">{{ author.name }}</td>
+          <td class="p-2" :class="columnsClasses.url">{{ author.url }}</td>
+          <td class="p-2" :class="columnsClasses.ad">{{ author.ad }}</td>
         </tr>
       </tbody>
     </table>
@@ -25,11 +25,13 @@
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="capitalize flex w-full p-2" @click="createAuthor">create</button>
+          <button class="capitalize flex w-full py-1 px-2" @click="createAuthor">create</button>
         </li>
       </ul>
     </teleport>
-    <dialog ref="modalAuthor" class="dialog dark:bg-slate-800 rounded-lg w-72" @close="modalAuthorShow = false">
+    <dialog ref="modalAuthor"
+            class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-72"
+            @close="modalAuthorShow = false">
       <EditAuthor v-if="modalAuthorShow" @hide-modal="closeDialog" :author="activeAuthor" @update-authors="getAuthors" />
     </dialog>
   </div>
