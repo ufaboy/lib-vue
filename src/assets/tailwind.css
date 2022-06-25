@@ -19,7 +19,7 @@
         @apply btn bg-gray-600 hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-800 border-gray-600 hover:border-gray-700 active:border-gray-800
     }
     .btn-blue {
-        @apply btn bg-blue-600 hover:bg-blue-700  focus:bg-blue-700 active:bg-blue-800 border-blue-600 hover:border-blue-700 active:border-blue-800
+        @apply btn bg-blue-600 hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 border-blue-600 hover:border-blue-700 active:border-blue-800
     }
 
     .base-input {

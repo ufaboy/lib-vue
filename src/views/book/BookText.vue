@@ -26,14 +26,21 @@
                   @select-image="selectImageByIndex">
 
     </ImageSlider>
-    <teleport to="#sidebar-target" v-if="!isMobile() && isMounted">
+    <teleport v-if="isMobile() && isMounted" to="#header-target">
+      <select class="w-full p-2 rounded hover:bg-blue-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 truncate" @change="scrollToChapter" v-model="chapterElement">
+        <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
+          {{ chapter.name }}
+        </option>
+      </select>
+    </teleport>
+    <teleport to="#sidebar-target" v-else-if="isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
           <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
         </li>
         <li class="mb-2 p-2 text-slate-900 dark:text-white cursor-pointer">
-          <select class="select select-chapter w-full" @change="scrollToChapter" v-model="chapterElement">
+          <select class="select select-chapter w-full truncate" @change="scrollToChapter" v-model="chapterElement">
             <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
               {{ chapter.name }}
             </option>

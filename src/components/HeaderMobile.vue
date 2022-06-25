@@ -1,6 +1,7 @@
 <template>
 <header class="header md:sticky flex top-0 justify-between items-center relative text-white bg-neutral-900 w-full h-fit p-3 z-20" :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
-  <router-link class="breadcrumb-home" to="/">Home</router-link>
+  <router-link class="breadcrumb-home p-2" to="/">Home</router-link>
+  <div id="header-target" class="w-40"></div>
   <button class="btn-icon" aria-label="Menu" @click.stop="activeBurger = !activeBurger">
     <IconBurger :active="activeBurger" />
   </button>
