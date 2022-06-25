@@ -1,7 +1,18 @@
 <template>
   <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
        :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
-    <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
+    <div>
+      <div class="article-wrapper">
+        <h1 class="book-name text-lg font-bold text-center mb-4">{{book.name}}</h1>
+        <ul class="flex-row flex-wrap hidden lg:flex">
+          <li class="bg-slate-800 hover:bg-slate-700 rounded-md p-2 mr-3 mb-2"
+              v-for="(chapter, index) in headerChapters" :key="index">
+            <a :href="`#${chapter.url}`">{{chapter.name}}</a>
+          </li>
+        </ul>
+      </div>
+      <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
+    </div>
     <div class="progress-line" :style="widthProgressLine"></div>
     <TextSettings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
@@ -23,8 +34,8 @@
         </li>
         <li class="mb-2 p-2 text-slate-900 dark:text-white cursor-pointer">
           <select class="select select-chapter w-full" @change="scrollToChapter" v-model="chapterElement">
-            <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">
-              {{ calcOptionChapterName(chapter)}}
+            <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
+              {{ chapter.name }}
             </option>
           </select>
         </li>
@@ -45,6 +56,7 @@ import useSwipe from "../../composables/useSwipe";
 import TextSettings from "@/components/TextSettings.vue";
 import ImageSlider from "@/components/ImageSlider.vue";
 import {Author} from "../../interfaces/author";
+import {Book} from "../../interfaces/book";
 
 const printToast = inject('printToast') as Function
 const saveScrollingBook = inject('saveScrollingBook') as Function
@@ -61,6 +73,8 @@ const props = defineProps<{
 }>()
 const route = useRoute();
 const {book, downloadBook} = useBook();
+const {slideLeftRight, touchStart, touchEnd} = useSwipe();
+
 let editingText = ''
 const widthProgressLine = computed(() => {
   return {height: `${props.scrollingProgress.progress}vh`}
@@ -71,26 +85,11 @@ const textEditorModal = ref();
 const showEditorModal = ref(false);
 const activeImageIndex = ref<number | undefined>();
 const editorNode = ref<HTMLElement>();
-const chapterElement = ref<Element>();
-const chapterOptions = ref<Element[]>([]);
-const {slideLeftRight, touchStart, touchEnd} = useSwipe();
-
-
-function calcChapterOptions() {
-  const chapters = document.querySelectorAll('.chapter-header')
-  const h1Element = document.querySelector('.book-name')
-
-  if (h1Element) {
-    chapterOptions.value.push(h1Element)
-    chapterElement.value = h1Element
-  }
-  for (const element of chapters) {
-    chapterOptions.value.push(element)
-  }
-}
+const chapterElement = ref<{name:string, url:string, element:Element}>();
+const headerChapters = ref()
 
 function scrollToChapter() {
-  if (chapterElement.value) chapterElement.value.scrollIntoView()
+  if (chapterElement.value) chapterElement.value.element.scrollIntoView()
 }
 
 function editMode(e: Event) {
@@ -178,7 +177,23 @@ function scrollByClick(e: Event) {
 }
 
 function calcOptionChapterName(chapter:Element) {
-  return chapter.tagName === 'H1' ? 'Table Of Content' : chapter.innerHTML
+    const chapterElem = chapter.querySelector('.chapter-header')
+    return chapterElem ? chapterElem.innerHTML : ''
+}
+async function prepareHeaders() {
+  let arr = []
+  const chapterElements = document.querySelectorAll('.chapter')
+  const h1Element = document.querySelector('.book-name')
+
+  if (h1Element) {
+    const item = {name: 'Table Of Content', url: '/', element: h1Element}
+    arr.push(item)
+    chapterElement.value = {name: 'Table Of Content', url: '/', element: h1Element}
+  }
+  for (const elem of chapterElements) {
+    arr.push({name: calcOptionChapterName(elem), url: elem.id, element: elem})
+  }
+  headerChapters.value = arr
 }
 
 onBeforeUnmount(() => {
@@ -189,9 +204,9 @@ onBeforeUnmount(() => {
 onMounted(async () => {
   isMounted.value = true
   downloadBook(+route.params.id).then(() => {
+    prepareHeaders()
     nextTick(() => {
       scrollToBookmark()
-      calcChapterOptions();
     })
   });
   listenClickByImg();
@@ -205,6 +220,9 @@ onMounted(async () => {
   flex-flow: row wrap;
   justify-content: center;
   position: absolute;
+  .toc {
+    display: none;
+  }
 
   p {
     word-break: break-word;
@@ -245,6 +263,7 @@ onMounted(async () => {
       color: var(--primary);
       border: 2px solid var(--primary);
       border-radius: 5px;
+      white-space: nowrap;
     }
   }
   .picture-group {
