@@ -119,9 +119,11 @@
         </figure>
       </div>
     </div>
-    <dialog ref="genreBookModal" class="dialog dialog-genre-book bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg" @close="showGenreBookModal = false">
+    <dialog ref="genreBookModal"
+            class="dialog dialog-genre-book bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg"
+            @close="showGenreBookModal = false">
       <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
-                 @hide-modal="closeDialog"/>
+                 @hide-modal="closeDialog" />
     </dialog>
     <teleport to="#sidebar" v-if="!isMobile() && isMounted">
       <hr class="my-3">

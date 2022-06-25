@@ -1,5 +1,6 @@
 <template>
-  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]" :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
+  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
+       :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     <div class="progress-line" :style="widthProgressLine"></div>
     <TextSettings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
@@ -18,13 +19,12 @@
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">View</router-link>
+          <router-link class="flex w-full p-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
         </li>
         <li class="mb-2 p-2 text-slate-900 dark:text-white cursor-pointer">
           <select class="select select-chapter w-full" @change="scrollToChapter" v-model="chapterElement">
-            <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">{{
-                chapter.innerHTML
-              }}
+            <option v-for="(chapter, index) in chapterOptions" :key="index" :value="chapter">
+              {{ calcOptionChapterName(chapter)}}
             </option>
           </select>
         </li>
@@ -71,22 +71,26 @@ const textEditorModal = ref();
 const showEditorModal = ref(false);
 const activeImageIndex = ref<number | undefined>();
 const editorNode = ref<HTMLElement>();
-const chapterElement = ref<HTMLElement>();
+const chapterElement = ref<Element>();
 const chapterOptions = ref<Element[]>([]);
 const {slideLeftRight, touchStart, touchEnd} = useSwipe();
 
 
 function calcChapterOptions() {
-  const chapters = document.getElementsByClassName('toc-anchor')
-  console.log('calcChapterOptions', chapters.length)
-//ts-ignore
+  const chapters = document.querySelectorAll('.chapter-header')
+  const h1Element = document.querySelector('.book-name')
+
+  if (h1Element) {
+    chapterOptions.value.push(h1Element)
+    chapterElement.value = h1Element
+  }
   for (const element of chapters) {
     chapterOptions.value.push(element)
   }
 }
 
 function scrollToChapter() {
-  chapterElement.value?.click()
+  if (chapterElement.value) chapterElement.value.scrollIntoView()
 }
 
 function editMode(e: Event) {
@@ -171,6 +175,10 @@ function scrollByClick(e: Event) {
   (document.getElementById("progressbar") as HTMLProgressElement).value = x;
   let y = Math.floor((windowHeights.value * x) / 100);
   window.scrollTo(0, y);
+}
+
+function calcOptionChapterName(chapter:Element) {
+  return chapter.tagName === 'H1' ? 'Table Of Content' : chapter.innerHTML
 }
 
 onBeforeUnmount(() => {
