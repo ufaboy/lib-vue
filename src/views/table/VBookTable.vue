@@ -4,10 +4,12 @@
       <thead class="thead sticky top-0">
       <tr tabindex="0">
         <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy === column}" v-for="(column, index) of columns" :key="index">
-          <div class="flex flex-row flex-nowrap" >
+          <div class="flex flex-row flex-nowrap group">
             <div class="td-title mr-1">{{ column }}</div>
-            <button class="td-action" @click="sortBy(column)">
-              <IconSort class="icon" v-if="queryData.orderBy === column" :ascending="queryData.ascending"/>
+            <button class="td-action w-4" @click="sortBy(column)">
+              <IconSort class="icon hidden group-hover:block"
+                        :class="{'!block': queryData.orderBy === column}"
+                        :ascending="queryData.ascending" />
             </button>
           </div>
         </th>

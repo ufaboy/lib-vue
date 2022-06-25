@@ -247,9 +247,6 @@ onMounted(async () => {
       border-radius: 5px;
     }
   }
-  figure {
-
-  }
   .picture-group {
     display: flex;
     flex-flow: row wrap;
@@ -287,7 +284,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
   .book {
     .text {
-      figure {
+      .picture, .video {
         float: left;
         margin: 0 0.5rem 0.5rem 0;
         max-width: 394px;
@@ -299,7 +296,7 @@ onMounted(async () => {
 @media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
   .book {
     .text {
-      figure {
+      .picture, .video {
         width: 100%;
       }
     }
@@ -309,7 +306,7 @@ onMounted(async () => {
 @media only screen and (min-width: 893px) and (max-width: 1368px) {
   .book {
     .text {
-      figure {
+      .picture, .video {
         float: left;
         width: 375px;
         margin: 0.5rem 1rem 0.5rem 0;
@@ -321,7 +318,7 @@ onMounted(async () => {
 @media only screen and (min-width: 1368px) {
   .book {
     .text {
-      figure {
+      .picture, .video {
         float: left;
         width: 375px;
         margin: 0.5rem 1rem 0.5rem 0;
