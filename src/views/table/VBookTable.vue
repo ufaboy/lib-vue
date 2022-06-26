@@ -20,13 +20,13 @@
           v-for="(book, index) of books.items" :key="book.id" :tabindex="index + 1">
         <td class="p-2" @click="openBook(book, 'edit')">{{ book.id }}</td>
         <td class="p-2 w-72" @click="openBook(book, 'view')">
-          <p class="limited-p max-w-[13rem]">{{ book.name }}</p>
+          <p class="line-clamp-2 max-w-[13rem]">{{ book.name }}</p>
         </td>
         <td class="p-2 w-72 text-ellipsis" :data-tooltip="book.annotation" data-tooltip-location='top'>
-          <p class="limited-p max-w-[13rem]">{{ book.annotation }}</p>
+          <p class="line-clamp-2 max-w-[13rem]">{{ book.annotation }}</p>
         </td>
         <td class="p-2 w-48" :data-tooltip="calcGenres(book.genres)" data-tooltip-location='top'>
-          <p class="limited-p max-w-[10rem]">{{ calcGenres(book.genres) }}</p>
+          <p class="line-clamp-2 max-w-[10rem]">{{ calcGenres(book.genres) }}</p>
         </td>
         <td class="p-2">{{ book.rating }}</td>
         <td class="p-2">{{ book.view_count }}</td>

@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@tailwindcss/line-clamp': ^0.4.0
   '@types/workbox-window': ^4.3.4
   '@vitejs/plugin-vue': ^2.3.3
   '@vueuse/core': ^8.6.0
@@ -29,6 +30,7 @@ dependencies:
   vue-router: 4.0.16_vue@3.2.37
 
 devDependencies:
+  '@tailwindcss/line-clamp': 0.4.0_tailwindcss@3.1.2
   '@types/workbox-window': 4.3.4
   '@vitejs/plugin-vue': 2.3.3_vite@2.9.12+vue@3.2.37
   autoprefixer: 10.4.7_postcss@8.4.14
@@ -1326,6 +1328,14 @@ packages:
       json5: 2.2.1
       magic-string: 0.25.9
       string.prototype.matchall: 4.0.7
+    dev: true
+
+  /@tailwindcss/line-clamp/0.4.0_tailwindcss@3.1.2:
+    resolution: {integrity: sha512-HQZo6gfx1D0+DU3nWlNLD5iA6Ef4JAXh0LeD8lOGrJwEDBwwJNKQza6WoXhhY1uQrxOuU8ROxV7CqiQV4CoiLw==}
+    peerDependencies:
+      tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.1.2
     dev: true
 
   /@types/estree/0.0.39:
