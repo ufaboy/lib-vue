@@ -43,7 +43,7 @@ import User from '../interfaces/user';
 
 document.title = 'Login';
 const router = useRouter()
-const printToast = inject('printToast')
+const printToast = inject('printToast') as Function
 const username = ref('')
 const password = ref('')
 const signIn = ref(false)

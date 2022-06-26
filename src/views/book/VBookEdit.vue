@@ -1,6 +1,6 @@
 <template>
-  <div class="edit-book flex flex-row flex-nowrap px-1 py-2">
-    <div class="text-container w-[800px]">
+  <div class="edit-book flex flex-row flex-nowrap h-screen lg:!fixed">
+    <div class="text-container fixed h-screen overflow-x-hidden overflow-y-scroll w-[800px]">
       <div class="flex flex-row justify-between mb-5">
         <div class="flex flex-row">
           <button class="btn-gray mr-2" type="reset" @click="resetBook">reset</button>
@@ -77,7 +77,12 @@
         <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
     </div>
-    <div class="media-container ml-3" v-if="book.id">
+    <MediaContainer class="absolute top-0 left-[830px]"
+                    :book-files="book.files"
+                    :book-id="book.id"
+                    :book-cover-path="book.cover_path"
+                    :is-loaded="isLoaded" />
+<!--    <div class="media-container ml-3" v-if="book.id">
       <header class="header-media">
         <label class="upload-dropbox mr-2">
           <span class="btn-blue">Choose files</span>
@@ -118,7 +123,7 @@
           <figcaption class="figure-caption truncate">{{ getCaption(media) }}</figcaption>
         </figure>
       </div>
-    </div>
+    </div>-->
     <dialog ref="genreBookModal"
             class="dialog dialog-genre-book bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg"
             @close="showGenreBookModal = false">
@@ -141,7 +146,7 @@ import {ref, onUpdated, inject, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
-import {BookFile, FileRaw, BookSave} from '../../interfaces/book';
+import { FileMix, BookSave} from '../../interfaces/book';
 import {isMobile} from '../../utils/helpers';
 import {loadBook} from '../../utils/loadData';
 import {getAdAccess} from '../../utils/userData';
@@ -151,6 +156,7 @@ import useAuthors from '../../composables/useAuthors'
 import GenreBook from '@/components/modals/GenreBook.vue'
 import StarRating from "@/components/StarRating.vue";
 import ToggleAd from "../../components/ToggleAd.vue";
+import MediaContainer from "../../components/MediaContainer.vue";
 
 document.title = 'Editor';
 interface CategoryExtended extends Category {
@@ -171,30 +177,16 @@ interface Genre {
   created_at: number,
 }
 
-interface PromiseFulfilledResult {
-  status: "fulfilled";
-  value: BookFile;
-}
-
-interface PromiseRejectedResult {
-  status: "rejected";
-  reason: string;
-}
-
-type PromiseSettledResult = PromiseFulfilledResult | PromiseRejectedResult;
-type FileMix = FileRaw | BookFile
-
 const props = defineProps<{
   categories: CategoryExtended[]
 }>()
-// @ts-expect-error
-const printToast: Function = inject('printToast')
+const printToast = inject('printToast') as Function
+const toggleLoader = inject('toggleLoader') as Function
 
-// @ts-expect-error
-const loader: Loader = inject("loader");
 const router = useRouter();
 const route = useRoute();
 const isMounted = ref(false)
+const isLoaded = ref(false)
 const {book, authorData, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
 const {authors, getAuthors} = useAuthors()
 const editor = ref<HTMLTextAreaElement>()
@@ -247,7 +239,6 @@ function toggleEditor() {
 }
 
 function setGenres(e: { value: Genre[]; }) {
-
   book.value.ad = e.value.findIndex((item: Genre) => item.ad) > -1
   genres.value = e.value;
   closeDialog();
@@ -285,154 +276,10 @@ async function sendBook() {
   }
 }
 
-function loadFiles(evt: Event) {
-  console.log({loadFiles: evt});
-  const fileList = (evt.target as HTMLInputElement).files
-  if (fileList) {
-    for (const file of Array.from(fileList)) {
-      (files.value as FileMix[]).push({name: file.name, status: '', file: file})
-    }
-  }
-}
-
-async function deleteAllFiles() {
-  try {
-    if (book.value?.id) {
-      await deleteFiles(book.value?.id)
-      files.value?.splice(0, files.value.length)
-    }
-  } catch (e) {
-    console.log({deleteAllFiles: e})
-  }
-}
-
-function checkType(media: FileMix) {
-  // @ts-expect-error
-  const type: string = media.file ? media.file.type : media.type ? media.type : ''
-  if (type.includes('image')) {
-    return 'image'
-  } else if (type.includes('video')) {
-    return 'video'
-  } else if (type.includes('audio')) {
-    return 'audio'
-  } else return 'file'
-}
-
-async function deleteOneFile(fileIndex: number) {
-  try {
-    if (files.value) {
-      await deleteFile(files.value[fileIndex].id ?? 0);
-      files.value.splice(fileIndex, 1)
-    }
-  } catch (e) {
-    console.error({deleteFile: e})
-  }
-}
-
-async function uploadSingleFile(fileToUpload: FileMix, index: number) {
-  if (Array.isArray(files.value) && files.value.length) {
-    const fileData = (fileToUpload as FileRaw).file
-    const fileArray: File[] = [fileData]
-    loader.show();
-    // @ts-expect-error
-    const response = await uploadFiles(fileArray, book.value.id)
-    loader.hide();
-    if (response[0].status === 'fulfilled') {
-      const result = (response[0] as PromiseFulfilledResult).value
-      const fileData = {...result, status: 'fulfilled'}
-      files.value.splice(index, 1, fileData)
-    } else if (response[0].status === 'rejected') {
-      const result = (response[0] as PromiseRejectedResult).reason
-      files.value[index].status = 'rejected'
-      // @ts-expect-error
-      files.value[index].error = result
-      printToast('upload error', 'danger')
-    }
-  }
-
-}
-
-async function uploadAllFiles() {
-  try {
-    if (Array.isArray(files.value) && files.value.length) {
-      // @ts-expect-error
-      const fileArray: File[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
-      loader.show();
-      // @ts-expect-error
-      const response = await uploadFiles(fileArray, book.value.id)
-      loader.hide();
-
-      let errors: string[] = []
-      for (const item of response) {
-        if (item.status === 'fulfilled') {
-          const result = (item as PromiseFulfilledResult).value
-          const fileData = {...result, status: 'fulfilled'}
-          // @ts-expect-error
-          const filesIndex = files.value.findIndex(item => item.name === fileData.full_name)
-          files.value.splice(filesIndex, 1, fileData)
-        } else if (item.status === 'rejected') {
-          const result = (item as PromiseRejectedResult).reason
-          // files.value[filesIndex].status = 'rejected'
-          // files.value[filesIndex].error = result
-          errors.push(result)
-        }
-      }
-      if (errors.length) {
-        const toastText = `upload errors: ${errors.length}`
-        printToast(toastText, 'danger')
-      }
-    }
-  } catch (e: unknown) {
-    if (typeof e === "string") {
-      printToast(e, 'danger')
-    } else if (e instanceof Error) {
-      printToast(e.message, 'danger')
-    }
-    console.log('uploadAllFiles', {error: e})
-  }
-
-}
-
 function autoResize() {
   if (editor.value) {
     const scrollHeight = Number(editor.value.scrollHeight) + 50;
     editor.value.style.cssText = `height: ${scrollHeight}px`;
-  }
-}
-
-function getSrc(media: FileMix) {
-  const loaded = !!media.id
-  // @ts-expect-error
-  return loaded ? `${API_URL}/${media.url}` : window.URL.createObjectURL(media.file);
-}
-
-function getCaption(media: FileMix) {
-  const file = media.hasOwnProperty('full_name')
-  if (file) {
-    return (media as BookFile).full_name
-  } else {
-    return (media as FileRaw).name
-  }
-}
-
-function setCover(media: FileMix) {
-  const fileData = media as BookFile
-  book.value.cover_path = fileData.url
-}
-
-function getCoverBtnText(media: FileMix) {
-  const fileData = media as BookFile
-  book.value.cover_path === fileData.url ? 'current' : 'set'
-}
-
-async function copyFileName(file: FileMix) {
-  const fileData = file as BookFile
-  if (fileData.type.includes('image')) {
-    await navigator.clipboard.writeText(`<img class="picture" src="APIURL/${fileData.url}">`)
-  } else if (fileData.type.includes('video')) {
-    await navigator.clipboard.writeText(`<video class="video" autoplay loop muted controls><source src="APIURL/${fileData.url}"/></video>`)
-  } else if (fileData.type.includes('audio/mp4')) {
-    await navigator.clipboard.writeText(`<audio class="audio" controls><source src="APIURL/${fileData.url}"/></audio>`)
   }
 }
 
@@ -459,19 +306,19 @@ async function getBook() {
     return null;
   }
   try {
+    toggleLoader(true)
     const result = await loadBook(+route.params.id)
-    book.value = {...result, ad: !!result.ad, author: result.author ?? {id: 0, name: '', url: '', ad: false}}
-    if (result.files?.length) {
-      (files.value as FileMix[]).push(...result.files.map(file => {
-        return {...file, status: ''}
-      }))
-    }
+    toggleLoader(false)
+
+    book.value = {...result, ad: result.ad, author: result.author ?? {id: 0, name: '', url: '', ad: false}}
     genres.value = [...result.genres]
     if (result.author) {
       authorData.value = result.author
     }
+    isLoaded.value = true
   } catch (e) {
     console.log({getBook: e})
+    toggleLoader(false)
   }
 }
 function startTypograf() {

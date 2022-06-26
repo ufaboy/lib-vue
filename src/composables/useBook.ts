@@ -1,14 +1,13 @@
-import {inject, ref} from "vue";
+import {inject, ref} from 'vue';
 import {API_URL} from '../../runtimeEnv';
-import {loadBook} from "../utils/loadData";
-import {router} from "../router/index";
-import {isMobile} from "../utils/helpers";
-import {Book} from "../interfaces/book";
-import {Author} from "../interfaces/author";
+import {loadBook} from '../utils/loadData';
+import {router} from '../router';
+import {isMobile} from '../utils/helpers';
+import {Book} from '../interfaces/book';
+import {Author} from '../interfaces/author';
 
 export default function useBook() {
-// @ts-expect-error
-    const loader: Loader = inject("loader");
+    const toggleLoader = inject('toggleLoader') as Function
     const book = ref<Book>({
         id: 0,
         name: '',
@@ -64,17 +63,15 @@ export default function useBook() {
         return result
     };
     async function downloadBook(id: number) {
-        loader.show();
+        toggleLoader(true)
         const result = await loadBook(id)
-        loader.hide();
-
+        toggleLoader(false)
         if (isComic(result)) {
             book.value = result
         } else {
             book.value = await prepareUrlForMedia(result)
             rawText.value = book.value.text ?? ''
         }
-
         return book.value
     }
     return {

@@ -1,4 +1,3 @@
-import {Loader} from '../plugins/loader';
 import {computed, inject, ref,} from 'vue'
 import {goPage, loadBooks} from "../utils/loadData";
 import {API_URL} from '../../runtimeEnv';
@@ -6,8 +5,7 @@ import {BookData, QueryData, BookLink, Book, FormFilter} from "../interfaces/boo
 
 export default function useBooks() {
     let debTimer: number | undefined = undefined
-    // @ts-expect-error
-    const loader: Loader = inject("loader");
+    const toggleLoader = inject('toggleLoader') as Function
     const emptyGenre = ref({id: 0, name: '', description: '', ad: false, created_at: 0, category: {id: 0, name: ''}});
     const queryData = ref<QueryData>(
         {
@@ -89,9 +87,9 @@ export default function useBooks() {
             searchQuery: queryData.value.searchQuery
         }
         try {
-            loader.show();
+            toggleLoader(true)
             const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
-            loader.hide();
+            toggleLoader(false);
             books.value!._links = result._links
             books.value!._meta = result._meta
             books.value!.items.splice(0, books.value!.items.length)
@@ -100,7 +98,7 @@ export default function useBooks() {
             pagBtnArr.value = Array.from({length: result._meta.pageCount}, (v, k) => k + 1);
             calcPaginator();
         } catch (e) {
-            loader.hide();
+            toggleLoader(false)
             console.log({'getBooksAndReplace': e})
         }
     };
@@ -118,9 +116,9 @@ export default function useBooks() {
             infinityState.value = true
         }
 
-        loader.show();
+        toggleLoader(true)
         const result = await loadBooks(queryData.value.page, queryData.value.limit, sort, formFilter);
-        loader.hide();
+        toggleLoader(false)
         if (result) {
             if (method === 'push' && books.value.items.length) {
                 books.value?.items.push(...result.items)
@@ -137,10 +135,10 @@ export default function useBooks() {
     };
     const toPage = async (url: BookLink) => {
         try {
-            loader.show();
+            toggleLoader(true)
             books.value = await goPage(url.href);
             queryData.value.page = books.value?._meta.currentPage
-            loader.hide();
+            toggleLoader(false)
             calcPaginator();
         } catch (e) {
             console.log({'goPage': e})

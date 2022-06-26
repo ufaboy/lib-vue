@@ -3,7 +3,6 @@ import {sendGenre} from "../utils/uploadData";
 import {getAdAccess} from "../utils/userData";
 import {$delete} from "../utils/superFetch";
 import {Genre, GenreForm} from "../interfaces/genre";
-
 // @ts-expect-error
 export default function useGenre(props, emit) {
     const localGenre = ref({
@@ -17,7 +16,7 @@ export default function useGenre(props, emit) {
         localGenre.value = props.genre
     }
     const adAccess = getAdAccess()
-    const loader = inject("loader");
+    const toggleLoader = inject('toggleLoader') as Function
 
     const invalidGenre = computed((): string => {
         return localGenre.value ? (!localGenre.value.name || !localGenre.value.category) ? 'Не заполнены поля' : '' : ''
@@ -38,11 +37,9 @@ export default function useGenre(props, emit) {
             genreForm.id = localGenre.value.id
         }
         try {
-            // @ts-expect-error
-            loader.show()
+            toggleLoader(true)
             await sendGenre(genreForm)
-            // @ts-expect-error
-            loader.hide()
+            toggleLoader(false)
             emit('update-genres')
             closeModal();
         } catch (e) {

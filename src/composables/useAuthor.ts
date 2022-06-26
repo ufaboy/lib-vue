@@ -1,4 +1,4 @@
-import {inject, ref} from "vue";
+import {ref} from "vue";
 import {sendAuthor} from "../utils/uploadData";
 // @ts-expect-error
 export default function useAuthor(props, emit) {

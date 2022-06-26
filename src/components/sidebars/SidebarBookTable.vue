@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full p-1">create</router-link>
+      <router-link :to="{ name: 'book-create'}" class="capitalize flex w-full py-1 px-2">create</router-link>
     </li>
     <li class="py-1 px-2">
       <input type="search" class="input-text w-full" placeholder="search" @input="debounceSearch" v-model="queryData.searchQuery">

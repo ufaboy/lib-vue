@@ -91,6 +91,7 @@ interface FileRaw {
     type?: string,
     error?: string
 }
+type FileMix = FileRaw | BookFile
 
 interface BookScrolling {
     bookId: number,
@@ -161,6 +162,7 @@ export {
     BookTable,
     BookData,
     FileRaw,
+    FileMix,
     BookFile,
     BookScrolling,
     BookFilesUpload,

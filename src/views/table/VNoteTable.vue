@@ -77,7 +77,7 @@ interface Note {
 }
 
 document.title = 'Notes';
-const loader = inject("loader");
+const toggleLoader = inject('toggleLoader') as Function
 const notes = ref<Note[]>([]);
 const types: string[] = ['', 'story', 'video', 'site', 'comic']
 const filterType = ref('')
@@ -101,11 +101,9 @@ const deleteNote = (index: number): void => {
 }
 const sendNotes = async () => {
   const formData = {text: JSON.stringify(notes.value)}
-  // @ts-expect-error
-  loader.show()
+  toggleLoader(true)
   const result = await $patch(new URL(`${API_URL}/book/update?id=1`), formData)
-  // @ts-expect-error
-  loader.hide()
+  toggleLoader(false)
   if (result) {
     notes.value.splice(0, notes.value.length)
     notes.value.push(...JSON.parse(result.text))

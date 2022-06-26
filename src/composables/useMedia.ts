@@ -5,8 +5,7 @@ import {API_URL} from '../../runtimeEnv';
 import { ActiveMedia, BookDirFile, BookDirFiles } from "../interfaces/book";
 
 export default function useMedia() {
-// @ts-expect-error
-const loader: Loader = inject("loader");
+    const toggleLoader = inject('toggleLoader') as Function
     const directories = ref<BookDirFiles[]>([])
     const activeDirIndex = ref<number|undefined>();
     const activeMedia = ref<ActiveMedia>({
@@ -29,9 +28,9 @@ const loader: Loader = inject("loader");
         }
     }
     const getMediaFiles = async function () {
-        loader.show();
+        toggleLoader(true)
         directories.value = await loadMediaFiles()
-        loader.hide();
+        toggleLoader(false)
     }
     const attachFile = async function (name:string, index:number) {
         if(typeof activeDirIndex.value === 'number') {

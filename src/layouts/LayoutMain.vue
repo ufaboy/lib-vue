@@ -9,7 +9,7 @@
       @search-input="searchInputHandler" />
     <router-view
       class="overflow-x-hidden overflow-y-auto bg-inherit text-inherit
-      lg:w-[calc(100%_-_10rem)] lg:absolute lg:left-40 lg:absolute lg:left-[10rem]"
+      lg:w-[calc(100%_-_10rem)] lg:left-40 lg:absolute lg:left-[10rem]"
       v-bind="$attrs"
       :categories="categories"
       :scrolling-progress="scrollingProgress"

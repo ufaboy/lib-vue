@@ -3,7 +3,7 @@ import {Genre, GenreForm} from '../interfaces/genre';
 import {loadGenres} from "../utils/loadData";
 
 export default function useGenres() {
-    const loader = inject("loader");
+    const toggleLoader = inject('toggleLoader') as Function
     const genreModal = ref<InstanceType<typeof HTMLDialogElement>>()
     const showGenreModal = ref(false)
     const genres = ref<Genre[]>([{
@@ -23,7 +23,7 @@ export default function useGenres() {
         category_id: 0,
         ad: false
     });
-    const openRow = (row:GenreForm) => {
+    const openRow = (row: GenreForm) => {
         activeGenre.value = row
         showGenreModal.value = true
         genreModal.value?.showModal()
@@ -45,23 +45,25 @@ export default function useGenres() {
     }
 
     async function getGenres() {
-        // @ts-expect-error
-        loader.show();
-        const result = await loadGenres()
-        // @ts-expect-error
-        loader.hide();
-        if (result) {
+        try {
+            toggleLoader(true);
+            const result = await loadGenres()
+            toggleLoader(false);
             genres.value = result
-        } else console.log({'getGenres': result})
+        } catch (e) {
+            console.log('error', e)
+            toggleLoader(false);
+        }
     }
-    const sortBy = (orderBy:string, asc:boolean) => {
+
+    const sortBy = (orderBy: string, asc: boolean) => {
         genres.value?.sort(function (a, b) {
             if (a[orderBy] > b[orderBy]) {
-                    return asc ? 1 : -1;
-                }
+                return asc ? 1 : -1;
+            }
             if (a[orderBy] < b[orderBy]) {
-                    return asc ? -1 : 1;
-                } 
+                return asc ? -1 : 1;
+            }
 
             return 0;
         })
@@ -69,5 +71,17 @@ export default function useGenres() {
     }
 
 
-    return {genres, ascending, orderBy, genreModal, showGenreModal, closeDialog, activeGenre, openRow, createGenre, getGenres, sortBy}
+    return {
+        genres,
+        ascending,
+        orderBy,
+        genreModal,
+        showGenreModal,
+        closeDialog,
+        activeGenre,
+        openRow,
+        createGenre,
+        getGenres,
+        sortBy
+    }
 }

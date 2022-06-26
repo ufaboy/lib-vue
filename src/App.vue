@@ -1,5 +1,6 @@
 <template>
   <router-view class="" />
+  <TheLoader v-if="loaderShow" />
   <teleport to="body">
     <TheToaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
   </teleport>
@@ -8,9 +9,11 @@
 import {provide, ref} from "vue";
 import TheToaster from "./components/TheToaster.vue";
 import {isMobile} from "./utils/helpers";
+import TheLoader from "./components/TheLoader.vue";
 
 const toastMessage = ref('')
 const toastType = ref('')
+const loaderShow = ref(false)
 
 function printToast(message: string, type: string): void {
   toastMessage.value = message
@@ -24,7 +27,17 @@ function printToast(message: string, type: string): void {
 if (isMobile()) {
   document.documentElement.classList.add('mobile')
 }
+
+function toggleLoader(status:boolean|undefined) {
+  console.log('toggleLoader', status)
+  if (status === undefined) {
+    loaderShow.value = !loaderShow.value
+  } else {
+    loaderShow.value = status
+  }
+}
 provide('printToast', printToast)
+provide('toggleLoader', toggleLoader)
 
 </script>
 
