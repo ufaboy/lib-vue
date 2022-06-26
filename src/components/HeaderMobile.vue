@@ -1,5 +1,5 @@
 <template>
-<header class="header md:sticky flex top-0 justify-between items-center relative text-white bg-blue-500
+<header class="header sticky flex top-0 justify-between items-center relative text-white bg-blue-500
         dark:bg-neutral-900 w-full h-fit p-3 z-20"
         :class="{active: activeBurger, hide: !activeBurger}" @click.stop="activeBurger = false">
   <router-link class="breadcrumb-home p-2" to="/">Home</router-link>
