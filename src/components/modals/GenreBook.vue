@@ -24,14 +24,6 @@
         </label>
       </div>
     </fieldset>
-<!--    <select class="select" v-model="selectedGenre" v-if="isMobile()" multiple>-->
-<!--      <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">-->
-<!--        <option v-for="genre of category.genres"-->
-<!--                :key="'select-genre'+genre.id"-->
-<!--                :value="genre">{{ genre.name }}-->
-<!--        </option>-->
-<!--      </optgroup>-->
-<!--    </select>-->
     <footer class="mt-2 flex flex-row justify-around">
       <button class="btn-gray" type="button" @click="reset">Сброс</button>
       <button class="btn-green">Сохранить</button>

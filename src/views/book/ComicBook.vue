@@ -17,10 +17,9 @@
         <audio class="audio" :src="getSrcUrl" controls v-else-if="activeMedia.type.includes('audio/')"></audio>
       </figure>
     </div>
-
     <div class="book-picture" v-else-if="getTypeBook === 'picture'">
-      <image-item class="book-picture_img cap" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
-                  @click="activeImage = getSrcImgUrl(media)"></image-item>
+      <ImageItem class="book-picture_img cap" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
+                  @click="activeImage = getSrcImgUrl(media)"></ImageItem>
     </div>
   </div>
 </template>
@@ -34,7 +33,6 @@ import ImageItem from "@/components/ImageItem.vue";
 
 import {API_URL} from "../../../runtimeEnv";
 import { BookDirFile } from "../../interfaces/book";
-
 
 interface Category {
     id: number,
@@ -106,8 +104,6 @@ downloadBook(+route.params.id)
 
 <style lang="scss">
 .book-container {
-  background-color: var(--background);
-
   .book-picture {
     display: flex;
     flex-flow: row wrap;

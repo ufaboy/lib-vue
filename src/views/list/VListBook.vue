@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-row flex-wrap" @touchstart="touchStart" @touchend="touchEnd">
-    <router-link :to="{ name: 'book-view', params: {id: book.id}}"
+    <router-link :to="{ name: isComic(book) ? 'comic-view' : 'book-view', params: {id: book.id}}"
                  class="h-fit overflow-hidden w-80 flex flex-row flex-nowrap justify-between
                  drop-shadow-md cursor-pointer rounded-md m-2 p-2 lg:mr-4 lg:mb-4 lg:p-2 lg:p-4
                  bg-sky-200 hover:bg-sky-400
@@ -37,6 +37,7 @@
 import {onBeforeUnmount, ref, watch} from 'vue';
 import {useRoute} from 'vue-router'
 import useBooks from "../../composables/useBooks";
+import useBook from "../../composables/useBook";
 import useSwipe from "../../composables/useSwipe";
 import {QueryData} from "../../interfaces/book";
 import {isMobile} from "../../utils/helpers";
@@ -70,6 +71,7 @@ document.title = 'Books';
 const orderByOptions = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'last_read', 'updated_at']
 const route = useRoute();
 const { queryData, books, getCover, loadQuery, saveQuery, getBooksAndPush, getBooksAndReplace } = useBooks();
+const {isComic} = useBook()
 const { slideLeftRight, touchStart, touchEnd } = useSwipe();
 const topButtonShow = ref(false);
 const filterDialog = ref<InstanceType<typeof HTMLDialogElement>>()

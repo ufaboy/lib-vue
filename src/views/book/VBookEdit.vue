@@ -13,45 +13,45 @@
         </div>
       </div>
       <section class=" flex flex-row flex-wrap justify-between mb-5">
-        <div class="flex flex-col mr-3">
+        <div class="w-full flex flex-col lg:mr-3">
           <label class="">Name</label>
           <input type="text" class="input-text" v-model.trim="book.name">
         </div>
-        <div class="flex flex-col mr-3">
+        <div class="w-full flex flex-col lg:mr-3">
           <label class="">Source</label>
           <input type="url"
                  class="input-text"
                  v-model.trim="book.source">
         </div>
-        <div class="flex flex-col w-32">
+        <div class="w-full flex flex-col lg:w-32">
           <label class="">Author</label>
           <select class="select w-full" v-model="authorData">
             <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
           </select>
         </div>
       </section>
-      <div class="flex flex-col mb-5">
+      <div class="w-full flex flex-col mb-5">
         <label class="">
           annotation
           <meter class="meter" :value="book.annotation?.length" min="0" max="300" low="30" high="280" optimum="150"/>
         </label>
         <textarea class="textarea" rows="4" maxlength="300" v-model.trim="book.annotation"/>
       </div>
-      <section class="genre cursor-pointer mb-3" @click="openGenreModal">
+      <select class="select" v-model="genres" v-if="isMobile()" multiple>
+        <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
+          <option v-for="genre of category.genres"
+                  :key="'select-genre'+genre.id"
+                  :value="genre">{{ genre.name }}
+          </option>
+        </optgroup>
+      </select>
+      <section class="genre cursor-pointer mb-3" v-else @click="openGenreModal">
         <span v-if="genres.length === 0">Не выбраны жанры</span>
         <span class="mr-1" :style="{color: colorizeGenre(index)}"
               v-for="(genre, index) of genres"
               :key="genre.id">
             {{ genre.name }}
           </span>
-        <select class="select" v-model="genres" v-if="isMobile()" multiple>
-          <optgroup :label="category.name" v-for="category of categories" :key="'category-' + category.id">
-            <option v-for="genre of category.genres"
-                    :key="'select-genre'+genre.id"
-                    :value="genre">{{ genre.name }}
-            </option>
-          </optgroup>
-        </select>
       </section>
       <div class="flex flex-col">
         <div class="">
@@ -84,8 +84,8 @@
                     :is-loaded="isLoaded" />
     <dialog ref="genreBookModal"
             class="dialog dialog-genre-book bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg"
-            @close="showGenreBookModal = false">
-      <GenreBook v-if="showGenreBookModal" :genres-props="genres" :categories="categories" @set-genres="setGenres"
+            @close="genreModalShow = false">
+      <GenreBook v-if="genreModalShow" :genres-props="genres" :categories="categories" @set-genres="setGenres"
                  @hide-modal="closeDialog" />
     </dialog>
     <teleport to="#sidebar-target" v-if="!isMobile() && route.params.id && isMounted">
@@ -145,7 +145,7 @@ const router = useRouter();
 const route = useRoute();
 const isMounted = ref(false)
 const isLoaded = ref(false)
-const {book, authorData, genreBookModal, closeDialog, openGenreModal, showGenreBookModal} = useBook();
+const {book, authorData, genreBookModal, genreModalShow, openGenreModal, closeDialog} = useBook();
 const {authors, getAuthors} = useAuthors()
 const editor = ref<HTMLTextAreaElement>()
 const files = ref<FileMix[]>([]);

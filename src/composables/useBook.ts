@@ -30,7 +30,7 @@ export default function useBook() {
     const rawText = ref('')
     const typeBook = ref('BookEmpty')
     const genreBookModal = ref<InstanceType<typeof HTMLElement>>()
-    const showGenreBookModal = ref(false)
+    const genreModalShow = ref(false)
     const authorData = ref<Author>({id: 0, name:'', ad: true, url: ''})
 
     function openBook(book: Book, type: string) {
@@ -45,11 +45,12 @@ export default function useBook() {
     const closeDialog = () => {
         // @ts-expect-error
         genreBookModal.value.close()
-        showGenreBookModal.value = false
+        genreModalShow.value = false
     }
 
     function openGenreModal() {
-        showGenreBookModal.value = !isMobile()
+        if (isMobile()) return null;
+        genreModalShow.value = true
         // @ts-expect-error
         genreBookModal.value?.showModal()
     }
@@ -79,7 +80,8 @@ export default function useBook() {
         book,
         authorData,
         genreBookModal,
-        showGenreBookModal,
+        genreModalShow,
+        isComic,
         closeDialog,
         openGenreModal,
         downloadBook,
