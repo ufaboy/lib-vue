@@ -19,7 +19,7 @@
     </router-link>
     <p v-if="!books.items.length" class="w-full text-xl text-center">Nothing found</p>
     <observer @intersect="getBooksAndPush('push')"/>
-    <button class="scroll-btn" v-show="topButtonShow" title="Go to top" @click="scrollToTop">Top</button>
+    <button class="fixed bottom-5 right-5 rounded-lg shadow bg-yellow-300/75 dark:bg-neutral-300/50 p-2" v-show="topButtonShow" title="Go to top" @click="scrollToTop">Top</button>
     <dialog ref="filterDialog"
             class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-72"
             @close="closeDialog">

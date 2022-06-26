@@ -1,18 +1,18 @@
 <template>
-  <div class="edit-book flex flex-row flex-nowrap h-screen lg:!fixed">
-    <div class="text-container fixed h-screen overflow-x-hidden overflow-y-scroll w-[800px]">
-      <div class="flex flex-row justify-between mb-5">
+  <div class="edit-book flex flex-row flex-nowrap lg:h-screen lg:!fixed ">
+    <div class="text-container p-2 lg:fixed lg:h-screen overflow-x-hidden overflow-y-scroll w-full lg:w-[800px]">
+      <div class="flex flex-row flex-wrap justify-between mb-5">
         <div class="flex flex-row">
-          <button class="btn-gray mr-2" type="reset" @click="resetBook">reset</button>
-          <button class="btn-green mr-2" @click="sendBook">save</button>
-          <button class="btn-blue" @click="startTypograf">typograf</button>
+          <button class="btn-gray mr-2 mb-2" type="reset" @click="resetBook">reset</button>
+          <button class="btn-green mr-2  mb-2" @click="sendBook">save</button>
+          <button class="btn-blue mb-2" @click="startTypograf">typograf</button>
         </div>
         <div class="flex flex-row">
-          <StarRating class="mr-2" v-model="book.rating" />
+          <StarRating class="mr-2" v-model="book.rating" :size="isMobile() ? 24 : 32" />
           <ToggleAd v-model="book.ad" v-if="getAdAccess()" />
         </div>
       </div>
-      <section class=" flex flex-row justify-between mb-5">
+      <section class=" flex flex-row flex-wrap justify-between mb-5">
         <div class="flex flex-col mr-3">
           <label class="">Name</label>
           <input type="text" class="input-text" v-model.trim="book.name">
@@ -77,53 +77,11 @@
         <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
     </div>
-    <MediaContainer class="absolute top-0 left-[830px]"
+    <MediaContainer class="hidden lg:flex lg:absolute lg:top-0 lg:left-[830px]"
                     :book-files="book.files"
                     :book-id="book.id"
                     :book-cover-path="book.cover_path"
                     :is-loaded="isLoaded" />
-<!--    <div class="media-container ml-3" v-if="book.id">
-      <header class="header-media">
-        <label class="upload-dropbox mr-2">
-          <span class="btn-blue">Choose files</span>
-          <input type="file"
-                 class="upload-input hidden desktop"
-                 multiple
-                 accept="video/webm,image/webp,audio/mpeg"
-                 @change="loadFiles">
-        </label>
-        <button class="btn-green leading-[normal] mr-2" @click="uploadAllFiles">Upload</button>
-        <button class="btn-red leading-[normal]" @click="deleteAllFiles">Remove</button>
-      </header>
-      <div class="media-wrapper mt-3">
-        <figure class="figure group relative mb-3" v-for="(media, index) of files" :key="index">
-          <div class="action-panel absolute top-1 left-0 hidden group-hover:flex z-10 w-full flex flex-row flex-wrap justify-between">
-            <button class="btn bg-sky-500/50 hover:bg-sky-500/75" @click="uploadSingleFile(media, index)" v-if="!media.id">
-              load
-            </button>
-            <button class="btn bg-sky-500/50 hover:bg-sky-500/75 mr-2"
-                    @click="setCover(media)"
-                    v-if="checkType(media) === 'image' && media.id">
-              {{ getCoverBtnText(media) }}cover
-            </button>
-            <button class="btn bg-green-500/50 hover:bg-green-500/75 mr-2" @click="copyFileName(media)"
-                    v-if="media.id">tag
-            </button>
-            <button class="btn bg-red-500/50 hover:bg-red-500/75" @click="deleteOneFile(index)" v-if="media.id">
-              delete
-            </button>
-          </div>
-          <img class="media image w-72 h-36 object-cover rounded" :src="getSrc(media)" v-if="checkType(media) === 'image'" alt="img">
-          <video v-else-if="checkType(media) === 'video'" class="media video" controls>
-            <source :src="getSrc(media)">
-          </video>
-          <audio v-else-if="checkType(media) === 'audio'" class="media audio" controls muted>
-            <source :src="getSrc(media)">
-          </audio>
-          <figcaption class="figure-caption truncate">{{ getCaption(media) }}</figcaption>
-        </figure>
-      </div>
-    </div>-->
     <dialog ref="genreBookModal"
             class="dialog dialog-genre-book bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg"
             @close="showGenreBookModal = false">

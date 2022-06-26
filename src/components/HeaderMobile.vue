@@ -9,19 +9,19 @@
   </button>
   <ul v-if="activeBurger" class="absolute bg-blue-400 dark:bg-neutral-800 left-0 top-16 w-full">
     <li class="p-2 mb-3">
-      <router-link class="breadcrumb-link" :to="{name: 'book-index'}">Books</router-link>
+      <router-link class="flex w-full" :to="{name: 'book-index'}">Books</router-link>
     </li>
     <li class="p-2 mb-3">
-      <router-link class="breadcrumb-link" :to="{name: 'genre-index'}">Genre</router-link>
+      <router-link class="flex w-full" :to="{name: 'genre-index'}">Genre</router-link>
     </li>
     <li class="p-2 mb-3">
-      <router-link class="breadcrumb-link" :to="{name: 'note'}">Note</router-link>
+      <router-link class="flex w-full" :to="{name: 'note'}">Note</router-link>
     </li>
     <li class="p-2 mb-3">
-      <router-link class="breadcrumb-link" :to="{name: 'author-index'}">Authors</router-link>
+      <router-link class="flex w-full" :to="{name: 'author-index'}">Authors</router-link>
     </li>
     <li class="p-2 mb-3" v-if="btnViewEditMode.name">
-      <router-link class="breadcrumb-link" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
+      <router-link class="flex w-full" :to="btnViewEditMode.path">{{ btnViewEditMode.name }}</router-link>
     </li>
     <slot name="burger"></slot>
   </ul>

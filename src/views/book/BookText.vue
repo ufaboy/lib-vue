@@ -27,7 +27,7 @@
 
     </ImageSlider>
     <teleport v-if="isMobile() && isMounted" to="#header-target">
-      <select class="w-full p-2 rounded hover:bg-blue-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 truncate" @change="scrollToChapter" v-model="chapterElement">
+      <select class="w-full p-2 rounded hover:bg-blue-200 bg-blue-100 text-black dark:text-white dark:bg-neutral-700 dark:hover:bg-neutral-600 truncate" @change="scrollToChapter" v-model="chapterElement">
         <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
           {{ chapter.name }}
         </option>
@@ -40,7 +40,7 @@
           <router-link class="flex w-full py-1 px-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
         </li>
         <li class="mb-2 py-1 px-2 text-slate-900 dark:text-white cursor-pointer">
-          <select class="select select-chapter w-full truncate" @change="scrollToChapter" v-model="chapterElement">
+          <select class="select text-black select-chapter w-full truncate" @change="scrollToChapter" v-model="chapterElement">
             <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
               {{ chapter.name }}
             </option>

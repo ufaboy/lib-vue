@@ -39,6 +39,7 @@ export default function useBooks() {
 
     })
     const paginator = ref<Array<number>>();
+    const method = ref('push')
 
     function calcPaginator() {
         let arr = [];
@@ -128,7 +129,7 @@ export default function useBooks() {
                 books.value?.items.push(...result.items)
                 queryData.value.page = ++queryData.value.page
             }
-            if (result.items.length < queryData.value.limit) {
+            if (result.items.length < queryData.value.limit || result._meta.totalCount === result.items.length) {
                 infinityState.value = false
             }
         }
@@ -202,6 +203,7 @@ export default function useBooks() {
         infinityState,
         filterCount,
         paginator,
+        method,
         setPageNumber,
         saveQuery,
         loadQuery,
