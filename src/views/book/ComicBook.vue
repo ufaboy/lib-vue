@@ -1,24 +1,25 @@
 <template>
   <div class="book-container">
-    <div class="book-video" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
-      <ol class="media-list" v-if="!isMobile()">
-        <li :class="{active: media.id === activeMedia.id}"
+    <div class="book-video flex flex-col lg:flex-row p-3" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
+      <ol class="w-96 mr-3" v-if="!isMobile()">
+        <li class="w-full bg-sky-100 hover:bg-sky-300 border shadow mb-2 "
+            :class="{'!bg-sky-500 text-white': media.id === activeMedia.id}"
             v-for="media of book?.files"
             :key="media.id"
             @click="activeMedia = media">
-          <button class="btn media-name">{{ media.file_name }}</button>
+          <button class="p-2 text-left w-full truncate">{{ media.file_name }}</button>
         </li>
       </ol>
-      <select class="select" v-else-if="isMobile()" v-model="activeMedia">
+      <select class="select w-full mb-3" v-else-if="isMobile()" v-model="activeMedia">
         <option :value="media" v-for="media of book.files" :key="media.id">{{ media.file_name }}</option>
       </select>
-      <figure class="media-video">
-        <video class="video" :src="getSrcUrl" controls v-if="activeMedia.type.includes('video/')"></video>
+      <figure class="">
+        <video class="video w-full" :src="getSrcUrl" controls v-if="activeMedia.type.includes('video/')"></video>
         <audio class="audio" :src="getSrcUrl" controls v-else-if="activeMedia.type.includes('audio/')"></audio>
       </figure>
     </div>
-    <div class="book-picture" v-else-if="getTypeBook === 'picture'">
-      <ImageItem class="book-picture_img cap" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
+    <div class="flex flex-row flex-wrap" v-else-if="getTypeBook === 'picture'">
+      <ImageItem class="object-cover w-full min-h-[300px]" :source="getSrcImgUrl(media)" v-for="media of book.files" :key="media.id"
                   @click="activeImage = getSrcImgUrl(media)"></ImageItem>
     </div>
   </div>
@@ -30,54 +31,12 @@ import {useRoute} from "vue-router";
 import useBook from "../../composables/useBook";
 import {isMobile} from "../../utils/helpers";
 import ImageItem from "@/components/ImageItem.vue";
+import {Category} from "../../interfaces/category";
+import {Genre} from "../../interfaces/genre";
+import {BookFile, Book} from "../../interfaces/book";
 
 import {API_URL} from "../../../runtimeEnv";
 import { BookDirFile } from "../../interfaces/book";
-
-interface Category {
-    id: number,
-    name: string
-}
-
-interface Genre {
-    [key: string]: number|string|Category|boolean
-    id: number,
-    name: string,
-    description: string,
-    category: Category,
-    ad: boolean,
-    created_at: number,
-}
-interface BookFile {
-    created_at: number,
-    extension: string,
-    file_name: string,
-    full_name: string,
-    id: number,
-    path: string,
-    size: number,
-    type: string,
-    url: string,
-}
-
-interface Book {
-    id: number,
-    name: string,
-    annotation?: string,
-    text?: string,
-    book_type?: string,
-    source?: string,
-    bookmark?: number,
-    rating?: number,
-    ad?: boolean,
-    genres: Array<Genre>
-    cover_path?: string,
-    files?: Array<BookFile>,
-    view_count?: number,
-    created_at?: number,
-    updated_at?: number,
-    last_read?: number,
-}
 
 const route = useRoute();
 const {book, downloadBook} = useBook();
@@ -103,92 +62,4 @@ downloadBook(+route.params.id)
 </script>
 
 <style lang="scss">
-.book-container {
-  .book-picture {
-    display: flex;
-    flex-flow: row wrap;
-  }
-
-  .book-picture_img {
-    object-fit: cover;
-  }
-  .book-picture_img.cap {
-    width: 100%;
-    min-height: 300px;
-  }
-
-  .book-video {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1;
-    height: 100%;
-    width: 100%;
-    padding: 1rem 2rem;
-
-    .media-list {
-      width: 440px;
-      margin-right: 1rem;
-
-      li {
-        cursor: pointer;
-        margin-bottom: 0.5rem;
-      }
-
-      li.active {
-        color: var(--primary)
-      }
-
-      .media-name {
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-
-    .media-video {
-      flex: 1;
-      text-align: center;
-
-      video {
-        width: 100%;
-      }
-    }
-  }
-}
-
-.mobile .book-container {
-  height: calc(100vh - 3.5rem);
-}
-
-@media only screen and (max-width: 892px) {
-  .book-container {
-    .book-video {
-      display: block;
-      padding: 0.5rem;
-    }
-
-    .select {
-      width: 100%;
-      margin-bottom: 0.5rem;
-    }
-  }
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .book-container {
-    .book-video {
-      .media-video {
-        //height: 288px;
-        .video {
-          height: 288px;
-        }
-      }
-    }
-  }
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-  .book-container {
-  }
-}
 </style>
