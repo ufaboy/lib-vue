@@ -11,7 +11,7 @@ export default function useAuthor(props, emit) {
     if (props.author) {
         editableAuthor.value = props.author
     }
-    const updateAuthor = async () => {
+    async function updateAuthor() {
         try {
             await sendAuthor(editableAuthor.value)
             emit('update-authors')

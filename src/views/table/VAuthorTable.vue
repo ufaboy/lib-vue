@@ -12,8 +12,9 @@
       </th>
       </thead>
       <tbody>
-        <tr class="row cursor-pointer hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
-            @click="openRow(author)" :tabindex="index + 1">
+        <tr class="row cursor-pointer hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" 
+        :class="{picante: author.ad}" v-for="(author, index) of authors" :key="author.id"
+            @click="openRow(author)" >
           <td class="p-2" :class="columnsClasses.id">{{ author.id }}</td>
           <td class="p-2" :class="columnsClasses.name">{{ author.name }}</td>
           <td class="p-2" :class="columnsClasses.url">{{ author.url }}</td>

@@ -2,7 +2,7 @@
   <div class="book-container">
     <div class="book-video flex flex-col lg:flex-row p-3" v-if="getTypeBook === 'video' || getTypeBook === 'audio'">
       <ol class="w-96 mr-3" v-if="!isMobile()">
-        <li class="w-full bg-sky-100 hover:bg-sky-300 border shadow mb-2 "
+        <li class="w-full bg-sky-100 hover:bg-sky-300 dark:bg-slate-700 dark:hover:bg-slate-600 rounded border shadow mb-2 "
             :class="{'!bg-sky-500 text-white': media.id === activeMedia.id}"
             v-for="media of book?.files"
             :key="media.id"

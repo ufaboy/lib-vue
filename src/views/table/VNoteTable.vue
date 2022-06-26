@@ -19,33 +19,23 @@
       <tr>
         <th class="th">index</th>
         <th class="th">name</th>
-        <th class="th">
-          <select class="select" v-model="filterType">
+        <th class="th">type
+<!--          <select class="select" v-model="filterType">
             <option disabled value="">type</option>
             <option :value="type" v-for="(type, index) in types" :key="index">{{ type }}</option>
-          </select>
+          </select>-->
         </th>
         <th class="th">url</th>
         <th class="th">actions</th>
       </tr>
       </thead>
       <tbody>
-      <tr class="note row hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" v-for="(note, index) of filteredNotes" :key="'note-' + index">
+      <tr class="note row hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white cursor-pointer"
+          v-for="(note, index) of filteredNotes" @click="openRow(note, index)">
         <td class="p-2">{{ index }}</td>
-        <td class="p-2">
-          <input type="text" class="input-text" v-model="note.name">
-        </td>
-        <td class="p-2">
-          <select class="select" v-model="note.type">
-            <option :value="type" v-for="(type, index) in types" :key="index">{{ type }}</option>
-          </select>
-        </td>
-        <td class="p-2">
-          <input type="text" class="input-text" v-model="note.url">
-        </td>
-        <td class="p-2">
-          <button class="btn hover:dark:bg-slate-600 p-2 rounded-md" @click="deleteNote(index)">del</button>
-        </td>
+        <td class="p-2">{{note.name}}</td>
+        <td class="p-2">{{note.type}}</td>
+        <td class="p-2">{{note.url}}</td>
       </tr>
       </tbody>
     </table>
@@ -53,13 +43,16 @@
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="flex w-full py-1 px-2" @click="sendNotes">Save</button>
-        </li>
-        <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <button class="flex w-full py-1 px-2" @click="addNote">Add</button>
+          <button class="flex w-full py-1 px-2" @click="createNote">Create</button>
         </li>
       </ul>
     </teleport>
+    <dialog ref="modalNote"
+            class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-72"
+            @close="modalNoteShow = false">
+      <EditNote v-if="modalNoteShow" :note="note" :index="index"
+                @create="addNote" @update="updateNote" @delete="deleteNote" @close="closeDialog" />
+    </dialog>
   </div>
 </template>
 
@@ -69,6 +62,7 @@ import {loadNotes} from "../../utils/loadData";
 import {$patch} from "../../utils/superFetch";
 import {isMobile} from "../../utils/helpers";
 import {API_URL} from "../../../runtimeEnv";
+import EditNote from '../../components/modals/EditNote.vue'
 
 interface Note {
   name: string,
@@ -78,36 +72,91 @@ interface Note {
 
 document.title = 'Notes';
 const toggleLoader = inject('toggleLoader') as Function
+const modalNote = ref<InstanceType<typeof HTMLElement>>()
 const notes = ref<Note[]>([]);
 const types: string[] = ['', 'story', 'video', 'site', 'comic']
 const filterType = ref('')
+const note = ref<Note>({name:'', type:'', url: ''})
+const index = ref<number|undefined>()
+const modalNoteShow = ref(false)
 const filteredNotes = computed(() => {
   return filterType.value ? notes.value.filter(note => filterType.value === note.type) : notes.value;
 })
 
-const getNotes = async () => {
+async function getNotes() {
   const result = await loadNotes()
   if (result) {
     notes.value.push(...JSON.parse(result.text))
   }
-};
-
-const addNote = () => {
-  notes.value.unshift({url: '', name: '', type: ''})
-};
-const deleteNote = (index: number): void => {
-  notes.value.splice(index, 1)
-  sendNotes()
 }
-const sendNotes = async () => {
-  const formData = {text: JSON.stringify(notes.value)}
-  toggleLoader(true)
-  const result = await $patch(new URL(`${API_URL}/book/update?id=1`), formData)
-  toggleLoader(false)
-  if (result) {
+function createNote() {
+  note.value = {name:'', type:'', url: ''}
+  index.value = undefined
+  modalNoteShow.value = true
+  // @ts-expect-error
+  modalNote.value?.showModal()
+}
+function openRow(noteData:Note, indexData:number) {
+  try {
+    note.value = noteData
+    index.value = indexData
+    modalNoteShow.value = true
+    // @ts-expect-error
+    modalNote.value?.showModal()
+  } catch (e) {
+    console.log('openRow error', e)
+  }
+}
+async function addNote(note:Note) {
+  try {
+    notes.value.unshift(note)
+    await sendNotes()
+    closeDialog()
+  } catch (e) {
+    console.log('addNote error', e)
+  }
+
+}
+function deleteNote(): void {
+  try {
+    if(index.value) {
+    notes.value.splice(index.value, 1)
+    sendNotes()
+    closeDialog()
+    }
+  } catch (e) {
+    console.log('deleteNote error', e)
+  }
+}
+async function updateNote(note:Note) {
+  try {
+     if(index.value) {
+    notes.value[index.value] = note
+    await sendNotes()
+    closeDialog()
+     }
+  } catch (e) {
+    console.log('updateNote error', e)
+  }
+}
+async function sendNotes() {
+  try {
+    const formData = {text: JSON.stringify(notes.value)}
+    toggleLoader(true)
+    const result = await $patch(new URL(`${API_URL}/book/update?id=1`), formData)
+    toggleLoader(false)
     notes.value.splice(0, notes.value.length)
     notes.value.push(...JSON.parse(result.text))
+  } catch (e) {
+    console.log('sendNotes error', e)
+    toggleLoader(false)
   }
+
+}
+function closeDialog() {
+  // @ts-expect-error
+  modalNote.value?.close()
+  modalNoteShow.value = false
 }
 const isMounted = ref(false)
 onMounted(() => {
@@ -117,98 +166,4 @@ getNotes()
 </script>
 
 <style lang="scss">
-.notes {
-  padding: 1rem 1.5rem;
-
-  .notes__btn {
-    margin-left: 0.5rem;
-  }
-
-  .td__btn {
-    margin-right: initial;
-  }
-}
-
-@media only screen and (min-width: 893px) {
-  .notes {
-    /*    .notes-table {
-          border: 1px solid;
-          border-color: whitesmoke;
-          margin-bottom: 1rem;
-
-          .thead {
-            border-bottom: 1px solid;
-            border-color: inherit;
-          }
-
-          .th {
-            padding: 0.3rem;
-          }
-
-          .td {
-            padding: 0.3rem;
-            text-align: center;
-          }
-
-          .note {
-            border-bottom: 1px solid;
-            border-color: inherit;
-          }
-
-          .cell-dropdown {
-            display: flex;
-            flex-flow: row nowrap;
-            margin-top: 0.5rem;
-          }
-        }
-        .note__type {
-          max-width: 100px;
-          min-width: 100px;
-        }
-
-        .note__url {
-          width: 400px;
-        }*/
-  }
-}
-
-@media only screen and (max-width: 892px) {
-  /*  .notes {
-      padding: 0.5rem;
-      .note-group {
-        width: 49%;
-      }
-      .note {
-        border-radius: 5px;
-        padding: 0.5rem;
-        margin-bottom: 1rem;
-        display: flex;
-        flex-flow: row wrap;
-        justify-content: space-between;
-        background-color: var(--surface-light);
-
-        label {
-          width: 100%;
-          font-size: 1.5rem;
-        }
-        input {
-          width: 100%;
-        }
-      }
-
-      .note__url {
-        width: 100%;
-      }
-    }*/
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
-  .notes {
-  }
-}
-
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
-  .notes {
-  }
-}
 </style>
