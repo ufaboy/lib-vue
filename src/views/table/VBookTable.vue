@@ -1,9 +1,9 @@
 <template>
-  <main class="books-table ">
+  <main class="books-table">
     <table class="table border-collapse h-fit">
       <thead class="thead sticky top-0">
       <tr tabindex="0">
-        <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy === column}" v-for="(column, index) of columns" :key="index">
+        <th class="th py-2 px-1" :class="{'text-primary' : queryData.orderBy === column}" v-for="(column, index) of filteredColumns" :key="index">
           <div class="flex flex-row flex-nowrap group">
             <div class="td-title mr-1">{{ column }}</div>
             <button class="td-action w-4" @click="sortBy(column)">
@@ -18,42 +18,30 @@
       <tbody tabindex="0">
       <tr class="row cursor-pointer hover:bg-sky-300 hover:dark:bg-slate-700 border-b border-black dark:border-white" :class="{'picante': book.ad}"
           v-for="(book, index) of books.items" :key="book.id" :tabindex="index + 1">
-        <td class="p-2" @click="openBook(book, 'edit')">{{ book.id }}</td>
-        <td class="p-2 w-72" @click="openBook(book, 'view')">
+        <td v-if="filteredColumns.includes('id')" class="p-2" @click="openBook(book, 'edit')">{{ book.id }}</td>
+        <td v-if="filteredColumns.includes('name')" class="p-2 w-64" @click="openBook(book, 'view')">
           <p class="line-clamp-2 max-w-[13rem]">{{ book.name }}</p>
         </td>
-        <td class="p-2 w-72 text-ellipsis" :data-tooltip="book.annotation" data-tooltip-location='top'>
+        <td v-if="filteredColumns.includes('annotation')" class="p-2 w-64 text-ellipsis" :data-tooltip="book.annotation" data-tooltip-location='top'>
           <p class="line-clamp-2 max-w-[13rem]">{{ book.annotation }}</p>
         </td>
-        <td class="p-2 w-48" :data-tooltip="calcGenres(book.genres)" data-tooltip-location='top'>
+        <td v-if="filteredColumns.includes('genres')" class="p-2 w-48" :data-tooltip="calcGenres(book.genres)" data-tooltip-location='top'>
           <p class="line-clamp-2 max-w-[10rem]">{{ calcGenres(book.genres) }}</p>
         </td>
-        <td class="p-2">{{ book.rating }}</td>
-        <td class="p-2">{{ book.view_count }}</td>
-        <td class="p-2">{{ book.author ? book.author.name : '' }}</td>
-        <td class="p-2">{{ getDate(book.last_read) }}</td>
-        <td class="p-2">{{ getDate(book.updated_at) }}</td>
+        <td v-if="filteredColumns.includes('rating')" class="p-2">{{ book.rating }}</td>
+        <td v-if="filteredColumns.includes('view_count')" class="p-2">{{ book.view_count }}</td>
+        <td v-if="filteredColumns.includes('author')" class="p-2">{{ book.author ? book.author.name : '' }}</td>
+        <td v-if="filteredColumns.includes('last_read')" class="p-2">{{ getDate(book.last_read) }}</td>
+        <td v-if="filteredColumns.includes('updated_at')" class="p-2">{{ getDate(book.updated_at) }}</td>
       </tr>
       </tbody>
     </table>
     <div class="table-paginator" v-if="isMobile()">
-      <button class="btn-outline table-pag__btn" v-if="books._links.first"
-              @click="toPage(books._links.first)">first
-      </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.prev"
-              @click="toPage(books._links.prev)">prev
-      </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.self"
-              @click="toPage(books._links.self)">{{ books._meta ? books._meta.currentPage : '' }}
-      </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.next"
-              @click="toPage(books._links.next)">next
-      </button>
-      <button class="btn-outline table-pag__btn" v-if="books._links.last"
-              @click="toPage(books._links.last)">last
-      </button>
       <select class="select" @change="getBooksAndReplace" v-model="queryData.page">
         <option :value="pageNum" v-for="(pageNum, index) of pagBtnArr" :key="'page-' + index">{{ pageNum }}</option>
+      </select>
+      <select class="select" multiple @change="saveColumns" v-model="filteredColumns">
+        <option :value="column" v-for="column of columns">{{ column }}</option>
       </select>
     </div>
     <div class="table-paginator flex justify-center my-3" v-else>
@@ -90,19 +78,7 @@ import SidebarBookTable from '../../components/sidebars/SidebarBookTable.vue';
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'author', 'last_read', 'updated_at']
-
-interface ColumnsClasses {
-  [key: string]: string,
-  id: string,
-  name: string,
-  annotation: string,
-  genres: string,
-  rating: string,
-  view_count: string,
-  author: string,
-  last_read: string,
-  updated_at: string,
-}
+const filteredColumns = ref<string[]>()
 
 interface Category {
     id: number,
@@ -146,6 +122,15 @@ function cutLimitByHeight() {
   queryData.value.limit = x
   console.log('height', window.innerHeight, x)
 }
+
+function saveColumns() {
+  localStorage.setItem('book-columns', filteredColumns.value)
+}
+function getColumns() {
+  const cols = localStorage.getItem('book-columns')
+  filteredColumns.value = cols || columns
+}
+getColumns()
 onMounted(() => {
   isMounted.value = true
 })

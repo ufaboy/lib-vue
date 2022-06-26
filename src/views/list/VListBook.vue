@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-row flex-wrap" @touchstart="touchStart" @touchend="touchEnd">
+  <main class="flex flex-row flex-wrap min-h-[calc(100vh_-_80px)]" @touchstart="touchStart" @touchend="touchEnd">
     <router-link :to="{ name: isComic(book) ? 'comic-view' : 'book-view', params: {id: book.id}}"
                  class="h-fit overflow-hidden w-80 flex flex-row flex-nowrap justify-between
                  drop-shadow-md cursor-pointer rounded-md m-2 p-2 lg:mr-4 lg:mb-4 lg:p-2 lg:p-4
