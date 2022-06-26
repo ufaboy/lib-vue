@@ -78,7 +78,7 @@ import SidebarBookTable from '../../components/sidebars/SidebarBookTable.vue';
 
 document.title = 'Table Books';
 const columns = ['id', 'name', 'annotation', 'genres', 'rating', 'view_count', 'author', 'last_read', 'updated_at']
-const filteredColumns = ref<string[]>()
+const filteredColumns = ref<string[]>([''])
 
 interface Category {
     id: number,
@@ -124,11 +124,11 @@ function cutLimitByHeight() {
 }
 
 function saveColumns() {
-  localStorage.setItem('book-columns', filteredColumns.value)
+  localStorage.setItem('book-columns', JSON.stringify(filteredColumns.value) )
 }
 function getColumns() {
   const cols = localStorage.getItem('book-columns')
-  filteredColumns.value = cols || columns
+  filteredColumns.value = cols ? JSON.parse(cols) : columns
 }
 getColumns()
 onMounted(() => {
