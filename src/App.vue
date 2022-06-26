@@ -4,12 +4,14 @@
   <teleport to="body">
     <TheToaster v-if="toastMessage" :message="toastMessage" :type="toastType"/>
   </teleport>
+  <ReloadPrompt />
 </template>
 <script setup lang="ts">
 import {provide, ref} from "vue";
 import TheToaster from "./components/TheToaster.vue";
 import {isMobile} from "./utils/helpers";
 import TheLoader from "./components/TheLoader.vue";
+import ReloadPrompt from "./components/ReloadPrompt.vue";
 
 const toastMessage = ref('')
 const toastType = ref('')
@@ -29,7 +31,6 @@ if (isMobile()) {
 }
 
 function toggleLoader(status:boolean|undefined) {
-  console.log('toggleLoader', status)
   if (status === undefined) {
     loaderShow.value = !loaderShow.value
   } else {

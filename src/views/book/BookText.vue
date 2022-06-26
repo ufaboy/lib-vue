@@ -2,8 +2,8 @@
   <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
        :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="flex flex-row justify-center flex-wrap">
-      <div class="article-wrapper w-full">
-        <h1 class="book-name text-lg font-bold text-center mb-4">{{book.name}}</h1>
+      <div class="flex flex-row flex-wrap justify-center w-full">
+        <h1 class="w-full text-lg font-bold text-center mb-4">{{book.name}}</h1>
         <ul class="flex-row flex-wrap hidden lg:flex">
           <li class="bg-sky-300 hover:bg-sky-500 hover:text-white dark:bg-slate-800 dark:hover:bg-slate-700 rounded-md p-2 mr-3 mb-2"
               v-for="(chapter, index) in headerChapters" :key="index">
@@ -13,7 +13,7 @@
       </div>
       <article class="text" ref="text" v-html="book.text" @mouseup.ctrl="editMode"></article>
     </div>
-    <div class="progress-line" :style="widthProgressLine"></div>
+    <div class="fixed left-0 top-0 w-[4px] bg-primary" :style="widthProgressLine"></div>
     <TextSettings v-if="slideLeftRight" @scroll-by-click="scrollByClick" :scrolling-progress="scrollingProgress"
                    @hide-modal="slideLeftRight = false"/>
     <dialog ref="textEditorModal" class="dialog dark:bg-slate-800 rounded-lg" @close="showEditorModal = false">

@@ -12,8 +12,8 @@ export default ({mode}) => {
             vue(),
             VitePluginHtmlEnv(),
             VitePWA({
-                // includeAssets: ['robots.txt'],
-                registerType: 'autoUpdate',
+                includeAssets: ['robots.txt'],
+                // registerType: 'autoUpdate',
                 workbox: {
                     cleanupOutdatedCaches: false,
                     sourcemap: true

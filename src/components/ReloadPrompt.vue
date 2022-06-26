@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { useRegisterSW } from 'virtual:pwa-register/vue'
+
+const {
+  offlineReady,
+  needRefresh,
+  updateServiceWorker,
+} = useRegisterSW()
+
+const close = async () => {
+  offlineReady.value = false
+  needRefresh.value = false
+}
+</script>
+
 <template>
   <div
       v-if="offlineReady || needRefresh"
@@ -20,37 +35,7 @@
     </button>
   </div>
 </template>
-<script setup lang="ts">
-import { useRegisterSW } from 'virtual:pwa-register/vue'
 
-// replaced dyanmicaly
-const reloadSW: any = '__RELOAD_SW__'
-
-const {
-  offlineReady,
-  needRefresh,
-  updateServiceWorker,
-} = useRegisterSW({
-  immediate: true,
-  onRegistered(r) {
-    if (reloadSW === 'true') {
-      r && setInterval(async() => {
-        console.log('Checking for sw update')
-        await r.update()
-      }, 20000 /* 20s for testing purposes */)
-    }
-    else {
-      console.log(`SW Registered: ${r}`)
-    }
-  },
-})
-
-const close = async() => {
-  offlineReady.value = false
-  needRefresh.value = false
-}
-
-</script>
 <style>
 .pwa-toast {
   position: fixed;
@@ -62,7 +47,8 @@ const close = async() => {
   border-radius: 4px;
   z-index: 1;
   text-align: left;
-  box-shadow: 3px 4px 5px 0px #8885;
+  box-shadow: 3px 4px 5px 0 #8885;
+  background-color: white;
 }
 .pwa-toast .message {
   margin-bottom: 8px;
