@@ -14,50 +14,29 @@ const close = async () => {
 </script>
 
 <template>
-  <div
-      v-if="offlineReady || needRefresh"
-      class="pwa-toast"
+  <div v-if="offlineReady || needRefresh"
+       class="pwa-toast fixed right-0 bottom-0 p-3 m-4 bg-yellow-200/75 dark:bg-slate-500 shadow-md rounded"
       role="alert"
   >
-    <div class="message">
+    <div class="message mb-2 dark:text-white">
       <span v-if="offlineReady">
         App ready to work offline
       </span>
       <span v-else>
-        New content available, click on reload button to update.
+        New content available.
       </span>
     </div>
-    <button v-if="needRefresh" @click="updateServiceWorker()">
+    <button class="btn rounded mr-3 !px-2 shadow bg-amber-300/75 hover:bg-amber-500/75 dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-white"
+            v-if="needRefresh" @click="updateServiceWorker()">
       Reload
     </button>
-    <button @click="close">
+    <button class="btn rounded !px-2 shadow bg-yellow-300/75 hover:bg-yellow-500/75 dark:bg-zinc-600 dark:hover:bg-zinc-700 dark:text-white"
+            @click="close">
       Close
     </button>
   </div>
 </template>
 
 <style>
-.pwa-toast {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  margin: 16px;
-  padding: 12px;
-  border: 1px solid #8885;
-  border-radius: 4px;
-  z-index: 1;
-  text-align: left;
-  box-shadow: 3px 4px 5px 0 #8885;
-  background-color: white;
-}
-.pwa-toast .message {
-  margin-bottom: 8px;
-}
-.pwa-toast button {
-  border: 1px solid #8885;
-  outline: none;
-  margin-right: 5px;
-  border-radius: 2px;
-  padding: 3px 10px;
-}
+
 </style>

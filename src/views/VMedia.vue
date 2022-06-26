@@ -1,23 +1,22 @@
 <template>
-  <div class="media-manager h-full flex flex-row">
-    <ol class="ol-dir">
-      <li class="li-dir" v-for="(dir, index) of directories" :key="'dir-' + index" @click="activeDirIndex = index">
+  <div class="media-manager min-h-[calc(100%_-_80px)] lg:min-h-fit flex flex-row px-3">
+    <ol class="mr-4">
+      <li class="w-24 cursor-pointer" v-for="(dir, index) of directories" :key="'dir-' + index" @click="activeDirIndex = index">
         {{ dir.dir_name }}
       </li>
     </ol>
-    <div class="preview-wrapper scrollbar">
-      <figure class="figure group cursor-pointer" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
-        <img class="preview" :src="calcUrl(file)" alt="">
+    <div class="preview-wrapper w-80 flex flex-row flex-wrap shrink-0 scrollbar max-h-full">
+      <figure class="figure group w-36 mr-3 mb-3 cursor-pointer" v-for="(file, index) of activeDir" :key="'file-' + index" @click="openMedia(file)">
+        <img class="w-36 h-[120px] object-cover rounded-md cursor-pointer hover:scale-110" :src="calcUrl(file)" alt="">
         <figcaption class="truncate text-nowrap dark:text-blue-300 dark:group-hover:text-white">{{ file.full_name }}</figcaption>
-        <div class="btn-bar" v-if="!file.id">
-          <button class="fig-btn" @click.stop="attachFile(file.full_name, index)">
+        <div class="btn-bar flex flex-row flex-nowrap justify-between" v-if="!file.id">
+          <button class="btn-green !p-1 cursor-pointer" @click.stop="attachFile(file.full_name, index)">
             Attach
           </button>
-          <button class="fig-btn"
+          <button class="btn-red !p-1 cursor-pointer"
                   @click.stop="deleteFileFromStorage(file.full_name, index)">Delete
           </button>
         </div>
-
       </figure>
     </div>
     <div class="media-wrapper scrollbar ml-3">
@@ -25,19 +24,17 @@
       <video class="media-full" v-else-if="activeMedia.type === 'video'" controls>
         <source :src="activeMedia.url">
       </video>
-      <audio class="media-full" v-else-if="activeMedia.type === 'audio'" controls>
+      <audio class="max-w-[700px] max-h-[600px]" v-else-if="activeMedia.type === 'audio'" controls>
         <source :src="activeMedia.url">
       </audio>
       <span>{{ activeMedia.full_name }}</span>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import useMedia from "../composables/useMedia";
 
-// eslint-disable-next-line no-undef,no-unused-vars
 const props = defineProps({
   categories: Array,
 })
@@ -53,88 +50,7 @@ const {
   deleteFileFromStorage
 } = useMedia()
 getMediaFiles()
-
 </script>
 
 <style lang="scss">
-.media-manager {
-
-  .ol-dir {
-    margin-right: 1rem;
-
-    .li-dir {
-      width: 100px;
-      cursor: pointer;
-    }
-  }
-
-  .preview-wrapper {
-    width: 360px;
-    display: flex;
-    flex-shrink: 0;
-    flex-flow: row wrap;
-    overflow-y: auto;
-    max-height: 100%;
-
-    .figure {
-      width: 150px;
-      margin: 0 1rem 1rem 0;
-
-      .figcaption {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        margin: 0 0 0.5rem 0;
-      }
-
-      .btn-bar {
-        display: flex;
-        flex-flow: row nowrap;
-
-        .fig-btn {
-          flex: 1;
-          border: 1px solid;
-          padding: 5px;
-          color: var(--text-secondary);
-          background-color: var(--surface);
-          cursor: pointer;
-        }
-
-        .fig-btn:first-of-type {
-          border-radius: 5px 0 0 5px;
-          font-weight: bold;
-        }
-
-        .fig-btn:last-of-type {
-          font-weight: bold;
-          color: red;
-          border-radius: 0 5px 5px 0;
-        }
-      }
-    }
-
-    .preview {
-      width: 150px;
-      height: 100px;
-      object-fit: cover;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: all .2s ease-in-out;
-      &:hover {
-          transform: scale(1.1);
-      }
-    }
-  }
-
-  .media-wrapper {
-    display: flex;
-    flex-flow: column;
-
-    .media-full {
-      max-width: 700px;
-      max-height: 600px;
-    }
-  }
-}
-
 </style>
