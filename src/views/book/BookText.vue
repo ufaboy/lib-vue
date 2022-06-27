@@ -40,7 +40,7 @@
           <router-link class="flex w-full py-1 px-2" :to="{name: 'book-edit', params: {id: route.params.id}}">Edit</router-link>
         </li>
         <li class="mb-2 py-1 px-2 text-slate-900 dark:text-white cursor-pointer">
-          <select class="select text-black select-chapter w-full truncate" @change="scrollToChapter" v-model="chapterElement">
+          <select class="select text-black select-chapter w-full truncate dark:text-white" @change="scrollToChapter" v-model="chapterElement">
             <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
               {{ chapter.name }}
             </option>
