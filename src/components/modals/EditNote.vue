@@ -30,7 +30,6 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 import IconClose from "@/components/icons/IconClose.vue";
-import {isNumber} from "@vueuse/core";
 
 interface Note {
   name: string,
