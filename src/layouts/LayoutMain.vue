@@ -1,6 +1,6 @@
 <template>
   <main
-    class="layout bg-white h-full lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-white"
+    class="layout bg-white h-full lg:dark:bg-slate-900 dark:bg-neutral-900 text-slate-900 dark:text-white"
     @click="activeBurger = false">
     <HeaderMobile v-if="isMobile()" :categories="categories" />
     <Sidebar
