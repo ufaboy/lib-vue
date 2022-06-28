@@ -50,7 +50,7 @@ const url = ref('')
 
 function save() {
   const data = {'name': name.value, 'type': type.value, 'url': url.value}
-  if(isNumber(props.index)) {
+  if(Number.isInteger(props.index)) {
     emit('update', data)
   } else emit('create', data)
 }
