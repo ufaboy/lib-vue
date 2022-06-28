@@ -15,10 +15,27 @@ body {
 
 .scrollbar {
   &::-webkit-scrollbar {
-    width: 0.5rem;
+    width: 0.75rem;
     cursor: pointer;
   }
 
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #e2e8f0;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #64748b;
+    border-radius: 3px;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+}
+.dark .scrollbar {
   /* Track */
   &::-webkit-scrollbar-track {
     background: #888;
@@ -27,7 +44,7 @@ body {
   /* Handle */
   &::-webkit-scrollbar-thumb {
     background: #f1f1f1;
-    border-radius: 5px;
+    border-radius: 3px;
   }
 
   /* Handle on hover */

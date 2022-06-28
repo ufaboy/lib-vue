@@ -1,7 +1,7 @@
 <template>
   <div class="media-manager min-h-[calc(100%_-_80px)] lg:min-h-fit flex flex-row px-3">
     <ol class="mr-4">
-      <li class="w-24 cursor-pointer" v-for="(dir, index) of directories" :key="'dir-' + index" @click="activeDirIndex = index">
+      <li class="w-24 cursor-pointer" v-for="(dir, index) of directories" @click="activeDirIndex = index">
         {{ dir.dir_name }}
       </li>
     </ol>

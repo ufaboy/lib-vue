@@ -44,10 +44,10 @@
       </figure>
     </div>
     <ul v-else class="flex flex-col justify-center">
-      <li class="group flex flex-row items-center p-2 mb-2 rounded shadow hover:bg-sky-100" v-for="(media, index) in files">
+      <li class="group flex flex-row items-center p-2 mb-2 rounded shadow hover:bg-sky-100 dark:bg-slate-800 dark:hover:bg-slate-700" v-for="(media, index) in files">
         <span class="mr-2">{{ getCaption(media) }}</span>
         <div class="hidden flex-row group-hover:flex">
-          <button class="mr-2 group">
+          <button class="mr-2 group hover:text-sky-300">
             <IconImageReveal class="peer" />
             <figure class="fixed top-0 left-0 right-0 bottom-0 m-auto hidden peer-hover:block w-fit h-fit">
               <img class="media image max-w-[50vw] max-h-[75vh] object-cover rounded" :src="getSrc(media)" v-if="checkType(media) === 'image'" alt="img">
@@ -57,12 +57,17 @@
               <figcaption class="figure-caption truncate">{{ getCaption(media) }}</figcaption>
             </figure>
           </button>
-          <button class="mr-2" @click="copyFileName(media)">
-            <IconCopy />
+          <button v-if="!media.id" class="hover:text-sky-300" @click="uploadSingleFile(media, index)">
+            <IconUpload />
           </button>
-          <button @click="deleteOneFile(index)">
-            <IconClose />
-          </button>
+          <template v-else>
+            <button class="mr-2 hover:text-sky-300" @click="copyFileName(media)">
+              <IconCopy />
+            </button>
+            <button class="hover:text-sky-300" @click="deleteOneFile(index)">
+              <IconClose />
+            </button>
+          </template>
         </div>
       </li>
     </ul>
@@ -77,6 +82,7 @@ import {API_URL} from "../../runtimeEnv";
 import IconClose from "./icons/IconClose.vue";
 import IconImageReveal from "./icons/IconImageReveal.vue";
 import IconCopy from "./icons/IconCopy.vue";
+import IconUpload from "./icons/IconUpload.vue";
 
 const printToast = inject('printToast') as Function
 const toggleLoader = inject('toggleLoader') as Function
@@ -101,7 +107,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits(['set-cover',])
+const emit = defineEmits(['set-cover', 'uploaded'])
 
 const files = ref<FileMix[]>([]);
 const containerExpanded = ref(false)
@@ -142,26 +148,31 @@ function checkType(media: FileMix) {
 async function deleteOneFile(fileIndex: number) {
   try {
     if (files.value) {
+      toggleLoader(true)
       await deleteFile(files.value[fileIndex].id ?? 0);
+      toggleLoader(false)
       files.value.splice(fileIndex, 1)
     }
   } catch (e) {
     console.error({deleteFile: e})
+    toggleLoader(false)
   }
 }
 
 async function uploadSingleFile(fileToUpload: FileMix, index: number) {
-  if (Array.isArray(files.value) && files.value.length) {
+  try {
+    console.log('uploadSingleFile', fileToUpload, index)
     const fileData = (fileToUpload as FileRaw).file
     const fileArray: File[] = [fileData]
     toggleLoader(true)
     // @ts-expect-error
-    const response = await uploadFiles(fileArray, book.value.id)
+    const response = await uploadFiles(fileArray, props.bookId)
     toggleLoader(false)
     if (response[0].status === 'fulfilled') {
       const result = (response[0] as PromiseFulfilledResult).value
       const fileData = {...result, status: 'fulfilled'}
       files.value.splice(index, 1, fileData)
+      emit('uploaded', files.value)
     } else if (response[0].status === 'rejected') {
       const result = (response[0] as PromiseRejectedResult).reason
       files.value[index].status = 'rejected'
@@ -169,8 +180,10 @@ async function uploadSingleFile(fileToUpload: FileMix, index: number) {
       files.value[index].error = result
       printToast('upload error', 'danger')
     }
+  } catch (e) {
+    toggleLoader(false)
+    console.log('uploadSingleFile error', e)
   }
-
 }
 
 async function uploadAllFiles() {
@@ -180,7 +193,7 @@ async function uploadAllFiles() {
       const fileArray: File[] = files.value.filter(item => item.hasOwnProperty('file')).map(fileObject => fileObject.file)
       toggleLoader(true)
       // @ts-expect-error
-      const response = await uploadFiles(fileArray, book.value.id)
+      const response = await uploadFiles(fileArray, props.bookId)
       toggleLoader(false)
 
       let errors: string[] = []
@@ -204,6 +217,7 @@ async function uploadAllFiles() {
       }
     }
   } catch (e: unknown) {
+    toggleLoader(false)
     if (typeof e === "string") {
       printToast(e, 'danger')
     } else if (e instanceof Error) {

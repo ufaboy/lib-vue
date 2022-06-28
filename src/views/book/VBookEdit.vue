@@ -1,6 +1,6 @@
 <template>
   <div class="edit-book flex flex-row flex-nowrap lg:h-screen lg:!fixed ">
-    <div class="text-container p-2 lg:fixed lg:h-screen overflow-x-hidden overflow-y-scroll w-full lg:w-[800px]">
+    <div class="text-container p-2 lg:fixed lg:h-screen overflow-x-hidden overflow-y-scroll w-full lg:w-[800px] scrollbar">
       <div class="flex flex-row flex-wrap justify-between mb-5">
         <div class="flex flex-row">
           <button class="btn-gray mr-2 mb-2" type="reset" @click="resetBook">reset</button>
@@ -8,11 +8,11 @@
           <button class="btn-blue mb-2" @click="startTypograf">typograf</button>
         </div>
         <div class="flex flex-row">
-          <StarRating class="mr-2" v-model="book.rating" :size="isMobile() ? 24 : 32" />
-          <ToggleAd v-model="book.ad" v-if="getAdAccess()" />
+          <StarRating class="mr-2" v-model="book.rating" :size="isMobile() ? 24 : 32"/>
+          <ToggleAd v-model="book.ad" v-if="getAdAccess()"/>
         </div>
       </div>
-      <section class=" flex flex-row flex-wrap justify-between mb-5">
+      <section class=" flex flex-row flex-wrap lg:flex-nowrap justify-between mb-5">
         <div class="w-full flex flex-col lg:mr-3">
           <label class="">Name</label>
           <input type="text" class="input-text" v-model.trim="book.name">
@@ -23,10 +23,11 @@
                  class="input-text"
                  v-model.trim="book.source">
         </div>
-        <div class="w-full flex flex-col lg:w-32">
+        <div class="w-full flex flex-col lg:w-52">
           <label class="">Author</label>
           <select class="select w-full" v-model="authorData">
-            <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{author.name}}</option>
+            <option class="p-1" v-for="(author, index) in authors" :value="author" :key="index">{{ author.name }}
+            </option>
           </select>
         </div>
       </section>
@@ -55,9 +56,9 @@
       </section>
       <div class="flex flex-col">
         <div class="">
-          <span class="title">text {{ book.text ? book.text.length : '' }}</span>
+          <span class="mr-3">text {{ book.text ? book.text.length : '' }}</span>
           <span class="action-bar">
-          <button class="editor-btn" type="button" @click="toggleEditor">{{ editorMode }}</button>
+          <button class="btn-outline" type="button" @click="toggleEditor">{{ editorMode }}</button>
             <!-- <button class="editor-btn" type="button" @click="formatText('caret')" data-tooltip="переносы строк">
               <IconCarriage class="icon"/>
             </button>
@@ -69,7 +70,7 @@
             </button> -->
         </span>
         </div>
-        <textarea class="editor clarity textarea"
+        <textarea class="editor clarity textarea mt-3"
                   v-model="book.text"
                   v-if="editorMode === 'raw'"
                   ref="editor"
@@ -77,22 +78,24 @@
         <div class="editor" contenteditable="true" v-else v-html="book.text"></div>
       </div>
     </div>
-    <MediaContainer class="hidden lg:flex lg:absolute lg:top-0 lg:left-[830px]"
+    <MediaContainer class="hidden lg:flex lg:absolute lg:top-0 lg:left-[830px] flex-col"
                     :book-files="book.files"
                     :book-id="book.id"
                     :book-cover-path="book.cover_path"
-                    :is-loaded="isLoaded" />
+                    :is-loaded="isLoaded"
+                    @uploaded="files = $event"/>
     <dialog ref="genreBookModal"
             class="dialog dialog-genre-book bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg"
             @close="genreModalShow = false">
       <GenreBook v-if="genreModalShow" :genres-props="genres" :categories="categories" @set-genres="setGenres"
-                 @hide-modal="closeDialog" />
+                 @hide-modal="closeDialog"/>
     </dialog>
     <teleport to="#sidebar-target" v-if="!isMobile() && route.params.id && isMounted">
       <hr class="my-3">
       <ul>
         <li class="hover:dark:bg-slate-700 mb-2 text-slate-900 dark:text-white cursor-pointer">
-          <router-link class="flex w-full p-2" :to="{name: 'book-view', params: {id: route.params.id}}">View</router-link>
+          <router-link class="flex w-full p-2" :to="{name: 'book-view', params: {id: route.params.id}}">View
+          </router-link>
         </li>
       </ul>
     </teleport>
@@ -104,7 +107,7 @@ import {ref, onUpdated, inject, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import Typograf from "typograf";
 import {API_URL} from '../../../runtimeEnv';
-import { FileMix, BookSave} from '../../interfaces/book';
+import {FileMix, BookSave} from '../../interfaces/book';
 import {isMobile} from '../../utils/helpers';
 import {loadBook} from '../../utils/loadData';
 import {getAdAccess} from '../../utils/userData';
@@ -117,6 +120,7 @@ import ToggleAd from "../../components/ToggleAd.vue";
 import MediaContainer from "../../components/MediaContainer.vue";
 
 document.title = 'Editor';
+
 interface CategoryExtended extends Category {
   genres?: Array<Genre>
 }
@@ -214,7 +218,7 @@ async function sendBook() {
   }
   try {
     // let genresIdArray = genres.value.map(genre => genre.id)
-    let data:BookSave = {
+    let data: BookSave = {
       id: book.value.id,
       ad: book.value.ad,
       annotation: book.value.annotation,
@@ -223,7 +227,8 @@ async function sendBook() {
       rating: book.value.rating,
       source: book.value.source,
       text: book.value.text,
-      genres: genres.value}
+      genres: genres.value
+    }
     if (authorData.value.id) {
       data.author_id = authorData.value.id
     }
@@ -279,13 +284,15 @@ async function getBook() {
     toggleLoader(false)
   }
 }
+
 function startTypograf() {
   let tp = new Typograf({locale: ['ru', 'en-US']});
   let elem: HTMLTextAreaElement = document.querySelector('textarea.editor') as HTMLTextAreaElement;
   const typoResult = tp.execute(elem.value);
   elem.value = typoResult;
-  console.log('startTypograf', {typoResult:typoResult})
+  console.log('startTypograf', {typoResult: typoResult})
 }
+
 onMounted(() => {
   isMounted.value = true
 })
