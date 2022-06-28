@@ -19,7 +19,7 @@ jobs:
       # Устанавливаем Node.JS для сборки приложения
       - uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: '16'
       # Устанавливаем зависимости для сборки
       - name: Install Dependencies
         run: npm i
