@@ -1,5 +1,5 @@
 <template>
-  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 sm:dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
+  <div class="book lg:w-[calc(100%_-_10rem)] bg-white lg:dark:bg-slate-900 dark:bg-neutral-900 text-slate-900 dark:text-[#b3b3b3]"
        :class="{mobile: isMobile()}" @touchstart="touchStart" @touchend="touchEnd">
     <div class="flex flex-row justify-center flex-wrap">
       <div class="flex flex-row flex-wrap justify-center w-full">
