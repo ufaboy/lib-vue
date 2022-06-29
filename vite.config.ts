@@ -27,18 +27,71 @@ export default ({mode}) => {
                     background_color: '#004e92',
                     icons: [
                         {
-                            src: "icon-192.png",
+                            src: "./icons/pwa/maskable_icon_x48.png",
+                            sizes: "48x48",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x96.png",
+                            sizes: "96x96",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x72.png",
+                            sizes: "72x72",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x128.png",
+                            sizes: "128x128",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x144.png",
+                            sizes: "144x144",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/regular_icon_x144.png",
+                            sizes: "144x144",
+                            type: "image/png",
+                            purpose: "any"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x192.png",
                             sizes: "192x192",
                             type: "image/png",
                             purpose: "maskable"
                         },
                         {
-                            src: "/icon-512.png",
+                            src: "./icons/pwa/maskable_icon_x192.png",
+                            sizes: "192x192",
+                            type: "image/png",
+                            purpose: "any"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x384.png",
+                            sizes: "384x384",
+                            type: "image/png",
+                            purpose: "maskable"
+                        },
+                        {
+                            src: "./icons/pwa/maskable_icon_x512.png",
                             sizes: "512x512",
                             type: "image/png",
                             purpose: "maskable"
                         },
-
+                        {
+                            src: "./icons/pwa/regular_icon_x512.png",
+                            sizes: "512x512",
+                            type: "image/png",
+                            purpose: "any"
+                        }
                     ],
                 }
             })],
