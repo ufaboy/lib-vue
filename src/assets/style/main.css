@@ -1,0 +1,15 @@
+@import './animation.css';
+
+:root {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 16px;
+}
+
+.scrollbar {
+  scrollbar-gutter: stable;
+}
+
+.dialog::backdrop {
+  opacity: 35%;
+  background-color: #000;
+}

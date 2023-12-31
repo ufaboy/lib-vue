@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn-icon {
+        @apply rounded-full border
+    }
+
+    .btn-yellow {
+        @apply focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm dark:focus:ring-yellow-900
+    }
+
+    .btn-green {
+        @apply focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800
+    }
+
+    .btn-green-outline {
+        @apply text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800
+    }
+
+    .btn-blue-outline {
+        @apply text-white hover:text-white border border-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800
+    }
+
+    .btn-red-outline {
+        @apply text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900
+    }
+
+    .btn-gray-outline {
+        @apply text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800
+    }
+
+    .btn-header {
+        @apply h-9 focus:outline-none focus:ring-4 font-medium rounded-lg text-sm p-1 md:py-2 md:px-4 whitespace-nowrap
+    }
+
+    .btn-header-green {
+        @apply btn-header text-white bg-green-800 hover:bg-green-900 focus:ring-green-300
+    }
+    .btn-header-blue {
+        @apply btn-header text-white bg-blue-800 hover:bg-blue-900 focus:ring-blue-300
+    }
+
+    .label {
+        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-white
+    }
+
+    .input {
+        @apply bg-gray-50 border outline-blue-500 outline-offset-0 border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+    }
+
+    .select {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-blue-500 focus:border-blue-500 block w-full p-1.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500
+    }
+
+    .btn-paginator {
+        @apply flex items-center justify-center px-3 md:px-4 h-8 md:h-10 leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white border border-gray-300 first:rounded-l-lg last:rounded-r-lg dark:border-gray-700
+    }
+
+    .btn-paginator-active {
+        @apply text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white
+    }
+
+    .btn-paginator-inactive {
+        @apply text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white
+    }
+}
+
+@layer utilities {
+    .header-link {
+        @apply w-full lg:w-auto py-2 pl-3 pr-4 text-white rounded lg:hover:bg-transparent lg:border-0 lg:hover:text-teal-300 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent
+    }
+
+    .header-link-active {
+        @apply text-teal-400 lg:bg-transparent lg:text-teal-400 lg:p-0 dark:text-teal-400 lg:dark:text-blue-500
+    }
+
+    .th-shadow {
+        @apply shadow-[0px_20px_30px_-12px_rgba(0, 0, 0, 0.75)]
+    }
+}

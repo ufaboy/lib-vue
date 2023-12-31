@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full scroll-smooth dark:bg-gray-900 dark:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#1f2937" />
+    <script>
+      if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+    <title>Library</title>
+  </head>
+  <body class="h-full dark:bg-gray-900 dark:text-white">
+    <div id="app" class="h-full"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
