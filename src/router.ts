@@ -124,7 +124,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-	history: createWebHistory('reader'),
+	history: createWebHistory(),
 	routes,
 	// @ts-expect-error
 	scrollBehavior(to, from, savedPosition): RouterOptions {
