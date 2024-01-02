@@ -11,9 +11,9 @@ export default class Toast {
 		toastElement.classList.add(...this.getClassNames(type));
 		document.body.appendChild(toastElement);
 
-		// setTimeout(() => {
-		// 	document.body.removeChild(toastElement);
-		// }, this.duration * 1000);
+		setTimeout(() => {
+			document.body.removeChild(toastElement);
+		}, this.duration * 1000);
 	}
 
 	static success(message: string): void {

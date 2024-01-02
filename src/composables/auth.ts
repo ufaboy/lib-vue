@@ -23,7 +23,6 @@ export function useAuth() {
 				const userData: { name: string; access_token: string } = result;
 				if (userData.access_token) {
 					sessionStorage.setItem('lib-token', userData.access_token);
-					Toast.success('Successful');
 					await router.push({ name: 'book-table' });
 				} else {
 					console.log({ 'response.not token': response });
