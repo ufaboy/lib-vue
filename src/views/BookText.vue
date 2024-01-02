@@ -139,7 +139,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook()
             :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
             <div class="absolute -top-4 left-[calc(50%_-_40px)] bg-slate-400 dark:bg-slate-600 w-20 h-4 mx-auto rounded-t-xl"
                 @click="bottomSheetShow = !bottomSheetShow">
-                <svg class="m-auto"><use xlink:href="/icons/iconSprite.svg#menu" /></svg>
+                <svg class="m-auto" height="16" width="20"><use xlink:href="/icons/iconSprite.svg#menu" /></svg>
             </div>
             <div class="flex flex-row flex-wrap w-full md:w-auto">
                 <label for="" class="w-full">Font</label>
