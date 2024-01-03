@@ -3,10 +3,13 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useBook } from '@/composables/book';
 import { useImage } from '@/composables/images';
+import { PLAYER_INTERVALS } from '@/utils/constants';
+import { useRoutes } from '@/composables/routes';
 
 document.title = 'Comics';
 
 const route = useRoute();
+const {updateQueryStringParameter} = useRoutes()
 const bookID = Number(route.params.id);
 const { book, getBook } = useBook();
 const { getUploadedImageUrl } = useImage();
@@ -21,8 +24,15 @@ const totalImages = computed(() => {
 	return book.value && book.value.images ? book.value.images.length : '—';
 });
 
+const image = computed(()=> {
+  return book.value && book.value.images ? book.value.images[currentImageIndex.value] : null
+})
+
 function increasePage() {
-	if (book.value?.images && currentImageIndex.value < book.value.images.length - 1) currentImageIndex.value++;
+	if (book.value?.images && currentImageIndex.value < book.value.images.length - 1) {
+    currentImageIndex.value++;
+    updateQueryStringParameter(`page=${currentImageIndex.value}`)
+  }
 }
 
 function decreasePage() {
@@ -39,9 +49,16 @@ function autoTurnPage() {
 	}
 }
 
-onMounted(() => (mounted.value = true));
-onBeforeUnmount(() => clearInterval(renewIntervalID.value));
+function parseQuery() {
+  const queryPage = route.query.page
+  if( queryPage ) currentImageIndex.value = Number(queryPage)
+}
 
+onMounted(() => {
+  mounted.value = true
+});
+onBeforeUnmount(() => clearInterval(renewIntervalID.value));
+parseQuery()
 getBook(bookID);
 </script>
 
@@ -52,15 +69,17 @@ getBook(bookID);
     @keyup.left="decreasePage"
     @keyup.right="increasePage"
   >
-    <!-- <img v-if="book && book.images" :src="getUploadedImageUrl(image)" alt="" v-for="(image, index) in book.images"> -->
     <div
       v-if="book && book.images"
       id="default-carousel"
       class="relative w-full"
       data-carousel="slide"
     >
-      <!-- Carousel wrapper -->
-      <div class="relative h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg">
+      <img v-if="image"
+        :src="getUploadedImageUrl(image)"
+        class="h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg"
+      >
+      <!--       <div class="relative h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg">
         <div
           v-for="(image, index) in book.images"
           :key="index"
@@ -68,13 +87,13 @@ getBook(bookID);
           :class="{ hidden: currentImageIndex !== index }"
           data-carousel-item
         >
-          <img
+          <img v-if="index < currentImageIndex + 2 && index > currentImageIndex - 2"
             :src="getUploadedImageUrl(image)"
             class="absolute left-1/2 top-1/2 block h-full -translate-x-1/2 -translate-y-1/2 object-contain"
             alt="..."
           >
         </div>
-      </div>
+      </div> -->
       <button
         type="button"
         class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
@@ -84,7 +103,7 @@ getBook(bookID);
         <span
           class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
         >
-        <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
+          <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
           <span class="sr-only">Previous</span>
         </span>
       </button>
@@ -97,7 +116,7 @@ getBook(bookID);
         <span
           class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
         >
-        <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
+          <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
           <span class="sr-only">Next</span>
         </span>
       </button>
@@ -126,11 +145,11 @@ getBook(bookID);
           class="hidden w-16 rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 sm:block sm:text-xs dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
         >
         <datalist id="turn-second-list">
-          <option value="3" />
-          <option value="5" />
-          <option value="7" />
-          <option value="10" />
-          <option value="15" />
+          <option
+            v-for="(item, index) in PLAYER_INTERVALS"
+            :key="index"
+            :value="item"
+          />
         </datalist>
       </div>
     </Teleport>

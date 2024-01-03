@@ -89,7 +89,7 @@ export function useImage() {
 	function getUploadedImageUrl(image: Image) {
 		return import.meta.env.PROD
 			? `/${image.path}/${image.file_name}`
-			: `${import.meta.env.VITE_BACKEND_URL}/${image.path}/${image.file_name}`;
+			: `${import.meta.env.VITE_BACKEND_URL}/storage/${image.path}/${image.file_name}`;
 	}
 
 	function getImageUrl(image: Blob) {

@@ -21,4 +21,6 @@ const SORTING_OPTIONS = ['id', 'name', 'tag', 'count', 'rating', 'updated_at', '
 
 const SIZES = ['S', 'M', 'L', 'XL'];
 
-export { RATINGS, LIMIT, SIZES, TEXT_SIZES, REDIRECT_LOGIN_URL, SORTING_OPTIONS };
+const PLAYER_INTERVALS = [3, 5, 7, 10, 15, 20];
+
+export { RATINGS, LIMIT, SIZES, TEXT_SIZES, REDIRECT_LOGIN_URL, SORTING_OPTIONS, PLAYER_INTERVALS };
