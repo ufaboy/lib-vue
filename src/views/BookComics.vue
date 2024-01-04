@@ -77,7 +77,7 @@ getBook(bookID);
     >
       <img v-if="image"
         :src="getUploadedImageUrl(image)"
-        class="h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg"
+        class="max-h-[calc(100dvh_-_75px)] max-w-full overflow-hidden rounded-lg"
       >
       <!--       <div class="relative h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg">
         <div
