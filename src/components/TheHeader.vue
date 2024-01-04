@@ -20,7 +20,7 @@ watch(
 			<IconBurger class="size-10 sm:size-12" :class="{ active: dropdownShow }" />
 		</button>
 		<ul
-			class="absolute left-0 top-[50px] z-10 hidden w-full flex-row flex-wrap items-center bg-blue-500 text-white lg:static lg:mr-4 lg:flex lg:flex-nowrap lg:gap-3 lg:bg-blue-600 dark:bg-gray-900 dark:lg:bg-gray-900"
+			class="absolute left-0 top-[50px] z-40 hidden w-full flex-row flex-wrap items-center bg-blue-500 text-white lg:static lg:mr-4 lg:flex lg:flex-nowrap lg:gap-3 lg:bg-blue-600 dark:bg-gray-900 dark:lg:bg-gray-900"
 			:class="{ '!flex pb-3 ': dropdownShow }">
 			<li class="w-full lg:w-fit">
 				<router-link
