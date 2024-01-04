@@ -9,7 +9,7 @@ import { useRoutes } from '@/composables/routes';
 document.title = 'Comics';
 
 const route = useRoute();
-const {updateQueryStringParameter} = useRoutes()
+const { updateQueryStringParameter } = useRoutes();
 const bookID = Number(route.params.id);
 const { book, getBook } = useBook();
 const { getUploadedImageUrl } = useImage();
@@ -24,19 +24,22 @@ const totalImages = computed(() => {
 	return book.value && book.value.images ? book.value.images.length : '—';
 });
 
-const image = computed(()=> {
-  return book.value && book.value.images ? book.value.images[currentImageIndex.value] : null
-})
+const image = computed(() => {
+	return book.value && book.value.images ? book.value.images[currentImageIndex.value] : null;
+});
 
 function increasePage() {
 	if (book.value?.images && currentImageIndex.value < book.value.images.length - 1) {
-    currentImageIndex.value++;
-    updateQueryStringParameter(`page=${currentImageIndex.value}`)
-  }
+		currentImageIndex.value++;
+		updateQueryStringParameter(`page=${currentImageIndex.value + 1}`);
+	}
 }
 
 function decreasePage() {
-	if (currentImageIndex.value > 0) currentImageIndex.value--;
+	if (currentImageIndex.value > 0) {
+    currentImageIndex.value--;
+    updateQueryStringParameter(`page=${currentImageIndex.value + 1}`);
+  }
 }
 
 function autoTurnPage() {
@@ -50,77 +53,56 @@ function autoTurnPage() {
 }
 
 function parseQuery() {
-  const queryPage = route.query.page
-  if( queryPage ) currentImageIndex.value = Number(queryPage)
+	const queryPage = route.query.page;
+	if (queryPage) currentImageIndex.value = Number(queryPage);
 }
 
 onMounted(() => {
-  mounted.value = true
+	mounted.value = true;
 });
 onBeforeUnmount(() => clearInterval(renewIntervalID.value));
-parseQuery()
+parseQuery();
 getBook(bookID);
 </script>
 
 <template>
   <main
-    class="px-2 lg:px-4"
+    class="relative px-2 lg:px-4 flex justify-center"
     tabindex="0"
     @keyup.left="decreasePage"
     @keyup.right="increasePage"
   >
-    <div
-      v-if="book && book.images"
-      id="default-carousel"
-      class="relative w-full"
-      data-carousel="slide"
+    <img
+      v-if="image"
+      :src="getUploadedImageUrl(image)"
+      class="max-h-[calc(100dvh_-_75px)] max-w-full overflow-hidden rounded-lg"
     >
-      <img v-if="image"
-        :src="getUploadedImageUrl(image)"
-        class="max-h-[calc(100dvh_-_75px)] max-w-full overflow-hidden rounded-lg"
+    <button
+      type="button"
+      class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+      data-carousel-prev
+      @click="decreasePage"
+    >
+      <span
+        class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
       >
-      <!--       <div class="relative h-[calc(100dvh_-_75px)] overflow-hidden rounded-lg">
-        <div
-          v-for="(image, index) in book.images"
-          :key="index"
-          class="duration-700 ease-in-out"
-          :class="{ hidden: currentImageIndex !== index }"
-          data-carousel-item
-        >
-          <img v-if="index < currentImageIndex + 2 && index > currentImageIndex - 2"
-            :src="getUploadedImageUrl(image)"
-            class="absolute left-1/2 top-1/2 block h-full -translate-x-1/2 -translate-y-1/2 object-contain"
-            alt="..."
-          >
-        </div>
-      </div> -->
-      <button
-        type="button"
-        class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
-        data-carousel-prev
-        @click="decreasePage"
+        <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
+        <span class="sr-only">Previous</span>
+      </span>
+    </button>
+    <button
+      type="button"
+      class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+      data-carousel-next
+      @click="increasePage"
+    >
+      <span
+        class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
       >
-        <span
-          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
-        >
-          <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
-          <span class="sr-only">Previous</span>
-        </span>
-      </button>
-      <button
-        type="button"
-        class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
-        data-carousel-next
-        @click="increasePage"
-      >
-        <span
-          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
-        >
-          <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
-          <span class="sr-only">Next</span>
-        </span>
-      </button>
-    </div>
+        <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
+        <span class="sr-only">Next</span>
+      </span>
+    </button>
     <Teleport
       v-if="mounted"
       to="#header-target"
