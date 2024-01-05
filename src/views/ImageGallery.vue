@@ -25,10 +25,10 @@ watch(() => route.query, () => {
 })
 
 onMounted(() => {
-  queryImages.value.perPage = 20
   mounted.value = true
 })
-
+queryImages.value.page = 1
+queryImages.value.perPage = 20
 parseQueryParams()
 </script>
 

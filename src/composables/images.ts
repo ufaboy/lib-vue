@@ -1,12 +1,9 @@
 import { ref } from 'vue';
-import { useRoutes } from './routes';
 import { formRequest, deleteRequest, getRequest, getUrl, fetchData } from '@/utils/helper';
-import type { Image, QueryImages, ImagesResponse } from '@/interfaces/images';
+import type { Image, QueryImages, ImagesResponse, ImagesTotal } from '@/interfaces/images';
 import type { ListMeta } from '@/interfaces/meta';
 
 export function useImage() {
-	const { updateQueryStringParameter } = useRoutes();
-  
 	const image = ref<Image>();
 	const imageFileName = ref('');
 	const images = ref<Image[]>([]);
@@ -17,17 +14,21 @@ export function useImage() {
 		book_id: undefined,
 		book_name: undefined,
 		file_name: undefined,
-		page: 1,
-		perPage: 10,
+		page: undefined,
+		perPage: undefined,
 		sort: 'id',
 		expand: 'book',
 	});
 	const imageDialog = ref<InstanceType<typeof HTMLDialogElement>>();
 	const isTableView = ref(true);
 	const infinityState = ref(true);
+	const totalBooks = ref<Array<ImagesTotal>>([])
 
 	async function getImages(query?: BaseQuery) {
 		try {
+			if(!queryImages.value.book_id && !queryImages.value.book_name) {
+				return null;
+			}
 			const url = getUrl(`${import.meta.env.VITE_BACKEND_URL}/api/image`, {
 				...queryImages.value,
 				...query,
@@ -36,7 +37,6 @@ export function useImage() {
 			const data = await fetchData<ImagesResponse>(request);
 			images.value = data.items;
 			imagesMeta.value = data._meta;
-			updateQueryStringParameter(url.search);
 		} catch (error) {
 			console.log('getImages wrong', { error: error });
 		}
@@ -44,6 +44,9 @@ export function useImage() {
 
 	async function getImagesAndPush(query: QueryImages) {
 		try {
+			if (!queryImages.value.perPage || !queryImages.value.page) {
+				return;
+			}
 			const url = getUrl(`${import.meta.env.VITE_BACKEND_URL}/api/image`, {
 				...queryImages.value,
 				...query,
@@ -57,7 +60,6 @@ export function useImage() {
 			}
 			images.value = images.value.concat(data.items);
 			imagesMeta.value = data._meta;
-			updateQueryStringParameter(url.search);
 		} catch (error) {
 			console.log('getImages wrong', { error: error });
 		}
@@ -103,7 +105,9 @@ export function useImage() {
 	}
 
 	function changeSort(field: string) {
-		queryImages.value.page = 1;
+		if (queryImages.value.page) {
+			queryImages.value.page = 1;
+		}
 		const desc = queryImages.value.sort[0] === '-';
 		queryImages.value.sort = `${desc ? '' : '-'}${field}`;
 		getImages();
@@ -130,7 +134,6 @@ export function useImage() {
 			formData.append('book_id', image.value.book_id.toString());
 			console.log('updateImage', formData);
 			const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/image/update?id=${image.value.id}`);
-
 			const request = formRequest(url, 'POST', formData);
 			const data = await fetchData<Image>(request);
 			image.value = data;
@@ -144,9 +147,19 @@ export function useImage() {
 		}
 	}
 
+	async function getTotal() {
+		try {
+			const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/image/total`);
+			const request = getRequest(url);
+			const data = await fetchData<Array<ImagesTotal>>(request);
+			totalBooks.value = data
+		} catch (error) {}
+	}
+
 	return {
 		image,
 		images,
+		totalBooks,
 		imagesMeta,
 		queryImages,
 		isTableView,
@@ -154,6 +167,7 @@ export function useImage() {
 		imageFileName,
 		infinityState,
 		changeSort,
+		getTotal,
 		getImages,
 		getImagesAndPush,
 		updateImage,

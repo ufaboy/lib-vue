@@ -19,8 +19,8 @@ interface QueryImages {
 	path?: string;
 	file_name?: string;
 	sort: string;
-	perPage: number;
-	page: number;
+	perPage?: number;
+	page?: number;
 	expand?: string;
 }
 interface ImagesResponse {
@@ -28,4 +28,9 @@ interface ImagesResponse {
 	_meta: ListMeta;
 }
 
-export type { RawFile, Image, QueryImages, ImagesResponse };
+interface ImagesTotal {
+	book_id: number;
+	images_count: number
+}
+
+export type { RawFile, Image, QueryImages, ImagesResponse, ImagesTotal };
