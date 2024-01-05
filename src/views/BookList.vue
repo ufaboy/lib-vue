@@ -73,12 +73,12 @@ getTags();
 		<dialog
 			ref="filterDialog"
 			class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-80"
-			@close="closeDialog">
+			@close.passive="closeDialog">
 			<BookFilterForm
 				v-if="tags"
 				:tags="tags"
 				@search="getBooksByFilter"
-				@close="closeDialog"
+				@close.passive="closeDialog"
 				v-model:filter="queryBooks" />
 		</dialog>
 	</main>

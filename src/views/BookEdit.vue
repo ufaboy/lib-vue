@@ -262,7 +262,7 @@ onMounted(async () => {
             </button>
             <button
               type="reset"
-              @click.prevent="showNewTag = false"
+              @click.prevent.passive="showNewTag = false"
               class="rounded-full text-red-500 hover:bg-red-700/50"
             >
               <svg class="size-5">
@@ -274,7 +274,7 @@ onMounted(async () => {
             v-else
             type="button"
             class="btn-icon h-5 w-5"
-            @click.prevent="showNewTag = true"
+            @click.prevent.passive="showNewTag = true"
           >
             <svg class="size-5">
               <use xlink:href="/icons/iconSprite.svg#add" />
@@ -404,7 +404,7 @@ onMounted(async () => {
             class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400"
           />
         </label>
-        <button class="btn-red-outline" @click="removeAllFiles">
+        <button class="btn-red-outline" @click.passive="removeAllFiles">
           Remove Images
         </button>
       </div>
@@ -439,7 +439,7 @@ onMounted(async () => {
             <span :data-index="index" class="break-normal hover:text-blue-500">
               {{ image.name }}
             </span>
-            <button @click="images.splice(index, 1)">
+            <button @click.passive="images.splice(index, 1)">
               <svg class="size-5">
                 <use xlink:href="/icons/iconSprite.svg#delete" />
               </svg>
@@ -460,13 +460,13 @@ onMounted(async () => {
             class="flex items-center gap-2 p-1"
           >
             <button
-              @click="copyImageUrl(img)"
+              @click.passive="copyImageUrl(img)"
               :data-index="index"
               class="hover:text-blue-500"
             >
               {{ img.file_name }}
             </button>
-            <button @click="deleteImages([index])" class="dark:text-red-600">
+            <button @click.passive="deleteImages([index])" class="dark:text-red-600">
               <svg class="size-5">
                 <use xlink:href="/icons/iconSprite.svg#delete" />
               </svg>
@@ -483,7 +483,7 @@ onMounted(async () => {
     </div>
     <form id="Book" name="Book" @submit.prevent="saveBook"></form>
     <Teleport v-if="mounted" to="#header-target">
-      <button class="btn-header-blue" @click="typo">Typo</button>
+      <button class="btn-header-blue" @click.passive="typo">Typo</button>
       <ButtonExt
         form="Book"
         type="submit"

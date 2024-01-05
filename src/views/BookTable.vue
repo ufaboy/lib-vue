@@ -104,13 +104,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="ID"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('id') }"
-								@click="toggleColumn('id')">
+								@click.passive="toggleColumn('id')">
 								ID
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('id') }"
-								@click="changeSort('id')"
+								@click.passive="changeSort('id')"
 								aria-label="Sort by ID">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -127,13 +127,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Name"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('name') }"
-								@click="toggleColumn('name')">
+								@click.passive="toggleColumn('name')">
 								Name
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('name') }"
-								@click="changeSort('name')"
+								@click.passive="changeSort('name')"
 								aria-label="Sort by Name">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -152,13 +152,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Description"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('description') }"
-								@click="toggleColumn('description')">
+								@click.passive="toggleColumn('description')">
 								Description
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('description') }"
-								@click="changeSort('description')"
+								@click.passive="changeSort('description')"
 								aria-label="Sort by Description">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -175,11 +175,11 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Tags"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('tags') }"
-								@click="toggleColumn('tags')">
+								@click.passive="toggleColumn('tags')">
 								Tags
 							</button>
 							<!--               <button class="inline-block size-4 ml-2" :class="{ 'hidden': shortColumns.includes('tags') }"
-                @click="changeSort('tags')" aria-label="Sort by Tags">
+                @click.passive="changeSort('tags')" aria-label="Sort by Tags">
                 <IconSort :class="{}" size="16" :ascending="queryBooks.sort[0] !== '-'" />
               </button> -->
 						</div>
@@ -192,13 +192,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Rating"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('rating') }"
-								@click="toggleColumn('rating')">
+								@click.passive="toggleColumn('rating')">
 								Rating
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('rating') }"
-								@click="changeSort('rating')"
+								@click.passive="changeSort('rating')"
 								aria-label="Sort by Rating">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -215,13 +215,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Count"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('count') }"
-								@click="toggleColumn('count')">
+								@click.passive="toggleColumn('count')">
 								Count
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('count') }"
-								@click="changeSort('view_count')"
+								@click.passive="changeSort('view_count')"
 								aria-label="Sort by Count">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -238,13 +238,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Author"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('author') }"
-								@click="toggleColumn('author')">
+								@click.passive="toggleColumn('author')">
 								Author
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('author') }"
-								@click="changeSort('author')"
+								@click.passive="changeSort('author')"
 								aria-label="Sort by Author">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -261,13 +261,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Series"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('series') }"
-								@click="toggleColumn('series')">
+								@click.passive="toggleColumn('series')">
 								Series
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('series') }"
-								@click="changeSort('series')"
+								@click.passive="changeSort('series')"
 								aria-label="Sort by Series">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -286,13 +286,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Size"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('text_length') }"
-								@click="toggleColumn('text_length')">
+								@click.passive="toggleColumn('text_length')">
 								Size
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('text_length') }"
-								@click="changeSort('text_length')"
+								@click.passive="changeSort('text_length')"
 								aria-label="Sort by Length">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -311,13 +311,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden"
 								aria-label="Updated"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('updated_at') }"
-								@click="toggleColumn('updated_at')">
+								@click.passive="toggleColumn('updated_at')">
 								Updated
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('updated_at') }"
-								@click="changeSort('updated_at')"
+								@click.passive="changeSort('updated_at')"
 								aria-label="Sort by Updated At">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -336,13 +336,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 								class="overflow-hidden whitespace-nowrap"
 								aria-label="Last Read"
 								:class="{ 'w-4 invisible first-letter:visible': shortColumns.includes('last_read') }"
-								@click="toggleColumn('last_read')">
+								@click.passive="toggleColumn('last_read')">
 								Last Read
 							</button>
 							<button
 								class="inline-block size-4 ml-2"
 								:class="{ hidden: shortColumns.includes('last_read') }"
-								@click="changeSort('last_read')"
+								@click.passive="changeSort('last_read')"
 								aria-label="Sort by Last Read">
 								<svg class="size-4">
 									<use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />

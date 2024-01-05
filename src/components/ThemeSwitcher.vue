@@ -35,7 +35,7 @@ initTheme();
 			class="px-4 rounded-3xl border-0"
 			aria-pressed="false"
 			value="light"
-			@click="setTheme"
+			@click.passive="setTheme"
 			:class="{ 'bg-black dark:bg-white dark:text-black': theme === 'light' }">
 			Light
 		</button>
@@ -44,14 +44,14 @@ initTheme();
 			aria-pressed="true"
 			value="auto"
 			:class="{ 'bg-black dark:bg-white dark:text-black': !theme }"
-			@click="setTheme">
+			@click.passive="setTheme">
 			Auto
 		</button>
 		<button
 			class="px-4 rounded-3xl border-0"
 			aria-pressed="false"
 			value="dark"
-			@click="setTheme"
+			@click.passive="setTheme"
 			:class="{ 'bg-black dark:bg-white dark:text-black': theme === 'dark' }">
 			Dark
 		</button>

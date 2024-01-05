@@ -67,21 +67,22 @@ getBook(bookID);
 
 <template>
   <main
-    class="relative px-2 lg:px-4 flex justify-center"
+    class="px-2 lg:px-4"
     tabindex="0"
     @keyup.left="decreasePage"
     @keyup.right="increasePage"
   >
+  <div class="relative w-full flex justify-center">
     <img
       v-if="image"
       :src="getUploadedImageUrl(image)"
-      class="max-h-[calc(100dvh_-_75px)] max-w-full overflow-hidden rounded-lg"
+      class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg"
     >
     <button
       type="button"
       class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
       data-carousel-prev
-      @click="decreasePage"
+      @click.passive="decreasePage"
     >
       <span
         class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
@@ -94,7 +95,7 @@ getBook(bookID);
       type="button"
       class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
       data-carousel-next
-      @click="increasePage"
+      @click.passive="increasePage"
     >
       <span
         class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
@@ -103,6 +104,8 @@ getBook(bookID);
         <span class="sr-only">Next</span>
       </span>
     </button>
+  </div>
+
     <Teleport
       v-if="mounted"
       to="#header-target"
@@ -116,7 +119,7 @@ getBook(bookID);
         </div>
         <button
           class="btn-header-green mr-2 hidden sm:block"
-          @click="autoTurnPage"
+          @click.passive="autoTurnPage"
         >
           Auto {{ autoTurnPAgeON ? 'ON' : 'OFF' }}
         </button>

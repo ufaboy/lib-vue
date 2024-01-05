@@ -46,7 +46,7 @@ function updateSort(event: Event) {
 	<form method="dialog" class="flex flex-row flex-wrap p-4" @submit="$emit('search')">
 		<header class="w-full flex flex-row justify-between items-center mb-4">
 			<h2 class="filter-title">Filter & Sort</h2>
-			<button class="close-btn" type="reset" @click="$emit('close')">
+			<button class="close-btn" type="reset" @click.passive="$emit('close')">
 				<svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
 			</button>
 		</header>

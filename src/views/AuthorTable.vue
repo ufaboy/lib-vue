@@ -48,7 +48,7 @@ getAuthors();
 <template>
 	<main class="px-2 lg:px-4">
 		<Teleport v-if="mounted" to="#header-target">
-			<button class="btn-header-green" @click="startCreateAuthor">Create Author</button>
+			<button class="btn-header-green" @click.passive="startCreateAuthor">Create Author</button>
 		</Teleport>
 		<table class="w-full table-auto" v-table-nav>
 			<thead>
@@ -57,7 +57,7 @@ getAuthors();
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('id') }"
-							@click="changeSort('id')">
+							@click.passive="changeSort('id')">
 							<span class="mr-1">ID</span>
 							<svg class="size-4">
 								<use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -69,7 +69,7 @@ getAuthors();
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('name') }"
-							@click="changeSort('name')">
+							@click.passive="changeSort('name')">
 							<span class="mr-1">Name</span>
 							<svg class="size-4">
 								<use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -81,7 +81,7 @@ getAuthors();
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('url') }"
-							@click="changeSort('url')">
+							@click.passive="changeSort('url')">
 							<span class="mr-1">URL</span>
 							<svg class="size-4">
 								<use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
@@ -96,7 +96,7 @@ getAuthors();
 					v-for="author in authors"
 					:key="author.id"
 					class="border-b border-slate-600 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
-					@click="openAuthorDialog(author)">
+					@click.passive="openAuthorDialog(author)">
 					<td class="p-1">
 						<div>{{ author.id }}</div>
 					</td>
@@ -132,7 +132,7 @@ getAuthors();
 					<input type="url" name="url" class="w-full input mt-1" v-model="author.url" />
 				</label>
 				<footer class="w-full flex flex-row justify-between items-center">
-					<button type="reset" class="btn-gray-outline" aria-label="close" formnovalidate @click="closeDialog">
+					<button type="reset" class="btn-gray-outline" aria-label="close" formnovalidate @click.passive="closeDialog">
 						Close
 					</button>
 					<button class="btn-green" value="default">Save</button>

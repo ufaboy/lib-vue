@@ -14,7 +14,7 @@ export default {
 					},
 					{ passive: true },
 				);
-				imageElement.addEventListener('error', () => console.log('error'));
+				imageElement.addEventListener('error', () => console.log('error'), { passive: true });
 				imageElement.src = imageElement.dataset.url as string;
 			}
 		}

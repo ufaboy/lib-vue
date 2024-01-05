@@ -48,25 +48,25 @@ createPagination(props.meta);
 			<span>All: {{ meta.totalCount }}</span>
 		</div>
 		<nav class="flex flex-row flex-nowrap -space-x-px text-base" aria-label="Page navigation">
-			<button @click="$emit('updatePage', meta.currentPage - 1)" class="btn-paginator">
+			<button @click.passive="$emit('updatePage', meta.currentPage - 1)" class="btn-paginator">
 				<span class="sr-only">Previous</span>
 				<svg class="size-6">
 					<use xlink:href="/icons/iconSprite.svg#arrowBackward" />
 				</svg>
 			</button>
 			<template v-if="meta.currentPage > 3">
-				<button @click="$emit('updatePage', 1)" class="btn-paginator">
+				<button @click.passive="$emit('updatePage', 1)" class="btn-paginator">
 					<span class="sr-only">First</span>
 					<span>1</span>
 				</button>
-				<button @click="$emit('updatePage', meta.currentPage - 3)" class="btn-paginator">
+				<button @click.passive="$emit('updatePage', meta.currentPage - 3)" class="btn-paginator">
 					<span class="sr-only">Previous cohort</span>
 					<span>...</span>
 				</button>
 			</template>
 			<button
 				v-for="page in paginationArray"
-				@click="$emit('updatePage', page)"
+				@click.passive="$emit('updatePage', page)"
 				class="btn-paginator"
 				:class="{
 					'btn-paginator-active': meta.currentPage === page,
@@ -76,16 +76,16 @@ createPagination(props.meta);
 				{{ page }}
 			</button>
 			<template v-if="meta.currentPage < meta.pageCount - 2">
-				<button @click="$emit('updatePage', meta.currentPage + 3)" class="btn-paginator">
+				<button @click.passive="$emit('updatePage', meta.currentPage + 3)" class="btn-paginator">
 					<span class="sr-only">Next cohort</span>
 					<span>...</span>
 				</button>
-				<button @click="$emit('updatePage', meta.pageCount)" class="btn-paginator">
+				<button @click.passive="$emit('updatePage', meta.pageCount)" class="btn-paginator">
 					<span class="sr-only">Last</span>
 					<span>{{ meta.pageCount }}</span>
 				</button>
 			</template>
-			<button @click="$emit('updatePage', meta.currentPage + 1)" class="btn-paginator">
+			<button @click.passive="$emit('updatePage', meta.currentPage + 1)" class="btn-paginator">
 				<span class="sr-only">Next</span>
 				<svg class="size-6">
 					<use xlink:href="/icons/iconSprite.svg#arrowForward" />
