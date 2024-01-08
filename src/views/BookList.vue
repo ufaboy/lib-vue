@@ -49,7 +49,6 @@ getTags();
 	<main class="flex flex-row flex-wrap px-2 md:px-0" @touchstart="touchStart" @touchend="touchEnd">
 		<router-link
 			:to="{ name: isComics(book) ? 'comics-view' : 'book-view', params: { id: book.id } }"
-			replace
 			class="h-fit w-full md:min-w-[18rem] flex sm:flex-1 sm:shrink-0 flex-row flex-nowrap drop-shadow-md cursor-pointer rounded-md p-2 sm:mr-1 sm:mb-1 hover:bg-sky-400 shadow-lg mb-2 dark:bg-slate-800 hover:dark:bg-slate-700"
 			v-for="book of books"
 			:key="'book' + book.id">
