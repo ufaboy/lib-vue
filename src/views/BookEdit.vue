@@ -43,159 +43,131 @@ const bookID = computed(() => Number(route.params.id));
 const routeName = computed(() => route.name);
 
 const imageCoverList = computed(() => {
-  return book.value && book.value.images
-    ? book.value.images.map((img) => {
-        return `/${img.path}/${img.file_name}`;
-      })
-    : [];
+	return book.value && book.value.images
+		? book.value.images.map((img) => {
+				return `/${img.path}/${img.file_name}`;
+			})
+		: [];
 });
 const getUploadedImageUrl = computed(() => {
-  if (!image.value) return '';
-  if (image.value instanceof Blob) {
-    return window.URL.createObjectURL(image.value);
-  } else {
-    return import.meta.env.PROD
-      ? `/${image.value.path}/${image.value.file_name}`
-      : `${import.meta.env.VITE_BACKEND_URL}/${image.value.path}/${
-          image.value.file_name
-        }`;
-  }
+	if (!image.value) return '';
+	if (image.value instanceof Blob) {
+		return window.URL.createObjectURL(image.value);
+	} else {
+		return import.meta.env.PROD
+			? `/${image.value.path}/${image.value.file_name}`
+			: `${import.meta.env.VITE_BACKEND_URL}/${image.value.path}/${image.value.file_name}`;
+	}
 });
 
 watch(routeName, (newValue, oldValue) => {
-  if (newValue === 'book-create' && oldValue === 'book-update')
-    location.reload();
+	if (newValue === 'book-create' && oldValue === 'book-update') location.reload();
 });
 
 async function saveBook(event: Event) {
-  try {
-    if (loading.value) return null;
-    loading.value = true;
-    const formData = new FormData();
-    const formElement = event.target as HTMLFormElement;
-    const inputElements = Array.from(formElement.elements).filter((e) =>
-      e.getAttribute('name')
-    );
-    for (const element of inputElements) {
-      if (
-        element instanceof HTMLInputElement &&
-        element.name === 'Upload[imageFiles][]' &&
-        element.files
-      ) {
-        for (let i = 0; i < element.files.length; i++) {
-          const img = element.files[i];
-          formData.append(element.name, img);
-        }
-      } else if (
-        element instanceof HTMLSelectElement &&
-        element.name === 'Book[tag_ids][]'
-      ) {
-        for (const [i, opt] of Array.from(element.options).entries()) {
-          const optionElement = opt as HTMLOptionElement;
-          if (opt.selected) formData.append(element.name, optionElement.value);
-        }
-      } else if (
-        element instanceof HTMLInputElement &&
-        element.name === 'Book[tag_ids][]'
-      ) {
-        if (element.checked) formData.append(element.name, element.value);
-      } else if (
-        element instanceof HTMLInputElement &&
-        element.name === 'author_id'
-      ) {
-        const author = authors.value?.find(
-          (item) => item.name === element.value
-        );
-        formData.append(`Book[author_id]`, author ? String(author.id) : '');
-      } else if (
-        element instanceof HTMLInputElement &&
-        element.name === 'series_id'
-      ) {
-        const seriesItem = series.value?.find(
-          (item) => item.name === element.value
-        );
-        formData.append(
-          `Book[series_id]`,
-          seriesItem ? String(seriesItem.id) : ''
-        );
-      } else {
-        const inputElement = element as HTMLInputElement;
-        formData.append(`Book[${inputElement.name}]`, inputElement.value);
-      }
-    }
-    formData.append(`Book[text_length]`, String(text.value.length));
-    const url = bookID.value
-      ? new URL(
-          `${import.meta.env.VITE_BACKEND_URL}/api/book/update?id=${
-            bookID.value
-          }`
-        )
-      : new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/create`);
+	try {
+		if (loading.value) return null;
+		loading.value = true;
+		const formData = new FormData();
+		const formElement = event.target as HTMLFormElement;
+		const inputElements = Array.from(formElement.elements).filter((e) => e.getAttribute('name'));
+		if (book.value) {
+			formData.append(`bookID`, String(book.value.id));
+		}
+		formData.append(`Book[text_length]`, String(text.value.length));
+		for (const element of inputElements) {
+			if (element instanceof HTMLInputElement && element.name === 'Upload[imageFiles][]' && element.files) {
+				for (let i = 0; i < element.files.length; i++) {
+					const img = element.files[i];
+					formData.append(element.name, img);
+				}
+			} else if (element instanceof HTMLSelectElement && element.name === 'Book[tag_ids][]') {
+				for (const [i, opt] of Array.from(element.options).entries()) {
+					const optionElement = opt as HTMLOptionElement;
+					if (opt.selected) formData.append(element.name, optionElement.value);
+				}
+			} else if (element instanceof HTMLInputElement && element.name === 'Book[tag_ids][]') {
+				if (element.checked) formData.append(element.name, element.value);
+			} else if (element instanceof HTMLInputElement && element.name === 'author_id') {
+				const author = authors.value?.find((item) => item.name === element.value);
+				formData.append(`Book[author_id]`, author ? String(author.id) : '');
+			} else if (element instanceof HTMLInputElement && element.name === 'series_id') {
+				const seriesItem = series.value?.find((item) => item.name === element.value);
+				formData.append(`Book[series_id]`, seriesItem ? String(seriesItem.id) : '');
+			} else {
+				const inputElement = element as HTMLInputElement;
+				formData.append(`Book[${inputElement.name}]`, inputElement.value);
+			}
+		}
 
-    const request = formRequest(url, 'POST', formData);
-    const data = await fetchData<Book>(request);
-    bookStore.setBook(data);
-    if (tags.value) {
-      const comicsTag = tags.value.find((tag) => tag.name === 'comics');
-      if (comicsTag && comicsTag.id)
-        router.push({
-          name: `${
-            tagsID.value.includes(comicsTag.id) ? 'comics-view' : 'book-view'
-          }`,
-          params: { id: data.id },
-        });
-    } else {
-      router.push({ name: 'book-table', params: { id: data.id } });
-    }
-  } catch (error) {
-    console.log({ 'saveBook wrong': error });
-  } finally {
-    loading.value = false;
-  }
+		const url = bookID.value
+			? new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/update?id=${bookID.value}`)
+			: new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/create`);
+
+		const request = formRequest(url, 'POST', formData);
+		const data = await fetchData<Book>(request);
+		bookStore.setBook(data);
+		if (tags.value) {
+			const comicsTag = tags.value.find((tag) => tag.name === 'comics');
+			if (comicsTag && comicsTag.id)
+				router.push({
+					name: `${tagsID.value.includes(comicsTag.id) ? 'comics-view' : 'book-view'}`,
+					params: { id: data.id },
+				});
+		} else {
+			router.push({ name: 'book-table', params: { id: data.id } });
+		}
+	} catch (error) {
+		console.log({ 'saveBook wrong': error });
+	} finally {
+		loading.value = false;
+	}
 }
 
 async function removeAllFiles() {
-  const result = await deleteAllImages(bookID.value);
-  if (result && book.value) book.value.images = [];
+	const result = await deleteAllImages(bookID.value);
+	if (result && book.value) book.value.images = [];
 }
 async function loadBook(data: Book) {
-  name.value = data.name;
-  description.value = data.description || '';
-  source.value = data.source || '';
-  text.value = data.text || '';
-  cover.value = data.cover || '';
-  rating.value = data.rating;
-  tagsID.value = data.tags.map((tag) => tag.id);
-  authorName.value = data.author?.name;
-  seriesName.value = data.series?.name;
+	name.value = data.name;
+	description.value = data.description || '';
+	source.value = data.source || '';
+	text.value = data.text || '';
+	cover.value = data.cover || '';
+	rating.value = data.rating;
+	tagsID.value = data.tags.map((tag) => tag.id);
+	authorName.value = data.author?.name;
+	seriesName.value = data.series?.name;
 }
 function loadFiles(evt: Event) {
-  const fileList = (evt.target as HTMLInputElement).files;
-  if (fileList) {
-    for (const file of Array.from(fileList)) {
-      images.value.push(file);
-    }
-  }
+	const fileList = (evt.target as HTMLInputElement).files;
+	if (fileList) {
+		for (const file of Array.from(fileList)) {
+			images.value.push(file);
+		}
+	}
 }
 function mouseOverBlobImagesHandler(event: Event) {
-  const index = Number((event.target as HTMLElement).dataset.index);
-  image.value = images.value[index];
+	const index = Number((event.target as HTMLElement).dataset.index);
+	image.value = images.value[index];
 }
 function mouseOverBookImagesHandler(event: Event) {
-  const index = Number((event.target as HTMLElement).dataset.index);
-  if (book.value && book.value.images) image.value = book.value.images[index];
+	const index = Number((event.target as HTMLElement).dataset.index);
+	if (book.value && book.value.images) image.value = book.value.images[index];
 }
 function typo() {
-  if (book.value && window.Worker) {
-    const typografWorker = new Worker(
-      new URL('../utils/typografWorker.ts', import.meta.url),
-      { type: 'module' }
-    );
-    typografWorker.postMessage(text.value);
-    typografWorker.onmessage = (e) => {
-      text.value = e.data;
-    };
-  } else console.log('typo error');
+	if (book.value && window.Worker) {
+		const typografWorker = new Worker(new URL('../utils/typografWorker.ts', import.meta.url), { type: 'module' });
+		typografWorker.postMessage(text.value);
+		typografWorker.onmessage = (e) => {
+			text.value = e.data;
+		};
+	} else console.log('typo error');
+}
+
+function removeImage(imageID: number, index: number) {
+	deleteImages([imageID]);
+	book.value?.images?.splice(index, 1);
 }
 
 if (!tags.value) getTags({ perPage: 100, sort: 'name' });
@@ -203,315 +175,227 @@ if (!authors.value) getAuthors({ perPage: 100, sort: 'name' });
 if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 
 onMounted(async () => {
-  mounted.value = true;
-  if (route.name === 'book-update') {
-    await getBook(bookID.value);
-    if (book.value) loadBook(book.value);
-  }
+	mounted.value = true;
+	if (route.name === 'book-update') {
+		await getBook(bookID.value);
+		if (book.value) loadBook(book.value);
+	}
 });
 </script>
 
 <template>
-  <main class="px-2 lg:px-4 flex flex-row flex-nowrap">
-    <div class="flex flex-row flex-wrap w-[900px] h-fit">
-      <div class="w-full flex flex-col px-4 py-2">
-        <label for="name" class="label">Name</label>
-        <input
-          type="text"
-          name="name"
-          form="Book"
-          v-model.trim="name"
-          :title="name"
-          required
-          class="input"
-        />
-      </div>
-      <div class="w-1/2 flex flex-col px-4 py-2">
-        <label for="description" class="label">
-          Description
-          <output class="ml-2">{{ description.length }}</output>
-        </label>
-        <textarea
-          name="description"
-          form="Book"
-          maxlength="300"
-          v-model.trim="description"
-          rows="3"
-          class="input flex-1"
-        ></textarea>
-      </div>
-      <div class="w-1/2 px-4 py-2 flex flex-wrap">
-        <div class="w-full flex justify-between mb-2 gap-2">
-          <label for="tags" class="label mb-0">Tags</label>
-          <form
-            id="newTagForm"
-            v-if="showNewTag"
-            class="flex flex-row flex-nowrap items-center gap-1"
-            @submit.prevent="updateTag"
-          >
-            <input
-              type="text"
-              name="name"
-              v-model="tag"
-              class="input py-0 border-0"
-            />
-            <button class="rounded-full text-green-500 hover:bg-green-700/50">
-              <svg class="size-5">
-                <use xlink:href="/icons/iconSprite.svg#check" />
-              </svg>
-            </button>
-            <button
-              type="reset"
-              @click.prevent.passive="showNewTag = false"
-              class="rounded-full text-red-500 hover:bg-red-700/50"
-            >
-              <svg class="size-5">
-                <use xlink:href="/icons/iconSprite.svg#close" />
-              </svg>
-            </button>
-          </form>
-          <button
-            v-else
-            type="button"
-            class="btn-icon h-5 w-5"
-            @click.prevent.passive="showNewTag = true"
-          >
-            <svg class="size-5">
-              <use xlink:href="/icons/iconSprite.svg#add" />
-            </svg>
-          </button>
-        </div>
-        <div class="flex flex-wrap w-full">
-          <select
-            v-if="isMobile()"
-            name="Book[tag_ids][]"
-            form="Book"
-            multiple
-            class="select flex w-full"
-            v-model="tagsID"
-            required
-          >
-            <option v-for="tag in tags" :value="tag.id">{{ tag.name }}</option>
-          </select>
-          <template v-else>
-            <label
-              v-for="item in tags"
-              :for="item.name"
-              :key="item.id"
-              class="w-1/3 flex items-center gap-1"
-            >
-              <input
-                type="checkbox"
-                :id="item.name"
-                :value="item.id"
-                v-model="tagsID"
-                name="Book[tag_ids][]"
-                form="Book"
-                class="size-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-              />
-              <span>{{ item.name }}</span>
-            </label>
-          </template>
-        </div>
-      </div>
-      <div class="w-1/2 flex flex-col px-4 py-2">
-        <label for="source" class="label">Source</label>
-        <input
-          type="text"
-          name="source"
-          form="Book"
-          v-model.trim="source"
-          :title="source"
-          class="input"
-        />
-      </div>
-      <div class="w-1/2 flex flex-col px-4 py-2">
-        <label for="source" class="label">Cover</label>
-        <input
-          type="text"
-          name="cover"
-          form="Book"
-          list="coverList"
-          v-model.trim="cover"
-          :title="cover"
-          class="input"
-        />
-        <datalist id="coverList">
-          <option
-            v-for="(image, index) in imageCoverList"
-            :value="image"
-            :key="index"
-          ></option>
-        </datalist>
-      </div>
-      <div class="w-1/3 flex flex-col px-4 py-2">
-        <label for="author" class="label">Author</label>
-        <input
-          type="search"
-          form="Book"
-          name="author_id"
-          list="authorList"
-          class="input overflow-ellipsis"
-          aria-label="Search"
-          v-model="authorName"
-        />
-        <datalist id="authorList">
-          <option v-for="author in authors" :value="author.name"></option>
-        </datalist>
-      </div>
-      <div class="w-1/3 flex flex-col px-4 py-2">
-        <label for="" class="label">Series</label>
-        <input
-          type="search"
-          form="Book"
-          name="series_id"
-          list="seriesList"
-          aria-label="Search"
-          class="input overflow-ellipsis"
-          v-model="seriesName"
-        />
-        <datalist id="seriesList">
-          <option v-for="seria in series" :value="seria.name"></option>
-        </datalist>
-      </div>
-      <div class="w-1/3 flex flex-col justify-between px-4 py-2">
-        <label for="rating" class="label">Rating</label>
-        <select
-          name="rating"
-          form="Book"
-          class="select"
-          v-model="rating"
-          required
-        >
-          <option v-for="num in RATINGS" :value="num.value">
-            {{ num.name }}
-          </option>
-        </select>
-      </div>
-      <div class="w-full flex justify-between items-center px-4 py-3">
-        <label
-          for="multiple_files"
-          class="flex mr-3 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          <input
-            id="multiple_files"
-            type="file"
-            multiple
-            form="Book"
-            name="Upload[imageFiles][]"
-            accept="video/webm,image/webp,audio/mpeg"
-            @change="loadFiles"
-            class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400"
-          />
-        </label>
-        <button class="btn-red-outline" @click.passive="removeAllFiles">
-          Remove Images
-        </button>
-      </div>
-      <div class="w-full px-4 py-3">
-        <label for="text" class="w-full label"
-          >Text — <span>Length:</span
-          ><output class="mr-2">{{ text.length }}</output> <span>Size:</span
-          ><output>{{ calcTextSize(text.length) }}kb</output>
-        </label>
-        <textarea
-          name="text"
-          form="Book"
-          class="w-full input"
-          rows="20"
-          v-model="text"
-        ></textarea>
-      </div>
-    </div>
-    <div class="w-96 hidden md:block">
-      <div v-if="images.length">
-        <h3>New</h3>
-        <ol
-          class="columns-2"
-          @mouseover="mouseOverBlobImagesHandler"
-          @mouseleave="image = undefined"
-        >
-          <li
-            v-for="(image, index) in images"
-            :key="index"
-            class="flex items-center gap-2 p-1"
-          >
-            <span :data-index="index" class="break-normal hover:text-blue-500">
-              {{ image.name }}
-            </span>
-            <button @click.passive="images.splice(index, 1)">
-              <svg class="size-5">
-                <use xlink:href="/icons/iconSprite.svg#delete" />
-              </svg>
-            </button>
-          </li>
-        </ol>
-      </div>
-      <div v-if="book?.images?.length">
-        <h3 class="text-lg">Uploaded:</h3>
-        <ol
-          class="columns-2"
-          @mouseover="mouseOverBookImagesHandler"
-          @mouseleave="image = undefined"
-        >
-          <li
-            v-for="(img, index) in book.images"
-            :key="index"
-            class="flex items-center gap-2 p-1"
-          >
-            <button
-              @click.passive="copyImageUrl(img)"
-              :data-index="index"
-              class="hover:text-blue-500"
-            >
-              {{ img.file_name }}
-            </button>
-            <button @click.passive="deleteImages([index])" class="dark:text-red-600">
-              <svg class="size-5">
-                <use xlink:href="/icons/iconSprite.svg#delete" />
-              </svg>
-            </button>
-          </li>
-        </ol>
-      </div>
-      <img
-        v-if="image"
-        :src="getUploadedImageUrl"
-        class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
-        onerror="this.onerror=null;this.src = '/images/unknownImage.webp'"
-      />
-    </div>
-    <form id="Book" name="Book" @submit.prevent="saveBook"></form>
-    <Teleport v-if="mounted" to="#header-target">
-      <button class="btn-header-blue" @click.passive="typo">Typo</button>
-      <ButtonExt
-        form="Book"
-        type="submit"
-        class="btn-header-green"
-      >
-        <template #append>
-          <svg
-            v-if="loading"
-            aria-hidden="true"
-            role="status"
-            class="inline size-4 animate-spin text-white"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <use xlink:href="/icons/iconSprite.svg#loadingRing" />
-          </svg>
-        </template>
-        <template #default>Save</template>
-      </ButtonExt>
-      <router-link
-        v-if="route.name === 'book-update'"
-        :to="{ name: 'book-view' }"
-        class="btn-yellow py-2 px-4"
-        active-class="header-link-active"
-      >
-        View
-      </router-link>
-    </Teleport>
-  </main>
+	<main class="px-2 lg:px-4 flex flex-row flex-nowrap">
+		<div class="flex flex-row flex-wrap w-[900px] h-fit">
+			<div class="w-full flex flex-col px-4 py-2">
+				<label for="name" class="label">Name</label>
+				<input type="text" name="name" form="Book" v-model.trim="name" :title="name" required class="input" />
+			</div>
+			<div class="w-1/2 flex flex-col px-4 py-2">
+				<label for="description" class="label">
+					Description
+					<output class="ml-2">{{ description.length }}</output>
+				</label>
+				<textarea
+					name="description"
+					form="Book"
+					maxlength="300"
+					v-model.trim="description"
+					rows="3"
+					class="input flex-1"></textarea>
+			</div>
+			<div class="w-1/2 px-4 py-2 flex flex-wrap">
+				<div class="w-full flex justify-between mb-2 gap-2">
+					<label for="tags" class="label mb-0">Tags</label>
+					<form
+						id="newTagForm"
+						v-if="showNewTag"
+						class="flex flex-row flex-nowrap items-center gap-1"
+						@submit.prevent="updateTag">
+						<input type="text" name="name" v-model="tag" class="input py-0 border-0" />
+						<button class="rounded-full text-green-500 hover:bg-green-700/50">
+							<svg class="size-5">
+								<use xlink:href="/icons/iconSprite.svg#check" />
+							</svg>
+						</button>
+						<button
+							type="reset"
+							@click.prevent.passive="showNewTag = false"
+							class="rounded-full text-red-500 hover:bg-red-700/50">
+							<svg class="size-5">
+								<use xlink:href="/icons/iconSprite.svg#close" />
+							</svg>
+						</button>
+					</form>
+					<button v-else type="button" class="btn-icon h-5 w-5" @click.prevent.passive="showNewTag = true">
+						<svg class="size-5">
+							<use xlink:href="/icons/iconSprite.svg#add" />
+						</svg>
+					</button>
+				</div>
+				<div class="flex flex-wrap w-full">
+					<select
+						v-if="isMobile()"
+						name="Book[tag_ids][]"
+						form="Book"
+						multiple
+						class="select flex w-full"
+						v-model="tagsID"
+						required>
+						<option v-for="tag in tags" :value="tag.id">{{ tag.name }}</option>
+					</select>
+					<template v-else>
+						<label v-for="item in tags" :for="item.name" :key="item.id" class="w-1/3 flex items-center gap-1">
+							<input
+								type="checkbox"
+								:id="item.name"
+								:value="item.id"
+								v-model="tagsID"
+								name="Book[tag_ids][]"
+								form="Book"
+								class="size-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+							<span>{{ item.name }}</span>
+						</label>
+					</template>
+				</div>
+			</div>
+			<div class="w-1/2 flex flex-col px-4 py-2">
+				<label for="source" class="label">Source</label>
+				<input type="text" name="source" form="Book" v-model.trim="source" :title="source" class="input" />
+			</div>
+			<div class="w-1/2 flex flex-col px-4 py-2">
+				<label for="source" class="label">Cover</label>
+				<input
+					type="text"
+					name="cover"
+					form="Book"
+					list="coverList"
+					v-model.trim="cover"
+					:title="cover"
+					class="input" />
+				<datalist id="coverList">
+					<option v-for="(image, index) in imageCoverList" :value="image" :key="index"></option>
+				</datalist>
+			</div>
+			<div class="w-1/3 flex flex-col px-4 py-2">
+				<label for="author" class="label">Author</label>
+				<input
+					type="search"
+					form="Book"
+					name="author_id"
+					list="authorList"
+					class="input overflow-ellipsis"
+					aria-label="Search"
+					v-model="authorName" />
+				<datalist id="authorList">
+					<option v-for="author in authors" :value="author.name"></option>
+				</datalist>
+			</div>
+			<div class="w-1/3 flex flex-col px-4 py-2">
+				<label for="" class="label">Series</label>
+				<input
+					type="search"
+					form="Book"
+					name="series_id"
+					list="seriesList"
+					aria-label="Search"
+					class="input overflow-ellipsis"
+					v-model="seriesName" />
+				<datalist id="seriesList">
+					<option v-for="seria in series" :value="seria.name"></option>
+				</datalist>
+			</div>
+			<div class="w-1/3 flex flex-col justify-between px-4 py-2">
+				<label for="rating" class="label">Rating</label>
+				<select name="rating" form="Book" class="select" v-model="rating" required>
+					<option v-for="num in RATINGS" :value="num.value">
+						{{ num.name }}
+					</option>
+				</select>
+			</div>
+			<div class="w-full flex justify-between items-center px-4 py-3">
+				<label for="multiple_files" class="flex mr-3 text-sm font-medium text-gray-900 dark:text-white">
+					<input
+						id="multiple_files"
+						type="file"
+						multiple
+						form="Book"
+						name="Upload[imageFiles][]"
+						accept="video/webm,image/webp,audio/mpeg"
+						@change="loadFiles"
+						class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" />
+				</label>
+				<button class="btn-red-outline" @click.passive="removeAllFiles">Remove Images</button>
+			</div>
+			<div class="w-full px-4 py-3">
+				<label for="text" class="w-full label"
+					>Text — <span>Length:</span><output class="mr-2">{{ text.length }}</output> <span>Size:</span
+					><output>{{ calcTextSize(text.length) }}kb</output>
+				</label>
+				<textarea name="text" form="Book" class="w-full input" rows="20" v-model="text"></textarea>
+			</div>
+		</div>
+		<div class="w-96 hidden md:block">
+			<div v-if="images.length">
+				<h3>New</h3>
+				<ol class="columns-2" @mouseover="mouseOverBlobImagesHandler" @mouseleave="image = undefined">
+					<li v-for="(image, index) in images" :key="index" class="flex items-center gap-2 p-1">
+						<span :data-index="index" class="break-normal hover:text-blue-500">
+							{{ image.name }}
+						</span>
+						<button @click.passive="images.splice(index, 1)">
+							<svg class="size-5">
+								<use xlink:href="/icons/iconSprite.svg#delete" />
+							</svg>
+						</button>
+					</li>
+				</ol>
+			</div>
+			<div v-if="book?.images?.length">
+				<h3 class="text-lg">Uploaded:</h3>
+				<ol class="columns-2" @mouseover="mouseOverBookImagesHandler" @mouseleave="image = undefined">
+					<li v-for="(img, index) in book.images" :key="index" class="flex items-center gap-2 p-1">
+						<button @click.passive="copyImageUrl(img)" :data-index="index" class="hover:text-blue-500">
+							{{ img.file_name }}
+						</button>
+						<button @click.passive="removeImage(img.id, index)" class="dark:text-red-600">
+							<svg class="size-5">
+								<use xlink:href="/icons/iconSprite.svg#delete" />
+							</svg>
+						</button>
+					</li>
+				</ol>
+			</div>
+			<img
+				v-if="image"
+				:src="getUploadedImageUrl"
+				class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
+				onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
+		</div>
+		<form id="Book" name="Book" @submit.prevent="saveBook"></form>
+		<Teleport v-if="mounted" to="#header-target">
+			<button class="btn-header-blue" @click.passive="typo">Typo</button>
+			<ButtonExt form="Book" type="submit" class="btn-header-green">
+				<template #append>
+					<svg
+						v-if="loading"
+						aria-hidden="true"
+						role="status"
+						class="inline size-4 animate-spin text-white"
+						viewBox="0 0 100 101"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg">
+						<use xlink:href="/icons/iconSprite.svg#loadingRing" />
+					</svg>
+				</template>
+				<template #default>Save</template>
+			</ButtonExt>
+			<router-link
+				v-if="route.name === 'book-update'"
+				:to="{ name: 'book-view' }"
+				class="btn-yellow py-2 px-4"
+				active-class="header-link-active">
+				View
+			</router-link>
+		</Teleport>
+	</main>
 </template>
