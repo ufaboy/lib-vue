@@ -47,7 +47,7 @@ vi.mock('../composables/series', () => ({
 beforeAll(() => {
   // create teleport target
   const el = document.createElement('div');
-  el.id = 'header-target';
+  el.id = 'menu-target';
   // console.log({ 'document.body': document.body });
   document.body.appendChild(el);
 });
@@ -90,7 +90,7 @@ describe('SeriesTable', () => {
       },
     });
     
-    const targetElement = document.getElementById('header-target');
+    const targetElement = document.getElementById('menu-target');
     const btnElement = targetElement?.querySelector(
       '.btn-header-green'
     ) as HTMLButtonElement;

@@ -20,6 +20,7 @@ document.title = 'Books';
 const props = defineProps({
 	scrollProgress: Number,
 });
+
 const { books, queryBooks, booksMeta, loading, getBooks, changeSort, isComics, sizeConverter, parseQueryBookParams } =
 	useBook();
 const { convertTagToString, getTags } = useTag();
@@ -92,12 +93,12 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 </script>
 
 <template>
-	<main class="px-2 md:px-4">
+	<main class="">
 		<table class="w-full table-auto border-separate border-spacing-0" v-table-nav>
 			<thead>
 				<tr>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700 rounded-tl"
+						class="th sticky top-0 !rounded-es-none"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('id') }">
 							<button
@@ -120,7 +121,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('name') }">
 							<button
@@ -143,7 +144,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div
 							class="flex flex-row items-center"
@@ -168,7 +169,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('tags') }">
 							<button
@@ -185,7 +186,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('rating') }">
 							<button
@@ -208,7 +209,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('count') }">
 							<button
@@ -231,7 +232,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('author') }">
 							<button
@@ -254,7 +255,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div class="flex flex-row items-center" :class="{ 'text-emerald-300': queryBooks.sort.includes('series') }">
 							<button
@@ -277,7 +278,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div
 							class="flex flex-row items-center"
@@ -302,7 +303,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700"
+						class="th sticky top-0"
 						:class="{ '!border-black ': scrolled }">
 						<div
 							class="flex flex-row items-center"
@@ -327,7 +328,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</div>
 					</th>
 					<th
-						class="p-1 sticky border-b border-transparent top-[50px] bg-white dark:bg-gray-700 rounded-tr"
+						class="th sticky top-0 !rounded-ee-none"
 						:class="{ '!border-black ': scrolled }">
 						<div
 							class="flex flex-row items-center"
@@ -353,7 +354,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 					</th>
 				</tr>
 				<tr>
-					<th class="p-1 dark:bg-gray-700 rounded-bl">
+					<th class="th">
 						<input
 							form="searchForm"
 							name="id"
@@ -364,7 +365,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							v-model="queryBooks.id"
 							@search="getBooksByFilter" />
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							form="searchForm"
 							name="name"
@@ -376,7 +377,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							@search="getBooksByFilter"
 							autocomplete="off" />
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							form="searchForm"
 							name="description"
@@ -388,7 +389,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							@search="getBooksByFilter"
 							autocomplete="off" />
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<select
 							form="searchForm"
 							name="tag"
@@ -401,7 +402,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							<option v-for="tag in tags" :value="tag.name">{{ tag.name }}</option>
 						</select>
 					</th>
-					<th class="p-1 dark:bg-gray-700" :class="{ 'w-2': shortColumns.includes('rating') }">
+					<th class="th" :class="{ 'w-2': shortColumns.includes('rating') }">
 						<select
 							form="searchForm"
 							name="rating"
@@ -414,7 +415,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							<option v-for="num in RATINGS" :value="num.value">{{ num.name }}</option>
 						</select>
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							type="search"
 							form="searchForm"
@@ -425,7 +426,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							v-model="queryBooks.view_count"
 							@search="getBooksByFilter" />
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							type="search"
 							form="searchForm"
@@ -441,7 +442,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							<option v-for="author in authors" :value="author.name">{{ author.name }}</option>
 						</datalist>
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							type="search"
 							form="searchForm"
@@ -457,7 +458,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							<option v-for="seria in series" :value="seria.name">{{ seria.name }}</option>
 						</datalist>
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<select
 							form="searchForm"
 							name="size"
@@ -470,7 +471,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							<option v-for="element in SIZES" :value="element">{{ element }}</option>
 						</select>
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							type="date"
 							form="searchForm"
@@ -481,7 +482,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							v-model="queryBooks.updated_at"
 							@change="getBooksByFilter" />
 					</th>
-					<th class="p-1 dark:bg-gray-700 rounded-br">
+					<th class="th">
 						<input
 							type="date"
 							form="searchForm"
@@ -495,8 +496,8 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="book in books" :key="book.id" class="hover:bg-gray-300 dark:hover:bg-gray-700">
-					<td class="p-1 border-b border-slate-600">
+				<tr v-for="book in books" :key="book.id" class="tr">
+					<td class="td">
 						<router-link
 							:to="{ name: 'book-update', params: { id: book.id } }"
 							class="block"
@@ -504,7 +505,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							{{ book.id }}
 						</router-link>
 					</td>
-					<td class="p-1 border-b border-slate-600">
+					<td class="td">
 						<router-link
 							:to="{ name: isComics(book) ? 'comics-view' : 'book-view', params: { id: book.id } }"
 							class="line-clamp-2"
@@ -512,47 +513,47 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 							{{ book.name }}
 						</router-link>
 					</td>
-					<td class="p-1 border-b border-slate-600">
+					<td class="td">
 						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('description') }">
 							{{ book.description }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600">
+					<td class="td">
 						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('tags') }">
 							{{ convertTagToString(book.tags) }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600 w-5 text-center">
+					<td class="td w-5 text-center">
 						<span v-if="book.rating" :class="{ hidden: shortColumns.includes('rating') }">
 							{{ getBookRating(book.rating) }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600 text-center">
+					<td class="td text-center">
 						<span :class="{ hidden: shortColumns.includes('count') }">
 							{{ book.view_count }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600">
+					<td class="td">
 						<span :class="{ hidden: shortColumns.includes('author') }">
 							{{ book.author?.name }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600">
+					<td class="td">
 						<span :class="{ hidden: shortColumns.includes('series') }">
 							{{ book.series?.name }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600 text-center">
+					<td class="td text-center">
 						<span :class="{ hidden: shortColumns.includes('length') }">
 							{{ sizeConverter(book.text_length) }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600 text-center">
+					<td class="td text-center">
 						<span :class="{ hidden: shortColumns.includes('updated_at') }">
 							{{ convertTimestampToDate(book.updated_at) }}
 						</span>
 					</td>
-					<td class="p-1 border-b border-slate-600 text-center">
+					<td class="td text-center">
 						<span :class="{ hidden: shortColumns.includes('last_read') }">
 							{{ convertTimestampToDate(book.last_read) }}
 						</span>
@@ -562,11 +563,6 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 			</tbody>
 		</table>
 		<TablePaginator v-if="booksMeta" :meta="booksMeta" @update-page="getBooksByPage" @update-limit="updateLimit" />
-		<Teleport v-if="mounted" to="#header-target">
-			<router-link :to="{ name: 'book-create' }" class="btn-header-green" active-class="header-link-active">
-				Create
-			</router-link>
-		</Teleport>
 		<form name="searchForm"></form>
 		<TheLoader v-if="loading" class="fixed m-auto inset-0 size-24 text-emerald-500" />
 	</main>

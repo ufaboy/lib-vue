@@ -7,6 +7,10 @@ import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 
 document.title = 'Authors';
 
+const props = defineProps({
+	sidebarCollapsed: Boolean,
+});
+
 const {
 	authorDialog,
 	author,
@@ -46,14 +50,11 @@ getAuthors();
 </script>
 
 <template>
-	<main class="px-2 lg:px-4">
-		<Teleport v-if="mounted" to="#header-target">
-			<button class="btn-header-green" @click.passive="startCreateAuthor">Create Author</button>
-		</Teleport>
+	<main class="">
 		<table class="w-full table-auto" v-table-nav>
 			<thead>
 				<tr>
-					<th class="p-1">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('id') }"
@@ -65,7 +66,7 @@ getAuthors();
 							</svg>
 						</button>
 					</th>
-					<th class="p-1">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('name') }"
@@ -77,7 +78,7 @@ getAuthors();
 							</svg>
 						</button>
 					</th>
-					<th class="p-1">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryAuthors.sort.includes('url') }"
@@ -95,15 +96,15 @@ getAuthors();
 				<tr
 					v-for="author in authors"
 					:key="author.id"
-					class="border-b border-slate-600 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
+					class="tr"
 					@click.passive="openAuthorDialog(author)">
-					<td class="p-1">
+					<td class="td">
 						<div>{{ author.id }}</div>
 					</td>
-					<td class="p-1">
+					<td class="td">
 						<div>{{ author.name }}</div>
 					</td>
-					<td class="p-1">
+					<td class="td">
 						<div class="w-32 md:w-auto truncate">{{ author.url }}</div>
 					</td>
 				</tr>
@@ -115,6 +116,17 @@ getAuthors();
 			:meta="authorsMeta"
 			@update-page="getAuthorsByPage"
 			@update-limit="updateLimit" />
+		<Teleport v-if="mounted" to="#menu-target">
+			<button
+				class="nav-btn border flex items-center px-2 py-1 hover:bg-gray-600"
+				:class="{ 'w-full': !sidebarCollapsed, 'w-fit': sidebarCollapsed }"
+				@click.passive="startCreateAuthor">
+				<svg aria-hidden="true" role="status" class="inline size-6" fill="none">
+					<use xlink:href="/icons/iconSprite.svg#add" />
+				</svg>
+				<span v-if="!sidebarCollapsed">Create Author</span>
+			</button>
+		</Teleport>
 		<dialog
 			ref="authorDialog"
 			class="dialog bg-neutral-300 dark:bg-slate-800 text-slate-800 dark:text-white shadow-md rounded-lg w-80"

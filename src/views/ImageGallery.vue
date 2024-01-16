@@ -33,7 +33,7 @@ parseQueryParams()
 </script>
 
 <template>
-  <main class="flex flex-wrap gap-3 px-2 lg:px-4">
+  <main class="flex flex-wrap gap-3">
     <form
       action=""
       class="flex w-full items-center gap-4"
@@ -106,16 +106,5 @@ parseQueryParams()
         @close="closeDialog"
       />
     </dialog>
-    <Teleport
-      v-if="mounted"
-      to="#header-target"
-    >
-      <RouterLink
-        :to="{ name: 'images-table' }"
-        class="whitespace-nowrap"
-      >
-        Table View
-      </RouterLink>
-    </Teleport>
   </main>
 </template>

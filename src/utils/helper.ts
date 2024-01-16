@@ -89,6 +89,11 @@ function isMobile(): boolean {
 	return /android/i.test(navigator.userAgent) || /iPad|iPhone|iPod/.test(navigator.userAgent);
 }
 
+function isSmallDevice() {
+	const width = Math.floor(document.documentElement.clientWidth);
+	return width < 1024
+}
+
 function getRandomColor(): string {
 	const letters = '0123456789ABCDEF';
 	let color = '#';
@@ -115,6 +120,7 @@ export {
 	errorHandler,
 	calcTextSize,
 	isMobile,
+	isSmallDevice,
 	getRandomColor,
 	generateRandomNumber,
 };

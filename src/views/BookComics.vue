@@ -37,9 +37,9 @@ function increasePage() {
 
 function decreasePage() {
 	if (currentImageIndex.value > 0) {
-    currentImageIndex.value--;
-    updateQueryStringParameter(`page=${currentImageIndex.value + 1}`);
-  }
+		currentImageIndex.value--;
+		updateQueryStringParameter(`page=${currentImageIndex.value + 1}`);
+	}
 }
 
 function autoTurnPage() {
@@ -67,48 +67,47 @@ getBook(bookID);
 
 <template>
   <main
-    class="px-2 lg:px-4"
+    class=""
     tabindex="0"
     @keyup.left="decreasePage"
     @keyup.right="increasePage"
   >
-  <div class="relative w-full flex justify-center">
-    <img
-      v-if="image"
-      :src="getUploadedImageUrl(image)"
-      class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg"
-    >
-    <button
-      type="button"
-      class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
-      data-carousel-prev
-      @click.passive="decreasePage"
-    >
-      <span
-        class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
+    <div class="relative flex w-full justify-center">
+      <img
+        v-if="image"
+        :src="getUploadedImageUrl(image)"
+        class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg"
       >
-        <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
-        <span class="sr-only">Previous</span>
-      </span>
-    </button>
-    <button
-      type="button"
-      class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
-      data-carousel-next
-      @click.passive="increasePage"
-    >
-      <span
-        class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
+      <button
+        type="button"
+        class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+        data-carousel-prev
+        @click.passive="decreasePage"
       >
-        <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
-        <span class="sr-only">Next</span>
-      </span>
-    </button>
-  </div>
-
+        <span
+          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
+        >
+          <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
+          <span class="sr-only">Previous</span>
+        </span>
+      </button>
+      <button
+        type="button"
+        class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+        data-carousel-next
+        @click.passive="increasePage"
+      >
+        <span
+          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
+        >
+          <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
+          <span class="sr-only">Next</span>
+        </span>
+      </button>
+    </div>
     <Teleport
       v-if="mounted"
-      to="#header-target"
+      to="#menu-target"
     >
       <div class="flex flex-row">
         <div class="mr-3 max-w-[200px] truncate leading-8">

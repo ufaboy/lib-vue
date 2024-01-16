@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+
 import IconBurger from '@/components/IconBurger.vue';
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
 
 const version = __APP_VERSION__;
 const route = useRoute();
 const dropdownShow = ref(false);
+
+const routeName = computed(() => {
+	return route.name ? route.name.toString() : 'undefiened';
+});
+const bookID = computed(() => {
+	return ['book-view', 'comics-view'].includes(routeName.value) ? Number(route.params.id) : null;
+});
 
 watch(
 	() => route.name,
@@ -15,7 +23,8 @@ watch(
 </script>
 
 <template>
-	<header class="header flex h-[50px] flex-row items-center gap-2 bg-blue-600 px-2 lg:px-4 dark:bg-gray-900 dark:text-white">
+	<header
+		class="header flex h-[50px] flex-row items-center gap-2 bg-blue-600 px-2 lg:px-4 dark:bg-gray-900 dark:text-white">
 		<button class="h-full text-white lg:hidden" aria-label="Menu" @click="dropdownShow = !dropdownShow">
 			<IconBurger class="size-10 sm:size-12" :class="{ active: dropdownShow }" />
 		</button>
@@ -65,6 +74,13 @@ watch(
 				<ThemeSwitcher />
 			</li>
 		</ul>
-		<div id="header-target" class="ml-auto flex h-full flex-row items-center gap-1 md:gap-3"></div>
+		<div id="menu-target" class="ml-auto flex h-full flex-row items-center gap-1 md:gap-3"></div>
+		<RouterLink
+			v-if="['book-view', 'comics-view'].includes(routeName)"
+			:to="{ name: 'book-update', params: { id: bookID } }"
+			class="sidebar-link flex items-center gap-2 border rounded-md"
+			active-class="sidebar-link-active">
+			<span>Update</span>
+		</RouterLink>
 	</header>
 </template>

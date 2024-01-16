@@ -16,6 +16,10 @@ import ButtonExt from '@/components/ButtonExt.vue';
 
 document.title = 'Book Edit';
 
+const props = defineProps({
+	sidebarCollapsed: Boolean,
+});
+
 const route = useRoute();
 const router = useRouter();
 const { book, getBook } = useBook();
@@ -184,7 +188,7 @@ onMounted(async () => {
 </script>
 
 <template>
-	<main class="px-2 lg:px-4 flex flex-row flex-nowrap">
+	<main class="flex flex-row flex-nowrap">
 		<div class="flex flex-row flex-wrap w-[900px] h-fit">
 			<div class="w-full flex flex-col px-4 py-2">
 				<label for="name" class="label">Name</label>
@@ -324,7 +328,12 @@ onMounted(async () => {
 						@change="loadFiles"
 						class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" />
 				</label>
-				<button class="btn-red-outline" @click.passive="removeAllFiles">Remove Images</button>
+				<button class="btn-red-outline flex gap-1" @click.passive="removeAllFiles">Remove
+					<span class="hidden lg:inline">Images</span>
+					<svg aria-hidden="true" role="status" class="inline size-5 text-red-500">
+					<use xlink:href="/icons/iconSprite.svg#image" />
+				</svg>
+			</button>
 			</div>
 			<div class="w-full px-4 py-3">
 				<label for="text" class="w-full label"
@@ -372,30 +381,29 @@ onMounted(async () => {
 				onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
 		</div>
 		<form id="Book" name="Book" @submit.prevent="saveBook"></form>
-		<Teleport v-if="mounted" to="#header-target">
-			<button class="btn-header-blue" @click.passive="typo">Typo</button>
-			<ButtonExt form="Book" type="submit" class="btn-header-green">
-				<template #append>
-					<svg
-						v-if="loading"
-						aria-hidden="true"
-						role="status"
-						class="inline size-4 animate-spin text-white"
-						viewBox="0 0 100 101"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg">
-						<use xlink:href="/icons/iconSprite.svg#loadingRing" />
-					</svg>
-				</template>
-				<template #default>Save</template>
-			</ButtonExt>
-			<router-link
-				v-if="route.name === 'book-update'"
-				:to="{ name: 'book-view' }"
-				class="btn-yellow py-2 px-4"
-				active-class="header-link-active">
-				View
-			</router-link>
+		<Teleport v-if="mounted" to="#menu-target">
+			<button
+				class="nav-btn border flex items-center gap-2 hover:bg-gray-600"
+				:class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }"
+				@click.prevent="typo">
+				<svg aria-hidden="true" role="status" class="inline size-6">
+					<use xlink:href="/icons/iconSprite.svg#spellcheck" />
+				</svg>
+				<span v-if="!sidebarCollapsed">Typo</span>
+			</button>
+			<button
+				form="Book"
+				type="submit"
+				class="nav-btn border flex items-center gap-2 hover:bg-gray-600"
+				:class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }">
+				<svg v-if="!sidebarCollapsed || !loading" aria-hidden="true" role="status" class="inline size-6">
+					<use xlink:href="/icons/iconSprite.svg#save" />
+				</svg>
+				<span v-if="!sidebarCollapsed">Save</span>
+				<svg v-if="loading" aria-hidden="true" role="status" class="inline size-6 animate-spin text-white">
+					<use xlink:href="/icons/iconSprite.svg#loadingRing" />
+				</svg>
+			</button>
 		</Teleport>
 	</main>
 </template>

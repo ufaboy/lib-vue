@@ -23,7 +23,9 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
@@ -32,8 +34,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "index.d.ts",
-    "src/utils/typografWorker.ts"
-, "src/utils/transitions.js"  ],
+    "src/utils/typografWorker.ts",
+    "src/utils/transitions.js"
+  ],
   "exclude": [
     "node_modules",
     "src/**/*.spec.ts",

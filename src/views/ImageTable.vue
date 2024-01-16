@@ -55,14 +55,14 @@ getTotal()
 </script>
 
 <template>
-	<main class="px-2 lg:px-4">
-		<table v-table-nav class="table-auto">
+	<main class="">
+		<table v-table-nav class="w-full table-auto border-separate border-spacing-0">
 			<thead>
 				<tr>
-					<th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0 !rounded-es-none">
 						<input ref="commonCheckbox" v-model="allchecked" type="checkbox" class="size-4 align-middle" />
 					</th>
-					<!-- <th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<!-- <th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryImages.sort.includes('id') }"
@@ -74,7 +74,7 @@ getTotal()
 							</svg>
 						</button>
 					</th> -->
-					<th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryImages.sort.includes('book_id') }"
@@ -86,7 +86,7 @@ getTotal()
 							</svg>
 						</button>
 					</th>
-					<th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryImages.sort.includes('book_name') }"
@@ -98,7 +98,7 @@ getTotal()
 							</svg>
 						</button>
 					</th>
-					<th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryImages.sort.includes('file_name') }"
@@ -110,7 +110,7 @@ getTotal()
 							</svg>
 						</button>
 					</th>
-					<th class="sticky top-[50px] rounded-tl border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': queryImages.sort.includes('path') }"
@@ -122,13 +122,13 @@ getTotal()
 							</svg>
 						</button>
 					</th>
-					<th class="sticky top-[50px] rounded-tr border-b border-transparent bg-white p-1 dark:bg-gray-700">
+					<th class="th sticky top-0 !rounded-ee-none">
 						<span>Actions</span>
 					</th>
 				</tr>
 				<tr>
-					<th class="rounded-bl p-1 dark:bg-gray-700" />
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th" />
+					<th class="th">
 						<input
 							v-model="queryImages.book_id"
 							form="searchForm"
@@ -144,7 +144,7 @@ getTotal()
 							</option>
 						</datalist>
 					</th>
-					<th class="p-1 dark:bg-gray-700">
+					<th class="th">
 						<input
 							v-model="queryImages.bookName"
 							form="searchForm"
@@ -154,37 +154,37 @@ getTotal()
 							aria-label="Search"
 							@search="getImages" />
 					</th>
-					<!-- <th class="p-1 dark:bg-gray-700" /> -->
-					<th class="p-1 dark:bg-gray-700" />
-					<th class="p-1 dark:bg-gray-700" />
-					<th class="rounded-br p-1 dark:bg-gray-700" />
+					<!-- <th class="th" /> -->
+					<th class="th" />
+					<th class="th" />
+					<th class="th" />
 				</tr>
 			</thead>
 			<tbody>
 				<tr
 					v-for="(file, index) in images"
 					:key="file.id"
-					class="cursor-pointer border-b border-slate-600"
+					class="tr"
 					:class="{ 'bg-slate-500': file === image }">
-					<td class="text-center">
+					<td class="td text-center">
 						<input v-model="checkedArray[index]" type="checkbox" class="h-4 w-4 align-middle" />
 					</td>
-					<td class="text-center">
+					<td class="td text-center">
 						<span>{{ file.book?.id }}</span>
 					</td>
-					<td class="text-center">
+					<td class="td text-center">
 						<span class="whitespace-nowrap">{{ file.book?.name }}</span>
 					</td>
 					<!-- <td class="text-center">
 						<span>{{ file.id }}</span>
 					</td> -->
-					<td class="text-center">
+					<td class="td text-center">
 						<span class="whitespace-nowrap">{{ file.file_name }}</span>
 					</td>
-					<td class="text-center">
+					<td class="td text-center">
 						<span>{{ file.path }}</span>
 					</td>
-					<td class="text-center">
+					<td class="td text-center">
 						<button class="align-middle" @click="image = file">
 							<svg class="size-6" @click="showImageDialog(file)"><use xlink:href="/icons/iconSprite.svg#edit" /></svg>
 						</button>
@@ -199,8 +199,5 @@ getTotal()
 			@close="closeDialog">
 			<ImageForm v-if="image" :image="image" @close="closeDialog" />
 		</dialog>
-		<Teleport v-if="mounted" to="#header-target">
-			<RouterLink :to="{ name: 'images-gallery' }" class="whitespace-nowrap"> Gallery View </RouterLink>
-		</Teleport>
 	</main>
 </template>

@@ -7,6 +7,10 @@ import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 
 document.title = 'Series';
 
+const props = defineProps({
+	sidebarCollapsed: Boolean,
+});
+
 const {
 	seriesDialog,
 	seria,
@@ -45,14 +49,22 @@ getSeries();
 </script>
 
 <template>
-	<main class="px-2 lg:px-4">
-		<Teleport v-if="mounted" to="#header-target">
-			<button class="btn-header-green" @click="startCreateSeries">Create Series</button>
+	<main class="">
+		<Teleport v-if="mounted" to="#menu-target">
+			<button
+				class="nav-btn border flex items-center px-2 py-1 hover:bg-gray-600"
+				:class="{ 'w-full': !sidebarCollapsed, 'w-fit': sidebarCollapsed }"
+				@click.passive="startCreateSeries">
+				<svg aria-hidden="true" role="status" class="inline size-6" fill="none">
+					<use xlink:href="/icons/iconSprite.svg#add" />
+				</svg>
+				<span v-if="!sidebarCollapsed">Create Series</span>
+			</button>
 		</Teleport>
 		<table class="w-full table-auto" v-table-nav>
 			<thead>
 				<tr>
-					<th class="p-1">
+					<th class="th">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': querySeries.sort.includes('id') }"
@@ -64,7 +76,7 @@ getSeries();
 							</svg>
 						</button>
 					</th>
-					<th class="p-1">
+					<th class="th">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': querySeries.sort.includes('name') }"
@@ -76,7 +88,7 @@ getSeries();
 							</svg>
 						</button>
 					</th>
-					<th class="p-1">
+					<th class="th">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': querySeries.sort.includes('url') }"
@@ -94,15 +106,15 @@ getSeries();
 				<tr
 					v-for="part in series"
 					:key="part.id"
-					class="border-b border-slate-600 cursor-pointer"
+					class="tr"
 					@click="openSeriesDialog(part)">
-					<td class="p-1">
+					<td class="td">
 						<span>{{ part.id }}</span>
 					</td>
-					<td class="p-1">
+					<td class="td">
 						<span>{{ part.name }}</span>
 					</td>
-					<td class="p-1">
+					<td class="td">
 						<div class="w-32 md:w-auto max-w-[300px] truncate">
 							{{ part.url }}
 						</div>

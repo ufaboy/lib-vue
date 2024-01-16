@@ -28,7 +28,7 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
 					id="login-username"
 					name="username"
 					type="text"
-					class="input mb-3"
+					class="input mb-4 p-3 text-xl"
 					required
 					autocomplete="off"
 					autofocus
@@ -42,18 +42,18 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
 					v-model="password"
 					type="password"
 					name="password"
-					class="input mb-4"
+					class="input mb-6 p-3 text-xl"
 					required
 					autocomplete="off" />
 				<button
-					class="relative flex flex-row items-center justify-center rounded-lg bg-gradient-to-br from-green-400 to-blue-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 transition-colors"
+					class="relative flex flex-row items-center justify-center rounded-lg bg-gradient-to-br from-green-600 to-blue-600 p-3 text-xl font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 transition-colors"
 					:class="{ 'cursor-progress': loading }">
 					Submit
 					<svg
 						v-if="loading"
 						aria-hidden="true"
 						role="status"
-						class="absolute ml-20 inline size-4 animate-spin text-white"
+						class="absolute ml-40 inline size-5 animate-spin text-gray-500"
 						viewBox="0 0 100 101"
 						fill="none"
 						xmlns="http://www.w3.org/2000/svg">

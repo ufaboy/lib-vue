@@ -38,11 +38,11 @@ if (!tags.value) getTags({ perPage: 50, sort: 'name' });
 </script>
 
 <template>
-	<main class="px-2 lg:px-4">
+	<main class="">
 		<table v-if="tags" v-table-nav class="w-full table-auto">
 			<thead>
 				<tr>
-					<th class="p-1">
+					<th class="th">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': sort.includes('id') }"
@@ -54,7 +54,7 @@ if (!tags.value) getTags({ perPage: 50, sort: 'name' });
 							</svg>
 						</button>
 					</th>
-					<th class="p-1">
+					<th class="th">
 						<button
 							class="flex flex-row flex-nowrap items-center"
 							:class="{ 'text-emerald-300': sort.includes('name') }"
@@ -74,10 +74,10 @@ if (!tags.value) getTags({ perPage: 50, sort: 'name' });
 					:key="tag.id"
 					class="cursor-pointer border-b border-slate-600 hover:bg-gray-300 dark:hover:bg-gray-700"
 					@click="showTagModal(tag)">
-					<td class="p-1">
+					<td class="td">
 						<span>{{ tag.id }}</span>
 					</td>
-					<td class="p-1">
+					<td class="td">
 						<span>{{ tag.name }}</span>
 					</td>
 				</tr>

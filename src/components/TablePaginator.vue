@@ -49,18 +49,18 @@ createPagination(props.meta);
 		</div>
 		<nav class="flex flex-row flex-nowrap -space-x-px text-base" aria-label="Page navigation">
 			<button @click.passive="$emit('updatePage', meta.currentPage - 1)" class="btn-paginator">
-				<span class="sr-only">Previous</span>
+				<span class="relative sr-only">Previous</span>
 				<svg class="size-6">
 					<use xlink:href="/icons/iconSprite.svg#arrowBackward" />
 				</svg>
 			</button>
 			<template v-if="meta.currentPage > 3">
 				<button @click.passive="$emit('updatePage', 1)" class="btn-paginator">
-					<span class="sr-only">First</span>
+					<span class="relative sr-only">First</span>
 					<span>1</span>
 				</button>
 				<button @click.passive="$emit('updatePage', meta.currentPage - 3)" class="btn-paginator">
-					<span class="sr-only">Previous cohort</span>
+					<span class="relative sr-only">Previous cohort</span>
 					<span>...</span>
 				</button>
 			</template>
@@ -77,16 +77,16 @@ createPagination(props.meta);
 			</button>
 			<template v-if="meta.currentPage < meta.pageCount - 2">
 				<button @click.passive="$emit('updatePage', meta.currentPage + 3)" class="btn-paginator">
-					<span class="sr-only">Next cohort</span>
+					<span class="relative sr-only">Next cohort</span>
 					<span>...</span>
 				</button>
 				<button @click.passive="$emit('updatePage', meta.pageCount)" class="btn-paginator">
-					<span class="sr-only">Last</span>
+					<span class="relative sr-only">Last</span>
 					<span>{{ meta.pageCount }}</span>
 				</button>
 			</template>
 			<button @click.passive="$emit('updatePage', meta.currentPage + 1)" class="btn-paginator">
-				<span class="sr-only">Next</span>
+				<span class="relative sr-only">Next</span>
 				<svg class="size-6">
 					<use xlink:href="/icons/iconSprite.svg#arrowForward" />
 				</svg>

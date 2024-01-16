@@ -1,7 +1,10 @@
-import { ref } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 
-export default function useScroll() {
+export function useScroll() {
+	const observedElement = ref<HTMLElement>(document.documentElement);
 	const isThrottledScroll = ref(false);
+	const progress = ref(0);
+	const btnTopShow = ref(false);
 	const lastScrollTop = ref(0);
 	const hideByScroll = ref(false);
 	const currentScroll = ref(0);
@@ -26,12 +29,12 @@ export default function useScroll() {
 		}, 500);
 	};
 	const initHeights = function () {
-		scrollHeight.value = Math.floor(document.documentElement.scrollHeight);
-		clientHeight.value = Math.floor(document.documentElement.clientHeight);
+		scrollHeight.value = Math.floor(observedElement.value.scrollHeight);
+		clientHeight.value = Math.floor(observedElement.value.clientHeight);
 		return scrollHeight.value - clientHeight.value;
 	};
 	const calcScrollingProgress = function () {
-		const clientHeight = document.documentElement.clientHeight;
+		const clientHeight = observedElement.value.clientHeight;
 		const initHeightsNumber = initHeights();
 		scrollingProgress.value = {
 			progress: initHeightsNumber ? Math.round((scrollTop.value * 100) / initHeightsNumber) : 0,
@@ -41,7 +44,7 @@ export default function useScroll() {
 		};
 	};
 	const handleScroll = function () {
-		scrollTop.value = Math.floor(document.documentElement.scrollTop);
+		scrollTop.value = Math.floor(observedElement.value.scrollTop);
 		const res = scrollTop.value - lastScrollTop.value;
 		if (scrollTop.value > lastScrollTop.value) {
 			hideByScroll.value = scrollTop.value > 150 && res > 70;
@@ -49,12 +52,24 @@ export default function useScroll() {
 			hideByScroll.value = false;
 		}
 		lastScrollTop.value = scrollTop.value <= 0 ? 0 : scrollTop.value;
-
 		windowHeights.value = scrollHeight.value - clientHeight.value;
+		btnTopShow.value = scrollTop.value > 100;
 		calcScrollingProgress();
 	};
 
+	function scrollTo(top = 0, left = 0) {
+		observedElement.value.scrollTo({
+			top,
+			left,
+			behavior: 'smooth',
+		});
+	}
+
 	return {
+		isThrottledScroll,
+		observedElement,
+		progress,
+		btnTopShow,
 		currentScroll,
 		lastScrollTop,
 		scrollTop,
@@ -65,5 +80,6 @@ export default function useScroll() {
 		scrollingProgress,
 		initHeights,
 		throttleScroll,
+		scrollTo,
 	};
 }

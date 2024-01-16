@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouterOptions } from 'vue-router';
+import { isSmallDevice } from './utils/helper';
 
 const LayoutAuth = () => import('./layouts/LayoutAuth.vue');
 const LayoutMain = () => import('./layouts/LayoutMain.vue');
+const LayoutSidebar = () => import('./layouts/LayoutSidebar.vue');
 const AuthorTable = () => import('./views/AuthorTable.vue');
 const BookTable = () => import('./views/BookTable.vue');
 const BookList = () => import('./views/BookList.vue');
@@ -19,7 +21,7 @@ const ErrorPage = () => import('./views/ErrorPage.vue');
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
-		component: LayoutMain,
+		component: isSmallDevice() ? LayoutMain : LayoutSidebar,
 		children: [
 			{
 				path: '',
@@ -150,5 +152,7 @@ router.beforeEach(async (to, from) => {
 router.onError(() => {
 	router.replace('/error');
 });
+
+
 
 export { router, routes };
