@@ -85,7 +85,6 @@ async function scrollToBookmark() {
 
 	if (bookmark) {
 		window.scrollTo(0, (bookmark * windowHeights) / 100);
-		console.log('scrollToBookmark', bookmark * windowHeights);
 	}
 }
 
