@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { formRequest, deleteRequest, getRequest, getUrl, fetchData } from '@/utils/helper';
-import type { Image, QueryImages, ImagesResponse, ImagesTotal } from '@/interfaces/images';
+import type { Image, QueryImages, ImagesResponse, StorageImages } from '@/interfaces/images';
 import type { ListMeta } from '@/interfaces/meta';
 
 export function useImage() {
@@ -22,11 +22,21 @@ export function useImage() {
 	const imageDialog = ref<InstanceType<typeof HTMLDialogElement>>();
 	const isTableView = ref(true);
 	const infinityState = ref(true);
-	const totalBooks = ref<Array<ImagesTotal>>([])
+	const storageImages = ref<Array<StorageImages>>([]);
+
+	async function getImageByName(bookID: number, imageName: string) {
+		try {
+			const url = getUrl(`${import.meta.env.VITE_BACKEND_URL}/api/image/view-by-name`, { bookID, imageName });
+			const request = getRequest(url);
+			return await fetchData<ImagesResponse>(request);
+		} catch (error) {
+			console.log('getImageByName wrong', { error: error });
+		}
+	}
 
 	async function getImages(query?: BaseQuery) {
 		try {
-			if(!queryImages.value.book_id && !queryImages.value.book_name) {
+			if (!queryImages.value.book_id && !queryImages.value.book_name) {
 				return null;
 			}
 			const url = getUrl(`${import.meta.env.VITE_BACKEND_URL}/api/image`, {
@@ -93,6 +103,12 @@ export function useImage() {
 			? `/${image.path}/${image.file_name}`
 			: `${import.meta.env.VITE_BACKEND_URL}/${image.path}/${image.file_name}`;
 	}
+	function getStorageImageUrl(imageName: string, dirID: number) {
+		const bookPath = `book_${String(dirID).padStart(3, '0')}`;
+		return import.meta.env.PROD
+			? `/media/${bookPath}/${imageName}`
+			: `${import.meta.env.VITE_BACKEND_URL}/media/${bookPath}/${imageName}`;
+	}
 
 	function getImageUrl(image: Blob) {
 		return window.URL.createObjectURL(image);
@@ -118,7 +134,8 @@ export function useImage() {
 		image.value = undefined;
 	}
 
-	function showImageDialog(img: Image) {
+	async function showImageDialog(bookID: number, imageName: string) {
+		const img = await getImageByName(bookID, imageName);
 		image.value = img;
 		imageFileName.value = img.file_name;
 		if (imageDialog.value) imageDialog.value.showModal();
@@ -151,15 +168,15 @@ export function useImage() {
 		try {
 			const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/image/total`);
 			const request = getRequest(url);
-			const data = await fetchData<Array<ImagesTotal>>(request);
-			totalBooks.value = data
+			const data = await fetchData<Array<StorageImages>>(request);
+			storageImages.value = data;
 		} catch (error) {}
 	}
 
 	return {
 		image,
 		images,
-		totalBooks,
+		storageImages,
 		imagesMeta,
 		queryImages,
 		isTableView,
@@ -168,6 +185,7 @@ export function useImage() {
 		infinityState,
 		changeSort,
 		getTotal,
+		getImageByName,
 		getImages,
 		getImagesAndPush,
 		updateImage,
@@ -175,6 +193,7 @@ export function useImage() {
 		deleteAllImages,
 		getImageUrl,
 		copyImageUrl,
+		getStorageImageUrl,
 		getUploadedImageUrl,
 		closeDialog,
 		showImageDialog,

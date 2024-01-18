@@ -32,5 +32,9 @@ interface ImagesTotal {
 	book_id: number;
 	images_count: number
 }
+interface StorageImages {
+	bookID: number;
+	images: Array<string>;
+}
 
-export type { RawFile, Image, QueryImages, ImagesResponse, ImagesTotal };
+export type { RawFile, Image, QueryImages, ImagesResponse, ImagesTotal, StorageImages };

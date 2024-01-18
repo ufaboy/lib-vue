@@ -11,7 +11,6 @@ const BookText = () => import('./views/BookText.vue');
 const BookComics = () => import('./views/BookComics.vue');
 const BookEdit = () => import('./views/BookEdit.vue');
 const ImageGallery = () => import('./views/ImageGallery.vue');
-const ImageTable = () => import('./views/ImageTable.vue');
 const SeriesTable = () => import('./views/SeriesTable.vue');
 const TagTable = () => import('./views/TagTable.vue');
 const LoginPage = () => import('./views/LoginPage.vue');
@@ -78,18 +77,8 @@ const routes: RouteRecordRaw[] = [
 			},
 			{
 				path: '/images',
-				children: [
-					{
-						path: '',
-						name: 'images-table',
-						component: ImageTable,
-					},
-					{
-						path: 'gallery',
-						name: 'images-gallery',
-						component: ImageGallery,
-					},
-				],
+				name: 'images',
+				component: ImageGallery
 			},
 		],
 	},

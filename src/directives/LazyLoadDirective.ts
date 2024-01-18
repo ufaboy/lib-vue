@@ -9,7 +9,6 @@ export default {
 					() => {
 						setTimeout(() => {
 							el.classList.add('loaded');
-							el.classList.remove('cap');
 						}, 100);
 					},
 					{ passive: true },
@@ -53,5 +52,6 @@ export default {
 		} else {
 			createObserver();
 		}
+		
 	},
 };

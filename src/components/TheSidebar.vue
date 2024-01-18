@@ -70,7 +70,7 @@ const bookID = computed(()=> {
 			</li>
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'images-table' }"
+					:to="{ name: 'images' }"
 					class="sidebar-link flex items-center gap-2"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6" fill="none">
@@ -89,28 +89,6 @@ const bookID = computed(()=> {
 						<use xlink:href="/icons/iconSprite.svg#bookAdd" />
 					</svg>
 					<span v-show="!collapsed">Create</span>
-				</RouterLink>
-			</li>
-			<li v-if="route.name === 'images-table'" class="w-full">
-				<RouterLink
-					:to="{ name: 'images-gallery' }"
-					class="sidebar-link flex items-center gap-2"
-					active-class="sidebar-link-active">
-					<svg class="inline size-6" fill="none">
-						<use xlink:href="/icons/iconSprite.svg#gallery" />
-					</svg>
-					<span v-show="!collapsed">Gallery View</span>
-				</RouterLink>
-			</li>
-			<li v-if="route.name === 'images-gallery'" class="w-full">
-				<RouterLink
-					:to="{ name: 'images-table' }"
-					class="sidebar-link flex items-center gap-2"
-					active-class="sidebar-link-active">
-					<svg class="inline size-6" fill="none">
-						<use xlink:href="/icons/iconSprite.svg#gallery" />
-					</svg>
-					<span v-show="!collapsed">Table View</span>
 				</RouterLink>
 			</li>
 			<li v-if="route.name === 'book-update'" class="w-full">
