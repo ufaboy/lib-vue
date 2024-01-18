@@ -28,7 +28,7 @@ export function useImage() {
 		try {
 			const url = getUrl(`${import.meta.env.VITE_BACKEND_URL}/api/image/view-by-name`, { bookID, imageName });
 			const request = getRequest(url);
-			return await fetchData<ImagesResponse>(request);
+			return await fetchData<Image>(request);
 		} catch (error) {
 			console.log('getImageByName wrong', { error: error });
 		}
@@ -136,8 +136,10 @@ export function useImage() {
 
 	async function showImageDialog(bookID: number, imageName: string) {
 		const img = await getImageByName(bookID, imageName);
-		image.value = img;
-		imageFileName.value = img.file_name;
+		if (img) {
+			image.value = img;
+			imageFileName.value = img.file_name;
+		}
 		if (imageDialog.value) imageDialog.value.showModal();
 	}
 
