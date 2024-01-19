@@ -34,6 +34,7 @@ interface ImagesTotal {
 }
 interface StorageImages {
 	bookID: number;
+	bookName: string;
 	images: Array<string>;
 }
 

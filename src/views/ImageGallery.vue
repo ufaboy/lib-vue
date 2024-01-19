@@ -73,7 +73,7 @@ getTotal();
 			</label> -->
 		</form>
 		<div v-for="dir in filteredImages" :key="dir.bookID">
-			<h2 class="mb-2">Book {{ dir.bookID }}</h2>
+			<h2 class="mb-2">Book {{ dir.bookID }} {{ dir.bookName }}</h2>
 			<button v-for="(img, index) in dir.images" :key="index" class="p-2" @click="showImageDialog(dir.bookID, img)">
 				<figure class="h-full" v-lazy-load>
 					<img src="" class="size-44 rounded-md object-cover" :data-url="getStorageImageUrl(img, dir.bookID)" />
