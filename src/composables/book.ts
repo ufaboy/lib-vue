@@ -86,7 +86,7 @@ export function useBook() {
 	}
 
 	function updateRouterQuery(searchParams: URLSearchParams) {
-		router.replace(`/${route.name === 'book-table' ? 'books' : 'books-list'}?${searchParams.toString()}`);
+		router.replace(`/books?${searchParams.toString()}`);
 	}
 
 	async function updateBookMark(bookID: number, progress: number) {

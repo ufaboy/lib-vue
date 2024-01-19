@@ -24,26 +24,17 @@ const routes: RouteRecordRaw[] = [
 		children: [
 			{
 				path: '',
-				redirect: { name: 'book-table' },
+				redirect: { name: 'books' },
 			},
 			{
 				path: '/tags',
-				name: 'tag-list',
+				name: 'tags',
 				component: TagTable,
 			},
 			{
 				path: '/books',
-				name: 'book-table',
-				component: BookTable,
-				beforeEnter: (to, from) => {
-					const width = Math.floor(document.documentElement.clientWidth);
-					if (width < 1024) return { name: 'book-list' };
-				},
-			},
-			{
-				path: '/books-list',
-				name: 'book-list',
-				component: BookList,
+				name: 'books',
+				component: document.documentElement.clientWidth > 1024 ? BookTable : BookList,
 			},
 			{
 				path: '/book/:id',
@@ -67,12 +58,12 @@ const routes: RouteRecordRaw[] = [
 			},
 			{
 				path: '/authors',
-				name: 'author-list',
+				name: 'authors',
 				component: AuthorTable,
 			},
 			{
 				path: '/series',
-				name: 'series-list',
+				name: 'series',
 				component: SeriesTable,
 			},
 			{

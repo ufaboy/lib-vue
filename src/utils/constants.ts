@@ -17,7 +17,7 @@ const TEXT_SIZES = [
 
 const REDIRECT_LOGIN_URL = '/login';
 
-const SORTING_OPTIONS = ['id', 'name', 'tag', 'count', 'rating', 'updated_at', 'last'];
+const SORTING_OPTIONS = ['id', 'name', 'tag', 'view_count', 'rating', 'updated_at', 'last_read'];
 
 const SIZES = ['S', 'M', 'L', 'XL'];
 

@@ -33,30 +33,24 @@ watch(
 			:class="{ '!flex pb-3 ': dropdownShow }">
 			<li class="w-full lg:w-fit">
 				<router-link
-					:to="{ name: 'book-list' }"
+					:to="{ name: 'books' }"
 					class="header-link inline-block lg:hidden"
 					active-class="header-link-active">
 					Books
 				</router-link>
-				<router-link
-					:to="{ name: 'book-table' }"
-					class="header-link hidden lg:inline-block"
-					active-class="header-link-active">
-					Books
-				</router-link>
 			</li>
 			<li class="w-full lg:w-fit">
-				<router-link :to="{ name: 'tag-list' }" class="header-link inline-block" active-class="header-link-active">
+				<router-link :to="{ name: 'tags' }" class="header-link inline-block" active-class="header-link-active">
 					Tags
 				</router-link>
 			</li>
 			<li class="w-full lg:w-fit">
-				<router-link :to="{ name: 'author-list' }" class="header-link inline-block" active-class="header-link-active">
+				<router-link :to="{ name: 'authors' }" class="header-link inline-block" active-class="header-link-active">
 					Authors
 				</router-link>
 			</li>
 			<li class="w-full lg:w-fit">
-				<router-link :to="{ name: 'series-list' }" class="header-link inline-block" active-class="header-link-active">
+				<router-link :to="{ name: 'series' }" class="header-link inline-block" active-class="header-link-active">
 					Series
 				</router-link>
 			</li>

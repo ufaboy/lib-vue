@@ -26,7 +26,7 @@ const bookID = computed(()=> {
 		<ul class="w-full bg-blue-500 text-white gap-3 lg:bg-blue-600 dark:bg-gray-900 dark:lg:bg-gray-900">
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'book-table' }"
+					:to="{ name: 'books' }"
 					class="sidebar-link flex items-center gap-2 px-2 py-1"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6">
@@ -37,7 +37,7 @@ const bookID = computed(()=> {
 			</li>
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'tag-list' }"
+					:to="{ name: 'tags' }"
 					class="sidebar-link flex items-center gap-2"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6" fill="none">
@@ -48,7 +48,7 @@ const bookID = computed(()=> {
 			</li>
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'author-list' }"
+					:to="{ name: 'authors' }"
 					class="sidebar-link flex items-center gap-2"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6" fill="none">
@@ -59,7 +59,7 @@ const bookID = computed(()=> {
 			</li>
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'series-list' }"
+					:to="{ name: 'series' }"
 					class="sidebar-link flex items-center gap-2"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6" fill="none">
@@ -80,7 +80,7 @@ const bookID = computed(()=> {
 				</RouterLink>
 			</li>
 			<hr class="my-1"/>
-			<li v-if="route.name === 'book-table'" class="w-full">
+			<li v-if="route.name === 'books'" class="w-full">
 				<RouterLink
 					:to="{ name: 'book-create' }"
 					class="sidebar-link flex items-center gap-2"

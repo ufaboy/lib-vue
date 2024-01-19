@@ -119,7 +119,7 @@ async function saveBook(event: Event) {
 					params: { id: data.id },
 				});
 		} else {
-			router.push({ name: 'book-table', params: { id: data.id } });
+			router.push({ name: 'books', params: { id: data.id } });
 		}
 	} catch (error) {
 		console.log({ 'saveBook wrong': error });

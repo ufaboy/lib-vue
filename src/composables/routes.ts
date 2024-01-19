@@ -7,7 +7,7 @@ export function useRoutes() {
 	function updateQueryStringParameter(params: string) {
 		const url = new URL(`${window.location.origin}${window.location.pathname}`);
 		url.search = params;
-		router.replace({ name: route.name ?? 'book-table', query: Object.fromEntries(url.searchParams) });
+		router.replace({ name: route.name ?? 'books', query: Object.fromEntries(url.searchParams) });
 	}
 	return { updateQueryStringParameter };
 }
