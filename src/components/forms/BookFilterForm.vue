@@ -64,6 +64,7 @@ function updateSort(event: Event) {
 		<label for="rating" class="w-full mb-3">
 			<span>Rating</span>
 			<select name="rating" class="w-full h-10 mt-1 p-2 rounded-md dark:bg-slate-700" v-model="queryBooks.rating">
+				<option class="flex w-full p-1" :value="undefined">All</option>
 				<option class="value" v-for="item in RATINGS" :value="item.value" :key="item.name">{{ item.name }}</option>
 			</select>
 		</label>
