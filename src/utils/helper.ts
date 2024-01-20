@@ -72,8 +72,8 @@ async function fetchData<T>(request: Request): Promise<T> {
 	return await response.json();
 }
 
-function convertTimestampToDate(timestamp?: number): string {
-	return timestamp ? new Intl.DateTimeFormat('en-GB').format(timestamp * 1000) : '—';
+function convertTimestampToDate(timestamp?: string): string {
+	return timestamp ? new Intl.DateTimeFormat('en-GB').format(new Date(timestamp)) : '—';
 }
 
 function errorHandler(error: Error) {

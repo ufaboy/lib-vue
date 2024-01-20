@@ -12,8 +12,6 @@ import { RATINGS } from '@/utils/constants';
 import { Book } from '@/interfaces/book';
 import { Image } from '@/interfaces/images';
 
-import ButtonExt from '@/components/ButtonExt.vue';
-
 document.title = 'Book Edit';
 
 const props = defineProps({

@@ -19,9 +19,8 @@ interface Book {
 	bookmark?: number;
 	text_length?: number;
 	view_count?: number;
-	created_at?: number;
-	updated_at?: number;
-	last_read?: number;
+	updated_at?: string;
+	last_read?: string;
 	images?: Image[];
 }
 
