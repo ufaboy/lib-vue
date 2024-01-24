@@ -34,7 +34,7 @@ watch(
 			<li class="w-full lg:w-fit">
 				<router-link
 					:to="{ name: 'books' }"
-					class="header-link inline-block lg:hidden"
+					class="header-link inline-block"
 					active-class="header-link-active">
 					Books
 				</router-link>
