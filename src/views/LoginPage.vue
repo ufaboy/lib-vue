@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useAuth } from '@/composables/auth';
+import { useWebAuth } from '@/composables/webauth';
 
 document.title = 'Login';
 
-const passwordLength = computed(()=> {
-	return password.value ? password.value.length : 0
-})
+const { signIn, loading, username, signInUser, logInUser } = useWebAuth();
 
-const { signIn, loading, username, password, submitHandler } = useAuth();
+function submitHandler () {
+	if(signIn.value) {
+		signInUser()
+	} else {
+		logInUser()
+	}
+}
 </script>
 
 <template>
@@ -33,18 +36,7 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
 					autocomplete="off"
 					autofocus
 					v-model="username" />
-				<label class="label mb-2 flex items-center justify-between" for="login-pass">
-					<span>Password</span>
-					<meter v-if="signIn" min="0" max="15" low="6" optimum="10" :value="passwordLength" class="h-5 w-32" />
-				</label>
-				<input
-					id="login-pass"
-					v-model="password"
-					type="password"
-					name="password"
-					class="input mb-6 p-3 text-xl"
-					required
-					autocomplete="off" />
+
 				<button
 					class="relative flex flex-row items-center justify-center rounded-lg bg-gradient-to-br from-green-600 to-blue-600 p-3 text-xl font-medium text-white hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800 transition-colors"
 					:class="{ 'cursor-progress': loading }">

@@ -14,6 +14,7 @@
     "lint:fix": "eslint ./src --fix"
   },
   "dependencies": {
+    "@simplewebauthn/browser": "^9.0.0",
     "pinia": "^2.1.7",
     "typograf": "^7.3.0",
     "vue": "^3.4.3",
