@@ -14,7 +14,7 @@ export function useWebAuth() {
 		const optionsRequest = createRequest('generate-registration-options', {username: username.value})
 		const resp = await fetch(optionsRequest);
 		const attResp = await startRegistration(await resp.json());
-		const verificationRequest = createRequest('verify-registration', attResp)
+		const verificationRequest = createRequest('verify-registration', {...attResp, username: username.value})
 		const verificationResp = await fetch(verificationRequest);
 		const verificationJSON = await verificationResp.json();
 		if (verificationJSON && verificationJSON.verified) {
@@ -25,16 +25,11 @@ export function useWebAuth() {
 	}
 
 	async function logInUser() {
-		const resp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/generate-authentication-options`);
+		const optionsRequest = createRequest('generate-authentication-options', {username: username.value})
+		const resp = await fetch(optionsRequest);
 		const asseResp = await startAuthentication(await resp.json());
-		const verificationAuthRequest = createRequest('verify-authentication', asseResp)
-		const verificationResp = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/verify-authentication`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(asseResp),
-		});
+		const verificationAuthRequest = createRequest('verify-authentication', {...asseResp, username: username.value})
+		const verificationResp = await fetch(verificationAuthRequest);
 		const verificationJSON = await verificationResp.json();
 		if (verificationJSON && verificationJSON.verified) {
 			sessionStorage.setItem('lib-token', 'userData.access_token');
@@ -51,9 +46,7 @@ export function useWebAuth() {
 		})
 		return new Request(url, {
 			method: 'POST',
-			headers: {
-				
-			},
+			headers: headers,
 			body: JSON.stringify(data),
 		});
 	}
