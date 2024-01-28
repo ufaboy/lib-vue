@@ -14,6 +14,7 @@ import { RATINGS, SIZES } from '@/utils/constants';
 import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 import TheLoader from '@/components/TheLoader.vue';
+import { QueryBooks } from '@/interfaces/book';
 
 document.title = 'Books';
 
@@ -69,6 +70,11 @@ function getBookRating(bookRating: number) {
 function updateLimit(size: number) {
 	queryBooks.value.perPage = size;
 	getBooks();
+}
+
+function setFilterUpdateList(filter: QueryBooks) {
+	queryBooks.value = filter
+	getBooksByFilter();
 }
 
 watch(
@@ -535,14 +541,14 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 						</span>
 					</td>
 					<td class="td">
-						<span :class="{ hidden: shortColumns.includes('author') }">
+						<button :class="{ hidden: shortColumns.includes('author') }" @click="setFilterUpdateList({...queryBooks, authorName: book.author?.name})">
 							{{ book.author?.name }}
-						</span>
+						</button>
 					</td>
 					<td class="td">
-						<span :class="{ hidden: shortColumns.includes('series') }">
+						<button :class="{ hidden: shortColumns.includes('series') }" @click="setFilterUpdateList({...queryBooks, seriesName: book.series?.name})">
 							{{ book.series?.name }}
-						</span>
+						</button>
 					</td>
 					<td class="td text-center">
 						<span :class="{ hidden: shortColumns.includes('length') }">
