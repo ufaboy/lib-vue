@@ -508,18 +508,19 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 					<td class="td">
 						<router-link
 							:to="{ name: isComics(book) ? 'comics-view' : 'book-view', params: { id: book.id } }"
+							:title="book.name"
 							class="line-clamp-2"
 							:class="{ hidden: shortColumns.includes('name') }">
 							{{ book.name }}
 						</router-link>
 					</td>
 					<td class="td">
-						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('description') }">
+						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('description') }" :title="book.description">
 							{{ book.description }}
 						</span>
 					</td>
 					<td class="td">
-						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('tags') }">
+						<span class="line-clamp-2" :class="{ hidden: shortColumns.includes('tags') }" :title="convertTagToString(book.tags)">
 							{{ convertTagToString(book.tags) }}
 						</span>
 					</td>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Text Replacer</title>
+	</head>
+	<body>
+		<div id="text">
+
+
+        </div>
+		<button id="replaceButton">Replace Text and Copy to Clipboard</button>
+
+		<script>
+			document.getElementById('replaceButton').addEventListener('click', function () {
+				const replacements = {
+					A: 'А',
+					B: 'В',
+					C: 'С',
+					E: 'Е',
+					H: 'Н',
+					K: 'К',
+					M: 'М',
+					O: 'О',
+					P: 'Р',
+					T: 'Т',
+					X: 'Х',
+					Y: 'У',
+					a: 'а',
+					c: 'с',
+					e: 'е',
+					o: 'о',
+					x: 'х',
+					y: 'у',
+					p: 'р',
+				};
+
+				let bodyText = document.getElementById('text').innerText;
+
+				for (const [eng, rus] of Object.entries(replacements)) {
+					const regex = new RegExp(eng, 'g');
+					bodyText = bodyText.replace(regex, rus);
+				}
+
+				const divElement = document.createElement('div');
+				divElement.innerText = bodyText;
+				navigator.clipboard.writeText(divElement.innerText).catch((err) => console.error('Failed to copy text: ', err));
+			});
+		</script>
+	</body>
+</html>
