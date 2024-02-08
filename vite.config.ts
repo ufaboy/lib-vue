@@ -17,6 +17,9 @@ export default defineConfig({
 			// devOptions: {
 			//   enabled: true,
 			// },
+			workbox: {
+				navigateFallbackDenylist: [/^\/api/]
+			  },
 			manifest: {
 				name: 'Library',
 				short_name: 'Lib',
