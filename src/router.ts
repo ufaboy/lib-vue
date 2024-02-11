@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '/books',
 				name: 'books',
-				component: document.documentElement.clientWidth > 1024 ? BookTable : BookList,
+				component: isSmallDevice() ? BookList : BookTable,
 			},
 			{
 				path: '/book/:id',

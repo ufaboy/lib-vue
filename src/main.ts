@@ -5,6 +5,7 @@ import observer from './plugins/IntersectionObserver';
 import toaster from './plugins/toaster'
 import tableNav from './directives/TableArrowNav';
 import lazyLoad from './directives/LazyLoadDirective';
+import clickOutside from './directives/ClickOutsideDirective';
 
 import App from './App.vue'
 import './assets/style/main.css'
@@ -20,6 +21,7 @@ app.use(observer)
 app.use(toaster)
 app.directive('table-nav', tableNav)
 app.directive('lazy-load', lazyLoad)
+app.directive('click-outside', clickOutside)
 app.mount('#app')
 
 console.log('__APP_VERSION__', __APP_VERSION__)

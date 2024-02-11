@@ -38,9 +38,9 @@ function getRequest(url: URL): Request {
 }
 
 function dataRequest(url: URL, method = 'POST', data: unknown): Request {
-	const headers = getHeaders()
-	headers.append('Content-Type', 'application/json')
-	console.log('dataRequest', headers)
+	const headers = getHeaders();
+	headers.append('Content-Type', 'application/json');
+	console.log('dataRequest', headers);
 	return new Request(url, {
 		method: method,
 		headers: headers,
@@ -81,7 +81,7 @@ function errorHandler(error: Error) {
 	Toast.error(error.message);
 }
 
-function calcTextSize(size: number):number {
+function calcTextSize(size: number): number {
 	return Math.floor(size / 1024);
 }
 
@@ -90,8 +90,7 @@ function isMobile(): boolean {
 }
 
 function isSmallDevice() {
-	const width = Math.floor(document.documentElement.clientWidth);
-	return width < 1024
+	return Math.floor(document.documentElement.clientWidth) < 1024;
 }
 
 function getRandomColor(): string {
