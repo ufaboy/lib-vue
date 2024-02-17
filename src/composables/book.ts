@@ -30,16 +30,14 @@ export function useBook() {
 		last_read: undefined,
 		page: 1,
 		perPage: 10,
-		sort: localStorage.getItem('book-sort') ?? '-updated_at',
+		sort: getSortFromLS(),
 	});
 	const infinityState = ref(true);
 	const loading = ref(false);
 
 	async function getBook(id: number) {
 		try {
-			const url = new URL(
-				`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=image,author,series,tags`,
-			);
+			const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=image,author,series,tags`);
 			const request = getRequest(url);
 			const data = await fetchData<Book>(request);
 			bookStore.setBook({ ...data, tags: data.tags || [] });
@@ -70,7 +68,7 @@ export function useBook() {
 			}
 			booksMeta.value = data._meta;
 			updateQueryStringParameter(url.search);
-			saveSortConfig();
+			saveSortToLS();
 		} catch (error) {
 			console.log('getBooks wrong', { error: error });
 		} finally {
@@ -80,8 +78,18 @@ export function useBook() {
 
 	function changeSort(field: string) {
 		queryBooks.value.page = 1;
-		const desc = queryBooks.value.sort[0] === '-';
-		queryBooks.value.sort = `${desc ? '' : '-'}${field}`;
+		const existingFieldIndex = queryBooks.value.sort.findIndex((i) => i.includes(field));
+		if (existingFieldIndex > -1) {
+			const desc = queryBooks.value.sort[existingFieldIndex][0] === '-';
+			if (desc) {
+				queryBooks.value.sort.splice(existingFieldIndex, 1);
+			} else {
+				queryBooks.value.sort[existingFieldIndex] = `-${field}`;
+			}
+		} else {
+			queryBooks.value.sort.push(field);
+		}
+
 		getBooks();
 	}
 
@@ -106,14 +114,6 @@ export function useBook() {
 		return length <= 50000 ? 'S' : length <= 300000 ? 'M' : length <= 500000 ? 'L' : 'XL';
 	}
 
-	function saveSortConfig() {
-		localStorage.setItem('book-sort', queryBooks.value.sort);
-	}
-
-	function restoreSortConfig(): string {
-		return (queryBooks.value.sort = localStorage.getItem('book-sort') ?? '-updated_at');
-	}
-
 	async function parseQueryBookParams() {
 		const {
 			id,
@@ -135,7 +135,7 @@ export function useBook() {
 		if (id) queryBooks.value.id = Number(id);
 		if (name) queryBooks.value.name = String(name);
 		if (text) queryBooks.value.text = String(text);
-		if (sort) queryBooks.value.sort = String(sort);
+		if (sort) queryBooks.value.sort = sort as Array<string>;
 		if (tag) queryBooks.value.tag = String(tag);
 		if (authorName) queryBooks.value.authorName = String(authorName);
 		if (seriesName) queryBooks.value.seriesName = String(seriesName);
@@ -147,6 +147,13 @@ export function useBook() {
 		if (last_read) queryBooks.value.last_read = Number(last_read);
 		if (page) queryBooks.value.page = Number(page);
 		if (perPage) queryBooks.value.perPage = Number(perPage);
+	}
+	function saveSortToLS() {
+		localStorage.setItem('book-sort', JSON.stringify(queryBooks.value.sort));
+	}
+	function getSortFromLS(): Array<string> {
+		const restored = localStorage.getItem('book-sort');
+		return restored ? JSON.parse(restored) : ['-updated_at'];
 	}
 
 	return {
@@ -163,7 +170,8 @@ export function useBook() {
 		changeSort,
 		updateBookMark,
 		sizeConverter,
-		restoreSortConfig,
+		saveSortToLS,
+		getSortFromLS,
 		parseQueryBookParams,
 	};
 }

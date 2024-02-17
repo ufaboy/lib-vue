@@ -12,7 +12,7 @@ function getHeaders(): Headers {
 	});
 }
 
-function getUrl(baseUrl: string, query?: { [key: string]: string | number | undefined | null }): URL {
+function getUrl(baseUrl: string, query?: { [key: string]: string | Array<string> | number | undefined | null }): URL {
 	const url = new URL(baseUrl);
 	for (const key in query) {
 		const value = query[key];
@@ -24,7 +24,14 @@ function getUrl(baseUrl: string, query?: { [key: string]: string | number | unde
 			} else if (typeof value === 'string') {
 				stringValue = value;
 			} else stringValue = value.toString();
-			url.searchParams.append(key, stringValue);
+
+			if (key === 'sort' && Array.isArray(value)) {
+				for (const item of value) {
+					url.searchParams.append(key, item);
+				}
+			} else {
+				url.searchParams.append(key, stringValue);
+			}
 		}
 	}
 	return url;

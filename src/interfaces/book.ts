@@ -38,7 +38,7 @@ interface MetaLinks {
 }
 
 interface QueryBooks {
-	[key: string]: string | number | undefined;
+	[key: string]: string | Array<string> | number | undefined;
 	id?: number;
 	tag?: string;
 	view_count?: number;
@@ -51,7 +51,7 @@ interface QueryBooks {
 	size?: number;
 	updated_at?: number;
 	last_read?: number;
-	sort: string;
+	sort: Array<string>;
 	perPage: number;
 	page: number;
 }

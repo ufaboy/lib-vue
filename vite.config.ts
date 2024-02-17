@@ -6,9 +6,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
 	base: '/',
-	// server: {
+	server: {
+		host: 'localhost'
 	//   https: true,
-	// },
+	},
 	plugins: [
 		vue(),
 		// basicSsl(),

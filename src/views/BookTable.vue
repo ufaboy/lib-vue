@@ -90,7 +90,7 @@ onMounted(() => {
 	mounted.value = true;
 });
 
-parseQueryBookParams();
+// parseQueryBookParams();
 getBooks();
 
 if (!tags.value) getTags({ perPage: 100, sort: 'name' });
