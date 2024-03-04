@@ -2,7 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useBook } from '@/composables/book';
-import { useImage } from '@/composables/images';
+import { useMedia } from '@/composables/media';
 import { PLAYER_INTERVALS } from '@/utils/constants';
 import { useRoutes } from '@/composables/routes';
 
@@ -12,7 +12,7 @@ const route = useRoute();
 const { updateQueryStringParameter } = useRoutes();
 const bookID = Number(route.params.id);
 const { book, getBook } = useBook();
-const { getUploadedImageUrl } = useImage();
+const { getUploadedMediaUrl } = useMedia();
 const currentImageIndex = ref(0);
 const mounted = ref(false);
 
@@ -21,15 +21,15 @@ const intervalSeconds = ref(5);
 const renewIntervalID = ref();
 
 const totalImages = computed(() => {
-	return book.value && book.value.images ? book.value.images.length : '—';
+	return book.value && book.value.media ? book.value.media.length : '—';
 });
 
-const image = computed(() => {
-	return book.value && book.value.images ? book.value.images[currentImageIndex.value] : null;
+const media = computed(() => {
+	return book.value && book.value.media ? book.value.media[currentImageIndex.value] : null;
 });
 
 function increasePage() {
-	if (book.value?.images && currentImageIndex.value < book.value.images.length - 1) {
+	if (book.value?.media && currentImageIndex.value < book.value.media.length - 1) {
 		currentImageIndex.value++;
 		updateQueryStringParameter(`page=${currentImageIndex.value + 1}`);
 	}
@@ -74,8 +74,8 @@ getBook(bookID);
   >
     <div class="relative flex w-full justify-center">
       <img
-        v-if="image"
-        :src="getUploadedImageUrl(image)"
+        v-if="media"
+        :src="getUploadedMediaUrl(media)"
         class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg"
       >
       <button
@@ -139,3 +139,4 @@ getBook(bookID);
     </Teleport>
   </main>
 </template>
+@/composables/media

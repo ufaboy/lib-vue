@@ -6,11 +6,11 @@ import { useBook } from '@/composables/book';
 import { useTag } from '@/composables/tags';
 import { useSeries } from '@/composables/series';
 import { useAuthor } from '@/composables/author';
-import { useImage } from '@/composables/images';
+import { useMedia } from '@/composables/media';
 import { fetchData, formRequest, calcTextSize, isMobile } from '@/utils/helper';
 import { RATINGS } from '@/utils/constants';
 import { Book } from '@/interfaces/book';
-import { Image } from '@/interfaces/images';
+import { Media } from '@/interfaces/media';
 
 document.title = 'Book Edit';
 
@@ -24,7 +24,7 @@ const { book, getBook } = useBook();
 const { tag, tags, showNewTag, getTags, updateTag } = useTag();
 const { authors, getAuthors } = useAuthor();
 const { series, getSeries } = useSeries();
-const { deleteImages, deleteAllImages, copyImageUrl } = useImage();
+const { deleteMedia, deleteAllMedia, copyMediaUrl } = useMedia();
 const bookStore = useBookStore();
 
 const name = ref<string>('');
@@ -36,8 +36,8 @@ const rating = ref<number>();
 const tagsID = ref<Array<number>>([]);
 const seriesName = ref<string>();
 const authorName = ref<string>();
-const image = ref<Image | Blob>();
-const images = ref<File[]>([]);
+const media = ref<Media | Blob>();
+const mediaList = ref<File[]>([]);
 const loading = ref(false);
 const mounted = ref(false);
 
@@ -45,20 +45,20 @@ const bookID = computed(() => Number(route.params.id));
 const routeName = computed(() => route.name);
 
 const imageCoverList = computed(() => {
-	return book.value && book.value.images
-		? book.value.images.map((img) => {
+	return book.value && book.value.media
+		? book.value.media.map((img) => {
 				return `/${img.path}/${img.file_name}`;
 			})
 		: [];
 });
-const getUploadedImageUrl = computed(() => {
-	if (!image.value) return '';
-	if (image.value instanceof Blob) {
-		return window.URL.createObjectURL(image.value);
+const getMediaUrl = computed(() => {
+	if (!media.value) return '';
+	if (media.value instanceof Blob) {
+		return window.URL.createObjectURL(media.value);
 	} else {
 		return import.meta.env.PROD
-			? `/${image.value.path}/${image.value.file_name}`
-			: `${import.meta.env.VITE_BACKEND_URL}/${image.value.path}/${image.value.file_name}`;
+			? `/${media.value.path}/${media.value.file_name}`
+			: `${import.meta.env.VITE_BACKEND_URL}/${media.value.path}/${media.value.file_name}`;
 	}
 });
 
@@ -78,7 +78,7 @@ async function saveBook(event: Event) {
 		}
 		formData.append(`Book[text_length]`, String(text.value.length));
 		for (const element of inputElements) {
-			if (element instanceof HTMLInputElement && element.name === 'Upload[imageFiles][]' && element.files) {
+			if (element instanceof HTMLInputElement && element.name === 'Upload[mediaFiles][]' && element.files) {
 				for (let i = 0; i < element.files.length; i++) {
 					const img = element.files[i];
 					formData.append(element.name, img);
@@ -127,8 +127,8 @@ async function saveBook(event: Event) {
 }
 
 async function removeAllFiles() {
-	const result = await deleteAllImages(bookID.value);
-	if (result && book.value) book.value.images = [];
+	const result = await deleteAllMedia(bookID.value);
+	if (result && book.value) book.value.media = [];
 }
 async function loadBook(data: Book) {
 	name.value = data.name;
@@ -145,17 +145,17 @@ function loadFiles(evt: Event) {
 	const fileList = (evt.target as HTMLInputElement).files;
 	if (fileList) {
 		for (const file of Array.from(fileList)) {
-			images.value.push(file);
+			mediaList.value.push(file);
 		}
 	}
 }
-function mouseOverBlobImagesHandler(event: Event) {
+function mouseOverBlobMediaHandler(event: Event) {
 	const index = Number((event.target as HTMLElement).dataset.index);
-	image.value = images.value[index];
+	media.value = mediaList.value[index];
 }
-function mouseOverBookImagesHandler(event: Event) {
+function mouseOverBookMediaHandler(event: Event) {
 	const index = Number((event.target as HTMLElement).dataset.index);
-	if (book.value && book.value.images) image.value = book.value.images[index];
+	if (book.value && book.value.media) media.value = book.value.media[index];
 }
 function typo() {
 	if (book.value && window.Worker) {
@@ -167,9 +167,9 @@ function typo() {
 	} else console.log('typo error');
 }
 
-function removeImage(imageID: number, index: number) {
-	deleteImages([imageID]);
-	book.value?.images?.splice(index, 1);
+function removeMedia(mediaID: number, index: number) {
+	deleteMedia([mediaID]);
+	book.value?.media?.splice(index, 1);
 }
 
 if (!tags.value) getTags({ perPage: 100, sort: 'name' });
@@ -321,17 +321,18 @@ onMounted(async () => {
 						type="file"
 						multiple
 						form="Book"
-						name="Upload[imageFiles][]"
-						accept="video/webm,image/webp,audio/mpeg"
+						name="Upload[mediaFiles][]"
+						accept="video/mp4,video/webm,image/webp,audio/mpeg"
 						@change="loadFiles"
 						class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" />
 				</label>
-				<button class="btn-red-outline flex gap-1" @click.passive="removeAllFiles">Remove
-					<span class="hidden lg:inline">Images</span>
+				<button class="btn-red-outline flex gap-1" @click.passive="removeAllFiles">
+					Remove
+					<span class="hidden lg:inline">Media</span>
 					<svg aria-hidden="true" role="status" class="inline size-5 text-red-500">
-					<use xlink:href="/icons/iconSprite.svg#image" />
-				</svg>
-			</button>
+						<use xlink:href="/icons/iconSprite.svg#image" />
+					</svg>
+				</button>
 			</div>
 			<div class="w-full px-4 py-3">
 				<label for="text" class="w-full label"
@@ -342,14 +343,14 @@ onMounted(async () => {
 			</div>
 		</div>
 		<div class="w-96 hidden md:block">
-			<div v-if="images.length">
+			<div v-if="mediaList.length">
 				<h3>New</h3>
-				<ol class="columns-2" @mouseover="mouseOverBlobImagesHandler" @mouseleave="image = undefined">
-					<li v-for="(image, index) in images" :key="index" class="flex items-center gap-2 p-1">
+				<ol class="columns-2" @mouseover="mouseOverBlobMediaHandler" @mouseleave="media = undefined">
+					<li v-for="(media, index) in mediaList" :key="index" class="flex items-center gap-2 p-1">
 						<span :data-index="index" class="break-normal hover:text-blue-500">
-							{{ image.name }}
+							{{ media.name }}
 						</span>
-						<button @click.passive="images.splice(index, 1)">
+						<button @click.passive="mediaList.splice(index, 1)">
 							<svg class="size-5">
 								<use xlink:href="/icons/iconSprite.svg#delete" />
 							</svg>
@@ -357,14 +358,14 @@ onMounted(async () => {
 					</li>
 				</ol>
 			</div>
-			<div v-if="book?.images?.length">
+			<div v-if="book?.media?.length">
 				<h3 class="text-lg">Uploaded:</h3>
-				<ol class="columns-2" @mouseover="mouseOverBookImagesHandler" @mouseleave="image = undefined">
-					<li v-for="(img, index) in book.images" :key="index" class="flex items-center gap-2 p-1">
-						<button @click.passive="copyImageUrl(img)" :data-index="index" class="hover:text-blue-500">
+				<ol class="columns-2" @mouseover="mouseOverBookMediaHandler" @mouseleave="media = undefined">
+					<li v-for="(img, index) in book.media" :key="index" class="flex items-center gap-2 p-1">
+						<button @click.passive="copyMediaUrl(img)" :data-index="index" class="hover:text-blue-500">
 							{{ img.file_name }}
 						</button>
-						<button @click.passive="removeImage(img.id, index)" class="dark:text-red-600">
+						<button @click.passive="removeMedia(img.id, index)" class="dark:text-red-600">
 							<svg class="size-5">
 								<use xlink:href="/icons/iconSprite.svg#delete" />
 							</svg>
@@ -372,11 +373,20 @@ onMounted(async () => {
 					</li>
 				</ol>
 			</div>
-			<img
-				v-if="image"
-				:src="getUploadedImageUrl"
-				class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
-				onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
+			<div v-if="media">
+				<video
+					v-if="media.file_name.includes('.mp4')"
+					loop
+					autoplay
+					muted
+					:src="getMediaUrl"
+					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md" />
+				<img
+					v-else
+					:src="getMediaUrl"
+					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
+					onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
+			</div>
 		</div>
 		<form id="Book" name="Book" @submit.prevent="saveBook"></form>
 		<Teleport v-if="mounted" to="#menu-target">

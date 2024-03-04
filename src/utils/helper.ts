@@ -40,7 +40,6 @@ function getRequest(url: URL): Request {
 function dataRequest(url: URL, method = 'POST', data: unknown): Request {
 	const headers = getHeaders();
 	headers.append('Content-Type', 'application/json');
-	console.log('dataRequest', headers);
 	return new Request(url, {
 		method: method,
 		headers: headers,

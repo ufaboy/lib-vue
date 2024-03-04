@@ -3,7 +3,7 @@ import { ListMeta } from './meta';
 
 interface RawFile {}
 
-interface Image {
+interface Media {
 	id: number;
 	book_id: number;
 	book: Book;
@@ -11,7 +11,7 @@ interface Image {
 	file_name: string;
 }
 
-interface QueryImages {
+interface QueryMedia {
 	[key: string]: string | number | undefined;
 	id?: number;
 	book_id?: number;
@@ -23,19 +23,19 @@ interface QueryImages {
 	page?: number;
 	expand?: string;
 }
-interface ImagesResponse {
-	items: Array<Image>;
+interface MediaResponse {
+	items: Array<Media>;
 	_meta: ListMeta;
 }
 
-interface ImagesTotal {
+interface MediaTotal {
 	book_id: number;
-	images_count: number
+	media_count: number
 }
-interface StorageImages {
+interface StorageMedia {
 	bookID: number;
 	bookName: string;
-	images: Array<string>;
+	mediaList: Array<string>;
 }
 
-export type { RawFile, Image, QueryImages, ImagesResponse, ImagesTotal, StorageImages };
+export type { RawFile, Media, QueryMedia, MediaResponse, MediaTotal, StorageMedia };

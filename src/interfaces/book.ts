@@ -1,11 +1,11 @@
 import type { Tag } from './tag';
 import type { Author } from './author';
 import type { ListMeta } from './meta';
-import type { Image } from './images';
+import type { Media } from './media';
 import type { Series } from './series';
 
 interface Book {
-	[key: string]: string | number | undefined | Author | Series | Tag[] | Image[];
+	[key: string]: string | number | undefined | Author | Series | Tag[] | Media[];
 	id?: number;
 	name: string;
 	description?: string;
@@ -21,7 +21,7 @@ interface Book {
 	view_count?: number;
 	updated_at?: string;
 	last_read?: string;
-	images?: Image[];
+	media?: Media[];
 }
 
 interface BookResponse {

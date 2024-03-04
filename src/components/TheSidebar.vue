@@ -70,13 +70,13 @@ const bookID = computed(()=> {
 			</li>
 			<li class="w-full">
 				<RouterLink
-					:to="{ name: 'images' }"
+					:to="{ name: 'media' }"
 					class="sidebar-link flex items-center gap-2"
 					active-class="sidebar-link-active">
 					<svg class="inline size-6" fill="none">
 						<use xlink:href="/icons/iconSprite.svg#photoLibrary" />
 					</svg>
-					<span v-show="!collapsed">Images</span>
+					<span v-show="!collapsed">Media</span>
 				</RouterLink>
 			</li>
 			<hr class="my-1"/>

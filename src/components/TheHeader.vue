@@ -58,8 +58,8 @@ function toggleDropdown() {
 				</router-link>
 			</li>
 			<li class="w-full lg:w-fit">
-				<router-link :to="{ name: 'images' }" class="header-link inline-block" active-class="header-link-active">
-					Images
+				<router-link :to="{ name: 'media' }" class="header-link inline-block" active-class="header-link-active">
+					Media
 				</router-link>
 			</li>
 			<li class="w-full lg:w-fit">

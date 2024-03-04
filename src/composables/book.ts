@@ -38,7 +38,7 @@ export function useBook() {
 	async function getBook(id: number) {
 		try {
 			const url = new URL(
-				`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=image,author,series,tags`,
+				`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=media,author,series,tags`,
 			);
 			const request = getRequest(url);
 			const data = await fetchData<Book>(request);

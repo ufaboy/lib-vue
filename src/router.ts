@@ -10,7 +10,7 @@ const BookList = () => import('./views/BookList.vue');
 const BookText = () => import('./views/BookText.vue');
 const BookComics = () => import('./views/BookComics.vue');
 const BookEdit = () => import('./views/BookEdit.vue');
-const ImageGallery = () => import('./views/ImageGallery.vue');
+const MediaGallery = () => import('./views/MediaGallery.vue');
 const SeriesTable = () => import('./views/SeriesTable.vue');
 const TagTable = () => import('./views/TagTable.vue');
 const LoginPage = () => import('./views/LoginPage.vue');
@@ -67,9 +67,9 @@ const routes: RouteRecordRaw[] = [
 				component: SeriesTable,
 			},
 			{
-				path: '/images',
-				name: 'images',
-				component: ImageGallery
+				path: '/media',
+				name: 'media',
+				component: MediaGallery
 			},
 		],
 	},

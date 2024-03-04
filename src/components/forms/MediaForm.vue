@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { useImage } from '@/composables/images';
-import { Image } from '@/interfaces/images';
+import { useMedia } from '@/composables/media';
+import { Media } from '@/interfaces/media';
 
-const { imageFileName, updateImage, getUploadedImageUrl, closeDialog } = useImage();
+const { mediaFileName, updateMedia, getStorageMediaUrl, closeDialog } = useMedia();
 
 const props = defineProps<{
-	image: Image;
+	media: Media;
 }>();
 const emit = defineEmits(['close']);
 
 function reset() {
-	imageFileName.value = props.image.file_name;
+	mediaFileName.value = props.media.file_name;
 }
 
 reset();
 </script>
 
 <template>
-	<form id="Image" method="dialog" name="Image" class="flex flex-row flex-wrap" @submit.prevent="updateImage">
+	<form id="Media" method="dialog" name="Media" class="flex flex-row flex-wrap" @submit.prevent="updateMedia">
 		<header class="mb-4 flex w-full flex-row items-center justify-between">
 			<h2 class="filter-title">
-				{{ props.image.file_name }}
+				{{ props.media.file_name }}
 			</h2>
 			<button class="close-btn hover:animate-spin" type="reset" @click.passive="$emit('close')">
 				<svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
 			</button>
 		</header>
-		<img :src="getUploadedImageUrl(props.image)" alt="" class="mx-auto mb-4 max-h-96 max-w-xs" />
+		<img :src="getStorageMediaUrl(props.media.file_name, props.media.book_id)" alt="" class="mx-auto mb-4 max-h-96 max-w-xs" />
 		<label class="mb-4">
 			<span>File name</span>
 			<input
-				v-model="imageFileName"
+				v-model="mediaFileName"
 				type="text"
 				name="file_name"
 				class="mt-1 w-full rounded-md p-2 dark:bg-slate-700" />
