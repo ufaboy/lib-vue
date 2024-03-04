@@ -373,7 +373,7 @@ onMounted(async () => {
 					</li>
 				</ol>
 			</div>
-			<div v-if="media">
+			<!-- <div v-if="media && media instanceof Blob">
 				<video
 					v-if="media.file_name.includes('.mp4')"
 					loop
@@ -386,7 +386,7 @@ onMounted(async () => {
 					:src="getMediaUrl"
 					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
 					onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
-			</div>
+			</div> -->
 		</div>
 		<form id="Book" name="Book" @submit.prevent="saveBook"></form>
 		<Teleport v-if="mounted" to="#menu-target">
