@@ -1,9 +1,33 @@
 <template>
-	<svg class="icon-burger" viewBox="0 0 24 24" aria-hidden="true">
-		<rect class="rect" width="18" height="1.5" fill="currentColor" ry="0.75" x="3" y="6.25" />
-		<rect class="rect" width="18" height="1.5" fill="currentColor" ry="0.75" x="3" y="11.25" />
-		<rect class="rect" width="18" height="1.5" fill="currentColor" ry="0.75" x="3" y="16.25" />
-	</svg>
+  <svg
+    class="icon-burger"
+    viewBox="0 0 24 24"
+    aria-hidden="true">
+    <rect
+      class="rect"
+      width="18"
+      height="1.5"
+      fill="currentColor"
+      ry="0.75"
+      x="3"
+      y="6.25" />
+    <rect
+      class="rect"
+      width="18"
+      height="1.5"
+      fill="currentColor"
+      ry="0.75"
+      x="3"
+      y="11.25" />
+    <rect
+      class="rect"
+      width="18"
+      height="1.5"
+      fill="currentColor"
+      ry="0.75"
+      x="3"
+      y="16.25" />
+  </svg>
 </template>
 
 <style>

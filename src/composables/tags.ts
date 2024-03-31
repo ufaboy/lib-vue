@@ -22,6 +22,7 @@ export function useTag() {
 			console.log('getTags wrong', { error: error });
 		}
 	}
+
 	async function updateTag() {
 		try {
 			const method = tag.value && tag.value.id ? 'PUT' : 'POST'
@@ -45,6 +46,7 @@ export function useTag() {
 			console.log({ 'updateTag wrong': error });
 		}
 	}
+
 	function convertTagToString(tags?: Tag[]) {
 		return tags
 			? tags.reduce((previousValue, currentValue, index: number, array: Tag[]) => {
@@ -52,9 +54,11 @@ export function useTag() {
 				}, '')
 			: ' — ';
 	}
+
 	function isComic(tags: string[]) {
 		return tags.includes('comics');
 	}
+
 	function closeTagDialog() {
 		if (tagDialog.value) tagDialog.value.close();
 		showNewTag.value = false;

@@ -25,6 +25,7 @@ function showTagModal(data?: Tag) {
 
 	tagDialog.value?.showModal();
 }
+
 function changeSort(field: string) {
 	const desc = sort.value[0] === '-';
 	sort.value = `${desc ? '' : '-'}${field}`;
@@ -38,72 +39,105 @@ if (!tags.value) getTags({ perPage: 50, sort: 'name' });
 </script>
 
 <template>
-	<main class="">
-		<table v-if="tags" v-table-nav class="w-full table-auto">
-			<thead>
-				<tr>
-					<th class="th">
-						<button
-							class="flex flex-row flex-nowrap items-center"
-							:class="{ 'text-emerald-300': sort.includes('id') }"
-							@click="changeSort('id')">
-							<span class="mr-1">ID</span>
-							<svg class="size-4">
-								<use v-if="sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
-								<use v-else xlink:href="/icons/iconSprite.svg#ascending" />
-							</svg>
-						</button>
-					</th>
-					<th class="th">
-						<button
-							class="flex flex-row flex-nowrap items-center"
-							:class="{ 'text-emerald-300': sort.includes('name') }"
-							@click="changeSort('name')">
-							<span class="mr-1">Name</span>
-							<svg class="size-4">
-								<use v-if="sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
-								<use v-else xlink:href="/icons/iconSprite.svg#ascending" />
-							</svg>
-						</button>
-					</th>
-				</tr>
-			</thead>
-			<TransitionGroup tag="tbody" name="list">
-				<tr
-					v-for="tag in sortedTagList"
-					:key="tag.id"
-					class="cursor-pointer border-b border-slate-600 hover:bg-gray-300 dark:hover:bg-gray-700"
-					@click="showTagModal(tag)">
-					<td class="td">
-						<span>{{ tag.id }}</span>
-					</td>
-					<td class="td">
-						<span>{{ tag.name }}</span>
-					</td>
-				</tr>
-			</TransitionGroup>
-		</table>
-		<dialog
-			ref="tagDialog"
-			class="dialog w-80 rounded-lg bg-neutral-300 text-slate-800 shadow-md dark:bg-slate-800 dark:text-white"
-			@close="closeTagDialog">
-			<form action="" method="dialog" class="flex flex-row flex-wrap p-4" @submit.prevent="updateTag">
-				<header class="mb-4 flex w-full flex-row items-center justify-between">
-					<h2 class="filter-title">
-						{{ tag && tag.id ? 'Update' : 'Create' }}
-					</h2>
-				</header>
-				<label v-if="tag" for="name" class="label mb-3 w-full">
-					<span>Name</span>
-					<input v-model="tag.name" type="text" name="name" class="input mt-1 w-full" />
-				</label>
-				<footer class="flex w-full flex-row items-center justify-between">
-					<button type="reset" class="btn-gray-outline" aria-label="close" formnovalidate @click="closeTagDialog">
-						Close
-					</button>
-					<button class="btn-green" value="default">Save</button>
-				</footer>
-			</form>
-		</dialog>
-	</main>
+  <main class="">
+    <table
+      v-if="tags"
+      v-table-nav
+      class="w-full table-auto">
+      <thead>
+        <tr>
+          <th class="th">
+            <button
+              class="flex flex-row flex-nowrap items-center"
+              :class="{ 'text-emerald-300': sort.includes('id') }"
+              @click="changeSort('id')">
+              <span class="mr-1">ID</span>
+              <svg class="size-4">
+                <use
+                  v-if="sort[0] === '-'"
+                  xlink:href="/icons/iconSprite.svg#descending" />
+                <use
+                  v-else
+                  xlink:href="/icons/iconSprite.svg#ascending" />
+              </svg>
+            </button>
+          </th>
+          <th class="th">
+            <button
+              class="flex flex-row flex-nowrap items-center"
+              :class="{ 'text-emerald-300': sort.includes('name') }"
+              @click="changeSort('name')">
+              <span class="mr-1">Name</span>
+              <svg class="size-4">
+                <use
+                  v-if="sort[0] === '-'"
+                  xlink:href="/icons/iconSprite.svg#descending" />
+                <use
+                  v-else
+                  xlink:href="/icons/iconSprite.svg#ascending" />
+              </svg>
+            </button>
+          </th>
+        </tr>
+      </thead>
+      <TransitionGroup
+        tag="tbody"
+        name="list">
+        <tr
+          v-for="sortedTag in sortedTagList"
+          :key="sortedTag.id"
+          class="cursor-pointer border-b border-slate-600 hover:bg-gray-300 dark:hover:bg-gray-700"
+          @click="showTagModal(sortedTag)">
+          <td class="td">
+            <span>{{ sortedTag.id }}</span>
+          </td>
+          <td class="td">
+            <span>{{ sortedTag.name }}</span>
+          </td>
+        </tr>
+      </TransitionGroup>
+    </table>
+    <dialog
+      ref="tagDialog"
+      class="dialog w-80 rounded-lg bg-neutral-300 text-slate-800 shadow-md dark:bg-slate-800 dark:text-white"
+      @close="closeTagDialog">
+      <form
+        action=""
+        method="dialog"
+        class="flex flex-row flex-wrap p-4"
+        @submit.prevent="updateTag">
+        <header class="mb-4 flex w-full flex-row items-center justify-between">
+          <h2 class="filter-title">
+            {{ tag && tag.id ? 'Update' : 'Create' }}
+          </h2>
+        </header>
+        <label
+          v-if="tag"
+          for="name"
+          class="label mb-3 w-full">
+          <span>Name</span>
+          <input
+            v-model="tag.name"
+            type="text"
+            name="name"
+            class="input mt-1 w-full">
+        </label>
+        <footer class="flex w-full flex-row items-center justify-between">
+          <button
+            type="reset"
+            class="btn-gray-outline"
+            aria-label="close"
+            formnovalidate
+            @click="closeTagDialog">
+            Close
+          </button>
+          <button
+            class="btn-green"
+            value="default">
+            Save
+          </button>
+        </footer>
+      </form>
+    </dialog>
+  </main>
 </template>

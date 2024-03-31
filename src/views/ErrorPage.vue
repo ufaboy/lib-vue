@@ -5,22 +5,19 @@
       <svg
         height="100%"
         width="100%"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+        xmlns="http://www.w3.org/2000/svg">
         <ellipse
           cx="50%"
           cy="50%"
           rx="140"
           ry="100"
-          class="speech-bubble"
-        />
+          class="speech-bubble" />
         <text
           x="50%"
           y="50%"
           dominant-baseline="middle"
           text-anchor="middle"
-          class="speech-text"
-        >404</text>
+          class="speech-text">404</text>
       </svg>
     </div>
     <p class="error-text">

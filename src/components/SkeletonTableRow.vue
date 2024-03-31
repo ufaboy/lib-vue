@@ -8,10 +8,13 @@ const props = withDefaults(defineProps<Props>(), {
 });
 </script>
 <template>
-	<tr
-		class="max-w-md p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
-		<td v-for="item in Number(count)" :key="item" class="h-8 py-1 px-3">
-			<div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700"></div>
-		</td>
-	</tr>
+  <tr
+    class="max-w-md animate-pulse space-y-4 divide-y divide-gray-200 rounded border border-gray-200 p-4 shadow dark:divide-gray-700 dark:border-gray-700 md:p-6">
+    <td
+      v-for="item in Number(count)"
+      :key="item"
+      class="h-8 px-3 py-1">
+      <div class="h-2.5 rounded-full bg-gray-300 dark:bg-gray-700" />
+    </td>
+  </tr>
 </template>

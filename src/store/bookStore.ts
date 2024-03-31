@@ -9,6 +9,7 @@ export const useBookStore = defineStore('book', () => {
 	function setBook(data?: Book) {
 		book.value = data;
 	}
+
 	function setBooks(data: Book[]) {
 		books.value = data;
 	}

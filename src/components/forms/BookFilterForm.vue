@@ -38,55 +38,108 @@ const ascending = computed({
 
 function updateSort(event: Event) {
 	const target = event.target as HTMLSelectElement;
-	queryBooks.value.sort = ascending ? target.value : `-${target.value}`;
+	queryBooks.value.sort = ascending.value ? target.value : `-${target.value}`;
 }
 </script>
 
 <template>
-	<form method="dialog" class="flex flex-row flex-wrap p-4" @submit="$emit('search')">
-		<header class="w-full flex flex-row justify-between items-center mb-4">
-			<h2 class="filter-title">Filter & Sort</h2>
-			<button class="close-btn" type="reset" @click.passive="$emit('close')">
-				<svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
-			</button>
-		</header>
-		<label for="name" class="w-full mb-3">
-			<span>Name</span>
-			<input type="search" name="name" class="w-full mt-1 p-2 rounded-md dark:bg-slate-700" v-model="queryBooks.name" />
-		</label>
-		<label for="tag" class="w-full mb-3">
-			<span>Tag</span>
-			<select name="tag" class="w-full h-10 mt-1 p-2 rounded-md dark:bg-slate-700" v-model="queryBooks.tag">
-				<option class="flex w-full p-1" :value="undefined">All</option>
-				<option v-for="tag of tags" :value="tag.name" :key="tag.id">{{ tag.name }}</option>
-			</select>
-		</label>
-		<label for="rating" class="w-full mb-3">
-			<span>Rating</span>
-			<select name="rating" class="w-full h-10 mt-1 p-2 rounded-md dark:bg-slate-700" v-model="queryBooks.rating">
-				<option class="flex w-full p-1" :value="undefined">All</option>
-				<option class="value" v-for="item in RATINGS" :value="item.value" :key="item.name">{{ item.name }}</option>
-			</select>
-		</label>
-		<label for="sort" class="w-full mb-1">
-			<span>Sort by</span>
-		</label>
-		<select
-			name="sort"
-			@input="updateSort"
-			:value="queryBooks.sort.replace('-', '')"
-			class="w-1/2 h-10 mb-3 p-2 rounded-md dark:bg-slate-700 capitalize">
-			<option class="capitalize" :value="sortOption" v-for="(sortOption, index) in SORTING_OPTIONS" :key="index">
-				{{ sortOption }}
-			</option>
-		</select>
-		<label class="w-20 h-10 mb-3 mx-auto btn-blue-outline">
-			<span class="">{{ queryBooks.sort[0] !== '-' ? 'ASC' : 'DESC' }}</span>
-			<input type="checkbox" name="ascending" class="w-0 h-0 opacity-0" v-model="ascending" />
-		</label>
-		<footer class="w-full flex flex-row justify-between items-center">
-			<button type="reset" class="btn-gray-outline">Reset</button>
-			<button class="btn-green" value="default">Find</button>
-		</footer>
-	</form>
+  <form
+    method="dialog"
+    class="flex flex-row flex-wrap p-4"
+    @submit="$emit('search')">
+    <header class="mb-4 flex w-full flex-row items-center justify-between">
+      <h2 class="filter-title">
+        Filter & Sort
+      </h2>
+      <button
+        class="close-btn"
+        type="reset"
+        @click.passive="$emit('close')">
+        <svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
+      </button>
+    </header>
+    <label
+      for="name"
+      class="mb-3 w-full">
+      <span>Name</span>
+      <input
+        v-model="queryBooks.name"
+        type="search"
+        name="name"
+        class="mt-1 w-full rounded-md p-2 dark:bg-slate-700">
+    </label>
+    <label
+      for="tag"
+      class="mb-3 w-full">
+      <span>Tag</span>
+      <select
+        v-model="queryBooks.tag"
+        name="tag"
+        class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
+        <option
+          class="flex w-full p-1"
+          :value="undefined">All</option>
+        <option
+          v-for="tag of tags"
+          :key="tag.id"
+          :value="tag.name">{{ tag.name }}</option>
+      </select>
+    </label>
+    <label
+      for="rating"
+      class="mb-3 w-full">
+      <span>Rating</span>
+      <select
+        v-model="queryBooks.rating"
+        name="rating"
+        class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
+        <option
+          class="flex w-full p-1"
+          :value="undefined">All</option>
+        <option
+          v-for="item in RATINGS"
+          :key="item.name"
+          class="value"
+          :value="item.value">{{ item.name }}</option>
+      </select>
+    </label>
+    <label
+      for="sort"
+      class="mb-1 w-full">
+      <span>Sort by</span>
+    </label>
+    <select
+      name="sort"
+      :value="queryBooks.sort.replace('-', '')"
+      class="mb-3 h-10 w-1/2 rounded-md p-2 capitalize dark:bg-slate-700"
+      @input="updateSort">
+      <option
+        v-for="(sortOption, index) in SORTING_OPTIONS"
+        :key="index"
+        class="capitalize"
+        :value="sortOption">
+        {{ sortOption }}
+      </option>
+    </select>
+    <label class="btn-blue-outline mx-auto mb-3 h-10 w-20">
+      <span class="">{{ queryBooks.sort[0] !== '-' ? 'ASC' : 'DESC' }}</span>
+      <input
+        v-model="ascending"
+        type="checkbox"
+        name="ascending"
+        class="size-0 opacity-0">
+    </label>
+    <footer class="flex w-full flex-row items-center justify-between">
+      <button
+        type="reset"
+        class="btn-gray-outline">
+        Reset
+      </button>
+      <button
+        class="btn-green"
+        value="default">
+        Find
+      </button>
+    </footer>
+  </form>
 </template>

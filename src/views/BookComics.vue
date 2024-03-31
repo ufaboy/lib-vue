@@ -70,23 +70,19 @@ getBook(bookID);
     class=""
     tabindex="0"
     @keyup.left="decreasePage"
-    @keyup.right="increasePage"
-  >
+    @keyup.right="increasePage">
     <div class="relative flex w-full justify-center">
       <img
         v-if="media"
         :src="getUploadedMediaUrl(media)"
-        class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg"
-      >
+        class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg">
       <button
         type="button"
         class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
         data-carousel-prev
-        @click.passive="decreasePage"
-      >
+        @click.passive="decreasePage">
         <span
-          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
-        >
+          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70">
           <svg><use xlink:href="/icons/iconSprite.svg#arrowBackward" /></svg>
           <span class="sr-only">Previous</span>
         </span>
@@ -95,11 +91,9 @@ getBook(bookID);
         type="button"
         class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
         data-carousel-next
-        @click.passive="increasePage"
-      >
+        @click.passive="increasePage">
         <span
-          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70"
-        >
+          class="inline-flex size-10 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70">
           <svg><use xlink:href="/icons/iconSprite.svg#arrowForward" /></svg>
           <span class="sr-only">Next</span>
         </span>
@@ -107,8 +101,7 @@ getBook(bookID);
     </div>
     <Teleport
       v-if="mounted"
-      to="#menu-target"
-    >
+      to="#menu-target">
       <div class="flex flex-row">
         <div class="mr-3 max-w-[200px] truncate leading-8">
           {{ book?.name }}
@@ -118,22 +111,19 @@ getBook(bookID);
         </div>
         <button
           class="btn-header-green mr-2 hidden sm:block"
-          @click.passive="autoTurnPage"
-        >
+          @click.passive="autoTurnPage">
           Auto {{ autoTurnPAgeON ? 'ON' : 'OFF' }}
         </button>
         <input
           v-model="intervalSeconds"
           type="number"
           list="turn-second-list"
-          class="hidden w-16 rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 sm:block sm:text-xs dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-        >
+          class="hidden w-16 rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:block sm:text-xs">
         <datalist id="turn-second-list">
           <option
             v-for="(item, index) in PLAYER_INTERVALS"
             :key="index"
-            :value="item"
-          />
+            :value="item" />
         </datalist>
       </div>
     </Teleport>

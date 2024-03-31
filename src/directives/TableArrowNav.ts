@@ -47,6 +47,7 @@ function keyHandler(event: KeyboardEvent) {
 		}
 	}
 }
+
 function changeStyle(sibling: HTMLTableCellElement) {
 	if (sibling !== null && cellElement) {
 		cellElement.focus();

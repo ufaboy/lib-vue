@@ -30,31 +30,33 @@ initTheme();
 </script>
 
 <template>
-	<section class="flex flex-row items-center p-[2px] border-2 rounded-3xl text-white" aria-label="Color theme switcher">
-		<button
-			class="px-4 rounded-3xl border-0"
-			aria-pressed="false"
-			value="light"
-			@click.passive="setTheme"
-			:class="{ 'bg-black dark:bg-white dark:text-black': theme === 'light' }">
-			Light
-		</button>
-		<button
-			class="px-4 rounded-3xl border-0"
-			aria-pressed="true"
-			value="auto"
-			:class="{ 'bg-black dark:bg-white dark:text-black': !theme }"
-			@click.passive="setTheme">
-			Auto
-		</button>
-		<button
-			class="px-4 rounded-3xl border-0"
-			aria-pressed="false"
-			value="dark"
-			@click.passive="setTheme"
-			:class="{ 'bg-black dark:bg-white dark:text-black': theme === 'dark' }">
-			Dark
-		</button>
-		<div class="theme-switcher__status"></div>
-	</section>
+  <section
+    class="flex flex-row items-center rounded-3xl border-2 p-[2px] text-white"
+    aria-label="Color theme switcher">
+    <button
+      class="rounded-3xl border-0 px-4"
+      aria-pressed="false"
+      value="light"
+      :class="{ 'bg-black dark:bg-white dark:text-black': theme === 'light' }"
+      @click.passive="setTheme">
+      Light
+    </button>
+    <button
+      class="rounded-3xl border-0 px-4"
+      aria-pressed="true"
+      value="auto"
+      :class="{ 'bg-black dark:bg-white dark:text-black': !theme }"
+      @click.passive="setTheme">
+      Auto
+    </button>
+    <button
+      class="rounded-3xl border-0 px-4"
+      aria-pressed="false"
+      value="dark"
+      :class="{ 'bg-black dark:bg-white dark:text-black': theme === 'dark' }"
+      @click.passive="setTheme">
+      Dark
+    </button>
+    <div class="theme-switcher__status" />
+  </section>
 </template>

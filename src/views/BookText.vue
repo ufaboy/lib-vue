@@ -95,6 +95,7 @@ function keyHandler(event: KeyboardEvent) {
 	} else if (event.code === 'ArrowRight') {
 		nextPage();
 	} else if (event.code === 'Space') {
+		console.log('keyHandler event', event)
 	}
 }
 
@@ -108,6 +109,7 @@ function nextPage() {
 		console.log('nextPage', { currentTranslate: currentTranslate, translate: translate });
 	}
 }
+
 function prevPage() {
 	const mainElement = document.getElementById('mainText');
 	if (mainElement) {
@@ -137,47 +139,85 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
 </script>
 
 <template>
-	<main id="bookText" class="flex justify-center" :class="{ 'px-8': classicMode }">
-		<div v-if="book" id="mainText" v-html="book.text" class="" :class="{ [fontSize]: true, [textStyles]: true }"></div>
-		<TheLoader v-else class="fixed m-auto inset-0 size-24 text-emerald-500" />
-		<div
-			class="fixed flex flex-row flex-wrap gap-1 md:gap-3 w-full h-56 md:h-20 cursor-pointer bg-slate-300 dark:bg-slate-600 px-4 py-2 transition-all"
-			:class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
-			<div
-				class="absolute -top-4 left-[calc(50%_-_40px)] bg-slate-400 dark:bg-slate-600 w-20 h-4 mx-auto rounded-t-xl"
-				@click="bottomSheetShow = !bottomSheetShow">
-				<svg class="m-auto" height="16" width="20"><use xlink:href="/icons/iconSprite.svg#menu" /></svg>
-			</div>
-			<div class="flex flex-row flex-wrap w-full md:w-auto">
-				<label for="" class="w-full">Font</label>
-				<select name="" id="" class="w-full px-2 py-1 rounded dark:bg-gray-400" v-model="fontSize">
-					<option v-for="(size, index) in TEXT_SIZES" :value="size.value" :key="index">
-						{{ size.name }}
-					</option>
-				</select>
-			</div>
-			<div class="flex flex-row flex-wrap w-full md:w-auto md:max-w-[12rem]">
-				<label for="" class="w-full">Chapter</label>
-				<select class="w-full px-2 py-1 rounded dark:bg-gray-400" v-model="chapterElement" @change="scrollToChapter">
-					<option :value="chapter" v-for="(chapter, index) in headerChapters">
-						{{ chapter.name }}
-					</option>
-				</select>
-			</div>
-			<div class="flex flex-row flex-wrap w-full md:w-min md:max-w-[12rem]">
-				<label for="" class="w-full whitespace-nowrap">View Mode</label>
-				<button
-					@click="classicMode = !classicMode"
-					class="text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-					{{ classicMode ? 'Classic' : 'Scroll' }}
-				</button>
-			</div>
-		</div>
-		<Teleport v-if="mounted && book" to="#menu-target">
-			<div class="text-sm truncate max-w-[180px] text-white">{{ book.name }}</div>
-			<div class="text-sm mr-1 text-white">{{ progress }}%</div>
-		</Teleport>
-	</main>
+  <main
+    id="bookText"
+    class="flex justify-center"
+    :class="{ 'px-8': classicMode }">
+    <div
+      v-if="book"
+      id="mainText"
+      class=""
+      :class="{ [fontSize]: true, [textStyles]: true }"
+      v-html="book.text" />
+    <TheLoader
+      v-else
+      class="fixed inset-0 m-auto size-24 text-emerald-500" />
+    <div
+      class="fixed flex h-56 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
+      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
+      <div
+        class="absolute -top-4 left-[calc(50%_-_40px)] mx-auto h-4 w-20 rounded-t-xl bg-slate-400 dark:bg-slate-600"
+        @click="bottomSheetShow = !bottomSheetShow">
+        <svg
+          class="m-auto"
+          height="16"
+          width="20"><use xlink:href="/icons/iconSprite.svg#menu" /></svg>
+      </div>
+      <div class="flex w-full flex-row flex-wrap md:w-auto">
+        <label
+          for=""
+          class="w-full">Font</label>
+        <select
+          id=""
+          v-model="fontSize"
+          name=""
+          class="w-full rounded px-2 py-1 dark:bg-gray-400">
+          <option
+            v-for="(size, index) in TEXT_SIZES"
+            :key="index"
+            :value="size.value">
+            {{ size.name }}
+          </option>
+        </select>
+      </div>
+      <div class="flex w-full flex-row flex-wrap md:w-auto md:max-w-[12rem]">
+        <label
+          for=""
+          class="w-full">Chapter</label>
+        <select
+          v-model="chapterElement"
+          class="w-full rounded px-2 py-1 dark:bg-gray-400"
+          @change="scrollToChapter">
+          <option
+            v-for="(chapter, index) in headerChapters"
+            :key="index"
+            :value="chapter">
+            {{ chapter.name }}
+          </option>
+        </select>
+      </div>
+      <div class="flex w-full flex-row flex-wrap md:w-min md:max-w-[12rem]">
+        <label
+          for=""
+          class="w-full whitespace-nowrap">View Mode</label>
+        <button
+          class="rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
+          @click="classicMode = !classicMode">
+          {{ classicMode ? 'Classic' : 'Scroll' }}
+        </button>
+      </div>
+    </div>
+    <Teleport
+      v-if="mounted && book"
+      to="#menu-target">
+      <div class="max-w-[180px] truncate text-sm text-white">
+        {{ book.name }}
+      </div>
+      <div class="mr-1 text-sm text-white">
+        {{ progress }}%
+      </div>
+    </Teleport>
+  </main>
 </template>
 <style>
 @import url('/src/assets/style/tooltip.css');
@@ -307,14 +347,14 @@ span[data-tooltip]:hover {
 	}
 }
 
-@media only screen and (max-width: 892px) {
+@media only screen and (max-width: 768px) {
 	.book-view {
 		max-width: initial;
 		width: 100%;
 	}
 }
 
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: landscape) {
+@media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: landscape) {
 	.picture,
 	.video {
 		float: left;
@@ -323,14 +363,14 @@ span[data-tooltip]:hover {
 	}
 }
 
-@media only screen and (min-width: 360px) and (max-width: 892px) and (orientation: portrait) {
+@media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: portrait) {
 	.picture,
 	.video {
 		width: 100%;
 	}
 }
 
-@media only screen and (min-width: 893px) and (max-width: 1368px) {
+@media only screen and (min-width: 769px) and (max-width: 1368px) {
 	.picture,
 	.video {
 		float: left;

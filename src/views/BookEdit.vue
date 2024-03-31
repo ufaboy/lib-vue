@@ -130,6 +130,7 @@ async function removeAllFiles() {
 	const result = await deleteAllMedia(bookID.value);
 	if (result && book.value) book.value.media = [];
 }
+
 async function loadBook(data: Book) {
 	name.value = data.name;
 	description.value = data.description || '';
@@ -141,6 +142,7 @@ async function loadBook(data: Book) {
 	authorName.value = data.author?.name;
 	seriesName.value = data.series?.name;
 }
+
 function loadFiles(evt: Event) {
 	const fileList = (evt.target as HTMLInputElement).files;
 	if (fileList) {
@@ -149,14 +151,17 @@ function loadFiles(evt: Event) {
 		}
 	}
 }
+
 function mouseOverBlobMediaHandler(event: Event) {
 	const index = Number((event.target as HTMLElement).dataset.index);
 	media.value = mediaList.value[index];
 }
+
 function mouseOverBookMediaHandler(event: Event) {
 	const index = Number((event.target as HTMLElement).dataset.index);
 	if (book.value && book.value.media) media.value = book.value.media[index];
 }
+
 function typo() {
 	if (book.value && window.Worker) {
 		const typografWorker = new Worker(new URL('../utils/typografWorker.ts', import.meta.url), { type: 'module' });
@@ -186,194 +191,290 @@ onMounted(async () => {
 </script>
 
 <template>
-	<main class="flex flex-row flex-nowrap">
-		<div class="flex flex-row flex-wrap w-[900px] h-fit">
-			<div class="w-full flex flex-col px-4 py-2">
-				<label for="name" class="label">Name</label>
-				<input type="text" name="name" form="Book" v-model.trim="name" :title="name" required class="input" />
-			</div>
-			<div class="w-1/2 flex flex-col px-4 py-2">
-				<label for="description" class="label">
-					Description
-					<output class="ml-2">{{ description.length }}</output>
-				</label>
-				<textarea
-					name="description"
-					form="Book"
-					maxlength="300"
-					v-model.trim="description"
-					rows="3"
-					class="input flex-1"></textarea>
-			</div>
-			<div class="w-1/2 px-4 py-2 flex flex-wrap">
-				<div class="w-full flex justify-between mb-2 gap-2">
-					<label for="tags" class="label mb-0">Tags</label>
-					<form
-						id="newTagForm"
-						v-if="showNewTag"
-						class="flex flex-row flex-nowrap items-center gap-1"
-						@submit.prevent="updateTag">
-						<input type="text" name="name" v-model="tag" class="input py-0 border-0" />
-						<button class="rounded-full text-green-500 hover:bg-green-700/50">
-							<svg class="size-5">
-								<use xlink:href="/icons/iconSprite.svg#check" />
-							</svg>
-						</button>
-						<button
-							type="reset"
-							@click.prevent.passive="showNewTag = false"
-							class="rounded-full text-red-500 hover:bg-red-700/50">
-							<svg class="size-5">
-								<use xlink:href="/icons/iconSprite.svg#close" />
-							</svg>
-						</button>
-					</form>
-					<button v-else type="button" class="btn-icon h-5 w-5" @click.prevent.passive="showNewTag = true">
-						<svg class="size-5">
-							<use xlink:href="/icons/iconSprite.svg#add" />
-						</svg>
-					</button>
-				</div>
-				<div class="flex flex-wrap w-full">
-					<select
-						v-if="isMobile()"
-						name="Book[tag_ids][]"
-						form="Book"
-						multiple
-						class="select flex w-full"
-						v-model="tagsID"
-						required>
-						<option v-for="tag in tags" :value="tag.id">{{ tag.name }}</option>
-					</select>
-					<template v-else>
-						<label v-for="item in tags" :for="item.name" :key="item.id" class="w-1/3 flex items-center gap-1">
-							<input
-								type="checkbox"
-								:id="item.name"
-								:value="item.id"
-								v-model="tagsID"
-								name="Book[tag_ids][]"
-								form="Book"
-								class="size-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-							<span>{{ item.name }}</span>
-						</label>
-					</template>
-				</div>
-			</div>
-			<div class="w-1/2 flex flex-col px-4 py-2">
-				<label for="source" class="label">Source</label>
-				<input type="text" name="source" form="Book" v-model.trim="source" :title="source" class="input" />
-			</div>
-			<div class="w-1/2 flex flex-col px-4 py-2">
-				<label for="source" class="label">Cover</label>
-				<input
-					type="text"
-					name="cover"
-					form="Book"
-					list="coverList"
-					v-model.trim="cover"
-					:title="cover"
-					class="input" />
-				<datalist id="coverList">
-					<option v-for="(image, index) in imageCoverList" :value="image" :key="index"></option>
-				</datalist>
-			</div>
-			<div class="w-1/3 flex flex-col px-4 py-2">
-				<label for="author" class="label">Author</label>
-				<input
-					type="search"
-					form="Book"
-					name="author_id"
-					list="authorList"
-					class="input overflow-ellipsis"
-					aria-label="Search"
-					v-model="authorName" />
-				<datalist id="authorList">
-					<option v-for="author in authors" :value="author.name"></option>
-				</datalist>
-			</div>
-			<div class="w-1/3 flex flex-col px-4 py-2">
-				<label for="" class="label">Series</label>
-				<input
-					type="search"
-					form="Book"
-					name="series_id"
-					list="seriesList"
-					aria-label="Search"
-					class="input overflow-ellipsis"
-					v-model="seriesName" />
-				<datalist id="seriesList">
-					<option v-for="seria in series" :value="seria.name"></option>
-				</datalist>
-			</div>
-			<div class="w-1/3 flex flex-col justify-between px-4 py-2">
-				<label for="rating" class="label">Rating</label>
-				<select name="rating" form="Book" class="select" v-model="rating" required>
-					<option v-for="num in RATINGS" :value="num.value">
-						{{ num.name }}
-					</option>
-				</select>
-			</div>
-			<div class="w-full flex justify-between items-center px-4 py-3">
-				<label for="multiple_files" class="flex mr-3 text-sm font-medium text-gray-900 dark:text-white">
-					<input
-						id="multiple_files"
-						type="file"
-						multiple
-						form="Book"
-						name="Upload[mediaFiles][]"
-						accept="video/mp4,video/webm,image/webp,audio/mpeg"
-						@change="loadFiles"
-						class="block w-full px-3 py-2 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" />
-				</label>
-				<button class="btn-red-outline flex gap-1" @click.passive="removeAllFiles">
-					Remove
-					<span class="hidden lg:inline">Media</span>
-					<svg aria-hidden="true" role="status" class="inline size-5 text-red-500">
-						<use xlink:href="/icons/iconSprite.svg#image" />
-					</svg>
-				</button>
-			</div>
-			<div class="w-full px-4 py-3">
-				<label for="text" class="w-full label"
-					>Text — <span>Length:</span><output class="mr-2">{{ text.length }}</output> <span>Size:</span
-					><output>{{ calcTextSize(text.length) }}kb</output>
-				</label>
-				<textarea name="text" form="Book" class="w-full input" rows="20" v-model="text"></textarea>
-			</div>
-		</div>
-		<div class="w-96 hidden md:block">
-			<div v-if="mediaList.length">
-				<h3>New</h3>
-				<ol class="columns-2" @mouseover="mouseOverBlobMediaHandler" @mouseleave="media = undefined">
-					<li v-for="(media, index) in mediaList" :key="index" class="flex items-center gap-2 p-1">
-						<span :data-index="index" class="break-normal hover:text-blue-500">
-							{{ media.name }}
-						</span>
-						<button @click.passive="mediaList.splice(index, 1)">
-							<svg class="size-5">
-								<use xlink:href="/icons/iconSprite.svg#delete" />
-							</svg>
-						</button>
-					</li>
-				</ol>
-			</div>
-			<div v-if="book?.media?.length">
-				<h3 class="text-lg">Uploaded:</h3>
-				<ol class="columns-2" @mouseover="mouseOverBookMediaHandler" @mouseleave="media = undefined">
-					<li v-for="(img, index) in book.media" :key="index" class="flex items-center gap-2 p-1">
-						<button @click.passive="copyMediaUrl(img)" :data-index="index" class="hover:text-blue-500">
-							{{ img.file_name }}
-						</button>
-						<button @click.passive="removeMedia(img.id, index)" class="dark:text-red-600">
-							<svg class="size-5">
-								<use xlink:href="/icons/iconSprite.svg#delete" />
-							</svg>
-						</button>
-					</li>
-				</ol>
-			</div>
-			<!-- <div v-if="media && media instanceof Blob">
+  <main class="flex flex-row flex-nowrap">
+    <div class="flex h-fit w-[900px] flex-row flex-wrap">
+      <div class="flex w-full flex-col px-4 py-2">
+        <label
+          for="name"
+          class="label">Name</label>
+        <input
+          v-model.trim="name"
+          type="text"
+          name="name"
+          form="Book"
+          :title="name"
+          required
+          class="input">
+      </div>
+      <div class="flex w-1/2 flex-col px-4 py-2">
+        <label
+          for="description"
+          class="label">
+          Description
+          <output class="ml-2">{{ description.length }}</output>
+        </label>
+        <textarea
+          v-model.trim="description"
+          name="description"
+          form="Book"
+          maxlength="300"
+          rows="3"
+          class="input flex-1" />
+      </div>
+      <div class="flex w-1/2 flex-wrap px-4 py-2">
+        <div class="mb-2 flex w-full justify-between gap-2">
+          <label
+            for="tags"
+            class="label mb-0">Tags</label>
+          <form
+            v-if="showNewTag"
+            id="newTagForm"
+            class="flex flex-row flex-nowrap items-center gap-1"
+            @submit.prevent="updateTag">
+            <input
+              v-model="tag"
+              type="text"
+              name="name"
+              class="input border-0 py-0">
+            <button class="rounded-full text-green-500 hover:bg-green-700/50">
+              <svg class="size-5">
+                <use xlink:href="/icons/iconSprite.svg#check" />
+              </svg>
+            </button>
+            <button
+              type="reset"
+              class="rounded-full text-red-500 hover:bg-red-700/50"
+              @click.prevent.passive="showNewTag = false">
+              <svg class="size-5">
+                <use xlink:href="/icons/iconSprite.svg#close" />
+              </svg>
+            </button>
+          </form>
+          <button
+            v-else
+            type="button"
+            class="btn-icon size-5"
+            @click.prevent.passive="showNewTag = true">
+            <svg class="size-5">
+              <use xlink:href="/icons/iconSprite.svg#add" />
+            </svg>
+          </button>
+        </div>
+        <div class="flex w-full flex-wrap">
+          <select
+            v-if="isMobile()"
+            v-model="tagsID"
+            name="Book[tag_ids][]"
+            form="Book"
+            multiple
+            class="select flex w-full"
+            required>
+            <option
+              v-for="tagItem in tags"
+              :key="tagItem.id"
+              :value="tagItem.id">
+              {{ tagItem.name }}
+            </option>
+          </select>
+          <template v-else>
+            <label
+              v-for="item in tags"
+              :key="item.id"
+              :for="item.name"
+              class="flex w-1/3 items-center gap-1">
+              <input
+                :id="item.name"
+                v-model="tagsID"
+                type="checkbox"
+                :value="item.id"
+                name="Book[tag_ids][]"
+                form="Book"
+                class="size-4 shrink-0 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600">
+              <span>{{ item.name }}</span>
+            </label>
+          </template>
+        </div>
+      </div>
+      <div class="flex w-1/2 flex-col px-4 py-2">
+        <label
+          for="source"
+          class="label">Source</label>
+        <input
+          v-model.trim="source"
+          type="text"
+          name="source"
+          form="Book"
+          :title="source"
+          class="input">
+      </div>
+      <div class="flex w-1/2 flex-col px-4 py-2">
+        <label
+          for="source"
+          class="label">Cover</label>
+        <input
+          v-model.trim="cover"
+          type="text"
+          name="cover"
+          form="Book"
+          list="coverList"
+          :title="cover"
+          class="input">
+        <datalist id="coverList">
+          <option
+            v-for="(image, index) in imageCoverList"
+            :key="index"
+            :value="image" />
+        </datalist>
+      </div>
+      <div class="flex w-1/3 flex-col px-4 py-2">
+        <label
+          for="author"
+          class="label">Author</label>
+        <input
+          v-model="authorName"
+          type="search"
+          form="Book"
+          name="author_id"
+          list="authorList"
+          class="input text-ellipsis"
+          aria-label="Search">
+        <datalist id="authorList">
+          <option
+            v-for="author in authors"
+            :key="author.id"
+            :value="author.name" />
+        </datalist>
+      </div>
+      <div class="flex w-1/3 flex-col px-4 py-2">
+        <label
+          for=""
+          class="label">Series</label>
+        <input
+          v-model="seriesName"
+          type="search"
+          form="Book"
+          name="series_id"
+          list="seriesList"
+          aria-label="Search"
+          class="input text-ellipsis">
+        <datalist id="seriesList">
+          <option
+            v-for="seria in series"
+            :key="seria.id"
+            :value="seria.name" />
+        </datalist>
+      </div>
+      <div class="flex w-1/3 flex-col justify-between px-4 py-2">
+        <label
+          for="rating"
+          class="label">Rating</label>
+        <select
+          v-model="rating"
+          name="rating"
+          form="Book"
+          class="select"
+          required>
+          <option
+            v-for="(num, index) in RATINGS"
+            :key="index"
+            :value="num.value">
+            {{ num.name }}
+          </option>
+        </select>
+      </div>
+      <div class="flex w-full items-center justify-between px-4 py-3">
+        <label
+          for="multiple_files"
+          class="mr-3 flex text-sm font-medium text-gray-900 dark:text-white">
+          <input
+            id="multiple_files"
+            type="file"
+            multiple
+            form="Book"
+            name="Upload[mediaFiles][]"
+            accept="video/mp4,video/webm,image/webp,audio/mpeg"
+            class="block w-full cursor-pointer rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:text-gray-400 dark:placeholder:text-gray-400"
+            @change="loadFiles">
+        </label>
+        <button
+          class="btn-red-outline flex gap-1"
+          @click.passive="removeAllFiles">
+          Remove
+          <span class="hidden lg:inline">Media</span>
+          <svg
+            aria-hidden="true"
+            role="status"
+            class="inline size-5 text-red-500">
+            <use xlink:href="/icons/iconSprite.svg#image" />
+          </svg>
+        </button>
+      </div>
+      <div class="w-full px-4 py-3">
+        <label
+          for="text"
+          class="label w-full">Text — <span>Length:</span><output class="mr-2">{{ text.length }}</output> <span>Size:</span><output>{{ calcTextSize(text.length) }}kb</output>
+        </label>
+        <textarea
+          v-model="text"
+          name="text"
+          form="Book"
+          class="input w-full"
+          rows="20" />
+      </div>
+    </div>
+    <div class="hidden w-96 md:block">
+      <div v-if="mediaList.length">
+        <h3>New</h3>
+        <ol
+          class="columns-2"
+          @mouseover="mouseOverBlobMediaHandler"
+          @mouseleave="media = undefined">
+          <li
+            v-for="(media, index) in mediaList"
+            :key="index"
+            class="flex items-center gap-2 p-1">
+            <span
+              :data-index="index"
+              class="break-normal hover:text-blue-500">
+              {{ media.name }}
+            </span>
+            <button @click.passive="mediaList.splice(index, 1)">
+              <svg class="size-5">
+                <use xlink:href="/icons/iconSprite.svg#delete" />
+              </svg>
+            </button>
+          </li>
+        </ol>
+      </div>
+      <div v-if="book?.media?.length">
+        <h3 class="text-lg">
+          Uploaded:
+        </h3>
+        <ol
+          class="columns-2"
+          @mouseover="mouseOverBookMediaHandler"
+          @mouseleave="media = undefined">
+          <li
+            v-for="(img, index) in book.media"
+            :key="index"
+            class="flex items-center gap-2 p-1">
+            <button
+              :data-index="index"
+              class="hover:text-blue-500"
+              @click.passive="copyMediaUrl(img)">
+              {{ img.file_name }}
+            </button>
+            <button
+              class="dark:text-red-600"
+              @click.passive="removeMedia(img.id, index)">
+              <svg class="size-5">
+                <use xlink:href="/icons/iconSprite.svg#delete" />
+              </svg>
+            </button>
+          </li>
+        </ol>
+      </div>
+      <!-- <div v-if="media && media instanceof Blob">
 				<video
 					v-if="media.file_name.includes('.mp4')"
 					loop
@@ -387,31 +488,47 @@ onMounted(async () => {
 					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
 					onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
 			</div> -->
-		</div>
-		<form id="Book" name="Book" @submit.prevent="saveBook"></form>
-		<Teleport v-if="mounted" to="#menu-target">
-			<button
-				class="nav-btn border flex items-center gap-2 hover:bg-gray-600"
-				:class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }"
-				@click.prevent="typo">
-				<svg aria-hidden="true" role="status" class="inline size-6">
-					<use xlink:href="/icons/iconSprite.svg#spellcheck" />
-				</svg>
-				<span v-if="!sidebarCollapsed">Typo</span>
-			</button>
-			<button
-				form="Book"
-				type="submit"
-				class="nav-btn border flex items-center gap-2 hover:bg-gray-600"
-				:class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }">
-				<svg v-if="!sidebarCollapsed || !loading" aria-hidden="true" role="status" class="inline size-6">
-					<use xlink:href="/icons/iconSprite.svg#save" />
-				</svg>
-				<span v-if="!sidebarCollapsed">Save</span>
-				<svg v-if="loading" aria-hidden="true" role="status" class="inline size-6 animate-spin text-white">
-					<use xlink:href="/icons/iconSprite.svg#loadingRing" />
-				</svg>
-			</button>
-		</Teleport>
-	</main>
+    </div>
+    <form
+      id="Book"
+      name="Book"
+      @submit.prevent="saveBook" />
+    <Teleport
+      v-if="mounted"
+      to="#menu-target">
+      <button
+        class="nav-btn flex items-center gap-2 border hover:bg-gray-600"
+        :class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }"
+        @click.prevent="typo">
+        <svg
+          aria-hidden="true"
+          role="status"
+          class="inline size-6">
+          <use xlink:href="/icons/iconSprite.svg#spellcheck" />
+        </svg>
+        <span v-if="!sidebarCollapsed">Typo</span>
+      </button>
+      <button
+        form="Book"
+        type="submit"
+        class="nav-btn flex items-center gap-2 border hover:bg-gray-600"
+        :class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }">
+        <svg
+          v-if="!sidebarCollapsed || !loading"
+          aria-hidden="true"
+          role="status"
+          class="inline size-6">
+          <use xlink:href="/icons/iconSprite.svg#save" />
+        </svg>
+        <span v-if="!sidebarCollapsed">Save</span>
+        <svg
+          v-if="loading"
+          aria-hidden="true"
+          role="status"
+          class="inline size-6 animate-spin text-white">
+          <use xlink:href="/icons/iconSprite.svg#loadingRing" />
+        </svg>
+      </button>
+    </Teleport>
+  </main>
 </template>

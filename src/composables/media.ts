@@ -103,6 +103,7 @@ export function useMedia() {
 			? `/${media.path}/${media.file_name}`
 			: `${import.meta.env.VITE_BACKEND_URL}/${media.path}/${media.file_name}`;
 	}
+
 	function getStorageMediaUrl(mediaName: string, dirID: number) {
 		const bookPath = `book_${String(dirID).padStart(3, '0')}`;
 		return import.meta.env.PROD
@@ -172,7 +173,9 @@ export function useMedia() {
 			const request = getRequest(url);
 			const data = await fetchData<Array<StorageMedia>>(request);
 			storageMedia.value = data;
-		} catch (error) {}
+		} catch (error) {
+			console.log('getTotal', error)
+		}
 	}
 
 	function getMediaType(media: Media) {

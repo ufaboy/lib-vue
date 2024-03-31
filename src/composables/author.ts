@@ -65,15 +65,18 @@ export function useAuthor() {
 		queryAuthors.value.sort = `${desc ? '' : '-'}${field}`;
 		getAuthors();
 	}
+
 	function openAuthorDialog(authorData?: Author) {
 		author.value = authorData
 			? { id: authorData.id, name: authorData.name, url: authorData.url }
 			: { name: '', url: '' };
 		authorDialog.value?.showModal();
 	}
+
 	function closeDialog() {
 		if (authorDialog.value) authorDialog.value.close();
 	}
+
 	async function parseQueryAuthorParams() {
 		const { id, name, url, sort, page, perPage } = route.query;
 		if (id) queryAuthors.value.id = Number(id);

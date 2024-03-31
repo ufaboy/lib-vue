@@ -1,4 +1,4 @@
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
 export function useScroll() {
 	const observedElement = ref<HTMLElement>(document.documentElement);

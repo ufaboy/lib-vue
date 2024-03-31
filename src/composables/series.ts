@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { useSeriesStore } from '@/store/seriesStore';
-import { formRequest, getUrl, fetchData, getRequest, dataRequest } from '@/utils/helper';
+import { getUrl, fetchData, getRequest, dataRequest } from '@/utils/helper';
 import type { QuerySeries, Series, SeriesResponse } from '@/interfaces/series';
 import type { ListMeta } from '@/interfaces/meta';
 
@@ -34,6 +34,7 @@ export function useSeries() {
 			console.log('getSeries wrong', { error: error });
 		}
 	}
+
 	async function updateSeries() {
 		try {
 			const method = seria.value && seria.value.id ? 'PUT' : 'POST';
@@ -53,16 +54,19 @@ export function useSeries() {
 			console.log({ 'updateSeries wrong': error });
 		}
 	}
+
 	function changeSort(field: string) {
 		querySeries.value.page = 1;
 		const desc = querySeries.value.sort[0] === '-';
 		querySeries.value.sort = `${desc ? '' : '-'}${field}`;
 		getSeries();
 	}
+
 	function openSeriesDialog(seriesData?: Series) {
 		seria.value = seriesData || { name: '', url: '' };
 		seriesDialog.value?.showModal();
 	}
+
 	function closeDialog() {
 		if (seriesDialog.value) seriesDialog.value.close();
 	}
