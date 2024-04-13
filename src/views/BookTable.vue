@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { QueryBooks } from '@/interfaces/book';
 import { convertTimestampToDate } from '@/utils/helper';
 import { useBook } from '@/composables/book';
 import { useTag } from '@/composables/tags';
@@ -11,10 +12,10 @@ import { useAuthorStore } from '@/store/authorStore';
 import { useSeriesStore } from '@/store/seriesStore';
 import { RATINGS, SIZES } from '@/utils/constants';
 
+import TheLoader from '@/components/TheLoader.vue';
 import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
-import TheLoader from '@/components/TheLoader.vue';
-import { QueryBooks } from '@/interfaces/book';
+import TableRowEmptyResult from '@/components/TableRowEmptyResult.vue';
 
 document.title = 'Books';
 
@@ -677,8 +678,10 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
           </td>
         </tr>
         <SkeletonTableRow
-          v-if="!books.length"
+          v-if="loading"
           count="11" />
+        <TableRowEmptyResult
+          v-else-if="!books.length" />
       </tbody>
     </table>
     <TablePaginator

@@ -157,12 +157,14 @@ onBeforeUnmount(() => {
 	document.removeEventListener('mousedown', mouseDownHandler);
 	document.removeEventListener('mouseup', mouseUpHandler);
 });
-document.documentElement.classList.remove('scrollbar');
+document.documentElement.classList.remove('scrollbar-gutter');
 </script>
 
 <template>
-	<div class="layout h-full">
-		<router-view />
-		<canvas id="canvas" class="fixed top-0 left-0 -z-10"></canvas>
-	</div>
+  <div class="layout h-full">
+    <router-view />
+    <canvas
+      id="canvas"
+      class="fixed left-0 top-0 -z-10" />
+  </div>
 </template>

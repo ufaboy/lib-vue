@@ -10,6 +10,7 @@ const emit = defineEmits<{
 	updatePage: [id: number];
 	updateLimit: [size: number];
 }>();
+
 const perPage = ref<number>(0);
 const paginationArray = ref<number[]>();
 
@@ -58,6 +59,8 @@ createPagination(props.meta);
       aria-label="Page navigation">
       <button
         class="btn-paginator"
+        :class="{'cursor-not-allowed': meta.currentPage === 1}"
+        :disabled="meta.currentPage === 1"
         @click.passive="$emit('updatePage', meta.currentPage - 1)">
         <span class="sr-only relative">Previous</span>
         <svg class="size-6">
@@ -106,6 +109,8 @@ createPagination(props.meta);
       </template>
       <button
         class="btn-paginator"
+        :class="{'cursor-not-allowed': meta.currentPage >= meta.pageCount}"
+        :disabled="meta.currentPage >= meta.pageCount"
         @click.passive="$emit('updatePage', meta.currentPage + 1)">
         <span class="sr-only relative">Next</span>
         <svg class="size-6">

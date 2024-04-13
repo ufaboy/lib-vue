@@ -31,7 +31,7 @@ const fontSize = ref('text-xl');
 const textStyles = computed(() => {
 	return classicMode.value
 		? ' columns-1 md:columns-2 h-[calc(100dvh_-_67px)] gap-x-16 max-w-7xl py-4'
-		: 'text w-full max-w-[900px] py-2 px-3 md:p-3 lg:p-4';
+		: 'text max-w-[900px] py-2 px-3 md:p-3 lg:p-4';
 });
 
 /* const progressStyle = computed(() => {
@@ -61,7 +61,7 @@ async function prepareHeaders() {
 	const h1Element = document.querySelector('.book-name');
 
 	if (h1Element) {
-		const item = { name: 'Table Of Content', url: '/', element: h1Element };
+		const item = { name: 'Table Of Content', url: 'mainText', element: h1Element };
 		arr.push(item);
 		chapterElement.value = { name: 'Table Of Content', url: '/', element: h1Element };
 	}
@@ -146,12 +146,12 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
     <div
       v-if="book"
       id="mainText"
-      class=""
+      class="flex-1"
       :class="{ [fontSize]: true, [textStyles]: true }"
       v-html="book.text" />
     <TheLoader
       v-else
-      class="fixed inset-0 m-auto size-24 text-emerald-500" />
+      class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
       class="fixed flex h-56 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
       :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
@@ -210,12 +210,24 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
     <Teleport
       v-if="mounted && book"
       to="#menu-target">
-      <div class="max-w-[180px] truncate text-sm text-white">
-        {{ book.name }}
+      <div class="flex flex-wrap items-center gap-1">
+        <div class="font-medium text-white">
+          {{ book.name }}
+        </div>
+        <div class="font-medium text-white">
+          {{ progress }}%
+        </div>
       </div>
-      <div class="mr-1 text-sm text-white">
-        {{ progress }}%
-      </div>
+      <ol>
+        <li
+          v-for="(chapter, index) in headerChapters"
+          :key="index"
+          class="sidebar-link">
+          <a :href="`#${chapter.url}`">
+            {{ chapter.name }}
+          </a>
+        </li>
+      </ol>
     </Teleport>
   </main>
 </template>
@@ -320,9 +332,6 @@ span[data-tooltip]:hover {
 
 .chapter + .chapter {
 	break-before: column;
-}
-
-[data-tooltip] {
 }
 
 @media (prefers-color-scheme: dark) {

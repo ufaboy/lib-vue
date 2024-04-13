@@ -5,7 +5,39 @@
   font-size: 16px;
 }
 
-.scrollbar {
+
+  /* width */
+.scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  .scrollbar::-webkit-scrollbar-track {
+    background: #f3f4f6;
+    @media (prefers-color-scheme: dark) {
+      background: #4b5563;
+    }
+  }
+
+  /* Handle */
+  .scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: #d1d5db;
+    @media (prefers-color-scheme: dark) {
+      background: #6b7280;
+    }
+  }
+
+  /* Handle on hover */
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+    @media (prefers-color-scheme: dark) {
+      background: #9ca3af;
+    }
+  }
+
+
+.scrollbar-gutter {
   scrollbar-gutter: stable;
 }
 

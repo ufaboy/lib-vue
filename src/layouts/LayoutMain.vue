@@ -16,15 +16,19 @@ onBeforeUnmount(() => {
 	window.removeEventListener('scroll', throttleScroll);
 });
 
-document.documentElement.classList.add('scrollbar');
+document.documentElement.classList.add('scrollbar-gutter');
 </script>
 <template>
-	<div id="layout" class="">
-		<TheHeader class="sticky top-0 z-10" />
-		<router-view :progress="scrollingProgress.progress" class="px-2 lg:px-4" />
-		<BtnScrollToTop
-			v-if="btnTopShow"
-			@click="scrollTo()"
-			class="fixed bottom-20 right-5 z-10 flex size-10 items-center justify-center" />
-	</div>
+  <div
+    id="layout"
+    class="">
+    <TheHeader class="sticky top-0 z-10" />
+    <router-view
+      :progress="scrollingProgress.progress"
+      class="px-2 lg:px-4" />
+    <BtnScrollToTop
+      v-if="btnTopShow"
+      class="fixed bottom-20 right-5 z-10 flex size-10 items-center justify-center"
+      @click="scrollTo()" />
+  </div>
 </template>

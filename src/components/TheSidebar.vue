@@ -17,8 +17,7 @@ const bookID = computed(()=> {
 
 <template>
   <aside
-    class="border-r"
-    :class="{ 'w-40': !collapsed, 'w-12': collapsed }">
+    class="scrollbar">
     <button
       class="p-2 text-white"
       aria-label="Menu"
@@ -36,7 +35,7 @@ const bookID = computed(()=> {
           xlink:href="/icons/iconSprite.svg#sidebarOpen" />
       </svg>
     </button>
-    <ul class="w-full gap-3 bg-blue-500 text-white dark:bg-gray-900 lg:bg-blue-600 dark:lg:bg-gray-900">
+    <ul class="sticky top-0 w-full gap-3 bg-blue-500 text-white dark:bg-gray-900 lg:bg-blue-600 dark:lg:bg-gray-900">
       <li class="w-full">
         <RouterLink
           :to="{ name: 'books' }"
@@ -100,7 +99,7 @@ const bookID = computed(()=> {
           <span v-show="!collapsed">Media</span>
         </RouterLink>
       </li>
-      <hr class="my-1">
+      <!-- <hr class="my-1"> -->
       <li
         v-if="route.name === 'books'"
         class="w-full">
@@ -146,6 +145,8 @@ const bookID = computed(()=> {
           <span v-show="!collapsed">Update</span>
         </RouterLink>
       </li>
+      <hr class="my-1">
+
       <!-- 			<li class="px-4">
 				<ThemeSwitcher />
 			</li> -->
