@@ -3,6 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { useBookStore } from '@/store/bookStore';
 import { useBook } from '@/composables/book';
+import { isSmallDevice } from '@/utils/helper';
 import { TEXT_SIZES } from '@/utils/constants';
 import { Chapter } from '@/interfaces/book';
 
@@ -218,7 +219,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
           {{ progress }}%
         </div>
       </div>
-      <ol>
+      <ol v-if="!isSmallDevice()">
         <li
           v-for="(chapter, index) in headerChapters"
           :key="index"
