@@ -692,6 +692,6 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
     <form name="searchForm" />
     <TheLoader
       v-if="loading"
-      class="fixed inset-0 m-auto size-24 text-emerald-500" />
+      class="absolute inset-0 m-auto size-24 text-emerald-500" />
   </main>
 </template>

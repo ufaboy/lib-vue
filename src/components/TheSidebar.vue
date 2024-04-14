@@ -5,7 +5,6 @@ import { RouterLink, useRoute } from 'vue-router';
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
 
 const route = useRoute()
-const collapsed = defineModel({ type: Boolean});
 
 const routeName = computed(()=> {
 	return route.name ? route.name.toString() : 'undefiened'
@@ -18,23 +17,6 @@ const bookID = computed(()=> {
 <template>
   <aside
     class="scrollbar">
-    <button
-      class="p-2 text-white"
-      aria-label="Menu"
-      @click="collapsed = !collapsed">
-      <svg
-        aria-hidden="true"
-        role="status"
-        class="inline size-6"
-        fill="none">
-        <use
-          v-if="!collapsed"
-          xlink:href="/icons/iconSprite.svg#sidebarClose" />
-        <use
-          v-else
-          xlink:href="/icons/iconSprite.svg#sidebarOpen" />
-      </svg>
-    </button>
     <ul class="sticky top-0 w-full gap-3 bg-blue-500 text-white dark:bg-gray-900 lg:bg-blue-600 dark:lg:bg-gray-900">
       <li class="w-full">
         <RouterLink
@@ -44,7 +26,7 @@ const bookID = computed(()=> {
           <svg class="inline size-6">
             <use xlink:href="/icons/iconSprite.svg#books" />
           </svg>
-          <span v-show="!collapsed">Books</span>
+          <span>Books</span>
         </RouterLink>
       </li>
       <li class="w-full">
@@ -57,7 +39,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#tag" />
           </svg>
-          <span v-show="!collapsed">Tags</span>
+          <span>Tags</span>
         </RouterLink>
       </li>
       <li class="w-full">
@@ -70,7 +52,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#authors" />
           </svg>
-          <span v-show="!collapsed">Authors</span>
+          <span>Authors</span>
         </RouterLink>
       </li>
       <li class="w-full">
@@ -83,7 +65,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#series" />
           </svg>
-          <span v-show="!collapsed">Series</span>
+          <span>Series</span>
         </RouterLink>
       </li>
       <li class="w-full">
@@ -96,7 +78,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#photoLibrary" />
           </svg>
-          <span v-show="!collapsed">Media</span>
+          <span>Media</span>
         </RouterLink>
       </li>
       <!-- <hr class="my-1"> -->
@@ -112,7 +94,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#bookAdd" />
           </svg>
-          <span v-show="!collapsed">Create</span>
+          <span>Create</span>
         </RouterLink>
       </li>
       <li
@@ -127,7 +109,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#openBook" />
           </svg>
-          <span v-show="!collapsed">View</span>
+          <span>View</span>
         </RouterLink>
       </li>
       <li
@@ -142,7 +124,7 @@ const bookID = computed(()=> {
             fill="none">
             <use xlink:href="/icons/iconSprite.svg#openBook" />
           </svg>
-          <span v-show="!collapsed">Update</span>
+          <span>Update</span>
         </RouterLink>
       </li>
       <hr class="my-1">

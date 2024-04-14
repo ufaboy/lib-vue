@@ -281,7 +281,7 @@ onMounted(async () => {
               v-for="item in tags"
               :key="item.id"
               :for="item.name"
-              class="flex w-1/3 items-center gap-1">
+              class="flex w-1/3 cursor-pointer items-center gap-1">
               <input
                 :id="item.name"
                 v-model="tagsID"
@@ -372,7 +372,7 @@ onMounted(async () => {
           v-model="rating"
           name="rating"
           form="Book"
-          class="select"
+          class="select cursor-pointer"
           required>
           <option
             v-for="(num, index) in RATINGS"
@@ -404,7 +404,7 @@ onMounted(async () => {
           <svg
             aria-hidden="true"
             role="status"
-            class="inline size-5 text-red-500">
+            class="inline size-5 ">
             <use xlink:href="/icons/iconSprite.svg#image" />
           </svg>
         </button>
@@ -419,11 +419,11 @@ onMounted(async () => {
           name="text"
           form="Book"
           class="input w-full"
-          rows="20" />
+          rows="10" />
       </div>
     </div>
     <div class="hidden w-96 md:block">
-      <div v-if="mediaList.length">
+      <div v-if="mediaList.length" class="w-full px-2">
         <h3>New</h3>
         <ol
           class="columns-2"
@@ -435,18 +435,18 @@ onMounted(async () => {
             class="flex items-center gap-2 p-1">
             <span
               :data-index="index"
-              class="break-normal hover:text-blue-500">
+              class="truncate break-normal hover:text-blue-500">
               {{ media.name }}
             </span>
             <button @click.passive="mediaList.splice(index, 1)">
-              <svg class="size-5">
+              <svg class="size-5 text-red-500 hover:text-red-600">
                 <use xlink:href="/icons/iconSprite.svg#delete" />
               </svg>
             </button>
           </li>
         </ol>
       </div>
-      <div v-if="book?.media?.length">
+      <div v-if="book?.media?.length" class="w-full px-2">
         <h3 class="text-lg">
           Uploaded:
         </h3>

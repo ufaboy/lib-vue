@@ -58,6 +58,7 @@ interface QueryBooks {
 
 interface Chapter {
 	name: string;
+	shortName: string;
 	url: string;
 	element: Element;
 }

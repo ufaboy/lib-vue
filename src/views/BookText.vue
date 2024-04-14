@@ -57,17 +57,17 @@ function calcOptionChapterName(chapter: Element) {
 }
 
 async function prepareHeaders() {
-	let arr = [];
+	const arr: Chapter[] = [];
 	const chapterElements = document.querySelectorAll('.chapter');
 	const h1Element = document.querySelector('.book-name');
 
 	if (h1Element) {
-		const item = { name: 'Table Of Content', url: 'mainText', element: h1Element };
+		const item = { name: 'Table Of Content', shortName: 'Table Of Content', url: 'mainText', element: h1Element };
 		arr.push(item);
-		chapterElement.value = { name: 'Table Of Content', url: '/', element: h1Element };
+		chapterElement.value = item;
 	}
-	for (const elem of chapterElements) {
-		arr.push({ name: calcOptionChapterName(elem), url: elem.id, element: elem });
+	for (const [index, elem] of chapterElements.entries()) {
+		arr.push({ name: calcOptionChapterName(elem), shortName: `Chapter ${index + 1}`, url: elem.id, element: elem });
 	}
 	headerChapters.value = arr;
 }
@@ -223,9 +223,9 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
         <li
           v-for="(chapter, index) in headerChapters"
           :key="index"
-          class="sidebar-link">
+          class="sidebar-link px-0">
           <a :href="`#${chapter.url}`">
-            {{ chapter.name }}
+            {{ chapter.shortName }}
           </a>
         </li>
       </ol>
