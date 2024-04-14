@@ -22,7 +22,7 @@ onBeforeUnmount(() => {
     class="relative flex gap-2">
     <TheSidebar
       v-model="sidebarCollapsed"
-      class="fixed left-0 top-0 h-full w-48 overflow-x-hidden overflow-y-scroll"
+      class="fixed left-0 top-0 z-10 h-full w-48 overflow-x-hidden overflow-y-scroll dark:bg-gray-900"
       :class="{ 'w-48': !sidebarCollapsed, 'w-12': sidebarCollapsed }" />
     <router-view
       :sidebar-collapsed="sidebarCollapsed"

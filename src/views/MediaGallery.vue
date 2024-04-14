@@ -52,7 +52,7 @@ getTotal();
 </script>
 
 <template>
-  <main class="flex flex-wrap gap-3">
+  <main class="flex flex-wrap gap-3 px-2">
     <form
       action=""
       class="flex w-full items-center gap-4">
@@ -85,9 +85,11 @@ getTotal();
     <div
       v-for="dir in filteredMediaList"
       :key="dir.bookID">
-      <h2 class="mb-2">
-        Book {{ dir.bookID }} {{ dir.bookName }}
-      </h2>
+      <RouterLink
+        :to="{name: 'book-view', params: {id:dir.bookID}}"
+        class="mb-2 flex">
+        Book: {{ dir.bookID }} {{ dir.bookName }}
+      </RouterLink>
       <button
         v-for="(img, index) in dir.mediaList"
         :key="index"

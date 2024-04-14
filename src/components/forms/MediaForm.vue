@@ -37,8 +37,8 @@ reset();
     <img
       :src="getStorageMediaUrl(props.media.file_name, props.media.book_id)"
       alt=""
-      class="mx-auto mb-4 max-h-96 max-w-xs">
-    <label class="mb-4">
+      class="mx-auto mb-4 max-h-96 max-w-xs rounded-md">
+    <label class="w-full mb-4">
       <span>File name</span>
       <input
         v-model="mediaFileName"
