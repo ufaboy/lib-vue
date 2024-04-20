@@ -23,6 +23,20 @@ interface Book {
 	last_read?: string;
 	media?: Media[];
 }
+interface BookRaw {
+	id: number;
+	name: string;
+	description?: string;
+	text: string;
+	source: string;
+	rating: number;
+	cover?: string;
+	text_length: number;
+	view_count: number;
+	updated_at: string;
+	last_read: string;
+	media?: Media[];
+}
 
 interface BookResponse {
 	items: Book[];
@@ -63,4 +77,4 @@ interface Chapter {
 	element: Element;
 }
 
-export type { Book, BookResponse, QueryBooks, Chapter };
+export type { Book, BookRaw, BookResponse, QueryBooks, Chapter };

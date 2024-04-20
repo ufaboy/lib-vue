@@ -5,7 +5,7 @@ import { useBookStore } from '@/store/bookStore';
 import { useBook } from '@/composables/book';
 import { isSmallDevice } from '@/utils/helper';
 import { TEXT_SIZES } from '@/utils/constants';
-import { Chapter } from '@/interfaces/book';
+import { Chapter, BookRaw } from '@/interfaces/book';
 
 import TheLoader from '@/components/TheLoader.vue';
 
@@ -17,22 +17,25 @@ const props = defineProps({
 
 const route = useRoute();
 const bookStore = useBookStore();
-const bookID = Number(route.params.id);
-const { book, getBook } = useBook();
+const { readBook } = useBook();
 
+const bookID = Number(route.params.id);
 const bookmark = Number(localStorage.getItem(`bookmark-${bookID}`));
+const book = ref<BookRaw>();
 const bottomSheetShow = ref(false);
 const headerChapters = ref<Array<Chapter>>([]);
 const chapterElement = ref<Chapter>();
 const bottomShow = ref(false);
 const mounted = ref(false);
-const classicMode = ref(false);
+const classicMode = ref<boolean>(isSmallDevice());
 const fontSize = ref('text-xl');
+const page = ref(1);
+const pageCount = ref(1);
 
 const textStyles = computed(() => {
 	return classicMode.value
-		? ' columns-1 md:columns-2 h-[calc(100dvh_-_67px)] gap-x-16 max-w-7xl py-4'
-		: 'text max-w-[900px] py-2 px-3 md:p-3 lg:p-4';
+		? ' columns-1 md:columns-1 h-[calc(100dvh_-_52px)] gap-x-16 max-w-7xl py-4 overflow-hidden'
+		: 'text max-w-[900px] md:p-3 lg:p-4';
 });
 
 /* const progressStyle = computed(() => {
@@ -104,10 +107,12 @@ function nextPage() {
 	const mainElement = document.getElementById('mainText');
 	if (mainElement) {
 		const currentTranslate = Number(mainElement.dataset['translated']);
-		const translate = mainElement.clientWidth + (currentTranslate || 0) + 72;
-		mainElement.setAttribute('data-translated', String(translate));
-		window.scroll(translate, 0);
-		console.log('nextPage', { currentTranslate: currentTranslate, translate: translate });
+		const translate = mainElement.clientWidth + (currentTranslate || 0) + 64;
+		if (mainElement.scrollWidth > translate) {
+			mainElement.setAttribute('data-translated', String(translate));
+			mainElement.scroll(translate, 0);
+			calcPages()
+		}
 	}
 }
 
@@ -116,16 +121,37 @@ function prevPage() {
 	if (mainElement) {
 		const currentTranslate = Number(mainElement.dataset['translated']);
 		const prev = currentTranslate - mainElement.clientWidth;
-		const translate = prev > 0 ? prev - 72 : 0;
+		const translate = prev > 0 ? prev - 64 : 0;
 		mainElement.setAttribute('data-translated', String(translate));
-		window.scroll(translate, 0);
-		console.log('prevPage', { currentTranslate: currentTranslate, translate: translate });
+		mainElement.scroll(translate, 0);
+		calcPages()
 	}
 }
 
+function generalClickHandle(event: MouseEvent) {
+	const x = event.clientX;
+      const width = window.innerWidth;
+
+      if (x <= 150) {
+		prevPage()
+      } else if (x >= width - 150) {
+        nextPage();
+      }
+    }
+
+	function calcPages() {
+		const mainElement = document.getElementById('mainText');
+		if (mainElement) {
+			pageCount.value = Math.floor(mainElement.scrollWidth / mainElement.offsetWidth)
+			page.value = Math.ceil(mainElement.scrollLeft / mainElement.offsetWidth) 
+		}
+	}
+
 onMounted(async () => {
 	mounted.value = true;
-	if (!book.value) await getBook(bookID);
+	if (!book.value) {
+		book.value = await readBook(bookID);
+	}
 	prepareHeaders();
 	document.addEventListener('keydown', keyHandler, { passive: true });
 	nextTick(() => {
@@ -143,64 +169,50 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
   <main
     id="bookText"
     class="flex justify-center"
-    :class="{ 'px-8': classicMode }">
+    :class="{ 'px-8': classicMode }"
+    @click="generalClickHandle">
     <div
       v-if="book"
       id="mainText"
       class="flex-1"
       :class="{ [fontSize]: true, [textStyles]: true }"
       v-html="book.text" />
-    <TheLoader
-      v-else
-      class="absolute inset-0 m-auto size-24 text-emerald-500" />
+    <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
       class="fixed flex h-56 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
       :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
       <div
         class="absolute -top-4 left-[calc(50%_-_40px)] mx-auto h-4 w-20 rounded-t-xl bg-slate-400 dark:bg-slate-600"
         @click="bottomSheetShow = !bottomSheetShow">
-        <svg
-          class="m-auto"
-          height="16"
-          width="20"><use xlink:href="/icons/iconSprite.svg#menu" /></svg>
+        <svg class="m-auto" height="16" width="20">
+          <use xlink:href="/icons/iconSprite.svg#menu" />
+        </svg>
       </div>
       <div class="flex w-full flex-row flex-wrap md:w-auto">
-        <label
-          for=""
-          class="w-full">Font</label>
+        <label for="" class="w-full">Font</label>
         <select
           id=""
           v-model="fontSize"
           name=""
           class="w-full rounded px-2 py-1 dark:bg-gray-400">
-          <option
-            v-for="(size, index) in TEXT_SIZES"
-            :key="index"
-            :value="size.value">
+          <option v-for="(size, index) in TEXT_SIZES" :key="index" :value="size.value">
             {{ size.name }}
           </option>
         </select>
       </div>
       <div class="flex w-full flex-row flex-wrap md:w-auto md:max-w-[12rem]">
-        <label
-          for=""
-          class="w-full">Chapter</label>
+        <label for="" class="w-full">Chapter</label>
         <select
           v-model="chapterElement"
           class="w-full rounded px-2 py-1 dark:bg-gray-400"
           @change="scrollToChapter">
-          <option
-            v-for="(chapter, index) in headerChapters"
-            :key="index"
-            :value="chapter">
+          <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
             {{ chapter.name }}
           </option>
         </select>
       </div>
       <div class="flex w-full flex-row flex-wrap md:w-min md:max-w-[12rem]">
-        <label
-          for=""
-          class="w-full whitespace-nowrap">View Mode</label>
+        <label for="" class="w-full whitespace-nowrap">View Mode</label>
         <button
           class="rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
           @click="classicMode = !classicMode">
@@ -208,9 +220,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
         </button>
       </div>
     </div>
-    <Teleport
-      v-if="mounted && book"
-      to="#menu-target">
+    <Teleport v-if="mounted && book" to="#menu-target">
       <div class="flex flex-wrap items-center gap-1">
         <div class="font-medium text-white">
           {{ book.name }}
@@ -218,12 +228,10 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
         <div class="font-medium text-white">
           {{ progress }}%
         </div>
+		<div>{{ page }}/{{ pageCount }}</div>
       </div>
       <ol v-if="!isSmallDevice()">
-        <li
-          v-for="(chapter, index) in headerChapters"
-          :key="index"
-          class="sidebar-link px-0">
+        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
           <a :href="`#${chapter.url}`">
             {{ chapter.shortName }}
           </a>
@@ -240,7 +248,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
 	border-color: initial;
 }
 
-.text p + hr {
+.text p+hr {
 	margin: 1rem 0 0.5rem 0;
 }
 
@@ -331,7 +339,7 @@ span[data-tooltip]:hover {
 	animation: slide-top 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-.chapter + .chapter {
+.chapter+.chapter {
 	break-before: column;
 }
 
@@ -365,6 +373,7 @@ span[data-tooltip]:hover {
 }
 
 @media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: landscape) {
+
 	.picture,
 	.video {
 		float: left;
@@ -374,6 +383,7 @@ span[data-tooltip]:hover {
 }
 
 @media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: portrait) {
+
 	.picture,
 	.video {
 		width: 100%;
@@ -381,6 +391,7 @@ span[data-tooltip]:hover {
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1368px) {
+
 	.picture,
 	.video {
 		float: left;
@@ -390,6 +401,7 @@ span[data-tooltip]:hover {
 }
 
 @media only screen and (min-width: 1368px) {
+
 	.picture,
 	.video {
 		float: left;

@@ -11,7 +11,7 @@ document.title = 'Comics';
 const route = useRoute();
 const { updateQueryStringParameter } = useRoutes();
 const bookID = Number(route.params.id);
-const { book, getBook } = useBook();
+const { book, readBook } = useBook();
 const { getUploadedMediaUrl } = useMedia();
 const currentImageIndex = ref(0);
 const mounted = ref(false);
@@ -62,7 +62,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => clearInterval(renewIntervalID.value));
 parseQuery();
-getBook(bookID);
+readBook(bookID);
 </script>
 
 <template>

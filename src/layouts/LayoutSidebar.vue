@@ -5,7 +5,6 @@ import { useScroll } from '@/composables/scroll';
 import TheSidebar from '@/components/TheSidebar.vue';
 import BtnScrollToTop from '@/components/BtnScrollToTop.vue';
 
-
 const { btnTopShow, scrollingProgress, scrollTo, throttleScroll } = useScroll();
 
 onMounted(() => {

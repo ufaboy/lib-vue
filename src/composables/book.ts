@@ -4,7 +4,7 @@ import { useRoutes } from './routes';
 import { storeToRefs } from 'pinia';
 import { useBookStore } from '@/store/bookStore';
 import { getRequest, dataRequest, getUrl, fetchData } from '@/utils/helper';
-import type { Book, BookResponse, QueryBooks } from '@/interfaces/book';
+import type { Book, BookRaw, BookResponse, QueryBooks } from '@/interfaces/book';
 import type { ListMeta } from '@/interfaces/meta';
 
 export function useBook() {
@@ -45,6 +45,18 @@ export function useBook() {
 			bookStore.setBook({ ...data, tags: data.tags || [] });
 		} catch (error) {
 			console.log('getBook wrong', { error: error });
+		}
+	}
+
+	async function readBook(id: number) {
+		try {
+			const url = new URL(
+				`${import.meta.env.VITE_BACKEND_URL}/api/book/read?id=${id}`,
+			);
+			const request = getRequest(url);
+			return await fetchData<BookRaw>(request);
+		} catch (error) {
+			console.log('readBook wrong', { error: error });
 		}
 	}
 
@@ -158,6 +170,7 @@ export function useBook() {
 		loading,
 		isComics,
 		getBook,
+		readBook,
 		getBooks,
 		updateRouterQuery,
 		changeSort,

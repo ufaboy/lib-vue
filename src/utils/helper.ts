@@ -61,6 +61,7 @@ function deleteRequest(url: URL): Request {
 		headers: getHeaders(),
 	});
 }
+
 async function fetchData<T>(request: Request): Promise<T> {
 	const response = await fetch(request);
 	if (!response.ok) {
