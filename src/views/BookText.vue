@@ -52,6 +52,8 @@ watch(
 function scrollToChapter() {
 	bottomShow.value = false;
 	if (chapterElement.value) chapterElement.value.element.scrollIntoView();
+	bottomSheetShow.value = false;
+
 }
 
 function calcOptionChapterName(chapter: Element) {
@@ -103,6 +105,27 @@ function keyHandler(event: KeyboardEvent) {
 	}
 }
 
+function firstPage() {
+	const mainElement = document.getElementById('mainText');
+	if (mainElement) {
+		mainElement.setAttribute('data-translated', '0');
+		mainElement.scroll(0, 0);
+		calcPages()
+	}
+	bottomSheetShow.value = false;
+}
+
+function lastPage() {
+	const mainElement = document.getElementById('mainText');
+	if (mainElement) {
+		const translate = mainElement.scrollWidth - mainElement.clientWidth;
+		mainElement.setAttribute('data-translated', String(translate));
+		mainElement.scroll(translate, 0);
+		calcPages()
+	}
+	bottomSheetShow.value = false;
+}
+
 function nextPage() {
 	const mainElement = document.getElementById('mainText');
 	if (mainElement) {
@@ -114,6 +137,7 @@ function nextPage() {
 			calcPages()
 		}
 	}
+	bottomSheetShow.value = false;
 }
 
 function prevPage() {
@@ -126,36 +150,38 @@ function prevPage() {
 		mainElement.scroll(translate, 0);
 		calcPages()
 	}
+	bottomSheetShow.value = false;
 }
 
 function generalClickHandle(event: MouseEvent) {
 	const x = event.clientX;
-      const width = window.innerWidth;
+	const width = window.innerWidth;
 
-      if (x <= 150) {
+	if (x <= 150) {
 		prevPage()
-      } else if (x >= width - 150) {
-        nextPage();
-      }
-    }
-
-	function calcPages() {
-		const mainElement = document.getElementById('mainText');
-		if (mainElement) {
-			pageCount.value = Math.floor(mainElement.scrollWidth / mainElement.offsetWidth)
-			page.value = Math.ceil(mainElement.scrollLeft / mainElement.offsetWidth) 
-		}
+	} else if (x >= width - 150) {
+		nextPage();
 	}
+}
+
+function calcPages() {
+	const mainElement = document.getElementById('mainText');
+	if (mainElement) {
+		pageCount.value = Math.floor(mainElement.scrollWidth / mainElement.offsetWidth)
+		page.value = Math.ceil(mainElement.scrollLeft / mainElement.offsetWidth) || 1
+	}
+}
 
 onMounted(async () => {
 	mounted.value = true;
 	if (!book.value) {
 		book.value = await readBook(bookID);
 	}
-	prepareHeaders();
 	document.addEventListener('keydown', keyHandler, { passive: true });
 	nextTick(() => {
+		prepareHeaders();
 		scrollToBookmark();
+		calcPages();
 	});
 });
 onBeforeUnmount(() => {
@@ -169,7 +195,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
   <main
     id="bookText"
     class="flex justify-center"
-    :class="{ 'px-8': classicMode }"
+    :class="{ 'px-3': classicMode }"
     @click="generalClickHandle">
     <div
       v-if="book"
@@ -179,64 +205,82 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
       v-html="book.text" />
     <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
-      class="fixed flex h-56 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
-      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-56 md:-bottom-20': !bottomSheetShow }">
-      <div
+      class="fixed flex h-32 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
+      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 md:-bottom-20': !bottomSheetShow }"
+      @click.stop="">
+      <button
         class="absolute -top-4 left-[calc(50%_-_40px)] mx-auto h-4 w-20 rounded-t-xl bg-slate-400 dark:bg-slate-600"
         @click="bottomSheetShow = !bottomSheetShow">
         <svg class="m-auto" height="16" width="20">
           <use xlink:href="/icons/iconSprite.svg#menu" />
         </svg>
-      </div>
-      <div class="flex w-full flex-row flex-wrap md:w-auto">
-        <label for="" class="w-full">Font</label>
-        <select
-          id=""
-          v-model="fontSize"
-          name=""
-          class="w-full rounded px-2 py-1 dark:bg-gray-400">
-          <option v-for="(size, index) in TEXT_SIZES" :key="index" :value="size.value">
-            {{ size.name }}
-          </option>
-        </select>
-      </div>
-      <div class="flex w-full flex-row flex-wrap md:w-auto md:max-w-[12rem]">
-        <label for="" class="w-full">Chapter</label>
-        <select
-          v-model="chapterElement"
-          class="w-full rounded px-2 py-1 dark:bg-gray-400"
-          @change="scrollToChapter">
-          <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
-            {{ chapter.name }}
-          </option>
-        </select>
-      </div>
-      <div class="flex w-full flex-row flex-wrap md:w-min md:max-w-[12rem]">
-        <label for="" class="w-full whitespace-nowrap">View Mode</label>
-        <button
-          class="rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
-          @click="classicMode = !classicMode">
-          {{ classicMode ? 'Classic' : 'Scroll' }}
+      </button>
+      <div class="flex w-full justify-between gap-2">
+        <button class="flex-1 rounded border uppercase" @click="firstPage">
+          first
         </button>
+        <button class="flex-1 rounded border uppercase" @click="prevPage">
+          prev
+        </button>
+        <button class="flex-1 rounded border uppercase" @click="nextPage">
+          next
+        </button>
+        <button class="flex-1 rounded border uppercase" @click="lastPage">
+          last
+        </button>
+      </div>
+      <div class="flex w-full gap-2">
+        <div class="flex flex-row flex-wrap md:w-auto">
+          <label for="" class="w-full">Font</label>
+          <select
+            id=""
+            v-model="fontSize"
+            name=""
+            class="w-full rounded px-2 py-1 dark:bg-gray-400">
+            <option v-for="(size, index) in TEXT_SIZES" :key="index" :value="size.value">
+              {{ size.name }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-row flex-wrap md:w-auto md:max-w-[12rem]">
+          <label for="" class="w-full">Chapter</label>
+          <select
+            v-model="chapterElement"
+            class="w-full rounded px-2 py-1 dark:bg-gray-400"
+            @change="scrollToChapter">
+            <option v-for="(chapter, index) in headerChapters" :key="index" :value="chapter">
+              {{ chapter.name }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
     <Teleport v-if="mounted && book" to="#menu-target">
       <div class="flex flex-wrap items-center gap-1">
-        <div class="font-medium text-white">
+        <div class="max-w-52 md:max-w-40 truncate whitespace-nowrap font-medium text-white">
           {{ book.name }}
         </div>
-        <div class="font-medium text-white">
-          {{ progress }}%
+        <div v-if="classicMode">
+          {{ page }}/{{ pageCount }}
         </div>
-		<div>{{ page }}/{{ pageCount }}</div>
+        <div v-else class="font-medium text-white">
+          {{ progress }}%
+        </div>   
       </div>
-      <ol v-if="!isSmallDevice()">
-        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
-          <a :href="`#${chapter.url}`">
-            {{ chapter.shortName }}
-          </a>
-        </li>
-      </ol>
+      <template v-if="!isSmallDevice()">
+        <button
+          class="rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-3 py-1.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
+          @click="classicMode = !classicMode">
+          {{ classicMode ? 'Classic' : 'Scroll' }} mode
+        </button>
+        <ol>
+          <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
+            <a :href="`#${chapter.url}`">
+              {{ chapter.shortName }}
+            </a>
+          </li>
+        </ol>
+      </template>
     </Teleport>
   </main>
 </template>

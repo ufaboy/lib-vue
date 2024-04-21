@@ -22,7 +22,6 @@ watch(
 );
 
 function toggleDropdown() {
-	console.log('toggleDropdown');
 	dropdownShow.value = !dropdownShow.value;
 }
 </script>

@@ -5,17 +5,19 @@ import { useBook } from '@/composables/book';
 import { useMedia } from '@/composables/media';
 import { PLAYER_INTERVALS } from '@/utils/constants';
 import { useRoutes } from '@/composables/routes';
+import { BookRaw } from '@/interfaces/book';
 
 document.title = 'Comics';
 
 const route = useRoute();
 const { updateQueryStringParameter } = useRoutes();
 const bookID = Number(route.params.id);
-const { book, readBook } = useBook();
+const { readBook } = useBook();
 const { getUploadedMediaUrl } = useMedia();
+
+const book = ref<BookRaw>();
 const currentImageIndex = ref(0);
 const mounted = ref(false);
-
 const autoTurnPAgeON = ref(false);
 const intervalSeconds = ref(5);
 const renewIntervalID = ref();
@@ -57,12 +59,12 @@ function parseQuery() {
 	if (queryPage) currentImageIndex.value = Number(queryPage);
 }
 
-onMounted(() => {
+onMounted(async() => {
 	mounted.value = true;
+  book.value = await readBook(bookID);
 });
 onBeforeUnmount(() => clearInterval(renewIntervalID.value));
 parseQuery();
-readBook(bookID);
 </script>
 
 <template>
