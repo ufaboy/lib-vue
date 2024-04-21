@@ -34,8 +34,8 @@ const pageCount = ref(1);
 
 const textStyles = computed(() => {
 	return classicMode.value
-		? ' columns-1 md:columns-1 h-[calc(100dvh_-_52px)] gap-x-16 max-w-7xl py-4 overflow-hidden'
-		: 'text max-w-[900px] md:p-3 lg:p-4';
+		? 'columns-1 h-[calc(100dvh_-_52px)] gap-x-16 max-w-7xl py-4 overflow-hidden'
+		: 'md:p-3 lg:p-4';
 });
 
 /* const progressStyle = computed(() => {
@@ -156,11 +156,11 @@ function prevPage() {
 function generalClickHandle(event: MouseEvent) {
 	const x = event.clientX;
 	const width = window.innerWidth;
-
-	if (x <= 150) {
+	const leftЕhreshold = isSmallDevice() ? 150 : 350;
+	if (x <= leftЕhreshold) {
 		prevPage()
 	} else if (x >= width - 150) {
-		nextPage();
+		nextPage()
 	}
 }
 
@@ -200,13 +200,13 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
     <div
       v-if="book"
       id="mainText"
-      class="flex-1"
+      class="flex-1 text max-w-[900px]"
       :class="{ [fontSize]: true, [textStyles]: true }"
       v-html="book.text" />
     <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
-      class="fixed flex h-32 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:h-20 md:gap-3"
-      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 md:-bottom-20': !bottomSheetShow }"
+      class="fixed md:left-48 flex h-32 md:h-28 md:w-[calc(100%_-_192px)] cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:gap-3"
+      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 md:-bottom-28': !bottomSheetShow }"
       @click.stop="">
       <button
         class="absolute -top-4 left-[calc(50%_-_40px)] mx-auto h-4 w-20 rounded-t-xl bg-slate-400 dark:bg-slate-600"
@@ -256,7 +256,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
       </div>
     </div>
     <Teleport v-if="mounted && book" to="#menu-target">
-      <div class="flex flex-wrap items-center gap-1">
+      <div class="flex items-center gap-1">
         <div class="max-w-52 md:max-w-40 truncate whitespace-nowrap font-medium text-white">
           {{ book.name }}
         </div>
