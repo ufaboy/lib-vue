@@ -15,32 +15,23 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
   <main class="flex h-full bg-gradient-to-br from-cyan-500 to-blue-500 dark:bg-none">
     <div class="m-auto">
       <header class="mb-3 text-center">
-        <button
-          class=""
-          @click="signIn = !signIn">
+        <button @click="signIn = !signIn">
           <transition
             name="fade"
             mode="out-in">
-            <div
-              v-if="signIn"
-              key="SignIn">
+            <div v-if="signIn" key="SignIn">
               Sign In
             </div>
-            <div
-              v-else
-              key="LogIn">
+            <div v-else key="LogIn">
               Log In
             </div>
           </transition>
         </button>
       </header>
-      <form
-        class="flex flex-col flex-nowrap"
-        name="user-form"
-        @submit.prevent="submitHandler">
-        <label
-          class="label mb-2"
-          for="login-username">Username</label>
+      <form class="flex flex-col flex-nowrap" name="user-form" @submit.prevent="submitHandler">
+        <label class="label mb-2" for="login-username">
+          Username
+        </label>
         <input
           id="login-username"
           v-model="username"
@@ -50,9 +41,7 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
           required
           autocomplete="off"
           autofocus>
-        <label
-          class="label mb-2 flex items-center justify-between"
-          for="login-pass">
+        <label class="label mb-2 flex items-center justify-between" for="login-pass">
           <span>Password</span>
           <meter
             v-if="signIn"

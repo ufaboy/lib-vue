@@ -131,4 +131,3 @@ parseQuery();
     </Teleport>
   </main>
 </template>
-@/composables/media

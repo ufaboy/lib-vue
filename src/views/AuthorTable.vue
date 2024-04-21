@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useAuthor } from '@/composables/author';
 
+import AuthorForm from '@/components/forms/AuthorForm.vue';
 import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 
@@ -156,54 +157,11 @@ getAuthors();
       ref="authorDialog"
       class="dialog w-80 rounded-lg bg-neutral-300 text-slate-800 shadow-md dark:bg-slate-800 dark:text-white"
       @close="closeDialog">
-      <form
-        action=""
-        method="dialog"
-        class="flex flex-row flex-wrap p-4"
-        @submit.prevent="updateAuthor">
-        <header class="mb-4 flex w-full flex-row items-center justify-between">
-          <h2 class="filter-title">
-            {{ author && author.id ? 'Update' : 'Create' }}
-          </h2>
-        </header>
-        <label
-          v-if="author"
-          for="name"
-          class="label mb-3 w-full">
-          <span>Name</span>
-          <input
-            v-model="author.name"
-            type="text"
-            name="name"
-            class="input mt-1 w-full">
-        </label>
-        <label
-          v-if="author"
-          for="url"
-          class="label mb-3 w-full">
-          <span>URL</span>
-          <input
-            v-model="author.url"
-            type="url"
-            name="url"
-            class="input mt-1 w-full">
-        </label>
-        <footer class="flex w-full flex-row items-center justify-between">
-          <button
-            type="reset"
-            class="btn-gray-outline"
-            aria-label="close"
-            formnovalidate
-            @click.passive="closeDialog">
-            Close
-          </button>
-          <button
-            class="btn-green"
-            value="default">
-            Save
-          </button>
-        </footer>
-      </form>
+      <AuthorForm
+        v-if="author"
+        :author="author"
+        @close="closeDialog"
+        @update="updateAuthor" />
     </dialog>
   </main>
 </template>

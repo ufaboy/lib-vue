@@ -40,23 +40,15 @@ createPagination(props.meta);
     <div class="flex items-center gap-3">
       <label class="flex items-center gap-1">
         Limit:
-        <select
-          v-model="perPage"
-          class="select"
-          @change="$emit('updateLimit', perPage)">
-          <option
-            v-for="(size, index) in LIMIT"
-            :key="index"
-            :value="size">
+        <select v-model="perPage" class="select" @change="$emit('updateLimit', perPage)">
+          <option v-for="(size, index) in LIMIT" :key="index" :value="size">
             {{ size }}
           </option>
         </select>
       </label>
       <span>All: {{ meta.totalCount }}</span>
     </div>
-    <nav
-      class="flex flex-row flex-nowrap -space-x-px text-base"
-      aria-label="Page navigation">
+    <nav class="flex flex-row flex-nowrap -space-x-px text-base" aria-label="Page navigation">
       <button
         class="btn-paginator"
         :class="{'cursor-not-allowed': meta.currentPage === 1}"
@@ -68,15 +60,11 @@ createPagination(props.meta);
         </svg>
       </button>
       <template v-if="meta.currentPage > 3">
-        <button
-          class="btn-paginator"
-          @click.passive="$emit('updatePage', 1)">
+        <button class="btn-paginator" @click.passive="$emit('updatePage', 1)">
           <span class="sr-only relative">First</span>
           <span>1</span>
         </button>
-        <button
-          class="btn-paginator"
-          @click.passive="$emit('updatePage', meta.currentPage - 3)">
+        <button class="btn-paginator" @click.passive="$emit('updatePage', meta.currentPage - 3)">
           <span class="sr-only relative">Previous cohort</span>
           <span>...</span>
         </button>
@@ -94,15 +82,11 @@ createPagination(props.meta);
         {{ page }}
       </button>
       <template v-if="meta.currentPage < meta.pageCount - 2">
-        <button
-          class="btn-paginator"
-          @click.passive="$emit('updatePage', meta.currentPage + 3)">
+        <button class="btn-paginator" @click.passive="$emit('updatePage', meta.currentPage + 3)">
           <span class="sr-only relative">Next cohort</span>
           <span>...</span>
         </button>
-        <button
-          class="btn-paginator"
-          @click.passive="$emit('updatePage', meta.pageCount)">
+        <button class="btn-paginator" @click.passive="$emit('updatePage', meta.pageCount)">
           <span class="sr-only relative">Last</span>
           <span>{{ meta.pageCount }}</span>
         </button>

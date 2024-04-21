@@ -34,50 +34,33 @@ function toggleDropdown() {
       class="h-full text-white lg:hidden"
       aria-label="Menu"
       @click="toggleDropdown">
-      <IconBurger
-        class="size-10 sm:size-12"
-        :class="{ active: dropdownShow }" />
+      <IconBurger class="size-10 sm:size-12" :class="{ active: dropdownShow }" />
     </button>
     <ul
       class="absolute left-0 top-[50px] z-40 hidden w-full flex-row flex-wrap items-center bg-blue-500 text-white dark:bg-gray-900 lg:static lg:mr-4 lg:flex lg:flex-nowrap lg:gap-3 lg:bg-blue-600 dark:lg:bg-gray-900"
       :class="{ '!flex pb-3 ': dropdownShow }">
       <li class="w-full lg:w-fit">
-        <router-link
-          :to="{ name: 'books' }"
-          class="header-link inline-block"
-          active-class="header-link-active">
+        <router-link :to="{ name: 'books' }" class="header-link inline-block" active-class="header-link-active">
           Books
         </router-link>
       </li>
       <li class="w-full lg:w-fit">
-        <router-link
-          :to="{ name: 'tags' }"
-          class="header-link inline-block"
-          active-class="header-link-active">
+        <router-link :to="{ name: 'tags' }" class="header-link inline-block" active-class="header-link-active">
           Tags
         </router-link>
       </li>
       <li class="w-full lg:w-fit">
-        <router-link
-          :to="{ name: 'authors' }"
-          class="header-link inline-block"
-          active-class="header-link-active">
+        <router-link :to="{ name: 'authors' }" class="header-link inline-block" active-class="header-link-active">
           Authors
         </router-link>
       </li>
       <li class="w-full lg:w-fit">
-        <router-link
-          :to="{ name: 'series' }"
-          class="header-link inline-block"
-          active-class="header-link-active">
+        <router-link :to="{ name: 'series' }" class="header-link inline-block" active-class="header-link-active">
           Series
         </router-link>
       </li>
       <li class="w-full lg:w-fit">
-        <router-link
-          :to="{ name: 'media' }"
-          class="header-link inline-block"
-          active-class="header-link-active">
+        <router-link :to="{ name: 'media' }" class="header-link inline-block" active-class="header-link-active">
           Media
         </router-link>
       </li>
@@ -90,9 +73,7 @@ function toggleDropdown() {
         <ThemeSwitcher />
       </li>
     </ul>
-    <div
-      id="menu-target"
-      class="ml-auto flex h-full flex-row items-center gap-1 md:gap-3" />
+    <div id="menu-target" class="ml-auto flex h-full flex-row items-center gap-1 md:gap-3" />
     <RouterLink
       v-if="['book-view', 'comics-view'].includes(routeName)"
       :to="{ name: 'book-update', params: { id: bookID } }"

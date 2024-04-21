@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineModel } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
@@ -34,9 +34,7 @@ const bookID = computed(()=> {
           :to="{ name: 'tags' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#tag" />
           </svg>
           <span>Tags</span>
@@ -47,9 +45,7 @@ const bookID = computed(()=> {
           :to="{ name: 'authors' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#authors" />
           </svg>
           <span>Authors</span>
@@ -60,9 +56,7 @@ const bookID = computed(()=> {
           :to="{ name: 'series' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#series" />
           </svg>
           <span>Series</span>
@@ -73,9 +67,7 @@ const bookID = computed(()=> {
           :to="{ name: 'media' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#photoLibrary" />
           </svg>
           <span>Media</span>
@@ -89,9 +81,7 @@ const bookID = computed(()=> {
           :to="{ name: 'book-create' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#bookAdd" />
           </svg>
           <span>Create</span>
@@ -104,9 +94,7 @@ const bookID = computed(()=> {
           :to="{ name: 'book-view' }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#openBook" />
           </svg>
           <span>View</span>
@@ -119,9 +107,7 @@ const bookID = computed(()=> {
           :to="{ name: 'book-update', params: { id: bookID } }"
           class="sidebar-link flex items-center gap-2"
           active-class="sidebar-link-active">
-          <svg
-            class="inline size-6"
-            fill="none">
+          <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#openBook" />
           </svg>
           <span>Update</span>
@@ -133,8 +119,6 @@ const bookID = computed(()=> {
 				<ThemeSwitcher />
 			</li> -->
     </ul>
-    <div
-      id="menu-target"
-      class="mt-4 flex flex-wrap items-center gap-3 px-2" />
+    <div id="menu-target" class="mt-4 flex flex-wrap items-center gap-3 px-2" />
   </aside>
 </template>

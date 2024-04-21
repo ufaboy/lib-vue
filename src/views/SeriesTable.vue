@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useSeries } from '@/composables/series';
 
+import SeriesForm from '@/components/forms/SeriesForm.vue';
 import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 
@@ -154,54 +155,11 @@ getSeries();
       ref="seriesDialog"
       class="dialog w-80 rounded-lg bg-neutral-300 text-slate-800 shadow-md dark:bg-slate-800 dark:text-white"
       @close="closeDialog">
-      <form
-        action=""
-        method="dialog"
-        class="flex flex-row flex-wrap p-4"
-        @submit.prevent="updateSeries">
-        <header class="mb-4 flex w-full flex-row items-center justify-between">
-          <h2 class="filter-title">
-            {{ seria && seria.id ? 'Update' : 'Create' }}
-          </h2>
-        </header>
-        <label
-          v-if="seria"
-          for="name"
-          class="label mb-3 w-full">
-          <span>Name</span>
-          <input
-            v-model="seria.name"
-            type="text"
-            name="name"
-            class="input mt-1 w-full">
-        </label>
-        <label
-          v-if="seria"
-          for="url"
-          class="label mb-3 w-full">
-          <span>URL</span>
-          <input
-            v-model="seria.url"
-            type="url"
-            name="url"
-            class="input mt-1 w-full">
-        </label>
-        <footer class="flex w-full flex-row items-center justify-between">
-          <button
-            type="reset"
-            class="btn-gray-outline"
-            aria-label="close"
-            formnovalidate
-            @click="closeDialog">
-            Close
-          </button>
-          <button
-            class="btn-green"
-            value="default">
-            Save
-          </button>
-        </footer>
-      </form>
+      <SeriesForm
+        v-if="seria"
+        :series="seria"
+        @update:series="updateSeries"
+        @close="closeDialog" />
     </dialog>
   </main>
 </template>

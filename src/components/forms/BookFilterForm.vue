@@ -43,24 +43,16 @@ function updateSort(event: Event) {
 </script>
 
 <template>
-  <form
-    method="dialog"
-    class="flex flex-row flex-wrap p-4"
-    @submit="$emit('search')">
+  <form method="dialog" class="flex flex-row flex-wrap p-4" @submit="$emit('search')">
     <header class="mb-4 flex w-full flex-row items-center justify-between">
       <h2 class="filter-title">
         Filter & Sort
       </h2>
-      <button
-        class="close-btn"
-        type="reset"
-        @click.passive="$emit('close')">
+      <button class="close-btn" type="reset" @click.passive="$emit('close')">
         <svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
       </button>
     </header>
-    <label
-      for="name"
-      class="mb-3 w-full">
+    <label for="name" class="mb-3 w-full">
       <span>Name</span>
       <input
         v-model="queryBooks.name"
@@ -68,26 +60,18 @@ function updateSort(event: Event) {
         name="name"
         class="mt-1 w-full rounded-md p-2 dark:bg-slate-700">
     </label>
-    <label
-      for="tag"
-      class="mb-3 w-full">
+    <label for="tag" class="mb-3 w-full">
       <span>Tag</span>
-      <select
-        v-model="queryBooks.tag"
-        name="tag"
-        class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
-        <option
-          class="flex w-full p-1"
-          :value="undefined">All</option>
-        <option
-          v-for="tag of tags"
-          :key="tag.id"
-          :value="tag.name">{{ tag.name }}</option>
+      <select v-model="queryBooks.tag" name="tag" class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
+        <option class="flex w-full p-1" :value="undefined">
+          All
+        </option>
+        <option v-for="tag of tags" :key="tag.id" :value="tag.name">
+          {{ tag.name }}
+        </option>
       </select>
     </label>
-    <label
-      for="rating"
-      class="mb-3 w-full">
+    <label for="rating" class="mb-3 w-full">
       <span>Rating</span>
       <select
         v-model="queryBooks.rating"

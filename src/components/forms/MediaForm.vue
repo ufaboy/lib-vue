@@ -27,17 +27,11 @@ reset();
       <h2 class="filter-title">
         {{ props.media.file_name }}
       </h2>
-      <button
-        class="close-btn hover:animate-spin"
-        type="reset"
-        @click.passive="$emit('close')">
+      <button class="close-btn hover:animate-spin" type="reset" @click.passive="$emit('close')">
         <svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
       </button>
     </header>
-    <img
-      :src="getStorageMediaUrl(props.media.file_name, props.media.book_id)"
-      alt=""
-      class="mx-auto mb-4 max-h-96 max-w-xs rounded-md">
+    <img :src="getStorageMediaUrl(props.media.file_name, props.media.book_id)" class="mx-auto mb-4 max-h-96 max-w-xs rounded-md">
     <label class="w-full mb-4">
       <span>File name</span>
       <input
@@ -47,15 +41,10 @@ reset();
         class="mt-1 w-full rounded-md p-2 dark:bg-slate-700">
     </label>
     <footer class="flex w-full flex-row items-center justify-between">
-      <button
-        type="reset"
-        class="btn-gray-outline"
-        @click.passive.prevent="reset">
+      <button type="reset" class="btn-gray-outline" @click.passive.prevent="reset">
         Reset
       </button>
-      <button
-        class="btn-green"
-        value="default">
+      <button class="btn-green" value="default">
         Save
       </button>
     </footer>
