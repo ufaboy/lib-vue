@@ -32,7 +32,7 @@ function resize() {
 }
 
 function generateCanvas() {
-	canvas.value = document.getElementById('canvas') as HTMLCanvasElement;
+	// canvas.value = document.getElementById('canvas') as HTMLCanvasElement;
 	resize();
 
 	mouseX.value = centerX.value;
@@ -146,16 +146,16 @@ function mouseUpHandler(e: MouseEvent) {
 
 onMounted(() => {
 	generateCanvas();
-	document.addEventListener('resize', resize, { passive: true });
-	document.addEventListener('mousemove', mouseMoveHandler, { passive: true });
-	document.addEventListener('mousedown', mouseDownHandler, { passive: true });
-	document.addEventListener('mouseup', mouseUpHandler, { passive: true });
+	window.addEventListener('resize', resize, { passive: true });
+	window.addEventListener('mousemove', mouseMoveHandler, { passive: true });
+	window.addEventListener('mousedown', mouseDownHandler, { passive: true });
+	window.addEventListener('mouseup', mouseUpHandler, { passive: true });
 });
 onBeforeUnmount(() => {
-	document.removeEventListener('resize', resize);
-	document.removeEventListener('mousemove', mouseMoveHandler);
-	document.removeEventListener('mousedown', mouseDownHandler);
-	document.removeEventListener('mouseup', mouseUpHandler);
+	window.removeEventListener('resize', resize);
+	window.removeEventListener('mousemove', mouseMoveHandler);
+	window.removeEventListener('mousedown', mouseDownHandler);
+	window.removeEventListener('mouseup', mouseUpHandler);
 });
 document.documentElement.classList.remove('scrollbar-gutter');
 </script>
@@ -165,6 +165,7 @@ document.documentElement.classList.remove('scrollbar-gutter');
     <router-view />
     <canvas
       id="canvas"
+      ref="canvas"
       class="fixed left-0 top-0 -z-10" />
   </div>
 </template>
