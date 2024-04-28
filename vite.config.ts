@@ -19,7 +19,7 @@ export default defineConfig({
 			// },
 			workbox: {
 				navigateFallbackDenylist: [/^\/api/]
-			  },
+			},
 			manifest: {
 				name: 'Library',
 				short_name: 'Lib',
@@ -76,20 +76,20 @@ export default defineConfig({
 	},
 	build: {
 		// minify: false,
-		rollupOptions: {
+/* 		rollupOptions: {
 			output: {
 				manualChunks(name: string) {
-					/*           if (name.includes('Icon')) {
-            console.log('manualChunks name', name);
-            return 'icon-pack';
-          } */
-					/*           const reg = new RegExp('^Icon[A-Z][a-zA-Z]*');
-          if (reg.test(name)) {
-            return 'icon-pack';
-          } */
+					if (name.includes('Icon')) {
+						console.log('manualChunks name', name);
+						return 'icon-pack';
+					}
+					const reg = new RegExp('^Icon[A-Z][a-zA-Z]*');
+					if (reg.test(name)) {
+						return 'icon-pack';
+					}
 				},
 			},
-		},
+		}, */
 	},
 	resolve: {
 		alias: {

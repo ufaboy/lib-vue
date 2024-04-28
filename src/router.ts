@@ -1,21 +1,10 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouterOptions } from 'vue-router';
 import { isSmallDevice } from './utils/helper';
 
-const LayoutAuth = () => import('./layouts/LayoutAuth.vue');
 const LayoutMain = () => import('./layouts/LayoutMain.vue');
 const LayoutSidebar = () => import('./layouts/LayoutSidebar.vue');
-const AuthorTable = () => import('./views/AuthorTable.vue');
 const BookTable = () => import('./views/BookTable.vue');
 const BookList = () => import('./views/BookList.vue');
-const BookText = () => import('./views/BookText.vue');
-const BookComics = () => import('./views/BookComics.vue');
-const BookEdit = () => import('./views/BookEdit.vue');
-const MediaGallery = () => import('./views/MediaGallery.vue');
-const SeriesTable = () => import('./views/SeriesTable.vue');
-const TagTable = () => import('./views/TagTable.vue');
-const LoginPage = () => import('./views/LoginPage.vue');
-const TestPage = () => import('./views/TestPage.vue');
-const ErrorPage = () => import('./views/ErrorPage.vue');
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -29,7 +18,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '/tags',
 				name: 'tags',
-				component: TagTable,
+				component: () => import('./views/TagTable.vue'),
 			},
 			{
 				path: '/books',
@@ -39,60 +28,60 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '/book/:id',
 				name: 'book-view',
-				component: BookText,
+				component: () => import('./views/BookText.vue'),
 			},
 			{
 				path: '/comics/:id',
 				name: 'comics-view',
-				component: BookComics,
+				component: () => import('./views/BookComics.vue'),
 			},
 			{
 				path: '/book/create',
 				name: 'book-create',
-				component: BookEdit,
+				component: () => import('./views/BookEdit.vue'),
 			},
 			{
 				path: '/book/update/:id',
 				name: 'book-update',
-				component: BookEdit,
+				component: () => import('./views/BookEdit.vue'),
 			},
 			{
 				path: '/authors',
 				name: 'authors',
-				component: AuthorTable,
+				component: () => import('./views/AuthorTable.vue'),
 			},
 			{
 				path: '/series',
 				name: 'series',
-				component: SeriesTable,
+				component: () => import('./views/SeriesTable.vue'),
 			},
 			{
 				path: '/media',
 				name: 'media',
-				component: MediaGallery
+				component: () => import('./views/MediaGallery.vue'),
 			},
 		],
 	},
 	{
 		path: '/login',
-		component: LayoutAuth,
+		component: () => import('./layouts/LayoutAuth.vue'),
 		children: [
 			{
 				path: '',
 				name: 'login',
-				component: LoginPage,
+				component: () => import('./views/LoginPage.vue'),
 			},
 		],
 	},
 	{
 		path: '/test',
 		name: 'test',
-		component: TestPage,
+		component: () => import('./views/TestPage.vue'),
 	},
 	{
 		path: '/:pathMatch(.*)*',
 		name: 'error',
-		component: ErrorPage,
+		component: () => import('./views/ErrorPage.vue'),
 	},
 
 	// {
@@ -132,7 +121,5 @@ router.beforeEach(async (to, from) => {
 router.onError(() => {
 	router.replace('/error');
 });
-
-
 
 export { router, routes };
