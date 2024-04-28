@@ -19,7 +19,7 @@ const authorName = ref(props.author.name);
     action=""
     method="dialog"
     class="flex flex-row flex-wrap p-4"
-    @submit.prevent="emit('update:series', {name: seriesName, url: seriesURL})">
+    @submit.prevent="emit('update:author', {name: authorName, url: authorURL})">
     <header class="mb-4 flex w-full flex-row items-center justify-between">
       <h2 class="filter-title">
         {{ props.author && props.author.id ? 'Update' : 'Create' }}
