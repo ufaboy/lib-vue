@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useBookStore } from '@/store/bookStore';
 import { useBook } from '@/composables/book';
 import { useTag } from '@/composables/tags';
 import { useSeries } from '@/composables/series';
@@ -9,7 +8,7 @@ import { useAuthor } from '@/composables/author';
 import { useMedia } from '@/composables/media';
 import { fetchData, formRequest, calcTextSize, isMobile } from '@/utils/helper';
 import { RATINGS } from '@/utils/constants';
-import { Book } from '@/interfaces/book';
+import { Book, BookTableIem } from '@/interfaces/book';
 import { Media } from '@/interfaces/media';
 
 document.title = 'Book Edit';
@@ -20,19 +19,19 @@ const props = defineProps({
 
 const route = useRoute();
 const router = useRouter();
-const { book, getBook } = useBook();
+const { getBook } = useBook();
 const { tag, tags, showNewTag, getTags, updateTag } = useTag();
 const { authors, getAuthors } = useAuthor();
-const { series, getSeries } = useSeries();
+const { seriesList, getSeries } = useSeries();
 const { deleteMedia, deleteAllMedia, copyMediaUrl } = useMedia();
-const bookStore = useBookStore();
 
+const book = ref<Book>();
 const name = ref<string>('');
 const description = ref<string>('');
 const source = ref<string>('');
 const text = ref<string>('');
 const cover = ref<string>('');
-const rating = ref<number>();
+const rating = ref<number | null>(null);
 const tagsID = ref<Array<number>>([]);
 const seriesName = ref<string>();
 const authorName = ref<string>();
@@ -51,7 +50,7 @@ const imageCoverList = computed(() => {
 			})
 		: [];
 });
-const getMediaUrl = computed(() => {
+/* const getMediaUrl = computed(() => {
 	if (!media.value) return '';
 	if (media.value instanceof Blob) {
 		return window.URL.createObjectURL(media.value);
@@ -60,7 +59,7 @@ const getMediaUrl = computed(() => {
 			? `/${media.value.path}/${media.value.file_name}`
 			: `${import.meta.env.VITE_BACKEND_URL}/${media.value.path}/${media.value.file_name}`;
 	}
-});
+}); */
 
 watch(routeName, (newValue, oldValue) => {
 	if (newValue === 'book-create' && oldValue === 'book-update') location.reload();
@@ -94,7 +93,7 @@ async function saveBook(event: Event) {
 				const author = authors.value?.find((item) => item.name === element.value);
 				formData.append(`Book[author_id]`, author ? String(author.id) : '');
 			} else if (element instanceof HTMLInputElement && element.name === 'series_id') {
-				const seriesItem = series.value?.find((item) => item.name === element.value);
+				const seriesItem = seriesList.value?.find((item) => item.name === element.value);
 				formData.append(`Book[series_id]`, seriesItem ? String(seriesItem.id) : '');
 			} else {
 				const inputElement = element as HTMLInputElement;
@@ -108,7 +107,6 @@ async function saveBook(event: Event) {
 
 		const request = formRequest(url, 'POST', formData);
 		const data = await fetchData<Book>(request);
-		bookStore.setBook(data);
 		if (tags.value) {
 			const comicsTag = tags.value.find((tag) => tag.name === 'comics');
 			if (comicsTag && comicsTag.id)
@@ -131,7 +129,7 @@ async function removeAllFiles() {
 	if (result && book.value) book.value.media = [];
 }
 
-async function loadBook(data: Book) {
+async function prepareForm(data: BookTableIem) {
 	name.value = data.name;
 	description.value = data.description || '';
 	source.value = data.source || '';
@@ -179,13 +177,16 @@ function removeMedia(mediaID: number, index: number) {
 
 if (!tags.value) getTags({ perPage: 100, sort: 'name' });
 if (!authors.value) getAuthors({ perPage: 100, sort: 'name' });
-if (!series.value) getSeries({ perPage: 100, sort: 'name' });
+if (!seriesList.value) getSeries({ perPage: 100, sort: 'name' });
 
 onMounted(async () => {
 	mounted.value = true;
 	if (route.name === 'book-update') {
-		await getBook(bookID.value);
-		if (book.value) loadBook(book.value);
+		const bookRsponse = await getBook(bookID.value);
+		if (bookRsponse) {
+      book.value = bookRsponse;
+      prepareForm(bookRsponse)
+    }
 	}
 });
 </script>
@@ -194,9 +195,7 @@ onMounted(async () => {
   <main class="flex flex-row flex-nowrap">
     <div class="flex h-fit w-[900px] flex-row flex-wrap">
       <div class="flex w-full flex-col px-4 py-2">
-        <label
-          for="name"
-          class="label">Name</label>
+        <label for="name" class="label">Name</label>
         <input
           v-model.trim="name"
           type="text"
@@ -207,9 +206,7 @@ onMounted(async () => {
           class="input">
       </div>
       <div class="flex w-1/2 flex-col px-4 py-2">
-        <label
-          for="description"
-          class="label">
+        <label for="description" class="label">
           Description
           <output class="ml-2">{{ description.length }}</output>
         </label>
@@ -223,9 +220,7 @@ onMounted(async () => {
       </div>
       <div class="flex w-1/2 flex-wrap px-4 py-2">
         <div class="mb-2 flex w-full justify-between gap-2">
-          <label
-            for="tags"
-            class="label mb-0">Tags</label>
+          <label for="tags" class="label mb-0">Tags</label>
           <form
             v-if="showNewTag"
             id="newTagForm"
@@ -241,10 +236,7 @@ onMounted(async () => {
                 <use xlink:href="/icons/iconSprite.svg#check" />
               </svg>
             </button>
-            <button
-              type="reset"
-              class="rounded-full text-red-500 hover:bg-red-700/50"
-              @click.prevent.passive="showNewTag = false">
+            <button type="reset" class="rounded-full text-red-500 hover:bg-red-700/50" @click.prevent.passive="showNewTag = false">
               <svg class="size-5">
                 <use xlink:href="/icons/iconSprite.svg#close" />
               </svg>
@@ -269,10 +261,7 @@ onMounted(async () => {
             multiple
             class="select flex w-full"
             required>
-            <option
-              v-for="tagItem in tags"
-              :key="tagItem.id"
-              :value="tagItem.id">
+            <option v-for="tagItem in tags" :key="tagItem.id" :value="tagItem.id">
               {{ tagItem.name }}
             </option>
           </select>
@@ -296,9 +285,7 @@ onMounted(async () => {
         </div>
       </div>
       <div class="flex w-1/2 flex-col px-4 py-2">
-        <label
-          for="source"
-          class="label">Source</label>
+        <label for="source" class="label">Source</label>
         <input
           v-model.trim="source"
           type="text"
@@ -308,9 +295,7 @@ onMounted(async () => {
           class="input">
       </div>
       <div class="flex w-1/2 flex-col px-4 py-2">
-        <label
-          for="source"
-          class="label">Cover</label>
+        <label for="source" class="label">Cover</label>
         <input
           v-model.trim="cover"
           type="text"
@@ -320,16 +305,11 @@ onMounted(async () => {
           :title="cover"
           class="input">
         <datalist id="coverList">
-          <option
-            v-for="(image, index) in imageCoverList"
-            :key="index"
-            :value="image" />
+          <option v-for="(image, index) in imageCoverList" :key="index" :value="image" />
         </datalist>
       </div>
       <div class="flex w-1/3 flex-col px-4 py-2">
-        <label
-          for="author"
-          class="label">Author</label>
+        <label for="author" class="label">Author</label>
         <input
           v-model="authorName"
           type="search"
@@ -339,16 +319,11 @@ onMounted(async () => {
           class="input text-ellipsis"
           aria-label="Search">
         <datalist id="authorList">
-          <option
-            v-for="author in authors"
-            :key="author.id"
-            :value="author.name" />
+          <option v-for="author in authors" :key="author.id" :value="author.name" />
         </datalist>
       </div>
       <div class="flex w-1/3 flex-col px-4 py-2">
-        <label
-          for=""
-          class="label">Series</label>
+        <label for="" class="label">Series</label>
         <input
           v-model="seriesName"
           type="search"
@@ -358,34 +333,24 @@ onMounted(async () => {
           aria-label="Search"
           class="input text-ellipsis">
         <datalist id="seriesList">
-          <option
-            v-for="seria in series"
-            :key="seria.id"
-            :value="seria.name" />
+          <option v-for="series in seriesList" :key="series.id" :value="series.name" />
         </datalist>
       </div>
       <div class="flex w-1/3 flex-col justify-between px-4 py-2">
-        <label
-          for="rating"
-          class="label">Rating</label>
+        <label for="rating" class="label">Rating</label>
         <select
           v-model="rating"
           name="rating"
           form="Book"
           class="select cursor-pointer"
           required>
-          <option
-            v-for="(num, index) in RATINGS"
-            :key="index"
-            :value="num.value">
+          <option v-for="(num, index) in RATINGS" :key="index" :value="num.value">
             {{ num.name }}
           </option>
         </select>
       </div>
       <div class="flex w-full items-center justify-between px-4 py-3">
-        <label
-          for="multiple_files"
-          class="mr-3 flex text-sm font-medium text-gray-900 dark:text-white">
+        <label for="multiple_files" class="mr-3 flex text-sm font-medium text-gray-900 dark:text-white">
           <input
             id="multiple_files"
             type="file"
@@ -396,23 +361,17 @@ onMounted(async () => {
             class="block w-full cursor-pointer rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none dark:border-gray-600 dark:text-gray-400 dark:placeholder:text-gray-400"
             @change="loadFiles">
         </label>
-        <button
-          class="btn-red-outline flex gap-1"
-          @click.passive="removeAllFiles">
+        <button class="btn-red-outline flex gap-1" @click.passive="removeAllFiles">
           Remove
           <span class="hidden lg:inline">Media</span>
-          <svg
-            aria-hidden="true"
-            role="status"
-            class="inline size-5 ">
+          <svg aria-hidden="true" role="status" class="inline size-5 ">
             <use xlink:href="/icons/iconSprite.svg#image" />
           </svg>
         </button>
       </div>
       <div class="w-full px-4 py-3">
-        <label
-          for="text"
-          class="label w-full">Text — <span>Length:</span><output class="mr-2">{{ text.length }}</output> <span>Size:</span><output>{{ calcTextSize(text.length) }}kb</output>
+        <label for="text" class="label w-full">
+          Text — <span>Length:</span><output class="mr-2">{{ text.length }}</output> <span>Size:</span><output>{{ calcTextSize(text.length) }}kb</output>
         </label>
         <textarea
           v-model="text"
@@ -425,17 +384,9 @@ onMounted(async () => {
     <div class="hidden w-96 md:block">
       <div v-if="mediaList.length" class="w-full px-2">
         <h3>New</h3>
-        <ol
-          class="columns-2"
-          @mouseover="mouseOverBlobMediaHandler"
-          @mouseleave="media = undefined">
-          <li
-            v-for="(media, index) in mediaList"
-            :key="index"
-            class="flex items-center gap-2 p-1">
-            <span
-              :data-index="index"
-              class="truncate break-normal hover:text-blue-500">
+        <ol class="columns-2" @mouseover="mouseOverBlobMediaHandler" @mouseleave="media = undefined">
+          <li v-for="(media, index) in mediaList" :key="index" class="flex items-center gap-2 p-1">
+            <span :data-index="index" class="truncate break-normal hover:text-blue-500">
               {{ media.name }}
             </span>
             <button @click.passive="mediaList.splice(index, 1)">
@@ -450,23 +401,12 @@ onMounted(async () => {
         <h3 class="text-lg">
           Uploaded:
         </h3>
-        <ol
-          class="columns-2"
-          @mouseover="mouseOverBookMediaHandler"
-          @mouseleave="media = undefined">
-          <li
-            v-for="(img, index) in book.media"
-            :key="index"
-            class="flex items-center gap-2 p-1">
-            <button
-              :data-index="index"
-              class="hover:text-blue-500"
-              @click.passive="copyMediaUrl(img)">
+        <ol class="columns-2" @mouseover="mouseOverBookMediaHandler" @mouseleave="media = undefined">
+          <li v-for="(img, index) in book.media" :key="index" class="flex items-center gap-2 p-1">
+            <button :data-index="index" class="hover:text-blue-500" @click.passive="copyMediaUrl(img)">
               {{ img.file_name }}
             </button>
-            <button
-              class="dark:text-red-600"
-              @click.passive="removeMedia(img.id, index)">
+            <button class="dark:text-red-600" @click.passive="removeMedia(img.id, index)">
               <svg class="size-5">
                 <use xlink:href="/icons/iconSprite.svg#delete" />
               </svg>
@@ -489,10 +429,7 @@ onMounted(async () => {
 					onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
 			</div> -->
     </div>
-    <form
-      id="Book"
-      name="Book"
-      @submit.prevent="saveBook" />
+    <form id="Book" name="Book" @submit.prevent="saveBook" />
     <Teleport
       v-if="mounted"
       to="#menu-target">

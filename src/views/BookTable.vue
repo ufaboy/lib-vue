@@ -107,14 +107,10 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
 
 <template>
   <main class="">
-    <table
-      v-table-nav
-      class="w-full table-auto border-separate border-spacing-0">
+    <table v-table-nav class="w-full table-auto border-separate border-spacing-0">
       <thead>
         <tr>
-          <th
-            class="th sticky top-0 !rounded-es-none"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0 !rounded-es-none" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('id') }">
@@ -131,19 +127,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by ID"
                 @click.passive="changeSort('id')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('name') }">
@@ -160,19 +150,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Name"
                 @click.passive="changeSort('name')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('description') }">
@@ -189,19 +173,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Description"
                 @click.passive="changeSort('description')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('tags') }">
@@ -218,9 +196,7 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
               </button> -->
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('rating') }">
@@ -237,19 +213,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Rating"
                 @click.passive="changeSort('rating')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('count') }">
@@ -266,19 +236,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Count"
                 @click.passive="changeSort('view_count')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('author') }">
@@ -295,19 +259,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Author"
                 @click.passive="changeSort('author')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('series') }">
@@ -324,19 +282,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Series"
                 @click.passive="changeSort('series')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('text_length') }">
@@ -353,19 +305,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Length"
                 @click.passive="changeSort('text_length')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('updated_at') }">
@@ -382,19 +328,13 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Updated At"
                 @click.passive="changeSort('updated_at')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
           </th>
-          <th
-            class="th sticky top-0 !rounded-ee-none"
-            :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0 !rounded-ee-none" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('last_read') }">
@@ -411,12 +351,8 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
                 aria-label="Sort by Last Read"
                 @click.passive="changeSort('last_read')">
                 <svg class="size-4">
-                  <use
-                    v-if="queryBooks.sort[0] === '-'"
-                    xlink:href="/icons/iconSprite.svg#descending" />
-                  <use
-                    v-else
-                    xlink:href="/icons/iconSprite.svg#ascending" />
+                  <use v-if="queryBooks.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                  <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
                 </svg>
               </button>
             </div>
@@ -470,17 +406,12 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
               <option :value="undefined">
                 All
               </option>
-              <option
-                v-for="tag in tags"
-                :key="tag.id"
-                :value="tag.name">
+              <option v-for="tag in tags" :key="tag.id" :value="tag.name">
                 {{ tag.name }}
               </option>
             </select>
           </th>
-          <th
-            class="th"
-            :class="{ 'w-2': shortColumns.includes('rating') }">
+          <th class="th" :class="{ 'w-2': shortColumns.includes('rating') }">
             <select
               v-model="queryBooks.rating"
               form="searchForm"
@@ -620,25 +551,17 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
             </router-link>
           </td>
           <td class="td">
-            <span
-              class="line-clamp-2"
-              :class="{ hidden: shortColumns.includes('description') }"
-              :title="book.description">
+            <span class="line-clamp-2" :class="{ hidden: shortColumns.includes('description') }" :title="book.description || ''">
               {{ book.description }}
             </span>
           </td>
           <td class="td">
-            <span
-              class="line-clamp-2"
-              :class="{ hidden: shortColumns.includes('tags') }"
-              :title="convertTagToString(book.tags)">
+            <span class="line-clamp-2" :class="{ hidden: shortColumns.includes('tags') }" :title="convertTagToString(book.tags)">
               {{ convertTagToString(book.tags) }}
             </span>
           </td>
           <td class="td w-5 text-center">
-            <span
-              v-if="book.rating"
-              :class="{ hidden: shortColumns.includes('rating') }">
+            <span v-if="book.rating" :class="{ hidden: shortColumns.includes('rating') }">
               {{ getBookRating(book.rating) }}
             </span>
           </td>
@@ -690,8 +613,6 @@ if (!series.value) getSeries({ perPage: 100, sort: 'name' });
       @update-page="getBooksByPage"
       @update-limit="updateLimit" />
     <form name="searchForm" />
-    <TheLoader
-      v-if="loading"
-      class="absolute inset-0 m-auto size-24 text-emerald-500" />
+    <TheLoader v-if="loading" class="absolute inset-0 m-auto size-24 text-emerald-500" />
   </main>
 </template>

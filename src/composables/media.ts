@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { formRequest, deleteRequest, getRequest, getUrl, fetchData } from '@/utils/helper';
 import type { Media, QueryMedia, MediaResponse, StorageMedia } from '@/interfaces/media';
-import type { ListMeta } from '@/interfaces/meta';
+import type { BaseQuery, ListMeta } from '@/interfaces/meta';
 
 export function useMedia() {
 	const media = ref<Media>();

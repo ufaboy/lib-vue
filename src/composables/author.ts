@@ -3,15 +3,13 @@ import { useRoute } from 'vue-router';
 import { useAuthorStore } from '@/store/authorStore';
 import { dataRequest, fetchData, getRequest, getUrl } from '@/utils/helper';
 import type { Author, QueryAuthor, AuthorResponse } from '@/interfaces/author';
-import type { ListMeta } from '@/interfaces/meta';
+import type { BaseQuery, ListMeta } from '@/interfaces/meta';
 
 export function useAuthor() {
 	const route = useRoute();
 	const authorStore = useAuthorStore();
 	const authorDialog = ref<InstanceType<typeof HTMLDialogElement>>();
-	const authorName = ref('');
-	const authorUrl = ref('');
-	const author = ref<Author>();
+	const author = ref<Partial<Author>>();
 	const authors = ref<Author[]>();
 	const authorsMeta = ref<ListMeta>();
 	const queryAuthors = ref<QueryAuthor>({
@@ -39,19 +37,23 @@ export function useAuthor() {
 		}
 	}
 
-	async function updateAuthor() {
+	async function updateAuthor(authorData: Partial<Author>) {
 		try {
-			const method = author.value && author.value.id ? 'PUT' : 'POST';
+			const method = authorData.id ? 'PUT' : 'POST';
 			const url =
-				author.value && author.value.id
-					? new URL(`${import.meta.env.VITE_BACKEND_URL}/api/author/update?id=${author.value.id}`)
+			authorData.id
+					? new URL(`${import.meta.env.VITE_BACKEND_URL}/api/author/update?id=${authorData.id}`)
 					: new URL(`${import.meta.env.VITE_BACKEND_URL}/api/author/create`);
 
-			const request = dataRequest(url, method, { name: author.value?.name, url: author.value?.url });
+			const request = dataRequest(url, method, { name: authorData?.name, url: authorData?.url });
 			const data = await fetchData<Author>(request);
 			if (authors.value) {
 				const authorIndex = authors.value.findIndex((item) => item.id === data.id);
-				if (Number.isInteger(authorIndex) && authors.value) authors.value[authorIndex] = data;
+				if (authorIndex > -1) {
+					authors.value[authorIndex] = data
+				} else {
+					authors.value.push(data);
+				}
 			}
 			closeDialog();
 		} catch (error) {
@@ -67,14 +69,17 @@ export function useAuthor() {
 	}
 
 	function openAuthorDialog(authorData?: Author) {
-		author.value = authorData
-			? { id: authorData.id, name: authorData.name, url: authorData.url }
-			: { name: '', url: '' };
+		if(authorData) {
+			author.value = authorData
+		}
 		authorDialog.value?.showModal();
 	}
 
 	function closeDialog() {
-		if (authorDialog.value) authorDialog.value.close();
+		if (authorDialog.value) {
+			authorDialog.value.close();
+			author.value = undefined;
+		}
 	}
 
 	async function parseQueryAuthorParams() {
@@ -89,8 +94,6 @@ export function useAuthor() {
 
 	return {
 		authorDialog,
-		authorName,
-		authorUrl,
 		author,
 		authors,
 		authorsMeta,

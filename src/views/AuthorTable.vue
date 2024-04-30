@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-indent -->
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useAuthor } from '@/composables/author';
@@ -9,42 +10,42 @@ import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 document.title = 'Authors';
 
 const props = defineProps({
-	sidebarCollapsed: Boolean,
+  sidebarCollapsed: Boolean,
 });
 
 const {
-	authorDialog,
-	author,
-	authors,
-	authorsMeta,
-	queryAuthors,
-	getAuthors,
-	updateAuthor,
-	changeSort,
-	openAuthorDialog,
-	closeDialog,
-	parseQueryAuthorParams,
+  authorDialog,
+  author,
+  authors,
+  authorsMeta,
+  queryAuthors,
+  getAuthors,
+  updateAuthor,
+  changeSort,
+  openAuthorDialog,
+  closeDialog,
+  parseQueryAuthorParams,
 } = useAuthor();
 queryAuthors.value.perPage = 20;
 const mounted = ref(false);
 
 function getAuthorsByPage(page: number) {
-	queryAuthors.value.page = page;
-	getAuthors();
+  queryAuthors.value.page = page;
+  getAuthors();
 }
 
 function startCreateAuthor() {
-	author.value = { name: '', url: '' };
-	authorDialog.value?.showModal();
+  author.value = { name: '', url: '' };
+  authorDialog.value?.showModal();
 }
 
 function updateLimit(size: number) {
-	queryAuthors.value.perPage = size;
-	getAuthors();
+  queryAuthors.value.perPage = size;
+  getAuthors();
 }
 
 onMounted(() => {
-	mounted.value = true;
+  mounted.value = true;
 });
 
 parseQueryAuthorParams();
@@ -53,9 +54,7 @@ getAuthors();
 
 <template>
   <main class="">
-    <table
-      v-table-nav
-      class="w-full table-auto">
+    <table v-table-nav class="w-full table-auto">
       <thead>
         <tr>
           <th class="th sticky top-0">
@@ -65,12 +64,8 @@ getAuthors();
               @click.passive="changeSort('id')">
               <span class="mr-1">ID</span>
               <svg class="size-4">
-                <use
-                  v-if="queryAuthors.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -81,12 +76,8 @@ getAuthors();
               @click.passive="changeSort('name')">
               <span class="mr-1">Name</span>
               <svg class="size-4">
-                <use
-                  v-if="queryAuthors.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -97,12 +88,8 @@ getAuthors();
               @click.passive="changeSort('url')">
               <span class="mr-1">URL</span>
               <svg class="size-4">
-                <use
-                  v-if="queryAuthors.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="queryAuthors.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -126,9 +113,7 @@ getAuthors();
             </div>
           </td>
         </tr>
-        <SkeletonTableRow
-          v-if="!authors?.length"
-          count="3" />
+        <SkeletonTableRow v-if="!authors?.length" count="3" />
       </tbody>
     </table>
     <TablePaginator
@@ -136,9 +121,7 @@ getAuthors();
       :meta="authorsMeta"
       @update-page="getAuthorsByPage"
       @update-limit="updateLimit" />
-    <Teleport
-      v-if="mounted"
-      to="#menu-target">
+    <Teleport v-if="mounted" to="#menu-target">
       <button
         class="nav-btn flex items-center border px-2 py-1 hover:bg-gray-600"
         :class="{ 'w-full': !sidebarCollapsed, 'w-fit': sidebarCollapsed }"
@@ -161,7 +144,7 @@ getAuthors();
         v-if="author"
         :author="author"
         @close="closeDialog"
-        @update="updateAuthor" />
+        @update:author="updateAuthor" />
     </dialog>
   </main>
 </template>

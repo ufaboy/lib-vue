@@ -1,8 +1,6 @@
-interface BaseTag {
+interface Tag {
+	id: number;
 	name: string;
 }
-interface Tag extends BaseTag {
-	id: number;
-}
 
-export type { BaseTag, Tag };
+export type { Tag };

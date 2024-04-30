@@ -7,7 +7,7 @@ import TagForm from '@/components/forms/TagForm.vue';
 
 document.title = 'Tags';
 
-const { tag, tags, tagDialog, getTags, updateTag, closeTagDialog } = useTag();
+const { tag, tags, tagDialog, getTags, closeTagDialog } = useTag();
 const mounted = ref(false);
 const sort = ref('name');
 
@@ -24,7 +24,6 @@ function showTagModal(data?: Tag) {
   if (data) {
     tag.value = { ...data };
   }
-
   tagDialog.value?.showModal();
 }
 
@@ -93,8 +92,7 @@ if (!tags.value) getTags({ perPage: 50, sort: 'name' });
       <TagForm
         v-if="tag"
         :tag="tag"
-        @close="closeTagDialog"
-        @update="updateTag" />
+        @close="closeTagDialog" />
     </dialog>
   </main>
 </template>

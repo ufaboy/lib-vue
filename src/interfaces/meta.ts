@@ -23,4 +23,12 @@ interface ListMeta {
 	totalCount: number;
 }
 
-export type { ListMetaLinks, ListMeta };
+interface BaseQuery {
+	[key: string]: string | number | undefined;
+	name?: string;
+	sort?: string;
+	perPage?: number;
+	page?: number;
+  }
+
+export type { ListMetaLinks, ListMeta, BaseQuery };

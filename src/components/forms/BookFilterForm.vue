@@ -5,40 +5,40 @@ import { QueryBooks } from '@/interfaces/book';
 import { Tag } from '@/interfaces/tag';
 
 const emit = defineEmits<{
-	(e: 'update:filter', filter: QueryBooks): void;
-	(e: 'search'): void;
-	(e: 'close'): void;
+  (e: 'update:filter', filter: QueryBooks): void;
+  (e: 'search'): void;
+  (e: 'close'): void;
 }>();
 const props = defineProps<{
-	filter: QueryBooks;
-	tags: Array<Tag>;
+  filter: QueryBooks;
+  tags: Array<Tag>;
 }>();
 
 const queryBooks = computed({
-	get() {
-		return props.filter;
-	},
-	set(newValue) {
-		emit('update:filter', newValue);
-	},
+  get() {
+    return props.filter;
+  },
+  set(newValue) {
+    emit('update:filter', newValue);
+  },
 });
 
 const ascending = computed({
-	get() {
-		return queryBooks.value.sort[0] !== '-';
-	},
-	set(newValue) {
-		if (newValue) {
-			queryBooks.value.sort = queryBooks.value.sort[0] === '-' ? queryBooks.value.sort.slice(1) : queryBooks.value.sort;
-		} else {
-			queryBooks.value.sort = `-${queryBooks.value.sort}`;
-		}
-	},
+  get() {
+    return queryBooks.value.sort[0] !== '-';
+  },
+  set(newValue) {
+    if (newValue) {
+      queryBooks.value.sort = queryBooks.value.sort[0] === '-' ? queryBooks.value.sort.slice(1) : queryBooks.value.sort;
+    } else {
+      queryBooks.value.sort = `-${queryBooks.value.sort}`;
+    }
+  },
 });
 
 function updateSort(event: Event) {
-	const target = event.target as HTMLSelectElement;
-	queryBooks.value.sort = ascending.value ? target.value : `-${target.value}`;
+  const target = event.target as HTMLSelectElement;
+  queryBooks.value.sort = ascending.value ? target.value : `-${target.value}`;
 }
 </script>
 
@@ -49,7 +49,9 @@ function updateSort(event: Event) {
         Filter & Sort
       </h2>
       <button class="close-btn" type="reset" @click.passive="$emit('close')">
-        <svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
+        <svg class="size-6">
+          <use xlink:href="/icons/iconSprite.svg#close" />
+        </svg>
       </button>
     </header>
     <label for="name" class="mb-3 w-full">
@@ -73,23 +75,18 @@ function updateSort(event: Event) {
     </label>
     <label for="rating" class="mb-3 w-full">
       <span>Rating</span>
-      <select
-        v-model="queryBooks.rating"
-        name="rating"
-        class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
-        <option
-          class="flex w-full p-1"
-          :value="undefined">All</option>
+      <select v-model="queryBooks.rating" name="rating" class="mt-1 h-10 w-full rounded-md p-2 dark:bg-slate-700">
+        <option class="flex w-full p-1" :value="undefined">All</option>
         <option
           v-for="item in RATINGS"
           :key="item.name"
           class="value"
-          :value="item.value">{{ item.name }}</option>
+          :value="item.value">
+          {{ item.name }}
+        </option>
       </select>
     </label>
-    <label
-      for="sort"
-      class="mb-1 w-full">
+    <label for="sort" class="mb-1 w-full">
       <span>Sort by</span>
     </label>
     <select
@@ -114,14 +111,10 @@ function updateSort(event: Event) {
         class="size-0 opacity-0">
     </label>
     <footer class="flex w-full flex-row items-center justify-between">
-      <button
-        type="reset"
-        class="btn-gray-outline">
+      <button type="reset" class="btn-gray-outline">
         Reset
       </button>
-      <button
-        class="btn-green"
-        value="default">
+      <button class="btn-green" value="default">
         Find
       </button>
     </footer>

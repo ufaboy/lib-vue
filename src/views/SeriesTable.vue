@@ -9,41 +9,41 @@ import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 document.title = 'Series';
 
 const props = defineProps({
-	sidebarCollapsed: Boolean,
+  sidebarCollapsed: Boolean,
 });
 
 const {
-	seriesDialog,
-	seria,
-	series,
-	seriesMeta,
-	querySeries,
-	getSeries,
-	changeSort,
-	openSeriesDialog,
-	updateSeries,
-	closeDialog,
+  seriesDialog,
+  series,
+  seriesList,
+  seriesMeta,
+  querySeries,
+  getSeries,
+  changeSort,
+  openSeriesDialog,
+  updateSeries,
+  closeDialog,
 } = useSeries();
 querySeries.value.perPage = 20;
 const mounted = ref(false);
 
 function getSeriesByPage(page: number) {
-	querySeries.value.page = page;
-	getSeries();
+  querySeries.value.page = page;
+  getSeries();
 }
 
 function startCreateSeries() {
-	seria.value = { name: '', url: '' };
-	seriesDialog.value?.showModal();
+  series.value = { name: '', url: '' };
+  seriesDialog.value?.showModal();
 }
 
 function updateLimit(size: number) {
-	querySeries.value.perPage = size;
-	getSeries();
+  querySeries.value.perPage = size;
+  getSeries();
 }
 
 onMounted(() => {
-	mounted.value = true;
+  mounted.value = true;
 });
 
 getSeries();
@@ -51,9 +51,7 @@ getSeries();
 
 <template>
   <main class="">
-    <Teleport
-      v-if="mounted"
-      to="#menu-target">
+    <Teleport v-if="mounted" to="#menu-target">
       <button
         class="nav-btn flex items-center border px-2 py-1 hover:bg-gray-600"
         :class="{ 'w-full': !sidebarCollapsed, 'w-fit': sidebarCollapsed }"
@@ -68,9 +66,7 @@ getSeries();
         <span v-if="!sidebarCollapsed">Create Series</span>
       </button>
     </Teleport>
-    <table
-      v-table-nav
-      class="w-full table-auto">
+    <table v-table-nav class="w-full table-auto">
       <thead>
         <tr>
           <th class="th">
@@ -80,12 +76,8 @@ getSeries();
               @click="changeSort('id')">
               <span class="mr-1">ID</span>
               <svg class="size-4">
-                <use
-                  v-if="querySeries.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="querySeries.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -96,12 +88,8 @@ getSeries();
               @click="changeSort('name')">
               <span class="mr-1">Name</span>
               <svg class="size-4">
-                <use
-                  v-if="querySeries.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="querySeries.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -112,12 +100,8 @@ getSeries();
               @click="changeSort('url')">
               <span class="mr-1">URL</span>
               <svg class="size-4">
-                <use
-                  v-if="querySeries.sort[0] === '-'"
-                  xlink:href="/icons/iconSprite.svg#descending" />
-                <use
-                  v-else
-                  xlink:href="/icons/iconSprite.svg#ascending" />
+                <use v-if="querySeries.sort[0] === '-'" xlink:href="/icons/iconSprite.svg#descending" />
+                <use v-else xlink:href="/icons/iconSprite.svg#ascending" />
               </svg>
             </button>
           </th>
@@ -125,7 +109,7 @@ getSeries();
       </thead>
       <tbody>
         <tr
-          v-for="part in series"
+          v-for="part in seriesList"
           :key="part.id"
           class="tr"
           @click="openSeriesDialog(part)">
@@ -141,9 +125,7 @@ getSeries();
             </div>
           </td>
         </tr>
-        <SkeletonTableRow
-          v-if="!series?.length"
-          count="3" />
+        <SkeletonTableRow v-if="!seriesList?.length" count="3" />
       </tbody>
     </table>
     <TablePaginator
@@ -156,8 +138,8 @@ getSeries();
       class="dialog w-80 rounded-lg bg-neutral-300 text-slate-800 shadow-md dark:bg-slate-800 dark:text-white"
       @close="closeDialog">
       <SeriesForm
-        v-if="seria"
-        :series="seria"
+        v-if="series"
+        :series="series"
         @update:series="updateSeries"
         @close="closeDialog" />
     </dialog>

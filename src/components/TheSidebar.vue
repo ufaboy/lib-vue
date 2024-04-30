@@ -6,17 +6,16 @@ import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
 
 const route = useRoute()
 
-const routeName = computed(()=> {
-	return route.name ? route.name.toString() : 'undefiened'
+const routeName = computed(() => {
+  return route.name ? route.name.toString() : 'undefiened'
 })
-const bookID = computed(()=> {
-	return ['book-view', 'comics-view'].includes(routeName.value) ? Number(route.params.id) : null
+const bookID = computed(() => {
+  return ['book-view', 'comics-view'].includes(routeName.value) ? Number(route.params.id) : null
 })
 </script>
 
 <template>
-  <aside
-    class="scrollbar">
+  <aside class="scrollbar">
     <ul class="sticky top-0 w-full gap-3 bg-blue-500 text-white dark:bg-gray-900 lg:bg-blue-600 dark:lg:bg-gray-900">
       <li class="w-full">
         <RouterLink
@@ -74,9 +73,7 @@ const bookID = computed(()=> {
         </RouterLink>
       </li>
       <!-- <hr class="my-1"> -->
-      <li
-        v-if="route.name === 'books'"
-        class="w-full">
+      <li v-if="route.name === 'books'" class="w-full">
         <RouterLink
           :to="{ name: 'book-create' }"
           class="sidebar-link flex items-center gap-2"
@@ -87,9 +84,7 @@ const bookID = computed(()=> {
           <span>Create</span>
         </RouterLink>
       </li>
-      <li
-        v-if="route.name === 'book-update'"
-        class="w-full">
+      <li v-if="route.name === 'book-update'" class="w-full">
         <RouterLink
           :to="{ name: 'book-view' }"
           class="sidebar-link flex items-center gap-2"
@@ -100,9 +95,7 @@ const bookID = computed(()=> {
           <span>View</span>
         </RouterLink>
       </li>
-      <li
-        v-if="['book-view', 'comics-view'].includes(routeName)"
-        class="w-full">
+      <li v-if="['book-view', 'comics-view'].includes(routeName)" class="w-full">
         <RouterLink
           :to="{ name: 'book-update', params: { id: bookID } }"
           class="sidebar-link flex items-center gap-2"

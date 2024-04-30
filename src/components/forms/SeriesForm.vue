@@ -3,40 +3,43 @@ import { ref } from 'vue';
 import type { Series } from '@/interfaces/series';
 
 const props = defineProps<{
-	series: Series;
+	series?: Partial<Series>;
 }>();
 const emit = defineEmits<{
-	(e: 'update:series', series: Series): void;
+	(e: 'update:series', series: Partial<Series>): void;
 	(e: 'close'): void;
 }>();
 
-const seriesURL = ref(props.series.url);
-const seriesName = ref(props.series.name);
+const id = ref<number>();
+const url = ref<string>('');
+const name = ref<string>('');
+
+if (props.series) {
+    id.value = props.series.id;
+    url.value = props.series.url || '';
+    name.value = props.series.name || '';
+  }
 </script>
 
 <template>
-  <form
-    action=""
-    method="dialog"
-    class="flex flex-row flex-wrap p-4"
-    @submit.prevent="emit('update:series', {name: seriesName, url: seriesURL})">
+  <form method="dialog" class="flex flex-row flex-wrap p-4" @submit.prevent="emit('update:series', {name, url, id})">
     <header class="mb-4 flex w-full flex-row items-center justify-between">
       <h2 class="filter-title">
         {{ props.series && props.series.id ? 'Update' : 'Create' }}
       </h2>
     </header>
-    <label v-if="props.series" for="name" class="label mb-3 w-full">
+    <label for="name" class="label mb-3 w-full">
       <span>Name</span>
       <input
-        v-model="seriesName"
+        v-model="name"
         type="text"
         name="name"
         class="input mt-1 w-full">
     </label>
-    <label v-if="props.series" for="url" class="label mb-3 w-full">
+    <label for="url" class="label mb-3 w-full">
       <span>URL</span>
       <input
-        v-model="seriesURL"
+        v-model="url"
         type="url"
         name="url"
         class="input mt-1 w-full">

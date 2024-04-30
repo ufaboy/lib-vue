@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { useBookStore } from '@/store/bookStore';
 import { useBook } from '@/composables/book';
 import { isSmallDevice } from '@/utils/helper';
 import { TEXT_SIZES } from '@/utils/constants';
-import { Chapter, BookRaw } from '@/interfaces/book';
+import { Chapter, Book } from '@/interfaces/book';
 
 import TheLoader from '@/components/TheLoader.vue';
 
@@ -16,12 +15,11 @@ const props = defineProps({
 });
 
 const route = useRoute();
-const bookStore = useBookStore();
 const { readBook } = useBook();
 
 const bookID = Number(route.params.id);
 const bookmark = Number(localStorage.getItem(`bookmark-${bookID}`));
-const book = ref<BookRaw>();
+const book = ref<Book>();
 const bottomSheetShow = ref(false);
 const headerChapters = ref<Array<Chapter>>([]);
 const chapterElement = ref<Chapter>();
@@ -174,9 +172,8 @@ function calcPages() {
 
 onMounted(async () => {
 	mounted.value = true;
-	if (!book.value) {
-		book.value = await readBook(bookID);
-	}
+	book.value = await readBook(bookID);
+	
 	document.addEventListener('keydown', keyHandler, { passive: true });
 	nextTick(() => {
 		prepareHeaders();
@@ -188,7 +185,6 @@ onBeforeUnmount(() => {
 	document.removeEventListener('keydown', keyHandler);
 });
 
-if (book.value && book.value.id !== bookID) bookStore.setBook();
 </script>
 
 <template>
@@ -200,12 +196,12 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
     <div
       v-if="book"
       id="mainText"
-      class="flex-1 text max-w-[900px]"
+      class="text max-w-[900px] flex-1"
       :class="{ [fontSize]: true, [textStyles]: true }"
       v-html="book.text" />
     <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
-      class="fixed md:left-48 flex h-32 md:h-28 md:w-[calc(100%_-_192px)] cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:gap-3"
+      class="fixed flex h-32 cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:left-48 md:h-28 md:w-[calc(100%_-_192px)] md:gap-3"
       :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 md:-bottom-28': !bottomSheetShow }"
       @click.stop="">
       <button
@@ -242,7 +238,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
             </option>
           </select>
         </div>
-        <div class="flex flex-row flex-wrap md:w-auto md:max-w-[12rem]">
+        <div class="flex flex-row flex-wrap md:w-auto md:max-w-48">
           <label for="" class="w-full">Chapter</label>
           <select
             v-model="chapterElement"
@@ -257,7 +253,7 @@ if (book.value && book.value.id !== bookID) bookStore.setBook();
     </div>
     <Teleport v-if="mounted && book" to="#menu-target">
       <div class="flex items-center gap-1">
-        <div class="max-w-52 md:max-w-40 truncate whitespace-nowrap font-medium text-white">
+        <div class="max-w-52 truncate whitespace-nowrap font-medium text-white md:max-w-40">
           {{ book.name }}
         </div>
         <div v-if="classicMode">

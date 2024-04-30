@@ -1,16 +1,13 @@
 import { ListMeta } from './meta';
 
 interface Author {
-	id?: number;
+	id: number;
 	name: string;
 	url: string;
 }
 
-interface QueryAuthor {
+interface QueryAuthor extends Partial<Author> {
 	[key: string]: string | number | undefined;
-	id?: number;
-	name?: string;
-	url?: string;
 	sort: string;
 	perPage: number;
 	page: number;

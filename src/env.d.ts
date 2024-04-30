@@ -8,11 +8,3 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-
-interface BaseQuery {
-  [key: string]: string | number | undefined;
-  name?: string;
-  sort?: string;
-  perPage?: number;
-  page?: number;
-}

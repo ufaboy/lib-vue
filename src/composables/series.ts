@@ -2,13 +2,13 @@ import { ref } from 'vue';
 import { useSeriesStore } from '@/store/seriesStore';
 import { getUrl, fetchData, getRequest, dataRequest } from '@/utils/helper';
 import type { QuerySeries, Series, SeriesResponse } from '@/interfaces/series';
-import type { ListMeta } from '@/interfaces/meta';
+import type { BaseQuery, ListMeta } from '@/interfaces/meta';
 
 export function useSeries() {
 	const seriesStore = useSeriesStore();
 	const seriesDialog = ref<InstanceType<typeof HTMLDialogElement>>();
-	const seria = ref<Series>();
-	const series = ref<Series[]>();
+	const series = ref<Partial<Series>>();
+	const seriesList = ref<Series[]>();
 	const seriesMeta = ref<ListMeta>();
 	const querySeries = ref<QuerySeries>({
 		id: undefined,
@@ -27,7 +27,7 @@ export function useSeries() {
 			});
 			const request = getRequest(url);
 			const data = await fetchData<SeriesResponse>(request);
-			series.value = data.items;
+			seriesList.value = data.items;
 			seriesMeta.value = data._meta;
 			seriesStore.setSeries(data.items);
 		} catch (error) {
@@ -35,19 +35,23 @@ export function useSeries() {
 		}
 	}
 
-	async function updateSeries() {
+	async function updateSeries(seriesData: Partial<Series>) {
 		try {
-			const method = seria.value && seria.value.id ? 'PUT' : 'POST';
+			const method = seriesData.id ? 'PUT' : 'POST';
 			const url =
-				seria.value && seria.value.id
-					? new URL(`${import.meta.env.VITE_BACKEND_URL}/api/series/update?id=${seria.value.id}`)
+			seriesData.id
+					? new URL(`${import.meta.env.VITE_BACKEND_URL}/api/series/update?id=${seriesData.id}`)
 					: new URL(`${import.meta.env.VITE_BACKEND_URL}/api/series/create`);
 
-			const request = dataRequest(url, method, { name: seria.value?.name, url: seria.value?.url });
+			const request = dataRequest(url, method, { name: seriesData?.name, url: seriesData?.url });
 			const data = await fetchData<Series>(request);
-			if (series.value) {
-				const seriesIndex = series.value.findIndex((item) => item.id === data.id);
-				if (Number.isInteger(seriesIndex) && series.value) series.value[seriesIndex] = data;
+			if (seriesList.value) {
+				const seriesIndex = seriesList.value.findIndex((item) => item.id === data.id);
+				if (seriesIndex > -1) {
+					seriesList.value[seriesIndex] = data;
+				} else {
+					seriesList.value.push(data);
+				}
 			}
 			closeDialog();
 		} catch (error) {
@@ -63,18 +67,23 @@ export function useSeries() {
 	}
 
 	function openSeriesDialog(seriesData?: Series) {
-		seria.value = seriesData || { name: '', url: '' };
+		if(seriesData) {
+			series.value = seriesData;
+		}
 		seriesDialog.value?.showModal();
 	}
 
 	function closeDialog() {
-		if (seriesDialog.value) seriesDialog.value.close();
+		if (seriesDialog.value) {
+			seriesDialog.value.close();
+			series.value = undefined
+		}
 	}
 
 	return {
 		seriesDialog,
-		seria,
 		series,
+		seriesList,
 		seriesMeta,
 		querySeries,
 		getSeries,

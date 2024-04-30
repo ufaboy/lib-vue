@@ -72,7 +72,7 @@ async function fetchData<T>(request: Request): Promise<T> {
 	return await response.json();
 }
 
-function convertTimestampToDate(timestamp?: string): string {
+function convertTimestampToDate(timestamp: string | null): string {
 	return timestamp ? new Intl.DateTimeFormat('en-GB').format(new Date(timestamp)) : '—';
 }
 

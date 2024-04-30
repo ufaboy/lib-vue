@@ -28,11 +28,13 @@ reset();
         {{ props.media.file_name }}
       </h2>
       <button class="close-btn hover:animate-spin" type="reset" @click.passive="$emit('close')">
-        <svg class="size-6"><use xlink:href="/icons/iconSprite.svg#close" /></svg>
+        <svg class="size-6">
+          <use xlink:href="/icons/iconSprite.svg#close" />
+        </svg>
       </button>
     </header>
     <img :src="getStorageMediaUrl(props.media.file_name, props.media.book_id)" class="mx-auto mb-4 max-h-96 max-w-xs rounded-md">
-    <label class="w-full mb-4">
+    <label class="mb-4 w-full">
       <span>File name</span>
       <input
         v-model="mediaFileName"

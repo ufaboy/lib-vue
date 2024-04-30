@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 import { useBook } from '@/composables/book';
 import { useTag } from '@/composables/tags';
 import { useSwipe } from '@/composables/swipe';
-import { Book } from '@/interfaces/book';
+import { BookTableIem } from '@/interfaces/book';
 
 import BookFilterForm from '@/components/forms/BookFilterForm.vue';
 
@@ -30,7 +30,7 @@ function getBooksByFilter() {
 	getBooks('push');
 }
 
-function getCoverUrl(book: Book) {
+function getCoverUrl(book: BookTableIem) {
 	return book.cover || '/images/book_x100.png';
 }
 
@@ -44,15 +44,12 @@ getTags();
 </script>
 
 <template>
-  <main
-    class="flex flex-row flex-wrap px-2 md:px-0"
-    @touchstart="touchStart"
-    @touchend="touchEnd">
+  <main class="flex flex-row flex-wrap px-2 md:px-0" @touchstart="touchStart" @touchend="touchEnd">
     <router-link
       v-for="book of books"
       :key="'book' + book.id"
       :to="{ name: isComics(book) ? 'comics-view' : 'book-view', params: { id: book.id } }"
-      class="mb-2 flex h-fit w-full cursor-pointer flex-row flex-nowrap rounded-md p-2 shadow-lg drop-shadow-md hover:bg-sky-400 dark:bg-slate-800 hover:dark:bg-slate-700 sm:mb-1 sm:mr-1 sm:flex-1 sm:shrink-0 md:min-w-[18rem]">
+      class="mb-2 flex h-fit w-full cursor-pointer flex-row flex-nowrap rounded-md p-2 shadow-lg drop-shadow-md hover:bg-sky-400 dark:bg-slate-800 hover:dark:bg-slate-700 sm:mb-1 sm:mr-1 sm:flex-1 sm:shrink-0 md:min-w-72">
       <img
         :src="getCoverUrl(book)"
         alt="cover"
@@ -69,13 +66,8 @@ getTags();
         </div>
       </div>
     </router-link>
-    <observer
-      v-if="infinityState || loading"
-      :options="{ threshold: 0.5 }"
-      @intersect="getBooks('push')" />
-    <div
-      v-else-if="!books || !books.length"
-      class="flex h-[calc(100dvh_-_50px)] w-full items-center justify-center text-xl">
+    <observer v-if="infinityState || loading" :options="{ threshold: 0.5 }" @intersect="getBooks('push')" />
+    <div v-else-if="!books || !books.length" class="flex h-[calc(100dvh_-_50px)] w-full items-center justify-center text-xl">
       Nothing found
     </div>
     <dialog

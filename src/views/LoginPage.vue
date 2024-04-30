@@ -16,9 +16,7 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
     <div class="m-auto">
       <header class="mb-3 text-center">
         <button @click="signIn = !signIn">
-          <transition
-            name="fade"
-            mode="out-in">
+          <transition name="fade" mode="out-in">
             <div v-if="signIn" key="SignIn">
               Sign In
             </div>

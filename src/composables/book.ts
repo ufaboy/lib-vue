@@ -1,19 +1,15 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useRoutes } from './routes';
-import { storeToRefs } from 'pinia';
-import { useBookStore } from '@/store/bookStore';
 import { getRequest, dataRequest, getUrl, fetchData } from '@/utils/helper';
-import type { Book, BookRaw, BookResponse, QueryBooks } from '@/interfaces/book';
+import type { Book, BookResponse, BookTableIem, QueryBooks } from '@/interfaces/book';
 import type { ListMeta } from '@/interfaces/meta';
 
 export function useBook() {
 	const route = useRoute();
 	const router = useRouter();
 	const { updateQueryStringParameter } = useRoutes();
-	const bookStore = useBookStore();
-	const { book } = storeToRefs(bookStore);
-	const books = ref<Book[]>([]);
+	const books = ref<Array<BookTableIem>>([]);
 	const booksMeta = ref<ListMeta>();
 	const queryBooks = ref<QueryBooks>({
 		id: undefined,
@@ -36,28 +32,15 @@ export function useBook() {
 	const loading = ref(false);
 
 	async function getBook(id: number) {
-		try {
-			const url = new URL(
-				`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=media,author,series,tags`,
-			);
-			const request = getRequest(url);
-			const data = await fetchData<Book>(request);
-			bookStore.setBook({ ...data, tags: data.tags || [] });
-		} catch (error) {
-			console.log('getBook wrong', { error: error });
-		}
+		const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/view?id=${id}&expand=media,author,series,tags`);
+		const request = getRequest(url);
+		return await fetchData<BookTableIem>(request);
 	}
 
 	async function readBook(id: number) {
-		try {
-			const url = new URL(
-				`${import.meta.env.VITE_BACKEND_URL}/api/book/read?id=${id}`,
-			);
-			const request = getRequest(url);
-			return await fetchData<BookRaw>(request);
-		} catch (error) {
-			console.log('readBook wrong', { error: error });
-		}
+		const url = new URL(`${import.meta.env.VITE_BACKEND_URL}/api/book/read?id=${id}`);
+		const request = getRequest(url);
+		return await fetchData<Book>(request);
 	}
 
 	async function getBooks(method = '') {
@@ -110,11 +93,14 @@ export function useBook() {
 		return response.json();
 	}
 
-	function isComics(book: Book) {
+	function isComics(book: BookTableIem) {
 		return !!book.tags.find((tag) => tag.name === 'comics');
 	}
 
-	function sizeConverter(length = 0) {
+	function sizeConverter(length: number | null) {
+		if (length === null) {
+			return '0';
+		}
 		return length <= 50000 ? 'S' : length <= 300000 ? 'M' : length <= 500000 ? 'L' : 'XL';
 	}
 
@@ -162,7 +148,6 @@ export function useBook() {
 	}
 
 	return {
-		book,
 		books,
 		booksMeta,
 		queryBooks,

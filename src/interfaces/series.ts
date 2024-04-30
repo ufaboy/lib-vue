@@ -1,16 +1,13 @@
 import { ListMeta } from './meta';
 
 interface Series {
-	id?: number;
+	id: number;
 	name: string;
 	url: string;
 }
 
-interface QuerySeries {
+interface QuerySeries extends Partial<Series>{
 	[key: string]: string | number | undefined;
-	id?: number;
-	name?: string;
-	url?: string;
 	sort: string;
 	perPage: number;
 	page: number;

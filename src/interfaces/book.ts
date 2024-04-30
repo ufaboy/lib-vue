@@ -1,54 +1,47 @@
 import type { Tag } from './tag';
 import type { Author } from './author';
-import type { ListMeta } from './meta';
+import type { ListMeta, ListMetaLinks } from './meta';
 import type { Media } from './media';
 import type { Series } from './series';
 
-interface Book {
-	[key: string]: string | number | undefined | Author | Series | Tag[] | Media[];
-	id?: number;
-	name: string;
-	description?: string;
-	text?: string;
-	source?: string;
-	rating?: number;
-	author?: Author;
-	series?: Series;
-	tags: Array<Tag>;
-	cover?: string;
-	bookmark?: number;
-	text_length?: number;
-	view_count?: number;
-	updated_at?: string;
-	last_read?: string;
-	media?: Media[];
-}
-interface BookRaw {
+interface BookTableIem {
+	[key: string]: string | number | null | Author | Series | Tag[] | Media[];
 	id: number;
 	name: string;
-	description?: string;
-	text: string;
-	source: string;
-	rating: number;
-	cover?: string;
-	text_length: number;
-	view_count: number;
+	description: string | null;
+	text: string | null;
+	source: string | null;
+	rating: number | null;
+	author: Author | null;
+	series: Series | null;
+	tags: Array<Tag>;
+	cover: string | null;
+	bookmark: number | null;
+	text_length: number | null;
+	view_count: number | null;
 	updated_at: string;
-	last_read: string;
-	media?: Media[];
+	last_read: string | null;
+	media: Media[] | null;
+}
+interface Book {
+	id: number;
+	name: string;
+	description: string | null;
+	text: string | null;
+	source: string | null;
+	rating: number | null;
+	cover: string | null;
+	text_length: number | null;
+	view_count: number | null;
+	updated_at: string;
+	last_read: string | null;
+	media: Media[] | null;
 }
 
 interface BookResponse {
-	items: Book[];
+	items: Array<BookTableIem>;
 	_meta: ListMeta;
-	_links: MetaLinks;
-}
-
-interface MetaLinks {
-	first: { href: string };
-	last: { href: string };
-	next: { href: string };
-	self: { href: string };
+	_links: ListMetaLinks;
 }
 
 interface QueryBooks {
@@ -77,4 +70,4 @@ interface Chapter {
 	element: Element;
 }
 
-export type { Book, BookRaw, BookResponse, QueryBooks, Chapter };
+export type { Book, BookTableIem, BookResponse, QueryBooks, Chapter };
