@@ -1,4 +1,4 @@
-import { ListMeta } from './meta';
+import { BaseQuery, ListMeta } from './meta';
 
 interface Series {
 	id: number;
@@ -6,11 +6,8 @@ interface Series {
 	url: string;
 }
 
-interface QuerySeries extends Partial<Series>{
+interface QuerySeries extends Partial<Series>, BaseQuery {
 	[key: string]: string | number | undefined;
-	sort: string;
-	perPage: number;
-	page: number;
 }
 
 interface SeriesResponse {

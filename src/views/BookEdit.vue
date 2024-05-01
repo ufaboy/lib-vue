@@ -175,9 +175,9 @@ function removeMedia(mediaID: number, index: number) {
 	book.value?.media?.splice(index, 1);
 }
 
-if (!tags.value) getTags({ perPage: 100, sort: 'name' });
-if (!authors.value) getAuthors({ perPage: 100, sort: 'name' });
-if (!seriesList.value) getSeries({ perPage: 100, sort: 'name' });
+if (!tags.value) getTags({ perPage: 100, page: 1, sort: 'name' });
+if (!authors.value) getAuthors({ perPage: 100, page: 1, sort: 'name' });
+if (!seriesList.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
 
 onMounted(async () => {
 	mounted.value = true;

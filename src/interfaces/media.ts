@@ -1,5 +1,5 @@
 import { Book } from './book';
-import { ListMeta } from './meta';
+import { BaseQuery, ListMeta } from './meta';
 
 interface RawFile {}
 
@@ -11,16 +11,9 @@ interface Media {
 	file_name: string;
 }
 
-interface QueryMedia {
+interface QueryMedia extends Partial<Omit<Media, 'book'>>, BaseQuery{
 	[key: string]: string | number | undefined;
-	id?: number;
-	book_id?: number;
 	bookName?: string;
-	path?: string;
-	file_name?: string;
-	sort: string;
-	perPage?: number;
-	page?: number;
 	expand?: string;
 }
 interface MediaResponse {

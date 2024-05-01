@@ -1,11 +1,10 @@
 import type { Tag } from './tag';
 import type { Author } from './author';
-import type { ListMeta, ListMetaLinks } from './meta';
+import type { BaseQuery, ListMeta, ListMetaLinks } from './meta';
 import type { Media } from './media';
 import type { Series } from './series';
 
 interface BookTableIem {
-	[key: string]: string | number | null | Author | Series | Tag[] | Media[];
 	id: number;
 	name: string;
 	description: string | null;
@@ -44,23 +43,14 @@ interface BookResponse {
 	_links: ListMetaLinks;
 }
 
-interface QueryBooks {
-	[key: string]: string | number | undefined;
-	id?: number;
+interface QueryBooks extends Partial<Omit<BookTableIem, 'tags' | 'author' | 'series' | 'media'>>, BaseQuery {
+	[key: string]: string | number | undefined | null;
 	tag?: string;
-	view_count?: number;
-	name?: string;
 	text?: string;
-	rating?: number;
 	text_length?: number;
 	authorName?: string;
 	seriesName?: string;
 	size?: number;
-	updated_at?: number;
-	last_read?: number;
-	sort: string;
-	perPage: number;
-	page: number;
 }
 
 interface Chapter {

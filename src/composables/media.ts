@@ -14,8 +14,8 @@ export function useMedia() {
 		book_id: undefined,
 		book_name: undefined,
 		file_name: undefined,
-		page: undefined,
-		perPage: undefined,
+		page: 1,
+		perPage: 10,
 		sort: 'id',
 		expand: 'book',
 	});

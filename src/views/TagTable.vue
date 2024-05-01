@@ -36,7 +36,7 @@ onMounted(() => {
   mounted.value = true;
 });
 
-if (!tags.value) getTags({ perPage: 50, sort: 'name' });
+if (!tags.value) getTags({ perPage: 50, page: 1, sort: 'name' });
 </script>
 
 <template>

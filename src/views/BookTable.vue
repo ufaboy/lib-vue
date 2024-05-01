@@ -100,9 +100,9 @@ onMounted(() => {
 parseQueryBookParams();
 getBooks();
 
-if (!tags.value) getTags({ perPage: 100, sort: 'name' });
-if (!authors.value) getAuthors({ perPage: 100, sort: 'name' });
-if (!series.value) getSeries({ perPage: 100, sort: 'name' });
+if (!tags.value) getTags({ perPage: 100, page: 1, sort: 'name' });
+if (!authors.value) getAuthors({ perPage: 100, page: 1, sort: 'name' });
+if (!series.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
 </script>
 
 <template>

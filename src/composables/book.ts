@@ -141,8 +141,8 @@ export function useBook() {
 		if (view_count) queryBooks.value.view_count = Number(view_count);
 		if (rating) queryBooks.value.rating = Number(rating);
 		if (size) queryBooks.value.size = Number(size);
-		if (updated_at) queryBooks.value.updated_at = Number(updated_at);
-		if (last_read) queryBooks.value.last_read = Number(last_read);
+		if (updated_at) queryBooks.value.updated_at = String(updated_at);
+		if (last_read) queryBooks.value.last_read = String(last_read);
 		if (page) queryBooks.value.page = Number(page);
 		if (perPage) queryBooks.value.perPage = Number(perPage);
 	}

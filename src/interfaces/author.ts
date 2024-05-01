@@ -1,4 +1,4 @@
-import { ListMeta } from './meta';
+import { BaseQuery, ListMeta } from './meta';
 
 interface Author {
 	id: number;
@@ -6,11 +6,8 @@ interface Author {
 	url: string;
 }
 
-interface QueryAuthor extends Partial<Author> {
+interface QueryAuthor extends Partial<Author>, BaseQuery {
 	[key: string]: string | number | undefined;
-	sort: string;
-	perPage: number;
-	page: number;
 }
 interface AuthorResponse {
 	items: Array<Author>;
