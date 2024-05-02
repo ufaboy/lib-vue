@@ -18,7 +18,7 @@ document.documentElement.classList.add('scrollbar-gutter');
 <template>
   <div
     id="layout"
-    class="relative flex gap-2">
+    class="min-h-full relative flex gap-2">
     <TheSidebar
       class="fixed left-0 top-0 z-10 h-full w-48 overflow-x-hidden overflow-y-scroll dark:bg-gray-900" />
     <router-view

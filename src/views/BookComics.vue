@@ -68,15 +68,19 @@ parseQuery();
 </script>
 
 <template>
-  <main tabindex="0" @keyup.left="decreasePage" @keyup.right="increasePage">
-    <div class="relative flex w-full justify-center">
+  <main
+    tabindex="0"
+    class="h-[calc(100dvh_-_55px)] lg:h-auto"
+    @keyup.left="decreasePage"
+    @keyup.right="increasePage">
+    <div class="relative flex size-full justify-center">
       <img
         v-if="media"
         :src="getUploadedMediaUrl(media)"
-        class="max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg">
+        class="h-full max-h-[calc(100dvh_-_55px)] lg:max-h-dvh max-w-full overflow-hidden rounded-lg object-contain">
       <button
         type="button"
-        class="group absolute left-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+        class="group absolute left-0 top-1/4 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none lg:top-0 lg:h-full"
         data-carousel-prev
         @click.passive="decreasePage">
         <span
@@ -89,7 +93,7 @@ parseQuery();
       </button>
       <button
         type="button"
-        class="group absolute right-0 top-1/2 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none md:top-0 md:h-full"
+        class="group absolute right-0 top-1/4 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none lg:top-0 lg:h-full"
         data-carousel-next
         @click.passive="increasePage">
         <span

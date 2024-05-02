@@ -21,7 +21,7 @@ document.documentElement.classList.add('scrollbar-gutter');
 <template>
   <div
     id="layout"
-    class="">
+    class="min-h-full">
     <TheHeader class="sticky top-0 z-10" />
     <router-view
       :progress="scrollingProgress.progress"
