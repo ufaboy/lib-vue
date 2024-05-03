@@ -15,8 +15,8 @@ const bookID = computed(() => {
 </script>
 
 <template>
-  <aside class="scrollbar">
-    <ul class="sticky top-0 w-full gap-3 bg-blue-500 text-white dark:bg-gray-900 lg:bg-blue-600 dark:lg:bg-gray-900">
+  <aside class="scrollbar bg-white dark:bg-gray-900">
+    <ul class="sticky top-0 w-full gap-3 bg-white dark:text-white dark:bg-gray-900">
       <li class="w-full">
         <RouterLink
           :to="{ name: 'books' }"

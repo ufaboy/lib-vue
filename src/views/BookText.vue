@@ -201,7 +201,8 @@ onBeforeUnmount(() => {
       v-html="book.text" />
     <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
-      class="fixed flex h-32 cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 lg:left-48 lg:h-28 w-full lg:w-[calc(100%_-_192px)] lg:gap-3"
+      v-if="isSmallDevice()"
+      class="fixed flex h-32 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 lg:left-48 lg:h-28 lg:w-[calc(100%_-_192px)] lg:gap-3"
       :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 lg:-bottom-28': !bottomSheetShow }"
       @click.stop="">
       <button
@@ -253,30 +254,31 @@ onBeforeUnmount(() => {
     </div>
     <Teleport v-if="mounted && book" to="#menu-target">
       <div class="flex items-center gap-1">
-        <div class="max-w-52 truncate whitespace-nowrap font-medium text-white md:max-w-40">
+        <div class="max-w-52 truncate whitespace-nowrap lg:max-w-40">
           {{ book.name }}
         </div>
+      </div>
+      <button
+        v-if="!isSmallDevice()"
+        class="w-20 rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-3 py-1.5 text-center text-sm font-medium hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
+        @click="classicMode = !classicMode">
+        {{ classicMode ? 'Classic' : 'Scroll' }}
+      </button>
+      <div>
         <div v-if="classicMode">
           {{ page }}/{{ pageCount }}
         </div>
-        <div v-else class="font-medium text-white">
+        <div v-else class="">
           {{ progress }}%
-        </div>   
+        </div>
       </div>
-      <template v-if="!isSmallDevice()">
-        <button
-          class="rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-3 py-1.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
-          @click="classicMode = !classicMode">
-          {{ classicMode ? 'Classic' : 'Scroll' }} mode
-        </button>
-        <ol>
-          <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
-            <a :href="`#${chapter.url}`">
-              {{ chapter.shortName }}
-            </a>
-          </li>
-        </ol>
-      </template>
+      <ol v-if="!isSmallDevice()">
+        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
+          <a :href="`#${chapter.url}`">
+            {{ chapter.shortName }}
+          </a>
+        </li>
+      </ol>
     </Teleport>
   </main>
 </template>
