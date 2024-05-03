@@ -201,8 +201,8 @@ onBeforeUnmount(() => {
       v-html="book.text" />
     <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
     <div
-      class="fixed flex h-32 cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 md:left-48 md:h-28 md:w-[calc(100%_-_192px)] md:gap-3"
-      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 md:-bottom-28': !bottomSheetShow }"
+      class="fixed flex h-32 cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 lg:left-48 lg:h-28 w-full lg:w-[calc(100%_-_192px)] lg:gap-3"
+      :class="{ 'bottom-0 ': bottomSheetShow, '-bottom-32 lg:-bottom-28': !bottomSheetShow }"
       @click.stop="">
       <button
         class="absolute -top-4 left-[calc(50%_-_40px)] mx-auto h-4 w-20 rounded-t-xl bg-slate-400 dark:bg-slate-600"

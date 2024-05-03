@@ -163,9 +163,6 @@ document.documentElement.classList.remove('scrollbar-gutter');
 <template>
   <div class="layout h-full">
     <router-view />
-    <canvas
-      id="canvas"
-      ref="canvas"
-      class="fixed left-0 top-0 -z-10" />
+    <canvas id="canvas" ref="canvas" class="fixed left-0 top-0 -z-10" />
   </div>
 </template>
