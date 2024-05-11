@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <Teleport v-if="mounted && book" to="#menu-target">
-      <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1 text-white">
         <div class="max-w-52 truncate whitespace-nowrap lg:max-w-40">
           {{ book.name }}
         </div>
@@ -264,7 +264,7 @@ onBeforeUnmount(() => {
         @click="classicMode = !classicMode">
         {{ classicMode ? 'Classic' : 'Scroll' }}
       </button>
-      <div>
+      <div class="text-white">
         <div v-if="classicMode">
           {{ page }}/{{ pageCount }}
         </div>
@@ -273,7 +273,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <ol v-if="!isSmallDevice()">
-        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0">
+        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0 text-white">
           <a :href="`#${chapter.url}`">
             {{ chapter.shortName }}
           </a>

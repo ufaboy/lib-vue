@@ -123,7 +123,7 @@ getAuthors();
       @update-limit="updateLimit" />
     <Teleport v-if="mounted" to="#menu-target">
       <button
-        class="nav-btn flex items-center border px-2 py-1 hover:bg-gray-600"
+        class="nav-btn flex items-center border px-2 py-1 text-white hover:bg-blue-500 dark:hover:bg-gray-600"
         :class="{ 'w-full': !sidebarCollapsed, 'w-fit': sidebarCollapsed }"
         @click.passive="startCreateAuthor">
         <svg

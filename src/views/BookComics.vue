@@ -77,7 +77,7 @@ parseQuery();
       <img
         v-if="media"
         :src="getUploadedMediaUrl(media)"
-        class="h-full max-h-[calc(100dvh_-_55px)] lg:max-h-dvh max-w-full overflow-hidden rounded-lg object-contain">
+        class="h-full max-h-[calc(100dvh_-_55px)] max-w-full overflow-hidden rounded-lg object-contain lg:max-h-dvh">
       <button
         type="button"
         class="group absolute left-0 top-1/4 z-30 flex h-1/2 cursor-pointer items-center justify-center px-4 focus:outline-none lg:top-0 lg:h-full"
@@ -106,14 +106,15 @@ parseQuery();
       </button>
     </div>
     <Teleport v-if="mounted" to="#menu-target">
-      <div class="flex flex-row">
-        <div class="mr-3 max-w-[200px] truncate leading-8">
+      <div class="flex flex-row lg:flex-wrap gap-2">
+        <div class="max-w-[200px] truncate leading-8">
           {{ book?.name }}
         </div>
-        <div class="mr-3 whitespace-nowrap leading-8">
+        <div class="whitespace-nowrap leading-8">
           {{ currentImageIndex + 1 }}/{{ totalImages }}
         </div>
-        <button class="btn-header-green mr-2 hidden sm:block" @click.passive="autoTurnPage">
+        <div class="flex items-center gap-2">
+        <button class="btn-header-green hidden sm:block p-1.5" @click.passive="autoTurnPage">
           Auto {{ autoTurnPAgeON ? 'ON' : 'OFF' }}
         </button>
         <input
@@ -124,6 +125,7 @@ parseQuery();
         <datalist id="turn-second-list">
           <option v-for="(item, index) in PLAYER_INTERVALS" :key="index" :value="item" />
         </datalist>
+      </div>
       </div>
     </Teleport>
   </main>

@@ -50,7 +50,7 @@ const imageCoverList = computed(() => {
 			})
 		: [];
 });
-/* const getMediaUrl = computed(() => {
+const getMediaUrl = computed(() => {
 	if (!media.value) return '';
 	if (media.value instanceof Blob) {
 		return window.URL.createObjectURL(media.value);
@@ -59,7 +59,7 @@ const imageCoverList = computed(() => {
 			? `/${media.value.path}/${media.value.file_name}`
 			: `${import.meta.env.VITE_BACKEND_URL}/${media.value.path}/${media.value.file_name}`;
 	}
-}); */
+});
 
 watch(routeName, (newValue, oldValue) => {
 	if (newValue === 'book-create' && oldValue === 'book-update') location.reload();
@@ -414,27 +414,27 @@ onMounted(async () => {
           </li>
         </ol>
       </div>
-      <!-- <div v-if="media && media instanceof Blob">
-				<video
-					v-if="media.file_name.includes('.mp4')"
-					loop
-					autoplay
-					muted
-					:src="getMediaUrl"
-					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md" />
-				<img
-					v-else
-					:src="getMediaUrl"
-					class="max-w-sm max-h-80 fixed top-[calc(50%_-_120px)] left-10 z-20 rounded-md"
-					onerror="this.onerror=null;this.src = '/images/unknownImage.webp'" />
-			</div> -->
+      <div v-if="media">
+        <video
+          v-if="getMediaUrl.includes('.mp4')"
+          loop
+          autoplay
+          muted
+          :src="getMediaUrl"
+          class="fixed left-10 top-[calc(50%_-_120px)] z-20 max-h-80 max-w-sm rounded-md" />
+        <img
+          v-else
+          :src="getMediaUrl"
+          class="fixed left-10 top-[calc(50%_-_120px)] z-20 max-h-80 max-w-sm rounded-md"
+          onerror="this.onerror=null;this.src = '/images/unknownImage.webp'">
+      </div>
     </div>
     <form id="Book" name="Book" @submit.prevent="saveBook" />
     <Teleport
       v-if="mounted"
       to="#menu-target">
       <button
-        class="nav-btn flex items-center gap-2 border hover:bg-gray-600"
+        class="nav-btn flex items-center gap-2 border text-white hover:bg-blue-500 dark:hover:bg-gray-600"
         :class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }"
         @click.prevent="typo">
         <svg
@@ -448,7 +448,7 @@ onMounted(async () => {
       <button
         form="Book"
         type="submit"
-        class="nav-btn flex items-center gap-2 border hover:bg-gray-600"
+        class="nav-btn flex items-center gap-2 border text-white hover:bg-blue-500 dark:hover:bg-gray-600"
         :class="{ 'w-full px-2 py-1': !sidebarCollapsed, 'w-fit p-0.5': sidebarCollapsed }">
         <svg
           v-if="!sidebarCollapsed || !loading"

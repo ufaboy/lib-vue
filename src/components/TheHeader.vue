@@ -77,7 +77,7 @@ function toggleDropdown() {
     <RouterLink
       v-if="['book-view', 'comics-view'].includes(routeName)"
       :to="{ name: 'book-update', params: { id: bookID } }"
-      class="sidebar-link flex items-center gap-2 rounded-md border"
+      class="sidebar-link flex items-center gap-2 rounded-md border text-white"
       active-class="sidebar-link-active">
       <span>Update</span>
     </RouterLink>
