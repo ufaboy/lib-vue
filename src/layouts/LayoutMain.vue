@@ -1,34 +1,37 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { useScroll } from '@/composables/scroll';
 
+import TheSidebar from '@/components/TheSidebar.vue';
 import BtnScrollToTop from '@/components/BtnScrollToTop.vue';
-import TheHeader from '@/components/TheHeader.vue';
 
-const { btnTopShow, scrollingProgress, observedElement, scrollTo, throttleScroll } = useScroll();
+
+const { btnTopShow, scrollingProgress, scrollTo, throttleScroll } = useScroll();
+
+const route = useRoute();
+const sidebarShow = ref(false);
+
+watch(
+  () => route.name,
+  () => (sidebarShow.value = false),
+);
 
 onMounted(() => {
-	window.addEventListener('scroll', throttleScroll, { passive: true });
-	observedElement.value = document.documentElement;
+  document.addEventListener('scroll', throttleScroll, { passive: true });
 });
-
 onBeforeUnmount(() => {
-	window.removeEventListener('scroll', throttleScroll);
+  document.removeEventListener('scroll', throttleScroll);
 });
-
 document.documentElement.classList.add('scrollbar-gutter');
 </script>
 <template>
-  <div
-    id="layout"
-    class="min-h-full">
-    <TheHeader class="sticky top-0 z-10" />
-    <router-view
-      :progress="scrollingProgress.progress"
-      class="px-2 lg:px-4" />
+  <div id="layout" class="relative flex min-h-full flex-col lg:flex-row">
+    <TheSidebar class="" :expanded="sidebarShow" @toggle-sidebar="sidebarShow = !sidebarShow" />
+    <router-view :progress="scrollingProgress.progress" class="relative px-2 lg:left-40" />
     <BtnScrollToTop
       v-if="btnTopShow"
-      class="fixed bottom-20 right-5 z-10 flex size-10 items-center justify-center"
+      class="fixed bottom-20 right-10 z-10 flex size-10 items-center justify-center"
       @click="scrollTo()" />
   </div>
 </template>

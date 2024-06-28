@@ -219,7 +219,7 @@ if (!series.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
               </button>
             </div>
           </th>
-          <th class="th sticky top-0" :class="{ '!border-black ': scrolled }">
+          <th class="th sticky top-0 w-24" :class="{ '!border-black ': scrolled }">
             <div
               class="flex flex-row items-center"
               :class="{ 'text-emerald-300': queryBooks.sort.includes('count') }">

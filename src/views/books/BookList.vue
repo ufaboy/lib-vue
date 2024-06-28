@@ -61,7 +61,7 @@ getTags();
         <div class="truncate font-bold">
           {{ book.name }}
         </div>
-        <div class="line-clamp-2 break-all">
+        <div class="line-clamp-2">
           {{ book.description }}
         </div>
       </div>

@@ -1,15 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw, RouterOptions } from 'vue-router';
-import { isSmallDevice } from './utils/helper';
-
-const LayoutMain = () => import('./layouts/LayoutMain.vue');
-const LayoutSidebar = () => import('./layouts/LayoutSidebar.vue');
-const BookTable = () => import('./views/BookTable.vue');
-const BookList = () => import('./views/BookList.vue');
 
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
-		component: isSmallDevice() ? LayoutMain : LayoutSidebar,
+		component: () => import('./layouts/LayoutMain.vue'),
 		children: [
 			{
 				path: '',
@@ -23,7 +17,7 @@ const routes: RouteRecordRaw[] = [
 			{
 				path: '/books',
 				name: 'books',
-				component: isSmallDevice() ? BookList : BookTable,
+				component: () => import('./views/books/BooksMain.vue'),
 			},
 			{
 				path: '/book/:id',
