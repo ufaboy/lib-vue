@@ -19,11 +19,11 @@ jobs:
       # Устанавливаем Node.JS для сборки приложения
       - uses: actions/setup-node@v1
         with:
-          node-version: '18'
+          node-version: '20'
       # Устанавливаем pnpm
       - uses: pnpm/action-setup@v2
         with:
-          version: 7.26.2
+          version: 9.4.0
       # Устанавливаем зависимости для сборки
       - name: Install Dependencies
         run: pnpm i
