@@ -20,23 +20,23 @@ const bookID = computed(() => {
 </script>
 
 <template>
-  <div class="sticky top-0 z-30 flex h-8 w-full items-center px-3 dark:bg-gray-900 dark:text-white lg:hidden">
+  <div class="sticky top-0 z-30 flex w-full items-center px-3 py-1 dark:bg-gray-900 dark:text-white lg:hidden">
     <button class="" @click="$emit('toggleSidebar')">
-      <IconBurger class="size-6" :class="{ active: expanded }" />
+      <IconBurger class="size-12" :class="{ active: expanded }" />
     </button>
     <div id="header-target" class="ml-auto flex items-center gap-1 md:gap-3" />
   </div>
 
   <aside
     v-bind="$attrs"
-    class="fixed -left-40 top-0 z-20 lg:left-0 h-full w-40 bg-white pt-8 lg:pt-0 shadow transition dark:bg-gray-900 dark:text-white"
-    :class="{'translate-x-40': expanded}">
+    class="fixed -left-80 top-0 z-20 h-full w-80 bg-white pt-14 shadow transition dark:bg-gray-900 dark:text-white lg:left-0 lg:pt-0"
+    :class="{'translate-x-80': expanded}">
     <ul
-      class=" gap-3 ">
+      class="">
       <li class="w-full">
         <RouterLink
           :to="{ name: 'books' }"
-          class="sidebar-link flex items-center gap-2 px-2 py-1"
+          class="sidebar-link flex items-center"
           active-class="sidebar-link-active">
           <svg class="inline size-6">
             <use xlink:href="/icons/iconSprite.svg#books" />
@@ -47,7 +47,7 @@ const bookID = computed(() => {
       <li class="w-full">
         <RouterLink
           :to="{ name: 'tags' }"
-          class="sidebar-link flex items-center gap-2"
+          class="sidebar-link flex items-center"
           active-class="sidebar-link-active">
           <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#tag" />
@@ -58,7 +58,7 @@ const bookID = computed(() => {
       <li class="w-full">
         <RouterLink
           :to="{ name: 'authors' }"
-          class="sidebar-link flex items-center gap-2"
+          class="sidebar-link flex items-center"
           active-class="sidebar-link-active">
           <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#authors" />
@@ -69,7 +69,7 @@ const bookID = computed(() => {
       <li class="w-full">
         <RouterLink
           :to="{ name: 'series' }"
-          class="sidebar-link flex items-center gap-2"
+          class="sidebar-link flex items-center"
           active-class="sidebar-link-active">
           <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#series" />
@@ -80,7 +80,7 @@ const bookID = computed(() => {
       <li class="w-full">
         <RouterLink
           :to="{ name: 'media' }"
-          class="sidebar-link flex items-center gap-2"
+          class="sidebar-link flex items-center"
           active-class="sidebar-link-active">
           <svg class="inline size-6" fill="none">
             <use xlink:href="/icons/iconSprite.svg#photoLibrary" />
@@ -93,7 +93,7 @@ const bookID = computed(() => {
         <li class="w-full">
           <RouterLink
             :to="{ name: 'book-create' }"
-            class="sidebar-link flex items-center gap-2"
+            class="sidebar-link flex items-center"
             active-class="sidebar-link-active">
             <svg class="inline size-6" fill="none">
               <use xlink:href="/icons/iconSprite.svg#bookAdd" />
@@ -107,7 +107,7 @@ const bookID = computed(() => {
         <li class="w-full">
           <RouterLink
             :to="{ name: 'book-view' }"
-            class="sidebar-link flex items-center gap-2"
+            class="sidebar-link flex items-center"
             active-class="sidebar-link-active">
             <svg class="inline size-6" fill="none">
               <use xlink:href="/icons/iconSprite.svg#openBook" />
@@ -121,7 +121,7 @@ const bookID = computed(() => {
         <li class="w-full">
           <RouterLink
             :to="{ name: 'book-update', params: { id: bookID } }"
-            class="sidebar-link flex items-center gap-2"
+            class="sidebar-link flex items-center"
             active-class="sidebar-link-active">
             <svg class="inline size-6" fill="none">
               <use xlink:href="/icons/iconSprite.svg#openBook" />
