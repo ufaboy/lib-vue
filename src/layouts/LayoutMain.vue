@@ -28,7 +28,7 @@ document.documentElement.classList.add('scrollbar-gutter');
 <template>
   <div id="layout" class="relative flex min-h-full flex-col lg:flex-row">
     <TheSidebar class="" :expanded="sidebarShow" @toggle-sidebar="sidebarShow = !sidebarShow" />
-    <router-view :progress="scrollingProgress.progress" class="relative px-2 lg:left-80" />
+    <router-view :progress="scrollingProgress.progress" class="relative px-2 lg:left-60" />
     <BtnScrollToTop
       v-if="btnTopShow"
       class="fixed bottom-20 right-10 z-10 flex size-10 items-center justify-center"
