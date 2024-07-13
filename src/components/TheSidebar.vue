@@ -29,7 +29,7 @@ const bookID = computed(() => {
 
   <aside
     v-bind="$attrs"
-    class="fixed -left-60 top-0 z-20 h-full w-60 bg-white pt-14 shadow transition dark:bg-gray-900 dark:text-white lg:left-0 lg:pt-0"
+    class="fixed -left-60 top-0 z-20 h-full w-60 bg-white pt-14 shadow-md shadow-white transition dark:bg-gray-900 dark:text-white lg:left-0 lg:pt-0"
     :class="{'translate-x-60': expanded}">
     <ul
       class="">

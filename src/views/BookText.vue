@@ -190,7 +190,7 @@ onBeforeUnmount(() => {
 <template>
   <main
     id="bookText"
-    class="flex justify-center"
+    class="flex justify-center lg:w-[calc(100%_-_15rem)]"
     :class="{ 'px-3': classicMode }"
     @click="generalClickHandle">
     <div
