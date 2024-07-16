@@ -68,6 +68,7 @@ watch(routeName, (newValue, oldValue) => {
 async function saveBook(event: Event) {
 	try {
 		if (loading.value) return null;
+    if(tagsID.value.length === 0) return alert('Select at least one tag');
 		loading.value = true;
 		const formData = new FormData();
 		const formElement = event.target as HTMLFormElement;
@@ -233,7 +234,7 @@ onMounted(async () => {
               class="input border-0 py-0">
             <button class="rounded-full text-green-500 hover:bg-green-700/50">
               <svg class="size-5">
-                <use xlink:href="/icons/iconSprite.svg#check" />
+                <use xlink:href="/icons/iconSprite.svg#done" />
               </svg>
             </button>
             <button type="reset" class="rounded-full text-red-500 hover:bg-red-700/50" @click.prevent.passive="showNewTag = false">
