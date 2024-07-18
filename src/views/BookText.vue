@@ -286,12 +286,14 @@ onBeforeUnmount(() => {
 @import url('/src/assets/style/tooltip.css');
 
 .text hr {
-	margin: 0.5rem 0;
 	border-color: initial;
 }
+.text h3 + hr {
+	margin: 0.5rem 0 1rem 0;
+}
 
-.text p+hr {
-	margin: 1rem 0 0.5rem 0;
+.text p + hr {
+	margin: 1rem 0;
 }
 
 .text h3 {
@@ -303,7 +305,9 @@ onBeforeUnmount(() => {
 	word-break: break-word;
 	padding: initial;
 	text-indent: 1rem;
-	margin: 0 0 0.5rem;
+}
+.text p + p {
+	margin-top: 0.5rem;
 }
 
 .chapter {
@@ -324,10 +328,11 @@ onBeforeUnmount(() => {
 	margin-bottom: 0.5rem;
 }
 
-blockquote {
+.text blockquote {
 	padding: 1rem;
 	background-color: #eee;
 	border-radius: 5px;
+	margin: 0.5rem 0;
 }
 
 #scrolling-progress {
