@@ -48,3 +48,27 @@
   opacity: 35%;
   background-color: #000;
 }
+
+.link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: currentColor;
+  transition: all 0.2s ease-out;
+  transform: translateX(-50%);
+}
+
+.link:hover::after {
+  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}

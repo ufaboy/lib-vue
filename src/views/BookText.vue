@@ -65,7 +65,7 @@ async function prepareHeaders() {
 	const h1Element = document.querySelector('.book-name');
 
 	if (h1Element) {
-		const item = { name: 'Table Of Content', shortName: 'Table Of Content', url: 'mainText', element: h1Element };
+		const item = { name: 'Table Of Content', shortName: 'ToC', url: 'mainText', element: h1Element };
 		arr.push(item);
 		chapterElement.value = item;
 	}
@@ -252,18 +252,24 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
+    <div v-else class="fixed right-0 flex h-dvh flex-col gap-2 p-3">
+      <a
+        v-for="(chapter, index) in headerChapters"
+        :key="index"
+        :href="`#${chapter.url}`"
+        class="link">
+        {{ chapter.shortName }}
+      </a>
+    </div>
     <Teleport v-if="mounted && book" to="#menu-target">
-      <div class="flex items-center gap-1 text-white">
-        <div class="max-w-52 truncate whitespace-nowrap lg:max-w-40">
-          {{ book.name }}
-        </div>
-      </div>
       <button
         v-if="!isSmallDevice()"
         class="w-20 rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-3 py-1.5 text-center text-sm font-medium hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
         @click="classicMode = !classicMode">
         {{ classicMode ? 'Classic' : 'Scroll' }}
       </button>
+    </Teleport>
+    <Teleport to="#header-target">
       <div class="text-white">
         <div v-if="classicMode">
           {{ page }}/{{ pageCount }}
@@ -272,13 +278,6 @@ onBeforeUnmount(() => {
           {{ progress }}%
         </div>
       </div>
-      <ol v-if="!isSmallDevice()">
-        <li v-for="(chapter, index) in headerChapters" :key="index" class="sidebar-link px-0 text-white">
-          <a :href="`#${chapter.url}`">
-            {{ chapter.shortName }}
-          </a>
-        </li>
-      </ol>
     </Teleport>
   </main>
 </template>
