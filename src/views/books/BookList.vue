@@ -13,7 +13,7 @@ const { books, queryBooks, infinityState, loading, getBooks, isComics } = useBoo
 const { slideLeftRight, touchStart, touchEnd } = useSwipe();
 const { tags, getTags } = useTag();
 
-queryBooks.value.perPage = 10;
+queryBooks.value.perPage = 25;
 
 const filterDialog = ref<InstanceType<typeof HTMLDialogElement>>();
 
