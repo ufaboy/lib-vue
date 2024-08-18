@@ -154,8 +154,8 @@ function prevPage() {
 function generalClickHandle(event: MouseEvent) {
 	const x = event.clientX;
 	const width = window.innerWidth;
-	const leftЕhreshold = isSmallDevice() ? 150 : 350;
-	if (x <= leftЕhreshold) {
+	const threshold = isSmallDevice() ? 150 : 350;
+	if (x <= threshold) {
 		prevPage()
 	} else if (x >= width - 150) {
 		nextPage()
@@ -170,10 +170,33 @@ function calcPages() {
 	}
 }
 
+async function initBook() {
+	const result = await readBook(bookID);
+		if(import.meta.env.PROD) {
+			return result
+		} else {
+			const text = prepareMediaLinks(result.text);
+			return { ...result, text}
+		}
+}
+
+function prepareMediaLinks(htmlString: string|null) {
+	const mediaRegex = /<([a-z]+)\s+([^>]*?)src=["'](\/[^"']*)["']([^>]*?)>/gi;
+	const bgImageRegex = /url\(["']?(\/[^"')]+)["']?\)/gi;
+
+	return htmlString ? htmlString.replace(mediaRegex, (match, tagName, beforeSrc, relativeUrl, afterSrc) => {
+        const absoluteUrl = new URL(relativeUrl, import.meta.env.VITE_BACKEND_URL).toString();
+        return `<${tagName} ${beforeSrc} src="${absoluteUrl}"${afterSrc}>`;
+    }).replace(bgImageRegex, (match, relativeUrl) => {
+        const absoluteUrl = new URL(relativeUrl, import.meta.env.VITE_BACKEND_URL).toString();
+        return `url("${absoluteUrl}")`;
+    }) : null;
+}
+
 onMounted(async () => {
 	mounted.value = true;
-	book.value = await readBook(bookID);
-	
+
+	book.value = await initBook();
 	document.addEventListener('keydown', keyHandler, { passive: true });
 	nextTick(() => {
 		prepareHeaders();
@@ -199,7 +222,7 @@ onBeforeUnmount(() => {
       class="text max-w-[900px] flex-1"
       :class="{ [fontSize]: true, [textStyles]: true }"
       v-html="book.text" />
-    <TheLoader v-else class="absolute inset-0 m-auto size-24 text-emerald-500" />
+    <TheLoader v-else class="fixed top-1/2 m-auto size-24 text-emerald-500" />
     <div
       v-if="isSmallDevice()"
       class="fixed flex h-32 w-full cursor-pointer flex-row flex-wrap gap-1 bg-slate-300 px-4 py-2 transition-all dark:bg-slate-600 lg:left-48 lg:h-28 lg:w-[calc(100%_-_192px)] lg:gap-3"
@@ -264,12 +287,14 @@ onBeforeUnmount(() => {
     <Teleport v-if="mounted && book" to="#menu-target">
       <button
         v-if="!isSmallDevice()"
-        class="w-20 rounded-lg bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 px-3 py-1.5 text-center text-sm font-medium hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
+        class="w-20 rounded-lg  bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600
+		px-3 py-1.5 text-center text-sm font-medium 
+		hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
         @click="classicMode = !classicMode">
         {{ classicMode ? 'Classic' : 'Scroll' }}
       </button>
     </Teleport>
-    <Teleport to="#header-target">
+    <Teleport v-if="isSmallDevice()" to="#header-target">
       <div class="text-white">
         <div v-if="classicMode">
           {{ page }}/{{ pageCount }}
@@ -287,6 +312,7 @@ onBeforeUnmount(() => {
 .text hr {
 	border-color: initial;
 }
+
 .text h3 + hr {
 	margin: 0.5rem 0 1rem 0;
 }
@@ -305,6 +331,7 @@ onBeforeUnmount(() => {
 	padding: initial;
 	text-indent: 1rem;
 }
+
 .text p + p {
 	margin-top: 0.5rem;
 }
@@ -389,6 +416,117 @@ span[data-tooltip]:hover {
 	break-before: column;
 }
 
+
+.chat {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	position: relative;
+}
+
+.chat div {
+	border: 1px solid gray;
+	font-size: 0.9rem;
+	line-height: 1.3;
+	position: relative;
+	text-align: left;
+	max-width: 90%
+}
+
+.chat div:hover::before {
+	opacity: 1;
+}
+
+.user1 {
+	margin: 0 0 0 1rem;
+	border-radius: 0 1rem 1rem 1rem;
+	padding: 0.5rem 1rem 0.5rem 2rem;
+	align-self: flex-start;
+}
+
+.user1::after {
+	left: -25px;
+}
+
+.user2 {
+	border-radius: 1rem 0 1rem 1rem;
+	padding: 0.5rem 2rem 0.5rem 1rem;
+	align-self: flex-end;
+	margin: 0 1rem 0 0;
+}
+/* 
+.user1::before,
+.user2::before {
+	content: attr(data-content);
+	position: fixed;
+	top: 1rem;
+	width: 200px;
+	height: 200px;
+	border-radius: 10px;
+	z-index: 100;
+	opacity: 0;
+	background-size: cover;
+	background-position: top;
+	transition: opacity 0.3s ease-in-out 1s;
+} */
+
+.user1::before {
+	left: 1rem;
+}
+
+.user2::before {
+	left: auto;
+	right: 1rem;
+}
+
+.user2::after,
+.user1::after {
+	content: attr(data-content);
+	display: block;
+	border: 1px solid gray;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: -7px;
+	background-size: cover;
+	background-position: top;
+}
+
+.user2::after {
+	right: -25px;
+}
+
+.chat .remark {
+	border: none;
+	margin: 0.5rem 0;
+	font-size: 1rem;
+	line-height: 1.5rem;
+	text-align: justify;
+	padding: 0;
+	background: transparent;
+}
+.picture-hidden {
+	display: none;
+	max-width: 75vw;
+	max-height: 75dvh;
+	position: fixed;
+	z-index: 9;
+	margin: auto;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+.btn-trigger-hidden-picture {
+	cursor: pointer;
+	color: yellow;
+}
+
+.btn-trigger-hidden-picture:focus + .picture-hidden {
+	display: block;
+}
+
 @media (prefers-color-scheme: dark) {
 	blockquote {
 		background-color: #343a40;
@@ -453,6 +591,10 @@ span[data-tooltip]:hover {
 		float: left;
 		width: 375px;
 		margin: 0.5rem 1rem 0.5rem 0;
+	}
+	.picture-hidden {
+		max-width: 50vw;
+		max-height: 50dvh;
 	}
 }
 </style>
