@@ -32,7 +32,7 @@ const pageCount = ref(1);
 
 const textStyles = computed(() => {
 	return classicMode.value
-		? 'columns-1 h-[calc(100dvh_-_52px)] gap-x-16 max-w-7xl py-4 overflow-hidden'
+		? 'columns-1 h-[calc(100dvh_-_52px)] gap-x-16 max-w-7xl py-2 overflow-hidden'
 		: 'md:p-3 lg:p-4';
 });
 
@@ -275,7 +275,7 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </div>
-    <div v-else class="fixed right-0 flex h-dvh flex-col gap-2 p-3">
+    <div v-else class="fixed right-6 flex h-dvh flex-col gap-2 p-3">
       <a
         v-for="(chapter, index) in headerChapters"
         :key="index"
@@ -287,9 +287,9 @@ onBeforeUnmount(() => {
     <Teleport v-if="mounted && book" to="#menu-target">
       <button
         v-if="!isSmallDevice()"
-        class="w-20 rounded-lg  bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600
-		px-3 py-1.5 text-center text-sm font-medium 
-		hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-800"
+        class="w-full rounded-lg  bg-gradient-to-r from-teal-500 via-teal-600 to-teal-800
+		px-3 py-1.5 text-center text-sm font-bold 
+		hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-teal-400 dark:focus:ring-teal-900"
         @click="classicMode = !classicMode">
         {{ classicMode ? 'Classic' : 'Scroll' }}
       </button>
@@ -378,9 +378,13 @@ span[data-tooltip]:hover {
 	flex-flow: row wrap;
 }
 
-.picture {
+.picture, .picture-full {
 	object-fit: cover;
 	border-radius: 0.75rem;
+}
+.picture-full {
+	max-width: 868px;
+	max-height: 675px;
 }
 
 .illustrations {
@@ -558,8 +562,7 @@ span[data-tooltip]:hover {
 
 @media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: landscape) {
 
-	.picture,
-	.video {
+	.video, .picture, .picture-full {
 		float: left;
 		margin: 0 0.5rem 0.5rem 0;
 		max-width: 394px;
@@ -568,16 +571,14 @@ span[data-tooltip]:hover {
 
 @media only screen and (min-width: 360px) and (max-width: 768px) and (orientation: portrait) {
 
-	.picture,
-	.video {
+	.video, .picture, .picture-full {
 		width: 100%;
 	}
 }
 
 @media only screen and (min-width: 769px) and (max-width: 1368px) {
 
-	.picture,
-	.video {
+	.video, .picture, .picture-full {
 		float: left;
 		width: 375px;
 		margin: 0.5rem 1rem 0.5rem 0;
