@@ -15,7 +15,7 @@ export function useSeries() {
 		name: undefined,
 		url: undefined,
 		page: 1,
-		perPage: 10,
+		perPage: window.innerHeight > 1000 ? 20 : 10,
 		sort: 'id',
 	});
 

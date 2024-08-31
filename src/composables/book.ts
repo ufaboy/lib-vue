@@ -25,7 +25,7 @@ export function useBook() {
 		updated_at: undefined,
 		last_read: undefined,
 		page: 1,
-		perPage: 10,
+		perPage: window.innerHeight > 1000 ? 20 : 10,
 		sort: localStorage.getItem('book-sort') ?? '-updated_at',
 	});
 	const infinityState = ref(true);
