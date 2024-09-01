@@ -15,6 +15,8 @@ function updateDeviceSize() {
     smallDedice.value = isSmallDevice();
 }
 
+document.title = 'Books';
+
 onMounted(() => {
     window.addEventListener('resize', updateDeviceSize);
   });

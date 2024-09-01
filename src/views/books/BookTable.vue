@@ -17,8 +17,6 @@ import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 import TableRowEmptyResult from '@/components/TableRowEmptyResult.vue';
 
-document.title = 'Books';
-
 const props = defineProps({
 	scrollProgress: Number,
 });

@@ -25,6 +25,7 @@ onBeforeUnmount(() => {
 });
 document.documentElement.classList.add('scrollbar-gutter');
 </script>
+
 <template>
   <div id="layout" class="relative flex min-h-full flex-col lg:flex-row">
     <TheSidebar class="" :expanded="sidebarShow" @toggle-sidebar="sidebarShow = !sidebarShow" />

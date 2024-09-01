@@ -12,8 +12,8 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
 </script>
 
 <template>
-  <main class="flex h-full bg-gradient-to-br from-cyan-500 to-blue-500 dark:bg-none">
-    <div class="m-auto">
+  <main class="flex h-full items-center justify-center bg-gradient-to-br from-cyan-500 to-blue-500 transition-all dark:bg-none">
+    <div class="h-fit transition-all has-[:focus]:-translate-y-3/4 lg:!translate-y-0">
       <header class="mb-3 text-center">
         <button @click="signIn = !signIn">
           <transition name="fade" mode="out-in">
@@ -59,7 +59,9 @@ const { signIn, loading, username, password, submitHandler } = useAuth();
           required
           autocomplete="off">
         <button
-          class="relative flex flex-row items-center justify-center rounded-lg bg-gradient-to-br from-green-600 to-blue-600 p-3 text-xl font-medium text-white transition-colors hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800"
+          class="relative flex flex-row items-center justify-center rounded-lg
+          bg-gradient-to-br from-green-600 to-blue-600 p-3 text-xl font-medium text-white transition-colors
+          hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-green-200 dark:focus:ring-green-800"
           :class="{ 'cursor-progress': loading }">
           Submit
           <svg

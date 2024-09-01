@@ -7,13 +7,11 @@ import { BookTableIem } from '@/interfaces/book';
 
 import BookFilterForm from '@/components/forms/BookFilterForm.vue';
 
-document.title = 'Books';
-
 const { books, queryBooks, infinityState, loading, getBooks, isComics } = useBook();
 const { slideLeftRight, touchStart, touchEnd } = useSwipe();
 const { tags, getTags } = useTag();
 
-queryBooks.value.perPage = 25;
+queryBooks.value.perPage = 20;
 
 const filterDialog = ref<InstanceType<typeof HTMLDialogElement>>();
 

@@ -106,7 +106,7 @@ parseQuery();
       </button>
     </div>
     <Teleport v-if="mounted" to="#menu-target">
-      <div class="flex flex-row lg:flex-wrap gap-2">
+      <div class="flex flex-row gap-2 lg:flex-wrap">
         <div class="max-w-[200px] truncate leading-8">
           {{ book?.name }}
         </div>
@@ -114,18 +114,18 @@ parseQuery();
           {{ currentImageIndex + 1 }}/{{ totalImages }}
         </div>
         <div class="flex items-center gap-2">
-        <button class="btn-header-green hidden sm:block p-1.5" @click.passive="autoTurnPage">
-          Auto {{ autoTurnPAgeON ? 'ON' : 'OFF' }}
-        </button>
-        <input
-          v-model="intervalSeconds"
-          type="number"
-          list="turn-second-list"
-          class="hidden w-16 rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:block sm:text-xs">
-        <datalist id="turn-second-list">
-          <option v-for="(item, index) in PLAYER_INTERVALS" :key="index" :value="item" />
-        </datalist>
-      </div>
+          <button class="btn-header-green hidden p-1.5 sm:block" @click.passive="autoTurnPage">
+            Auto {{ autoTurnPAgeON ? 'ON' : 'OFF' }}
+          </button>
+          <input
+            v-model="intervalSeconds"
+            type="number"
+            list="turn-second-list"
+            class="hidden w-16 rounded-lg border border-gray-300 bg-gray-50 p-2 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500 sm:block sm:text-xs">
+          <datalist id="turn-second-list">
+            <option v-for="(item, index) in PLAYER_INTERVALS" :key="index" :value="item" />
+          </datalist>
+        </div>
       </div>
     </Teleport>
   </main>

@@ -1,72 +1,20 @@
 <template>
-  <main class="error-page">
-    <h1>Whoopsie Doodle!</h1>
-    <div class="comic-bubble">
-      <svg
-        height="100%"
-        width="100%"
-        xmlns="http://www.w3.org/2000/svg">
-        <ellipse
-          cx="50%"
-          cy="50%"
-          rx="140"
-          ry="100"
-          class="speech-bubble" />
-        <text
-          x="50%"
-          y="50%"
-          dominant-baseline="middle"
-          text-anchor="middle"
-          class="speech-text">404</text>
-      </svg>
+  <main class="flex h-full items-center bg-white dark:bg-gray-900">
+    <div class="mx-auto max-w-screen-xl px-4 py-8 lg:px-6 lg:py-16">
+      <div class="mx-auto max-w-screen-sm text-center">
+        <h1 class="mb-4 text-7xl font-extrabold tracking-tight text-indigo-600 dark:text-indigo-500 lg:text-9xl">
+          404
+        </h1>
+        <p class="mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
+          Something's missing.
+        </p>
+        <p class="mb-4 text-lg font-light text-gray-500 dark:text-gray-400">
+          Sorry, we can't find that page. You'll find lots to explore on the home page.
+        </p>
+        <a href="/" class="my-4 inline-flex rounded-lg bg-indigo-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-indigo-800 focus:outline-none focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-900">
+          Back to Homepage
+        </a>
+      </div>
     </div>
-    <p class="error-text">
-      This page is more elusive than the last issue of "Spidey vs. Thanos"!
-    </p>
-    <p class="error-text">
-      <a href="/">Zoom back to base!</a>
-    </p>
   </main>
 </template>
-
-<style>
-.error-page {
-  background-color: #f5f5f5;
-  text-align: center;
-  padding: 50px;
-  font-family: 'Bangers', cursive;
-
-
-  h1 {
-    font-size: 60px;
-    color: #ff6347;
-  }
-
-  .comic-bubble {
-    height: 300px;
-    width: 300px;
-    margin: 0 auto;
-  }
-
-  .error-text {
-    color: #333;
-    font-size: 30px;
-    font-weight: bold;
-  }
-
-  a {
-    color: #ff6347;
-  }
-
-  .speech-bubble {
-    fill: none;
-    stroke: #ff6347;
-    stroke-width: 2px;
-  }
-
-  .speech-text {
-    fill: #ff6347;
-    font-size: 45px;
-  }
-}
-</style>
