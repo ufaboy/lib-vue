@@ -598,9 +598,7 @@ if (!series.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
             </span>
           </td>
         </tr>
-        <SkeletonTableRow
-          v-if="loading"
-          count="11" />
+        <SkeletonTableRow v-if="loading && !books.length" cells="11" rows="10" />
         <TableRowEmptyResult
           v-else-if="!books.length" />
       </tbody>

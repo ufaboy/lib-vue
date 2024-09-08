@@ -36,7 +36,7 @@ createPagination(props.meta);
 </script>
 
 <template>
-  <div class="table-paginator flex w-full items-center justify-around gap-2 py-3 md:justify-center">
+  <div class="table-paginator flex w-full items-center justify-around gap-2 py-2 md:justify-center">
     <div class="flex items-center gap-3">
       <label class="flex items-center gap-1">
         Limit:
