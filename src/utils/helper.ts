@@ -1,5 +1,5 @@
 import Toast from '@/plugins/toaster/toast';
-import { REDIRECT_LOGIN_URL } from '@/utils/constants';
+import { REDIRECT_LOGIN_URL } from '@/constants';
 
 function getHeaders(): Headers {
 	const token = sessionStorage.getItem('lib-token');

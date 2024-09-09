@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { LIMIT } from '@/utils/constants';
+import { LIMIT } from '@/constants';
 import { ListMeta } from '@/interfaces/meta';
 
 const props = defineProps<{

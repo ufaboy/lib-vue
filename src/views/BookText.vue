@@ -3,7 +3,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { useBook } from '@/composables/book';
 import { isSmallDevice } from '@/utils/helper';
-import { TEXT_SIZES } from '@/utils/constants';
+import { TEXT_SIZES } from '@/constants';
 import { Chapter, Book } from '@/interfaces/book';
 
 import TheLoader from '@/components/TheLoader.vue';

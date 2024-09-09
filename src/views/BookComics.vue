@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useBook } from '@/composables/book';
 import { useMedia } from '@/composables/media';
-import { PLAYER_INTERVALS } from '@/utils/constants';
+import { PLAYER_INTERVALS } from '@/constants';
 import { useRoutes } from '@/composables/routes';
 import { Book } from '@/interfaces/book';
 

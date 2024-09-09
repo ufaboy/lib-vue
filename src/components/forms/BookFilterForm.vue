@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { RATINGS, SORTING_OPTIONS } from '@/utils/constants';
+import { RATINGS, SORTING_OPTIONS } from '@/constants';
 import { QueryBooks } from '@/interfaces/book';
 import { Tag } from '@/interfaces/tag';
 

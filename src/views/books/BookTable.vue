@@ -10,7 +10,7 @@ import { useAuthor } from '@/composables/author';
 import { useTagStore } from '@/store/tagStore';
 import { useAuthorStore } from '@/store/authorStore';
 import { useSeriesStore } from '@/store/seriesStore';
-import { RATINGS, SIZES } from '@/utils/constants';
+import { RATINGS, SIZES } from '@/constants';
 
 import TheLoader from '@/components/TheLoader.vue';
 import TablePaginator from '@/components/TablePaginator.vue';

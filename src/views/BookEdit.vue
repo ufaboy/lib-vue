@@ -7,7 +7,7 @@ import { useSeries } from '@/composables/series';
 import { useAuthor } from '@/composables/author';
 import { useMedia } from '@/composables/media';
 import { fetchData, formRequest, calcTextSize, isMobile } from '@/utils/helper';
-import { RATINGS } from '@/utils/constants';
+import { RATINGS } from '@/constants';
 import { Book, BookTableIem } from '@/interfaces/book';
 import { Media } from '@/interfaces/media';
 
@@ -209,7 +209,8 @@ onMounted(async () => {
       <div class="flex w-1/2 flex-col px-4 py-2">
         <label for="description" class="label">
           Description
-          <output class="ml-2">{{ description.length }}</output>
+          <output class="mx-2">{{ description.length }}</output>
+          <meter low="50" high="275" min="0" max="300" optimum="140" :value="description.length" />
         </label>
         <textarea
           v-model.trim="description"
@@ -248,7 +249,7 @@ onMounted(async () => {
             type="button"
             class="btn-icon size-5"
             @click.prevent.passive="showNewTag = true">
-            <svg class="size-5">
+            <svg class="h-full aspect-square">
               <use xlink:href="/icons/iconSprite.svg#add" />
             </svg>
           </button>
@@ -379,7 +380,8 @@ onMounted(async () => {
           name="text"
           form="Book"
           class="input w-full"
-          rows="10" />
+          rows="10"
+          style="height: calc(100dvh - 500px);" />
       </div>
     </div>
     <div class="hidden w-96 md:block">
