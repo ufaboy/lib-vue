@@ -16,6 +16,7 @@ import TheLoader from '@/components/TheLoader.vue';
 import TablePaginator from '@/components/TablePaginator.vue';
 import SkeletonTableRow from '@/components/SkeletonTableRow.vue';
 import TableRowEmptyResult from '@/components/TableRowEmptyResult.vue';
+import MultiSelect from '@/components/MultiSelect.vue';
 
 const props = defineProps({
 	scrollProgress: Number,
@@ -393,7 +394,7 @@ if (!series.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
               @search="getBooksByFilter">
           </th>
           <th class="th">
-            <select
+<!--             <select
               v-model="queryBooks.tag"
               form="searchForm"
               name="tag"
@@ -407,7 +408,14 @@ if (!series.value) getSeries({ perPage: 100, page: 1, sort: 'name' });
               <option v-for="tag in tags" :key="tag.id" :value="tag.name">
                 {{ tag.name }}
               </option>
-            </select>
+            </select> -->
+            <MultiSelect
+              v-model="queryBooks['tag[]']"
+              :options="tags"
+              keyLabel="name"
+              keyValue="id"
+              @update:modelValue="getBooksByFilter"
+              :class="{ hidden: shortColumns.includes('tags') }" />
           </th>
           <th class="th" :class="{ 'w-2': shortColumns.includes('rating') }">
             <select

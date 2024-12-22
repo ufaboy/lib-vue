@@ -1,5 +1,6 @@
 import Toast from '@/plugins/toaster/toast';
 import { REDIRECT_LOGIN_URL } from '@/constants';
+import { Tag } from '@/interfaces/tag';
 
 function getHeaders(): Headers {
 	const token = sessionStorage.getItem('lib-token');
@@ -12,18 +13,25 @@ function getHeaders(): Headers {
 	});
 }
 
-function getUrl(baseUrl: string, query?: { [key: string]: string | number | undefined | null }): URL {
+function getUrl(baseUrl: string, query?: { [key: string]: string | number | undefined | null |  Tag[] }): URL {
 	const url = new URL(baseUrl);
 	for (const key in query) {
 		const value = query[key];
 
 		if (value !== '' && value !== undefined && value !== null) {
-			let stringValue: string;
+			let stringValue: string = '';
 			if (['updated_at', 'last_read'].includes(key) && typeof value === 'number') {
 				stringValue = (new Date(value).getTime() / 1000).toString();
+			} else if(key === 'tag[]' && Array.isArray(value)) {
+				for (const item of value) {
+					url.searchParams.append('tag[]', item.name);
+				}
 			} else if (typeof value === 'string') {
 				stringValue = value;
-			} else stringValue = value.toString();
+			} else {
+				stringValue = value.toString();
+			}
+			
 			url.searchParams.append(key, stringValue);
 		}
 	}

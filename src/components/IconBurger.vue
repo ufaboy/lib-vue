@@ -13,11 +13,11 @@
       y="6.25" />
     <rect
       class="rect"
-      width="18"
+      width="15"
       height="1.5"
       fill="currentColor"
       ry="0.75"
-      x="3"
+      x="6"
       y="11.25" />
     <rect
       class="rect"
@@ -35,38 +35,23 @@
 	.rect {
 		transform-box: fill-box;
 		transform-origin: 50% 50%;
-		fill: hsl(0 0% 98%);
 	}
 
 	.rect {
-		transition:
-			rotate 0.2s 0s,
-			translate 0.2s 0.2s;
+      transition:  transform 0.5s, opacity 0.5s;
 	}
 }
 
-.icon-burger.active {
-	rotate: 90deg;
-	transition: rotate 500ms 0.4s;
+.active .rect:nth-of-type(1) {
+  transform: rotate(45deg) translate(20%, 230%) scaleX(1.25);
+}
 
-	.rect {
-		transition:
-			translate 0.2s,
-			rotate 0.2s 0.3s;
-	}
+.active .rect:nth-of-type(2) {
+  opacity: 0;
+  transform: translate(0, 0) scale(0.01);
+}
 
-	.rect:nth-of-type(1) {
-		translate: 0 333%;
-		rotate: -45deg;
-	}
-
-	.rect:nth-of-type(2) {
-		rotate: 45deg;
-	}
-
-	.rect:nth-of-type(3) {
-		translate: 0 -333%;
-		rotate: 45deg;
-	}
+.active .rect:nth-of-type(3) {
+  transform: rotate(-45deg) translate(20%, -230%) scaleX(1.25);
 }
 </style>

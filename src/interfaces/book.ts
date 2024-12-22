@@ -45,7 +45,7 @@ interface BookResponse {
 
 interface QueryBooks extends Partial<Omit<BookTableIem, 'tags' | 'author' | 'series' | 'media'>>, BaseQuery {
 	[key: string]: string | number | undefined | null;
-	tag?: string;
+	'tag[]'?: string;
 	text?: string;
 	text_length?: number;
 	authorName?: string;

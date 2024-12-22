@@ -16,7 +16,7 @@ export function useBook() {
 		name: undefined,
 		text: undefined,
 		text_length: undefined,
-		tag: undefined,
+		'tag[]': undefined,
 		view_count: undefined,
 		rating: undefined,
 		authorName: undefined,
